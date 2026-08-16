@@ -202,7 +202,7 @@ main{min-width:0;padding:26px 0 90px}
 .opt.right{border-color:var(--ok);background:var(--ok-soft)}
 .opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
 .opt-k{font-family:var(--f-mono);font-size:11.5px;color:var(--ink-faint);flex:none;padding-top:2px}
-.opt-t{font-family:var(--f-mono);font-size:13px;line-height:1.5;word-break:break-word}
+.opt-t{font-family:var(--f-mono);font-size:13px;line-height:1.5;word-break:break-word;white-space:pre-wrap}
 .verdict{padding:12px 14px;border-radius:var(--r);margin:14px 0;font-size:13.5px;line-height:1.6}
 .verdict.ok{background:var(--ok-soft);border-left:2px solid var(--ok)}
 .verdict.bad{background:var(--bad-soft);border-left:2px solid var(--bad)}
@@ -357,6 +357,12 @@ const CONFIG = {
   MIN_PW_LEN   : 8,
 
   QUIZ_COUNT   : 10,
+
+  // 미리 만들어 둔 문항 은행. 여러 개를 적으면 합쳐서 씁니다.
+  BANK_FILES   : ['bank/question-bank-numpy.json'],
+  // true 로 두면 출제 직전에 은행 문항의 정답을 브라우저에서 다시 실행해 확인합니다.
+  // 문항을 새로 추가한 직후에만 잠깐 켜 보세요. 켜면 시작이 몇 초 느려집니다.
+  BANK_VERIFY  : false,
 };
 
 /* ── 유틸 ─────────────────────────────────────────────── */
@@ -688,6 +694,8 @@ const solvable = u => introLen(u) >= 12 || u.out.length > 0;
 /* 실행 결과를 문제와 함께 보여줘도 되는 유형.
    출력 예측·값 계산은 그 출력이 곧 정답이므로 절대 포함하지 않습니다. */
 const SHOW_EXPECT = new Set(['blank','order']);
+/* 선택지 번호. 기출처럼 5지까지 나올 수 있습니다. */
+const OPT_MARK = ['①','②','③','④','⑤','⑥'];
 
 /* ════════════════════════════════════════════════════════
    Pyodide 실행 환경
@@ -1028,30 +1036,65 @@ async function genValue(nb){
   return null;
 }
 
-/* 4. 개념 (마크다운 설명 문장) */
+/* 4. 개념 — 마크다운의 코드 표기(`...`)된 이름만 후보로 씁니다.
+
+   예전 방식은 제목과 굵은 글씨까지 후보에 넣었습니다. 그래서
+   '파이썬 넘파이(NumPy) 심화' 같은 섹션 제목이 선택지로 나왔고,
+   표 안에서 백틱 짝이 어긋나면 '는 행 인덱스,' 같은 한국어 조각도
+   용어로 잡혔습니다. 게다가 문장을 제목에서 떼어내 출제하니
+   무엇에 대한 설명인지 알 수 없었습니다.
+
+   지금은 (1) 함수·속성 이름 모양인 것만 후보로 두고,
+   (2) 그런 후보가 넷 미만이면 아예 문항을 만들지 않으며,
+   (3) 그 문장이 속한 제목을 함께 보여 줍니다. */
+const IDENT_RE = /^[A-Za-z_][A-Za-z0-9_]*(\.[A-Za-z_][A-Za-z0-9_]*)*(\(\))?$/;
+
+/* 제목 앞에 붙은 목차 번호를 떼어냅니다.
+   '1)Numpy 특징' → 'Numpy 특징', '(5) 넘파이 모듈의 함수 특징' → '넘파이 모듈의 함수 특징',
+   '① arange 함수로 생성하기' → 'arange 함수로 생성하기'.
+   번호는 문서 안에서만 뜻이 있고 문제에서는 잡음입니다. */
+const HEAD_NUM = /^\s*(?:[\u2460-\u2473\u3251-\u325F]|\(\s*\d+\s*\)|\d+\s*[).]|[가나다라마바사아자차카타파하]\s*[).])\s*/;
+function cleanHead(h){
+  let t = String(h).replace(/[`*_#]/g,'').trim();
+  for(let i=0;i<3 && HEAD_NUM.test(t);i++) t = t.replace(HEAD_NUM,'');
+  return t.trim();
+}
+
+/* 제목과 그 아래 설명을 묶어 맥락을 유지합니다. */
+function mdSections(nb){
+  const out=[];
+  for(const cell of nb.mdCells){
+    let head='';
+    for(const raw of cell.split('\n')){
+      const h = raw.match(/^#{1,6}\s*(.+?)\s*$/);
+      if(h){ head = cleanHead(h[1]); continue; }
+      if(/^\s*\|/.test(raw)) continue;              // 표는 문장이 아니므로 건너뜁니다
+      const body = raw.replace(/^[\s>*+\-]+/,'').trim();
+      if(body.length>18 && body.length<220) out.push({head, body});
+    }
+  }
+  return out;
+}
+
 function genConcept(nb){
-  const terms = uniq(nb.mdCells.flatMap(t=>[
-    ...[...t.matchAll(/`([^`\n]{2,24})`/g)].map(m=>m[1]),
-    ...[...t.matchAll(/\*\*([^*\n]{2,24})\*\*/g)].map(m=>m[1]),
-    ...[...t.matchAll(/^#{1,6}\s*(.{2,24})$/gm)].map(m=>m[1]),
-  ].map(x=>x.trim()))).filter(t=>t && !/^\d+$/.test(t));
-  if(terms.length<4) return null;
-  const sentences = nb.mdCells.join('\n')
-    .replace(/```[\s\S]*?```/g,' ').replace(/^#+\s*/gm,'')
-    .split(/[.!?。]\s+|\n+/).map(s=>s.trim())
-    .filter(s=>s.length>18 && s.length<220);
-  for(const t of shuffle(terms)){
-    const s = sentences.find(x=>x.includes(t) && x.replace(t,'').length>14);
-    if(!s) continue;
-    const clean = x=>x.replace(/[`*_>#\[\]]/g,'').trim();
-    const others = shuffle(terms.filter(o=>o!==t && !s.includes(o))).slice(0,3);
+  const terms = uniq(nb.mdCells.flatMap(t =>
+      [...t.matchAll(/`([^`\n]+)`/g)].map(m=>m[1].trim())
+    )).filter(t => t.length>=3 && IDENT_RE.test(t));
+  if(terms.length<4) return null;                   // 후보가 모자라면 만들지 않습니다
+
+  const clean = x => x.replace(/[`*_>#]/g,'').trim();
+  for(const sec of shuffle(mdSections(nb))){
+    const hit = terms.find(t => sec.body.includes(t) && clean(sec.body.split(t).join('')).length>14);
+    if(!hit) continue;
+    const others = shuffle(terms.filter(o => o!==hit && !sec.body.includes(o))).slice(0,3);
     if(others.length<3) continue;
     return {
       type:'개념', typeKey:'concept', mode:'mc',
-      stem:`다음 설명의 빈칸에 들어갈 말은?<br><span style="display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px">${esc(clean(s).replace(t,'____'))}</span>`,
-      options:shuffle([t,...others]).map(clean),
-      answer:clean(t),
-      why:'노트북 설명 부분에 나온 문장입니다.'
+      intro: sec.head ? `다음은 **${sec.head}** 에 대한 설명이다.` : '',
+      stem:`다음 설명의 빈칸에 들어갈 것으로 알맞은 것은?<br><span style="display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px">${esc(clean(sec.body).split(hit).join('____'))}</span>`,
+      options: shuffle([hit, ...others]),
+      answer: hit,
+      why:`노트북 설명 부분에서 <span class="mono">${esc(hit)}</span> 를 다룬 문장입니다.`
     };
   }
   return null;
@@ -1094,7 +1137,8 @@ async function genEssay(nb){
   };
 }
 
-async function buildQuiz(nb, count){
+/* 노트북 내용에서 즉석으로 만드는 문항. 은행이 모자랄 때만 씁니다. */
+async function buildGenerated(nb, count){
   const gens = [
     ()=>genBlank(nb), ()=>genConcept(nb), ()=>genOrder(nb),
     ()=>genOutput(nb), ()=>genValue(nb),
@@ -1110,6 +1154,134 @@ async function buildQuiz(nb, count){
     seen.add(key); out.push(q);
   }
   return out;
+}
+
+
+/* ════════════════════════════════════════════════════════
+   문항 은행 — bank/ 폴더에 미리 만들어 둔 문항을 씁니다.
+   유형(개념 분류·빈칸·경계값·상태 예측·대조·조건 매핑·서답형)마다
+   골고루 뽑아서 내고, 모자라면 위의 생성기로 채웁니다.
+   ════════════════════════════════════════════════════════ */
+const BANK = { loaded:false, types:[], questions:[] };
+
+async function loadBank(){
+  if(BANK.loaded) return BANK;
+  BANK.loaded = true;
+  for(const f of (CONFIG.BANK_FILES||[])){
+    try{
+      const r = await fetch(RAW(f), {cache:'no-cache'});
+      if(!r.ok) continue;
+      const j = await r.json();
+      if(!BANK.types.length) BANK.types = j.types||[];
+      BANK.questions.push(...(j.questions||[]));
+    }catch{ /* 은행이 없어도 생성기로 그대로 동작합니다 */ }
+  }
+  return BANK;
+}
+
+/* '1_넘파이_기초(개념)' 과 '1_넘파이_기초_개념_' 처럼
+   괄호·밑줄만 다른 이름도 같은 노트북으로 봅니다. */
+const bankKey = s => String(s||'').replace(/\.ipynb$/,'')
+  .replace(/[^0-9A-Za-z가-힣]/g,'').toLowerCase();
+function bankMatches(q, nbName){
+  const a=bankKey(q.src), b=bankKey(nbName);
+  return !!a && !!b && (a===b || a.startsWith(b) || b.startsWith(a));
+}
+
+/* 유형별 배분. 문항 수가 적으면 유형마다 1개씩, 늘어나면 상한까지.
+   한 바퀴마다 순서를 섞습니다. 고정 순서로 두면 문항 수가 적을 때
+   늘 뒤쪽 유형만 빠지고 남는 문항도 앞쪽 유형에만 몰립니다. */
+function bankAllocate(types, n, avail){
+  const alloc={}; types.forEach(t=>{alloc[t.key]=0;});
+  const live = types.filter(t=>(avail[t.key]||0)>0);
+  if(!live.length) return alloc;
+  const total = ()=>live.reduce((s,t)=>s+alloc[t.key],0);
+  const fill = capOf => {
+    let guard=0;
+    while(total()<n && guard++<400){
+      let moved=false;
+      for(const t of shuffle(live)){
+        if(total()>=n) break;
+        if(alloc[t.key] < Math.min(capOf(t), avail[t.key])){ alloc[t.key]++; moved=true; }
+      }
+      if(!moved) break;
+    }
+  };
+  fill(t=>(t.pick&&t.pick[0])||1);   // 유형마다 최소치
+  fill(t=>(t.pick&&t.pick[1])||2);   // 유형별 상한까지
+  fill(()=>Infinity);                // 그래도 모자라면 남는 만큼
+  return alloc;
+}
+
+/* 최근에 낸 문항은 뒤로 미뤄 같은 문제가 연달아 나오지 않게 합니다. */
+function pickFromBank(nbName, count){
+  const recent = new Set(S.data?.quiz?.recentBank || []);
+  const pool = BANK.questions.filter(q=>bankMatches(q, nbName));
+  if(!pool.length) return [];
+  const byType={};
+  for(const q of pool) (byType[q.typeKey] ||= []).push(q);
+  const avail={};
+  for(const k in byType) avail[k]=byType[k].length;
+  const types = BANK.types.length ? BANK.types : Object.keys(byType).map(k=>({key:k}));
+  const alloc = bankAllocate(types, count, avail);
+
+  const out=[];
+  for(const t of types){
+    const want = alloc[t.key]||0;
+    if(!want) continue;
+    const fresh = shuffle(byType[t.key].filter(q=>!recent.has(q.id)));
+    const seen  = shuffle(byType[t.key].filter(q=> recent.has(q.id)));
+    out.push(...[...fresh,...seen].slice(0,want));
+  }
+  return out;
+}
+
+/* 출제 직전 정답 재검증. CONFIG.BANK_VERIFY 가 true 일 때만 돕니다.
+   파이썬을 못 쓰는 상황이면 그냥 통과시킵니다. */
+async function verifyBankQuestion(q){
+  if(!CONFIG.BANK_VERIFY || !q.verifyCode) return true;
+  try{
+    const r = await Py.run('import numpy as np\n'+q.verifyCode, {fresh:true});
+    if(r.err) return false;
+    return r.out.trim() === String(q.verifyExpect||'').trim();
+  }catch{ return true; }
+}
+
+/* 서답형 채점 — 공백과 따옴표 차이는 무시하고 accept 목록도 정답으로 봅니다. */
+const bankNorm = s => String(s ?? '').replace(/\s+/g,'')
+  .replace(/[\u2018\u2019\u201C\u201D'`]/g,'"').replace(/^\.+/,'').toLowerCase();
+function acceptsAnswer(q, mine){
+  const m = bankNorm(mine);
+  if(!m) return false;
+  return [q.answer, ...(q.accept||[])].map(bankNorm).includes(m);
+}
+
+function rememberBankIds(qs){
+  if(!S.data?.quiz) return;
+  const ids = qs.filter(q=>q.id).map(q=>q.id);
+  if(!ids.length) return;
+  const prev = S.data.quiz.recentBank || [];
+  S.data.quiz.recentBank = [...ids, ...prev.filter(x=>!ids.includes(x))].slice(0,40);
+}
+
+/* 은행을 먼저 쓰고, 모자라는 만큼만 생성기로 채웁니다. */
+async function buildQuiz(nb, count){
+  await loadBank();
+  let picked = pickFromBank(nb.name, count);
+
+  if(CONFIG.BANK_VERIFY && picked.length){
+    const checked=[];
+    for(const q of picked) if(await verifyBankQuestion(q)) checked.push(q);
+    picked = checked;
+  }
+  rememberBankIds(picked);
+
+  const need = count - picked.length;
+  if(need > 0){
+    try{ picked.push(...await buildGenerated(nb, need)); }
+    catch(e){ console.warn('생성기 실패 — 은행 문항만으로 진행합니다:', e); }
+  }
+  return picked;
 }
 
 /* ════════════════════════════════════════════════════════
@@ -1206,7 +1378,7 @@ function renderQuestion(){
   const box=$('#q-input');
   if(q.mode==='mc'){
     box.innerHTML=`<div class="opts">${q.options.map((o,i)=>
-      `<button class="opt" data-o="${escAttr(o)}"><span class="opt-k">${'ABCD'[i]}</span><span class="opt-t">${esc(o)}</span></button>`).join('')}</div>`;
+      `<button class="opt" data-o="${escAttr(o)}"><span class="opt-k">${OPT_MARK[i]||(i+1)}</span><span class="opt-t">${esc(o)}</span></button>`).join('')}</div>`;
     box.onclick=e=>{ const b=e.target.closest('.opt'); if(!b||QZ.graded) return;
       $$('.opt',box).forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); QZ.picked=b.dataset.o; };
   }else if(q.mode==='text'){
@@ -1253,7 +1425,7 @@ async function grade(){
     if(!QZ.order.length) return toast('순서를 먼저 고르세요');
   }else if(q.mode==='text'){
     mine=$('#q-text').value; if(!mine.trim()) return toast('답을 입력하세요');
-    ok = norm(mine)===norm(q.answer);
+    ok = norm(mine)===norm(q.answer) || acceptsAnswer(q, mine);
   }else{ /* essay */
     mine=$('#q-text').value; if(!mine.trim()) return toast('답을 입력하세요');
     $('#q-submit').disabled=true; $('#q-submit').textContent='채점 중…';
@@ -1294,7 +1466,8 @@ async function record(q, mine, ok){
   }else{
     const entry={key,path,nb:nbName,type:q.type,typeKey:q.typeKey,stem:q.stem,code:q.code||'',
       intro:q.intro||'',expect:q.expect||'',
-      options:q.options||null,answer:q.answer,mine,why:q.why,at:Date.now(),streak:0};
+      options:q.options||null,answer:q.answer,accept:q.accept||null,
+      mine,why:q.why,at:Date.now(),streak:0};
     if(idx>=0) S.data.wrong[idx]=entry; else S.data.wrong.push(entry);
   }
   await persist(); updateWrongDot();
@@ -1370,7 +1543,7 @@ function viewWrong(){
   $('#w-retry').onclick=()=>{
     const qs=list.map(w=>({type:w.type,typeKey:w.typeKey,mode:w.options?'mc':(w.typeKey==='order'?'order':'text'),
       stem:w.stem,code:w.code,intro:w.intro||'',expect:w.expect||'',
-      options:w.options,answer:w.answer,why:w.why,
+      options:w.options,answer:w.answer,accept:w.accept||null,why:w.why,
       path:w.path,nb:w.nb,
       lines:w.typeKey==='order'?w.answer.split('\n'):undefined}));
     QZ={nb:{name:'오답 노트',path:list[0].path},qs:shuffle(qs),i:0,picked:null,order:[],graded:false,right:0};
@@ -1406,7 +1579,9 @@ function viewStats(){
   const editCount=Object.values(S.data.edits||{}).reduce((a,o)=>a+Object.keys(o).length,0);
   const byType={};
   q.attempts.forEach(a=>{ const t=byType[a.type]||(byType[a.type]={n:0,ok:0}); t.n++; if(a.ok) t.ok++; });
-  const TYPE_KO={blank:'빈칸',output:'출력 예측',value:'값 계산',concept:'개념',order:'순서',essay:'서술형'};
+  const TYPE_KO={blank:'빈칸',output:'출력 예측',value:'값 계산',concept:'개념',order:'순서',essay:'서술형',
+    classify:'개념 분류',blank2:'빈칸(㉠㉡)',boundary:'경계값',trace:'상태 예측',
+    contrast:'대조',spec:'조건 매핑',short:'서답형'};
 
   $('#view').innerHTML=`
     <div class="page-head"><div class="eyebrow">Progress</div><h2>${esc(S.data.user)}</h2>
