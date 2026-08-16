@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>정보수업 노트북</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ── 토큰 ─────────────────────────────────────────────── */
+:root{
+  --paper:#F2F1EC;
+  --paper-raised:#FBFAF7;
+  --grid:rgba(22,35,58,.055);
+  --ink:#16233A;
+  --ink-soft:#5D6A80;
+  --ink-faint:#98A2B3;
+  --rule:#D9D8D1;
+  --slate:#111A2B;
+  --slate-2:#1B2639;
+  --slate-ink:#DCE3EF;
+  --accent:#3B2FD6;
+  --accent-soft:#EAE8FB;
+  --ok:#0E7C66;
+  --ok-soft:#DDF0EA;
+  --bad:#C42847;
+  --bad-soft:#FADDE3;
+  --run:#B07800;
+  --run-soft:#FBEFD2;
+
+  --t-kw:#C792EA; --t-str:#A5D6A7; --t-num:#FFCC80; --t-cmt:#6B7A94; --t-bi:#82B1FF;
+
+  --f-sans:'IBM Plex Sans KR',system-ui,-apple-system,sans-serif;
+  --f-mono:'IBM Plex Mono','D2Coding','Menlo','Consolas',monospace;
+  --gutter:74px;
+  --r:3px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:var(--f-sans);font-weight:400;color:var(--ink);
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:24px 24px;
+  font-size:15px;line-height:1.65;-webkit-font-smoothing:antialiased;
+}
+button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
+button{cursor:pointer}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.hidden{display:none !important}
+
+/* ── 공용 ─────────────────────────────────────────────── */
+.mono{font-family:var(--f-mono)}
+.eyebrow{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint)}
+.btn{
+  font-family:var(--f-mono);font-size:12.5px;letter-spacing:.02em;
+  background:var(--paper-raised);border:1px solid var(--rule);border-radius:var(--r);
+  padding:7px 13px;color:var(--ink);transition:border-color .12s,background .12s;
+}
+.btn:hover{border-color:var(--ink-soft)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn-primary:hover{background:#3226b8;border-color:#3226b8}
+.btn-ghost{background:transparent;border-color:transparent;color:var(--ink-soft);padding:6px 8px}
+.btn-ghost:hover{color:var(--ink);background:rgba(22,35,58,.05);border-color:transparent}
+.btn-sm{padding:4px 9px;font-size:11.5px}
+.field{width:100%;padding:10px 12px;border:1px solid var(--rule);border-radius:var(--r);background:var(--paper-raised)}
+.field:focus{border-color:var(--accent);outline:none}
+.card{background:var(--paper-raised);border:1px solid var(--rule);border-radius:var(--r)}
+
+/* ── 시그니처: 실행 거터 ──────────────────────────────── */
+.gut{display:grid;grid-template-columns:var(--gutter) 1fr;column-gap:0}
+.gut>.g-mark{
+  font-family:var(--f-mono);font-size:11.5px;color:var(--ink-faint);
+  text-align:right;padding:10px 14px 0 0;white-space:nowrap;
+  border-right:1px solid var(--rule);
+}
+.gut>.g-body{padding:2px 0 2px 20px;min-width:0}
+.g-mark.is-run{color:var(--run);animation:pulse 1.1s ease-in-out infinite}
+.g-mark.is-ok{color:var(--ok)}
+.g-mark.is-bad{color:var(--bad)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+@media (prefers-reduced-motion:reduce){.g-mark.is-run{animation:none}}
+
+/* ── 로그인 ───────────────────────────────────────────── */
+#login{min-height:100dvh;display:grid;place-items:center;padding:24px}
+.login-box{width:100%;max-width:400px}
+.login-head{border-left:2px solid var(--ink);padding-left:16px;margin-bottom:34px}
+.login-head h1{font-size:26px;font-weight:600;letter-spacing:-.02em;margin:4px 0 2px}
+.login-head p{margin:0;color:var(--ink-soft);font-size:13.5px}
+.login-form{display:flex;flex-direction:column;gap:10px}
+.login-label{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:5px;display:block}
+.login-foot{margin-top:14px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.tiny{font-size:11.5px;color:var(--ink-faint)}
+.tiny a,.linkish{color:var(--ink-faint);text-decoration:underline;text-underline-offset:2px;background:none;border:0;padding:0;font-size:11.5px;cursor:pointer}
+.tiny a:hover,.linkish:hover{color:var(--ink)}
+.chk{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--ink-faint);cursor:pointer}
+.msg{font-size:12.5px;padding:8px 11px;border-radius:var(--r);margin-top:4px}
+.msg-bad{background:var(--bad-soft);color:var(--bad)}
+.msg-ok{background:var(--ok-soft);color:var(--ok)}
+
+/* ── 셸 ───────────────────────────────────────────────── */
+#app{min-height:100dvh;display:flex;flex-direction:column}
+header{
+  position:sticky;top:0;z-index:40;background:rgba(242,241,236,.92);backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--rule);
+}
+.hbar{display:flex;align-items:center;gap:14px;padding:10px 20px}
+.brand{font-family:var(--f-mono);font-size:12.5px;letter-spacing:.04em;font-weight:500}
+.brand span{color:var(--ink-faint)}
+.spacer{flex:1}
+.chip{
+  font-family:var(--f-mono);font-size:11.5px;padding:4px 9px;border:1px solid var(--rule);
+  border-radius:100px;background:var(--paper-raised);display:inline-flex;align-items:center;gap:6px
+}
+.chip.admin{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.banner{background:var(--run-soft);border-bottom:1px solid #E3CE96;padding:7px 20px;font-size:12.5px;display:flex;align-items:center;gap:12px}
+.banner .mono{font-weight:500}
+
+.layout{flex:1;display:grid;grid-template-columns:262px 1fr;min-height:0}
+aside{border-right:1px solid var(--rule);padding:18px 0 40px;overflow-y:auto;max-height:calc(100dvh - 46px);position:sticky;top:46px}
+.nav-sec{padding:0 16px;margin-bottom:22px}
+.nav-sec h3{margin:0 0 8px;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);font-weight:500}
+.nav-item{
+  display:flex;align-items:baseline;gap:9px;width:100%;text-align:left;
+  padding:6px 9px;border:0;background:none;border-radius:var(--r);font-size:13.5px;line-height:1.45;
+}
+.nav-item:hover{background:rgba(22,35,58,.055)}
+.nav-item.active{background:var(--ink);color:var(--paper-raised)}
+.nav-item.active .nav-n{color:rgba(255,255,255,.55)}
+.nav-n{font-family:var(--f-mono);font-size:10.5px;color:var(--ink-faint);flex:none}
+.nav-item .dot{width:5px;height:5px;border-radius:50%;background:var(--accent);flex:none;align-self:center}
+main{min-width:0;padding:26px 0 90px}
+.wrap{max-width:1000px;padding:0 20px}
+
+.page-head{border-bottom:1px solid var(--rule);padding-bottom:14px;margin-bottom:26px}
+.page-head h2{margin:6px 0 0;font-size:23px;font-weight:600;letter-spacing:-.02em}
+.page-head .sub{color:var(--ink-soft);font-size:13px;margin-top:5px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:14px}
+
+/* ── 노트북 셀 ────────────────────────────────────────── */
+.cell{margin:0 0 6px}
+.cell-md .g-body{padding-top:2px;padding-bottom:10px}
+.md :is(h1,h2,h3,h4){font-weight:600;letter-spacing:-.015em;line-height:1.3;margin:20px 0 8px}
+.md h1{font-size:22px} .md h2{font-size:19px} .md h3{font-size:16px} .md h4{font-size:14.5px}
+.md p{margin:8px 0} .md ul,.md ol{margin:8px 0;padding-left:22px} .md li{margin:3px 0}
+.md code{font-family:var(--f-mono);font-size:.88em;background:rgba(59,47,214,.08);color:var(--accent);padding:1px 5px;border-radius:2px}
+.md pre{background:var(--slate);color:var(--slate-ink);padding:12px 14px;border-radius:var(--r);overflow-x:auto}
+.md pre code{background:none;color:inherit;padding:0}
+.md blockquote{margin:10px 0;padding-left:14px;border-left:2px solid var(--rule);color:var(--ink-soft)}
+.md img{max-width:100%;border-radius:var(--r)}
+.md table{border-collapse:collapse;font-size:13px;margin:10px 0}
+.md th,.md td{border:1px solid var(--rule);padding:5px 9px;text-align:left}
+.md hr{border:0;border-top:1px solid var(--rule);margin:18px 0}
+
+.code-shell{background:var(--slate);border-radius:var(--r);overflow:hidden;position:relative}
+.code-shell pre{margin:0;padding:12px 14px;overflow-x:auto;font-family:var(--f-mono);font-size:13px;line-height:1.6;color:var(--slate-ink);tab-size:4}
+.code-shell textarea{
+  display:block;width:100%;background:var(--slate-2);color:var(--slate-ink);border:0;
+  font-family:var(--f-mono);font-size:13px;line-height:1.6;padding:12px 14px;resize:vertical;min-height:64px;tab-size:4;
+}
+.code-shell textarea:focus{outline:2px solid var(--accent);outline-offset:-2px}
+.cell-acts{display:flex;gap:2px;padding:4px 6px;background:rgba(255,255,255,.04);border-top:1px solid rgba(255,255,255,.07)}
+.cell-acts .btn{background:transparent;border-color:transparent;color:#9FB0CC;font-size:11.5px;padding:3px 8px}
+.cell-acts .btn:hover{background:rgba(255,255,255,.08);color:#fff;border-color:transparent}
+.edited-tag{font-family:var(--f-mono);font-size:10px;color:var(--run);margin-left:auto;align-self:center;padding-right:6px}
+
+.t-kw{color:var(--t-kw)} .t-str{color:var(--t-str)} .t-num{color:var(--t-num)}
+.t-cmt{color:var(--t-cmt);font-style:italic} .t-bi{color:var(--t-bi)}
+
+.out{margin-top:6px;font-family:var(--f-mono);font-size:12.5px;line-height:1.55}
+.out pre{margin:0;white-space:pre-wrap;word-break:break-word;padding:8px 12px;background:rgba(22,35,58,.045);border-radius:var(--r);border-left:2px solid var(--rule)}
+.out.err pre{background:var(--bad-soft);border-left-color:var(--bad);color:#8A1B31}
+.out img{max-width:100%;background:#fff;border-radius:var(--r);border:1px solid var(--rule)}
+.out table{border-collapse:collapse;font-size:12px}
+.out th,.out td{border:1px solid var(--rule);padding:3px 7px}
+
+/* ── 퀴즈 ─────────────────────────────────────────────── */
+.q-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.tag{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.06em;padding:2px 7px;border:1px solid var(--rule);border-radius:100px;color:var(--ink-soft)}
+.tag.t-ai{border-color:var(--accent);color:var(--accent)}
+.q-stem{font-size:15.5px;line-height:1.6;margin:0 0 14px}
+.q-code{background:var(--slate);border-radius:var(--r);padding:12px 14px;overflow-x:auto;margin:0 0 14px}
+.q-code pre{margin:0;font-family:var(--f-mono);font-size:13px;line-height:1.6;color:var(--slate-ink);white-space:pre}
+.blank{color:var(--run);font-weight:600;background:rgba(176,120,0,.16);padding:0 3px;border-radius:2px}
+.opts{display:flex;flex-direction:column;gap:7px;margin-bottom:16px}
+.opt{
+  display:flex;gap:11px;align-items:flex-start;text-align:left;width:100%;
+  padding:10px 13px;border:1px solid var(--rule);border-radius:var(--r);background:var(--paper-raised);
+}
+.opt:hover:not(:disabled){border-color:var(--ink-soft)}
+.opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt-k{font-family:var(--f-mono);font-size:11.5px;color:var(--ink-faint);flex:none;padding-top:2px}
+.opt-t{font-family:var(--f-mono);font-size:13px;line-height:1.5;word-break:break-word}
+.verdict{padding:12px 14px;border-radius:var(--r);margin:14px 0;font-size:13.5px;line-height:1.6}
+.verdict.ok{background:var(--ok-soft);border-left:2px solid var(--ok)}
+.verdict.bad{background:var(--bad-soft);border-left:2px solid var(--bad)}
+.verdict b{font-family:var(--f-mono);font-size:12.5px;letter-spacing:.04em;display:block;margin-bottom:4px}
+.verdict .ans{font-family:var(--f-mono);white-space:pre-wrap;background:rgba(255,255,255,.55);padding:6px 9px;border-radius:2px;margin-top:6px;display:block;font-size:12.5px}
+.order-pool,.order-picked{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
+.order-line{
+  font-family:var(--f-mono);font-size:12.5px;text-align:left;width:100%;padding:8px 11px;
+  border:1px dashed var(--rule);border-radius:var(--r);background:var(--paper-raised);white-space:pre
+}
+.order-picked .order-line{border-style:solid;border-color:var(--accent);background:var(--accent-soft)}
+.progress{height:2px;background:var(--rule);border-radius:2px;overflow:hidden;margin-bottom:20px}
+.progress i{display:block;height:100%;background:var(--ink);transition:width .3s}
+
+/* ── 표 / 통계 ────────────────────────────────────────── */
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{
+  font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);
+  text-align:left;font-weight:500;padding:7px 10px;border-bottom:1px solid var(--rule)
+}
+.tbl td{padding:9px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+.tbl tr:hover td{background:rgba(22,35,58,.03)}
+.stat-row{display:flex;gap:26px;flex-wrap:wrap;margin-bottom:22px}
+.stat{min-width:78px}
+.stat .n{font-family:var(--f-mono);font-size:26px;font-weight:500;letter-spacing:-.02em;line-height:1.1}
+.stat .l{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);margin-top:3px}
+.bar{height:4px;background:var(--rule);border-radius:2px;overflow:hidden;width:110px;margin-top:5px}
+.bar i{display:block;height:100%;background:var(--ok)}
+.empty{padding:44px 20px;text-align:center;color:var(--ink-soft);font-size:13.5px}
+.empty .eyebrow{margin-bottom:8px}
+
+/* ── 모달 ─────────────────────────────────────────────── */
+.modal{position:fixed;inset:0;z-index:80;display:grid;place-items:center;padding:20px;background:rgba(22,35,58,.35)}
+.modal-box{width:100%;max-width:460px;background:var(--paper-raised);border:1px solid var(--rule);border-radius:var(--r);padding:22px}
+.modal-box h3{margin:0 0 4px;font-size:17px;font-weight:600}
+.modal-box .sub{color:var(--ink-soft);font-size:13px;margin-bottom:16px}
+.row{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+.hashout{font-family:var(--f-mono);font-size:11.5px;word-break:break-all;background:var(--slate);color:var(--t-str);padding:10px 12px;border-radius:var(--r);margin-top:10px}
+
+#toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:90;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none}
+.toast{font-family:var(--f-mono);font-size:12.5px;background:var(--ink);color:var(--paper-raised);padding:8px 15px;border-radius:100px}
+
+.menu-btn{display:none}
+@media (max-width:860px){
+  :root{--gutter:52px}
+  .layout{grid-template-columns:1fr}
+  aside{position:fixed;inset:46px 0 auto 0;z-index:35;background:var(--paper-raised);max-height:calc(100dvh - 46px);border-right:0;border-bottom:1px solid var(--rule);box-shadow:0 12px 30px rgba(22,35,58,.1)}
+  aside.closed{display:none}
+  .menu-btn{display:inline-flex}
+  .gut>.g-mark{padding-right:9px;font-size:10.5px}
+  .gut>.g-body{padding-left:12px}
+  .hbar{padding:10px 14px}
+  .wrap{padding:0 14px}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ 로그인 ══════════════════════════════════════════ -->
+<section id="login">
+  <div class="login-box">
+    <div class="login-head">
+      <div class="eyebrow">Colab Notebook Workbench</div>
+      <h1>정보수업 노트북</h1>
+      <p>수업 노트북을 읽고, 실행하고, 문제로 확인합니다.</p>
+    </div>
+
+    <div class="login-form">
+      <div>
+        <label class="login-label" for="lg-id">아이디</label>
+        <input class="field mono" id="lg-id" autocomplete="username" spellcheck="false">
+      </div>
+      <div>
+        <label class="login-label" for="lg-pw">비밀번호</label>
+        <input class="field mono" id="lg-pw" type="password" autocomplete="current-password">
+      </div>
+      <div id="lg-msg"></div>
+      <button class="btn btn-primary" id="lg-go" style="padding:11px">로그인</button>
+      <button class="btn" id="lg-reg">계정 만들기</button>
+    </div>
+
+    <div class="login-foot">
+      <label class="chk"><input type="checkbox" id="lg-auto"> 자동 로그인</label>
+      <button class="linkish" id="lg-hash">비밀번호 해시 만들기</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 앱 ══════════════════════════════════════════════ -->
+<div id="app" class="hidden">
+  <header>
+    <div class="hbar">
+      <button class="btn btn-ghost menu-btn" id="menu-btn">☰</button>
+      <div class="brand">정보수업 <span>/ notebook</span></div>
+      <div class="spacer"></div>
+      <span class="chip" id="py-chip" title="Python 실행 환경">python <span class="mono" id="py-state">대기</span></span>
+      <span class="chip" id="user-chip"></span>
+      <button class="btn btn-ghost btn-sm" id="logout">로그아웃</button>
+    </div>
+    <div class="banner hidden" id="imp-banner">
+      <span class="mono" id="imp-who"></span>
+      <span>님의 화면을 보고 있습니다. 읽기 전용입니다.</span>
+      <div class="spacer"></div>
+      <button class="btn btn-sm" id="imp-exit">내 화면으로</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside id="side" class="closed">
+      <div class="nav-sec">
+        <h3>노트북</h3>
+        <div id="nb-list"><div class="tiny" style="padding:6px 9px">불러오는 중…</div></div>
+      </div>
+      <div class="nav-sec">
+        <h3>학습</h3>
+        <button class="nav-item" data-view="quiz"><span class="nav-n">Q</span>문제 풀기</button>
+        <button class="nav-item" data-view="wrong"><span class="nav-n">E</span>오답 노트<span class="dot hidden" id="wrong-dot"></span></button>
+        <button class="nav-item" data-view="stats"><span class="nav-n">S</span>진행 상황</button>
+      </div>
+      <div class="nav-sec hidden" id="admin-sec">
+        <h3>관리자</h3>
+        <button class="nav-item" data-view="admin"><span class="nav-n">A</span>회원 관리</button>
+      </div>
+    </aside>
+
+    <main><div class="wrap" id="view"></div></main>
+  </div>
+</div>
+
+<div id="toast"></div>
+<div id="modal-host"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
+<script>
+/* ════════════════════════════════════════════════════════
+   설정 — 배포 전에 이 블록만 고치면 됩니다. README 참고.
+   ════════════════════════════════════════════════════════ */
+const CONFIG = {
+  GITHUB_OWNER : 'NAMU578',          // 깃허브 계정명
+  GITHUB_REPO  : 'INFSUB',   // 저장소 이름
+  GITHUB_BRANCH: 'main',
+  NOTEBOOK_DIR : 'notebooks',        // .ipynb 파일이 들어있는 폴더
+
+  // Cloudflare Worker 주소. 비워두면 이 브라우저에만 저장되는 로컬 모드로 동작합니다.
+  WORKER_URL   : '',                 // 예: 'https://info-nb.your-name.workers.dev'
+
+  ADMIN_ID     : 'ohh5259',
+
+  // 로컬 모드에서만 쓰이는 관리자 비밀번호 해시 (SHA-256, 소문자 16진수).
+  // 로그인 화면의 '비밀번호 해시 만들기'로 뽑아서 여기에 붙여넣으세요.
+  ADMIN_PW_SHA256 : '',
+
+  QUIZ_COUNT   : 10,
+};
+
+/* ── 유틸 ─────────────────────────────────────────────── */
+const $  = (s,r=document)=>r.querySelector(s);
+const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const escAttr = s => esc(s).replace(/"/g,'&quot;');
+const rand = (a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const pick = a => a[Math.floor(Math.random()*a.length)];
+const shuffle = a => { const x=[...a]; for(let i=x.length-1;i>0;i--){const j=rand(0,i);[x[i],x[j]]=[x[j],x[i]];} return x; };
+const uniq = a => [...new Set(a)];
+
+async function sha256(str){
+  const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');
+}
+function toast(msg,ms=2400){
+  const el=document.createElement('div');el.className='toast';el.textContent=msg;
+  $('#toast').appendChild(el);setTimeout(()=>el.remove(),ms);
+}
+function modal(html){
+  const host=$('#modal-host');
+  host.innerHTML=`<div class="modal"><div class="modal-box">${html}</div></div>`;
+  const close=()=>host.innerHTML='';
+  host.querySelector('.modal').addEventListener('mousedown',e=>{ if(e.target===host.querySelector('.modal')) close(); });
+  return {host,close};
+}
+
+/* ── 파이썬 문법 강조 ─────────────────────────────────── */
+const PY_KW = ['False','None','True','and','as','assert','async','await','break','class','continue','def','del','elif','else','except','finally','for','from','global','if','import','in','is','lambda','nonlocal','not','or','pass','raise','return','try','while','with','yield'];
+const PY_BI = ['print','len','range','int','str','float','list','dict','set','tuple','sum','max','min','abs','round','sorted','enumerate','zip','map','filter','type','input','open','bool','any','all','reversed','isinstance','append','pop','split','join','format','keys','values','items','strip','replace','upper','lower','count','index','insert','remove','extend','sort'];
+const HL_RE = new RegExp(
+  '(#[^\\n]*)'
++ '|("""[\\s\\S]*?"""|\'\'\'[\\s\\S]*?\'\'\'|"(?:\\\\.|[^"\\\\])*"|\'(?:\\\\.|[^\'\\\\])*\')'
++ '|\\b(\\d+\\.?\\d*(?:[eE][+-]?\\d+)?)\\b'
++ '|\\b(' + PY_KW.join('|') + ')\\b'
++ '|\\b(' + PY_BI.join('|') + ')\\b', 'g');
+function hl(code){
+  const safe = String(code).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return safe.replace(HL_RE,(m,c,s,n,k,b)=>{
+    if(c) return `<span class="t-cmt">${c}</span>`;
+    if(s) return `<span class="t-str">${s}</span>`;
+    if(n) return `<span class="t-num">${n}</span>`;
+    if(k) return `<span class="t-kw">${k}</span>`;
+    if(b) return `<span class="t-bi">${b}</span>`;
+    return m;
+  });
+}
+
+/* ════════════════════════════════════════════════════════
+   상태
+   ════════════════════════════════════════════════════════ */
+const S = {
+  me:null,            // {id, admin, token}
+  data:null,          // 현재 화면에 쓰이는 사용자 데이터
+  myData:null,        // 내 데이터 (대리 보기 중에도 유지)
+  shared:null,        // 관리자 공용 편집
+  viewingAs:null,     // 대리 보기 대상 아이디
+  notebooks:[],       // [{name, path}]
+  nb:null,            // 현재 노트북 {path, name, cells}
+  view:'quiz',
+};
+const readOnly = () => !!S.viewingAs;
+const blankData = id => ({version:1,user:id,updatedAt:null,edits:{},quiz:{attempts:[],stats:{}},wrong:[]});
+
+/* ════════════════════════════════════════════════════════
+   저장소 — Worker 있으면 깃허브, 없으면 이 브라우저
+   ════════════════════════════════════════════════════════ */
+const hasWorker = () => !!CONFIG.WORKER_URL;
+const LKEY = id => `cnb:data:${id}`;
+
+async function api(path, body, method='POST'){
+  const res = await fetch(CONFIG.WORKER_URL.replace(/\/$/,'') + path, {
+    method,
+    headers:{'content-type':'application/json', ...(S.me?.token?{authorization:'Bearer '+S.me.token}:{})},
+    body: method==='GET'?undefined:JSON.stringify(body||{})
+  });
+  const j = await res.json().catch(()=>({error:'응답을 읽지 못했습니다'}));
+  if(res.status===401 && S.me){            // 세션 만료 → 다시 로그인
+    localStorage.removeItem('cnb:auto');
+    toast('로그인이 만료되었습니다. 다시 로그인해 주세요');
+    setTimeout(()=>location.reload(),1200);
+  }
+  if(!res.ok) throw new Error(j.error||('요청 실패 ('+res.status+')'));
+  return j;
+}
+
+const Store = {
+  async load(id){
+    if(hasWorker()){
+      try{ const j = await api('/data/get',{user:id}); return j.data || blankData(id); }
+      catch(e){ toast('서버에서 불러오지 못했습니다 — 로컬 사본을 씁니다'); }
+    }
+    try{ return JSON.parse(localStorage.getItem(LKEY(id))) || blankData(id); }
+    catch{ return blankData(id); }
+  },
+  async save(id,data){
+    data.updatedAt = new Date().toISOString();
+    try{ localStorage.setItem(LKEY(id), JSON.stringify(data)); }catch{}
+    if(hasWorker()){
+      clearTimeout(Store._t);
+      Store._t = setTimeout(()=>api('/data/put',{user:id,data}).catch(e=>toast('서버 저장 실패: '+e.message)), 900);
+    }
+  }
+};
+async function persist(){
+  if(readOnly()) return;
+  await Store.save(S.me.id, S.data);
+}
+
+/* ════════════════════════════════════════════════════════
+   인증
+   ════════════════════════════════════════════════════════ */
+const AKEY = 'cnb:accounts';
+const localAccounts = () => { try{ return JSON.parse(localStorage.getItem(AKEY))||{} }catch{ return {} } };
+const saveAccounts = a => localStorage.setItem(AKEY, JSON.stringify(a));
+
+async function doAuth(kind, id, pw){
+  const h = await sha256(pw);
+  if(hasWorker()){
+    const j = await api(kind==='login'?'/auth/login':'/auth/register',{id,pw:h});
+    return {id:j.id, admin:!!j.admin, token:j.token};
+  }
+  const accs = localAccounts();
+  if(kind==='register'){
+    if(accs[id]) throw new Error('이미 있는 아이디입니다');
+    if(id===CONFIG.ADMIN_ID && CONFIG.ADMIN_PW_SHA256 && h!==CONFIG.ADMIN_PW_SHA256)
+      throw new Error('관리자 아이디는 지정된 비밀번호로만 만들 수 있습니다');
+    accs[id]=h; saveAccounts(accs);
+    return {id, admin:id===CONFIG.ADMIN_ID, token:null};
+  }
+  if(id===CONFIG.ADMIN_ID && CONFIG.ADMIN_PW_SHA256){
+    if(h!==CONFIG.ADMIN_PW_SHA256) throw new Error('아이디 또는 비밀번호가 맞지 않습니다');
+    return {id, admin:true, token:null};
+  }
+  if(!accs[id]) throw new Error('없는 아이디입니다. 계정을 먼저 만들어 주세요');
+  if(accs[id]!==h) throw new Error('아이디 또는 비밀번호가 맞지 않습니다');
+  return {id, admin:id===CONFIG.ADMIN_ID, token:null};
+}
+
+function bindLogin(){
+  const idEl=$('#lg-id'), pwEl=$('#lg-pw'), msg=$('#lg-msg');
+  const say=(t,ok)=>msg.innerHTML=t?`<div class="msg ${ok?'msg-ok':'msg-bad'}">${esc(t)}</div>`:'';
+
+  const run = async kind => {
+    const id=idEl.value.trim(), pw=pwEl.value;
+    if(!id||!pw) return say('아이디와 비밀번호를 모두 입력하세요');
+    if(!/^[A-Za-z0-9_.-]{2,24}$/.test(id)) return say('아이디는 영문·숫자·_.- 2~24자로 지어 주세요');
+    if(pw.length<6) return say('비밀번호는 6자 이상이어야 합니다');
+    say('');
+    $('#lg-go').disabled=$('#lg-reg').disabled=true;
+    try{
+      const me = await doAuth(kind,id,pw);
+      if($('#lg-auto').checked) localStorage.setItem('cnb:auto', JSON.stringify(me));
+      else localStorage.removeItem('cnb:auto');
+      await start(me);
+    }catch(e){ say(e.message); }
+    finally{ $('#lg-go').disabled=$('#lg-reg').disabled=false; }
+  };
+
+  $('#lg-go').onclick  = ()=>run('login');
+  $('#lg-reg').onclick = ()=>run('register');
+  pwEl.onkeydown = e => { if(e.key==='Enter') run('login'); };
+  idEl.onkeydown = e => { if(e.key==='Enter') pwEl.focus(); };
+
+  $('#lg-hash').onclick = ()=>{
+    const m = modal(`
+      <h3>비밀번호 해시 만들기</h3>
+      <div class="sub">여기서 만든 값을 <span class="mono">index.html</span>의 <span class="mono">ADMIN_PW_SHA256</span>에 붙여넣으세요. 비밀번호 원문은 어디에도 저장되지 않습니다.</div>
+      <input class="field mono" id="hz-in" type="text" placeholder="비밀번호 입력" autocomplete="off">
+      <div class="hashout" id="hz-out">—</div>
+      <div class="row"><button class="btn" id="hz-copy">복사</button><button class="btn btn-primary" id="hz-close">닫기</button></div>`);
+    const inp=$('#hz-in'), out=$('#hz-out');
+    inp.focus();
+    inp.oninput = async ()=>{ out.textContent = inp.value ? await sha256(inp.value) : '—'; };
+    $('#hz-copy').onclick = ()=>{ navigator.clipboard?.writeText(out.textContent); toast('복사했습니다'); };
+    $('#hz-close').onclick = m.close;
+  };
+}
+
+/* ════════════════════════════════════════════════════════
+   깃허브에서 노트북 가져오기
+   ════════════════════════════════════════════════════════ */
+const RAW = p => `https://raw.githubusercontent.com/${CONFIG.GITHUB_OWNER}/${CONFIG.GITHUB_REPO}/${CONFIG.GITHUB_BRANCH}/${p}`;
+
+async function fetchNotebookList(){
+  const cacheKey='cnb:nblist';
+  try{
+    const c=JSON.parse(sessionStorage.getItem(cacheKey));
+    if(c && Date.now()-c.t < 6e5) return c.v;
+  }catch{}
+  let items;
+  if(hasWorker()){
+    items = (await api('/repo/list',{dir:CONFIG.NOTEBOOK_DIR})).items;
+  }else{
+    const url=`https://api.github.com/repos/${CONFIG.GITHUB_OWNER}/${CONFIG.GITHUB_REPO}/contents/${CONFIG.NOTEBOOK_DIR}?ref=${CONFIG.GITHUB_BRANCH}`;
+    const r=await fetch(url);
+    if(!r.ok) throw new Error(r.status===404?'노트북 폴더를 찾을 수 없습니다':'깃허브 목록을 불러오지 못했습니다 ('+r.status+')');
+    items=await r.json();
+  }
+  const list = items.filter(f=>f.name.endsWith('.ipynb'))
+    .map(f=>({name:f.name.replace(/\.ipynb$/,''), path:f.path}))
+    .sort((a,b)=>a.name.localeCompare(b.name,'ko',{numeric:true}));
+  sessionStorage.setItem(cacheKey,JSON.stringify({t:Date.now(),v:list}));
+  return list;
+}
+
+const nbCache = new Map();
+async function fetchNotebook(path){
+  if(nbCache.has(path)) return nbCache.get(path);
+  const r = await fetch(RAW(path));
+  if(!r.ok) throw new Error('노트북을 불러오지 못했습니다');
+  const json = await r.json();
+  const cells = (json.cells||[]).map((c,i)=>({
+    idx:i,
+    type:c.cell_type==='markdown'?'md':'code',
+    source: Array.isArray(c.source)?c.source.join(''):(c.source||''),
+    outputs: c.outputs||[],
+    count: c.execution_count
+  }));
+  nbCache.set(path,cells);
+  return cells;
+}
+
+/* 셀 원문: 관리자 공용 편집 → 내 편집 순으로 덮어씀 */
+function cellSource(path, cell){
+  const shared = S.shared?.edits?.[path]?.[cell.idx];
+  const mine   = S.data?.edits?.[path]?.[cell.idx];
+  return mine ?? shared ?? cell.source;
+}
+function cellEditedBy(path, cell){
+  if(S.data?.edits?.[path]?.[cell.idx]!=null) return readOnly()?'수정함':'내 수정';
+  if(S.shared?.edits?.[path]?.[cell.idx]!=null) return '관리자 수정';
+  return null;
+}
+
+/* ════════════════════════════════════════════════════════
+   Pyodide 실행 환경
+   ════════════════════════════════════════════════════════ */
+const Py = {
+  inst:null, loading:null,
+  setState(t){ $('#py-state').textContent=t; },
+  async get(){
+    if(this.inst) return this.inst;
+    if(this.loading) return this.loading;
+    this.setState('준비 중');
+    this.loading = (async()=>{
+      await new Promise((res,rej)=>{
+        const s=document.createElement('script');
+        s.src='https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js';
+        s.onload=res; s.onerror=()=>rej(new Error('Python 환경을 내려받지 못했습니다'));
+        document.head.appendChild(s);
+      });
+      const py = await loadPyodide({indexURL:'https://cdn.jsdelivr.net/pyodide/v0.26.4/full/'});
+      this.inst=py; this.setState('준비됨');
+      return py;
+    })();
+    try{ return await this.loading; }
+    catch(e){ this.setState('실패'); this.loading=null; throw e; }
+  },
+  /* 코드 한 덩어리 실행 → {out, err, images} */
+  async run(code, {fresh=false}={}){
+    const py = await this.get();
+    const buf=[];
+    py.setStdout({batched:s=>buf.push(s)});
+    py.setStderr({batched:s=>buf.push(s)});
+    try{ await py.loadPackagesFromImports(code); }catch{}
+    const ns = fresh ? py.runPython('dict()') : undefined;   // 문제 채점용 격리 네임스페이스
+    let err=null, images=[];
+    try{
+      await py.runPythonAsync(code, ns?{globals:ns}:undefined);
+      // matplotlib 그림이 있으면 이미지로 뽑아냅니다
+      if(/matplotlib|plt\./.test(code)){
+        try{
+          const b64 = await py.runPythonAsync(`
+import io, base64
+try:
+    import matplotlib
+    matplotlib.use("AGG")
+    import matplotlib.pyplot as _plt
+    _res=[]
+    for _n in _plt.get_fignums():
+        _b=io.BytesIO(); _plt.figure(_n).savefig(_b,format="png",dpi=110,bbox_inches="tight")
+        _res.append(base64.b64encode(_b.getvalue()).decode())
+    _plt.close("all")
+    _res
+except Exception:
+    []
+`);
+          images = b64 ? b64.toJs() : [];
+        }catch{}
+      }
+    }catch(e){ err = String(e.message||e); }
+    finally{ if(ns) ns.destroy?.(); }
+    return {out:buf.join(''), err, images};
+  }
+};
+
+/* ════════════════════════════════════════════════════════
+   화면: 노트북
+   ════════════════════════════════════════════════════════ */
+function renderOutputs(outs){
+  if(!outs?.length) return '';
+  return outs.map(o=>{
+    if(o.output_type==='stream')
+      return `<div class="out"><pre>${esc([].concat(o.text||[]).join(''))}</pre></div>`;
+    if(o.output_type==='error')
+      return `<div class="out err"><pre>${esc((o.traceback||[]).join('\n').replace(/\u001b\[[0-9;]*m/g,''))}</pre></div>`;
+    const d=o.data||{};
+    if(d['image/png']) return `<div class="out"><img src="data:image/png;base64,${String(d['image/png']).replace(/\s/g,'')}" alt="출력 이미지"></div>`;
+    if(d['text/html'])  return `<div class="out">${DOMPurify.sanitize([].concat(d['text/html']).join(''))}</div>`;
+    if(d['text/plain']) return `<div class="out"><pre>${esc([].concat(d['text/plain']).join(''))}</pre></div>`;
+    return '';
+  }).join('');
+}
+
+function viewNotebook(){
+  const {path,name,cells}=S.nb;
+  const el=$('#view');
+  el.innerHTML = `
+    <div class="page-head">
+      <div class="eyebrow">${esc(path)}</div>
+      <h2>${esc(name)}</h2>
+      <div class="toolbar">
+        <button class="btn" id="nb-run-all">전체 실행</button>
+        <button class="btn" id="nb-quiz">이 노트북으로 문제 풀기</button>
+        <button class="btn" id="nb-dl">.ipynb 내려받기</button>
+        <button class="btn btn-ghost btn-sm" id="nb-reset">내 수정 되돌리기</button>
+      </div>
+    </div>
+    <div id="cells"></div>`;
+
+  const host=$('#cells');
+  cells.forEach(c=>{
+    const src=cellSource(path,c);
+    const tag=cellEditedBy(path,c);
+    const d=document.createElement('div');
+    d.className='cell gut '+(c.type==='md'?'cell-md':'');
+    d.dataset.idx=c.idx;
+    if(c.type==='md'){
+      d.innerHTML=`<div class="g-mark"></div>
+        <div class="g-body"><div class="md">${DOMPurify.sanitize(marked.parse(src))}</div></div>`;
+    }else{
+      d.innerHTML=`
+        <div class="g-mark">In [${c.count??' '}]:</div>
+        <div class="g-body">
+          <div class="code-shell">
+            <pre class="code-view">${hl(src)}</pre>
+            <div class="cell-acts">
+              <button class="btn act-run">▶ 실행</button>
+              <button class="btn act-edit">편집</button>
+              ${tag?`<span class="edited-tag">${tag}</span>`:''}
+            </div>
+          </div>
+          <div class="live"></div>
+          ${renderOutputs(c.outputs)}
+        </div>`;
+    }
+    host.appendChild(d);
+  });
+
+  host.addEventListener('click', async e=>{
+    const cellEl = e.target.closest('.cell'); if(!cellEl) return;
+    const idx = +cellEl.dataset.idx;
+    const cell = cells.find(c=>c.idx===idx);
+    if(e.target.closest('.act-run')) return runCell(cellEl, cell);
+    if(e.target.closest('.act-edit')) return openEditor(cellEl, cell);
+    if(e.target.closest('.act-save')) return saveEditor(cellEl, cell);
+    if(e.target.closest('.act-cancel')) return closeEditor(cellEl, cell);
+  });
+
+  $('#nb-run-all').onclick = async ()=>{
+    for(const c of cells.filter(c=>c.type==='code')){
+      const elc = host.querySelector(`.cell[data-idx="${c.idx}"]`);
+      await runCell(elc, c);
+    }
+  };
+  $('#nb-quiz').onclick = ()=>{ setView('quiz',{preset:path}); };
+  $('#nb-dl').onclick = ()=>downloadNotebook();
+  $('#nb-reset').onclick = async ()=>{
+    if(readOnly()) return toast('읽기 전용입니다');
+    if(!S.data.edits[path]) return toast('되돌릴 수정이 없습니다');
+    delete S.data.edits[path]; await persist(); toast('원본으로 되돌렸습니다'); viewNotebook();
+  };
+}
+
+async function runCell(cellEl, cell){
+  if(cell.type!=='code') return;
+  const mark = cellEl.querySelector('.g-mark');
+  const live = cellEl.querySelector('.live');
+  const prev = mark.textContent;
+  mark.textContent='In [*]:'; mark.className='g-mark is-run';
+  live.innerHTML='';
+  try{
+    const src = cellEl.querySelector('.code-shell textarea')?.value ?? cellSource(S.nb.path,cell);
+    const r = await Py.run(src);
+    let html='';
+    if(r.out) html+=`<div class="out"><pre>${esc(r.out)}</pre></div>`;
+    r.images.forEach(b=>html+=`<div class="out"><img src="data:image/png;base64,${b}" alt="그래프"></div>`);
+    if(r.err) html+=`<div class="out err"><pre>${esc(r.err)}</pre></div>`;
+    if(!html) html=`<div class="out"><pre style="color:var(--ink-faint)">(출력 없음)</pre></div>`;
+    live.innerHTML=html;
+    mark.textContent=prev; mark.className='g-mark '+(r.err?'is-bad':'is-ok');
+  }catch(e){
+    live.innerHTML=`<div class="out err"><pre>${esc(e.message)}</pre></div>`;
+    mark.textContent=prev; mark.className='g-mark is-bad';
+  }
+}
+
+function openEditor(cellEl, cell){
+  if(readOnly()) return toast('읽기 전용입니다. 내 화면으로 돌아가면 편집할 수 있습니다');
+  const shell=cellEl.querySelector('.code-shell');
+  const src=cellSource(S.nb.path,cell);
+  shell.innerHTML=`
+    <textarea spellcheck="false">${esc(src)}</textarea>
+    <div class="cell-acts">
+      <button class="btn act-save">저장</button>
+      <button class="btn act-run">▶ 실행</button>
+      <button class="btn act-cancel">취소</button>
+    </div>`;
+  const ta=shell.querySelector('textarea');
+  ta.style.height=Math.max(64, src.split('\n').length*20.8+26)+'px';
+  ta.focus();
+  ta.addEventListener('keydown',e=>{
+    if(e.key==='Tab'){ e.preventDefault();
+      const s=ta.selectionStart; ta.value=ta.value.slice(0,s)+'    '+ta.value.slice(ta.selectionEnd);
+      ta.selectionStart=ta.selectionEnd=s+4;
+    }
+    if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){ e.preventDefault(); runCell(cellEl,cell); }
+  });
+}
+async function saveEditor(cellEl, cell){
+  const ta=cellEl.querySelector('textarea'); if(!ta) return;
+  const val=ta.value, path=S.nb.path;
+  const target = (S.me.admin && S.adminGlobal) ? S.shared : S.data;
+  target.edits[path] = target.edits[path]||{};
+  if(val===cell.source) delete target.edits[path][cell.idx];
+  else target.edits[path][cell.idx]=val;
+  if(S.me.admin && S.adminGlobal) await saveShared();
+  else await persist();
+  toast(S.adminGlobal?'모두에게 적용했습니다':'저장했습니다');
+  closeEditor(cellEl,cell);
+}
+function closeEditor(cellEl, cell){
+  const shell=cellEl.querySelector('.code-shell');
+  const src=cellSource(S.nb.path,cell);
+  const tag=cellEditedBy(S.nb.path,cell);
+  shell.innerHTML=`
+    <pre class="code-view">${hl(src)}</pre>
+    <div class="cell-acts">
+      <button class="btn act-run">▶ 실행</button>
+      <button class="btn act-edit">편집</button>
+      ${tag?`<span class="edited-tag">${tag}</span>`:''}
+    </div>`;
+}
+function downloadNotebook(){
+  const {path,name,cells}=S.nb;
+  const keepNl = s => s.split('\n').map((l,i,a)=>i<a.length-1?l+'\n':l).filter(l=>l!=='');
+  const nb={cells:cells.map(c=>({cell_type:c.type==='md'?'markdown':'code',metadata:{},
+    source:keepNl(cellSource(path,c)), ...(c.type==='code'?{outputs:[],execution_count:null}:{})})),
+    metadata:{kernelspec:{name:'python3',display_name:'Python 3'},language_info:{name:'python'}},
+    nbformat:4,nbformat_minor:5};
+  const url=URL.createObjectURL(new Blob([JSON.stringify(nb,null,1)],{type:'application/json'}));
+  const a=document.createElement('a'); a.href=url; a.download=name+'.ipynb'; a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+/* ════════════════════════════════════════════════════════
+   문제 생성기
+   ════════════════════════════════════════════════════════ */
+/* 문자열 리터럴을 숫자 없는 표식으로 잠시 치워 둡니다 — 숫자 무작위화가 문자열 안을 건드리지 않도록. */
+const DIG='abcdefghij';
+const encIdx = n => String(n).replace(/\d/g, d=>DIG[+d]);
+const decIdx = s => +s.replace(/[a-j]/g, c=>String(DIG.indexOf(c)));
+const maskStrings = src => {
+  const store=[];
+  const out = src.replace(/("""[\s\S]*?"""|'''[\s\S]*?'''|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')/g, m=>{
+    store.push(m); return `\u0001${encIdx(store.length-1)}\u0001`;
+  });
+  return {out, restore:s=>s.replace(/\u0001([a-j]+)\u0001/g,(_,k)=>store[decIdx(k)])};
+};
+const BAD_PAT = /(^\s*[!%])|input\s*\(|open\s*\(|import\s+(os|sys|requests|urllib|socket|tensorflow|torch|keras|cv2)|from\s+google|drive\.mount|files\.(upload|download)|while\s+True|time\.sleep|\.read_csv|\.to_csv/m;
+function isSelfContained(src){
+  if(!src.trim() || src.trim().length<12) return false;
+  if(BAD_PAT.test(src)) return false;
+  const big = src.match(/range\s*\(\s*(\d{5,})/); if(big) return false;
+  if(src.split('\n').filter(l=>l.trim()).length>28) return false;
+  return true;
+}
+function randomizeNumbers(src){
+  const {out,restore}=maskStrings(src);
+  const changed = out.replace(/(^|[^\w.])(\d+)(?![\w.])/g, (m,pre,d)=>{
+    const n=+d;
+    if(n<2||n>60) return m;
+    return pre + String(Math.min(60,Math.max(2,n+rand(-2,4))));
+  });
+  return restore(changed);
+}
+
+/* 1. 빈칸 채우기 */
+function genBlank(nb){
+  const codes = nb.codeCells.filter(s=>s.split('\n').filter(l=>l.trim()).length>=2);
+  for(const src of shuffle(codes)){
+    const {out,restore}=maskStrings(src);
+    const cands=[];
+    const re=new RegExp('\\b('+PY_KW.concat(PY_BI).join('|')+')\\b','g');
+    let m; while((m=re.exec(out))) cands.push({tok:m[1],i:m.index});
+    if(!cands.length) continue;
+    const hit=pick(cands);
+    const pool = PY_KW.includes(hit.tok)?PY_KW:PY_BI;
+    const others = shuffle(pool.filter(t=>t!==hit.tok && !new RegExp('\\b'+t+'\\b').test(out))).slice(0,3);
+    if(others.length<3) continue;
+    const blanked = restore(out.slice(0,hit.i)+'____'+out.slice(hit.i+hit.tok.length));
+    return {
+      type:'빈칸', typeKey:'blank', mode:'mc',
+      stem:'빈칸 <span class="blank">____</span> 에 들어갈 것으로 알맞은 것은?',
+      code:blanked,
+      options:shuffle([hit.tok,...others]),
+      answer:hit.tok,
+      why:`원래 코드에서는 <span class="mono">${esc(hit.tok)}</span> 이 자리에 쓰였습니다.`
+    };
+  }
+  return null;
+}
+
+/* 2. 출력 결과 예측 (실제 실행) */
+async function genOutput(nb){
+  for(const src of shuffle(nb.codeCells.filter(isSelfContained)).slice(0,6)){
+    if(!/print\s*\(/.test(src)) continue;
+    const code = randomizeNumbers(src);
+    const r = await Py.run(code,{fresh:true});
+    if(r.err || !r.out.trim() || r.out.length>400) continue;
+    return {
+      type:'출력 예측', typeKey:'output', mode:'text',
+      stem:'다음 코드를 실행했을 때 출력되는 내용을 쓰시오.',
+      code, answer:r.out.trim(),
+      why:'실제로 실행한 결과입니다.'
+    };
+  }
+  return null;
+}
+
+/* 3. 변수 값 계산 */
+async function genValue(nb){
+  for(const src of shuffle(nb.codeCells.filter(isSelfContained)).slice(0,6)){
+    const {out}=maskStrings(src);
+    const vars = uniq([...out.matchAll(/^\s*([A-Za-z_]\w*)\s*=(?!=)/gm)].map(m=>m[1]))
+                 .filter(v=>!['self','_'].includes(v));
+    if(!vars.length) continue;
+    const v = pick(vars);
+    const code = randomizeNumbers(src).replace(/\n*$/,'');
+    const probe = code.split('\n').filter(l=>!/^\s*print\s*\(/.test(l)).join('\n');
+    const r = await Py.run(probe+`\nprint(repr(${v}))`,{fresh:true});
+    if(r.err || !r.out.trim() || r.out.length>200) continue;
+    return {
+      type:'값 계산', typeKey:'value', mode:'text',
+      stem:`다음 코드를 끝까지 실행한 뒤 변수 <span class="mono blank">${esc(v)}</span> 의 값은?`,
+      code:probe, answer:r.out.trim(),
+      why:`<span class="mono">print(repr(${esc(v)}))</span> 를 붙여 실제로 확인한 값입니다.`
+    };
+  }
+  return null;
+}
+
+/* 4. 개념 (마크다운 용어) */
+function genConcept(nb){
+  const terms = uniq(nb.mdCells.flatMap(t=>[
+    ...[...t.matchAll(/`([^`\n]{2,24})`/g)].map(m=>m[1]),
+    ...[...t.matchAll(/\*\*([^*\n]{2,24})\*\*/g)].map(m=>m[1]),
+    ...[...t.matchAll(/^#{1,6}\s*(.{2,24})$/gm)].map(m=>m[1]),
+  ].map(x=>x.trim()))).filter(t=>t && !/^\d+$/.test(t));
+  if(terms.length<4) return null;
+  const sentences = nb.mdCells.join('\n')
+    .replace(/```[\s\S]*?```/g,' ').replace(/^#+\s*/gm,'')
+    .split(/[.!?。]\s+|\n+/).map(s=>s.trim())
+    .filter(s=>s.length>18 && s.length<220);
+  for(const t of shuffle(terms)){
+    const s = sentences.find(x=>x.includes(t) && x.replace(t,'').length>14);
+    if(!s) continue;
+    const clean = x=>x.replace(/[`*_>#\[\]]/g,'').trim();
+    const others = shuffle(terms.filter(o=>o!==t && !s.includes(o))).slice(0,3);
+    if(others.length<3) continue;
+    return {
+      type:'개념', typeKey:'concept', mode:'mc',
+      stem:`다음 설명의 빈칸에 들어갈 말은?<br><span style="display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px">${esc(clean(s).replace(t,'____'))}</span>`,
+      options:shuffle([t,...others]).map(clean),
+      answer:clean(t),
+      why:'노트북 설명 부분에 나온 문장입니다.'
+    };
+  }
+  return null;
+}
+
+/* 5. 줄 순서 맞추기 */
+function genOrder(nb){
+  for(const src of shuffle(nb.codeCells)){
+    const lines = src.split('\n').filter(l=>l.trim() && !/^\s*#/.test(l));
+    if(lines.length<3 || lines.length>6) continue;
+    if(new Set(lines).size!==lines.length) continue;
+    return {
+      type:'순서', typeKey:'order', mode:'order',
+      stem:'코드가 올바르게 동작하도록 줄을 순서대로 배열하시오.',
+      lines, answer:lines.join('\n'),
+      why:'노트북의 원래 셀 순서입니다.'
+    };
+  }
+  return null;
+}
+
+/* 6. 서술형 (Claude API, Worker 필요) */
+async function genEssay(nb){
+  if(!hasWorker()) return null;
+  const ctx = (nb.mdCells.join('\n\n').slice(0,1500)) + '\n\n```python\n' + nb.codeCells.slice(0,6).join('\n\n').slice(0,2500) + '\n```';
+  const j = await api('/ai',{task:'make', notebook:nb.name, context:ctx});
+  if(!j.question) return null;
+  return {
+    type:'서술형', typeKey:'essay', mode:'essay', ai:true,
+    stem:esc(j.question), code:j.code||'', rubric:j.rubric||'', answer:j.model_answer||'',
+    why:'AI 채점 결과입니다.'
+  };
+}
+
+async function buildQuiz(nb, count){
+  const gens = [
+    ()=>genBlank(nb), ()=>genConcept(nb), ()=>genOrder(nb),
+    ()=>genOutput(nb), ()=>genValue(nb),
+  ];
+  const tryGen = async f => { try{ return await f(); }catch{ return null; } };
+  const out=[]; const seen=new Set();
+  let guard=0;
+  while(out.length<count && guard++ < count*6){
+    const q = await tryGen(gens[out.length % gens.length]) || await tryGen(pick(gens));
+    if(!q) continue;
+    const key=(q.typeKey+'|'+(q.code||'')+'|'+q.answer).slice(0,300);
+    if(seen.has(key)) continue;
+    seen.add(key); out.push(q);
+  }
+  return out;
+}
+
+/* ════════════════════════════════════════════════════════
+   화면: 문제 풀기
+   ════════════════════════════════════════════════════════ */
+let QZ=null;
+
+function viewQuiz(opts={}){
+  const el=$('#view');
+  if(!QZ && !S.notebooks.length){
+    el.innerHTML=`<div class="page-head"><div class="eyebrow">Practice</div><h2>문제 풀기</h2></div>
+      <div class="empty"><div class="eyebrow">No notebooks</div>
+      먼저 저장소의 <span class="mono">${esc(CONFIG.NOTEBOOK_DIR)}/</span> 폴더에 <span class="mono">.ipynb</span> 파일을 올려 주세요.</div>`;
+    return;
+  }
+  if(!QZ){
+    el.innerHTML=`
+      <div class="page-head">
+        <div class="eyebrow">Practice</div>
+        <h2>문제 풀기</h2>
+        <div class="sub">노트북을 고르면 그 내용으로 문제가 만들어집니다. 같은 노트북이어도 숫자와 빈칸 위치가 매번 달라집니다.</div>
+      </div>
+      <div style="max-width:420px">
+        <label class="login-label">노트북</label>
+        <select class="field mono" id="qz-nb">${S.notebooks.map(n=>`<option value="${escAttr(n.path)}"${opts.preset===n.path?' selected':''}>${esc(n.name)}</option>`).join('')}</select>
+        <label class="login-label" style="margin-top:14px">문항 수</label>
+        <select class="field mono" id="qz-n"><option>5</option><option selected>10</option><option>15</option></select>
+        <label class="chk" style="margin-top:14px;font-size:13px;color:var(--ink)">
+          <input type="checkbox" id="qz-ai" ${hasWorker()?'':'disabled'}> 서술형 문제 포함 ${hasWorker()?'':'<span class="tiny">(서버 연결 필요)</span>'}
+        </label>
+        <button class="btn btn-primary" id="qz-start" style="margin-top:18px;width:100%;padding:11px">시작</button>
+        <div class="tiny" style="margin-top:10px">출력 예측·값 계산 문제는 브라우저에서 코드를 직접 실행해 정답을 구하므로, 첫 문제까지 몇 초 걸릴 수 있습니다.</div>
+      </div>`;
+    $('#qz-start').onclick=startQuiz;
+    return;
+  }
+  renderQuestion();
+}
+
+async function startQuiz(){
+  const path=$('#qz-nb').value, n=+$('#qz-n').value, useAI=$('#qz-ai').checked;
+  const meta=S.notebooks.find(x=>x.path===path);
+  $('#view').innerHTML=`<div class="empty"><div class="eyebrow">Generating</div>문제를 만드는 중입니다…</div>`;
+  try{
+    const cells = await fetchNotebook(path);
+    const nb = {
+      name:meta.name, path,
+      codeCells: cells.filter(c=>c.type==='code').map(c=>cellSource(path,c)).filter(s=>s.trim()),
+      mdCells:  cells.filter(c=>c.type==='md').map(c=>cellSource(path,c)).filter(s=>s.trim()),
+    };
+    if(!nb.codeCells.length && !nb.mdCells.length) throw new Error('이 노트북에는 문제로 만들 내용이 없습니다');
+    await Py.get().catch(()=>{});
+    let qs = await buildQuiz(nb, useAI?Math.max(1,n-2):n);
+    if(useAI){
+      for(let i=0;i<2;i++){ try{ const e=await genEssay(nb); if(e) qs.push(e); }catch(err){ toast('서술형 생성 실패: '+err.message); break; } }
+    }
+    if(!qs.length) throw new Error('문제를 만들지 못했습니다. 다른 노트북을 골라 보세요');
+    QZ={nb, qs:shuffle(qs), i:0, picked:null, order:[], graded:false, right:0};
+    renderQuestion();
+  }catch(e){
+    $('#view').innerHTML=`<div class="empty"><div class="eyebrow">Error</div>${esc(e.message)}<div style="margin-top:14px"><button class="btn" onclick="location.reload()">새로고침</button></div></div>`;
+  }
+}
+
+function renderQuestion(){
+  const q=QZ.qs[QZ.i], el=$('#view');
+  const pct=Math.round(QZ.i/QZ.qs.length*100);
+  el.innerHTML=`
+    <div class="progress"><i style="width:${pct}%"></i></div>
+    <div class="gut">
+      <div class="g-mark">Q [${QZ.i+1}/${QZ.qs.length}]</div>
+      <div class="g-body">
+        <div class="q-meta">
+          <span class="tag${q.ai?' t-ai':''}">${esc(q.type)}</span>
+          <span class="tag">${esc(QZ.nb.name)}</span>
+        </div>
+        <p class="q-stem">${q.stem}</p>
+        ${q.code?`<div class="q-code"><pre>${hl(q.code)}</pre></div>`:''}
+        <div id="q-input"></div>
+        <div id="q-verdict"></div>
+        <div class="row" style="justify-content:flex-start">
+          <button class="btn btn-primary" id="q-submit">제출</button>
+          <button class="btn hidden" id="q-next">다음</button>
+          <button class="btn btn-ghost btn-sm" id="q-quit">그만두기</button>
+        </div>
+      </div>
+    </div>`;
+
+  const box=$('#q-input');
+  if(q.mode==='mc'){
+    box.innerHTML=`<div class="opts">${q.options.map((o,i)=>
+      `<button class="opt" data-o="${escAttr(o)}"><span class="opt-k">${'ABCD'[i]}</span><span class="opt-t">${esc(o)}</span></button>`).join('')}</div>`;
+    box.onclick=e=>{ const b=e.target.closest('.opt'); if(!b||QZ.graded) return;
+      $$('.opt',box).forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); QZ.picked=b.dataset.o; };
+  }else if(q.mode==='text'){
+    box.innerHTML=`<textarea class="field mono" id="q-text" rows="3" spellcheck="false" placeholder="답을 입력하세요"></textarea>`;
+  }else if(q.mode==='essay'){
+    box.innerHTML=`<textarea class="field" id="q-text" rows="5" placeholder="문장으로 설명해 보세요"></textarea>`;
+  }else if(q.mode==='order'){
+    QZ.order=[];
+    box.innerHTML=`<div class="eyebrow" style="margin-bottom:6px">고른 순서</div><div class="order-picked" id="op"></div>
+      <div class="eyebrow" style="margin:12px 0 6px">보기</div><div class="order-pool" id="ol"></div>`;
+    const pool=shuffle(q.lines);
+    const draw=()=>{
+      $('#op').innerHTML=QZ.order.map((l,i)=>`<button class="order-line" data-r="${i}">${esc(l)}</button>`).join('')||`<div class="tiny">아래에서 순서대로 고르세요</div>`;
+      $('#ol').innerHTML=pool.filter(l=>!QZ.order.includes(l)).map(l=>`<button class="order-line" data-a="${escAttr(l)}">${esc(l)}</button>`).join('');
+    };
+    box.onclick=e=>{ if(QZ.graded) return;
+      const a=e.target.closest('[data-a]'), r=e.target.closest('[data-r]');
+      if(a){ QZ.order.push(a.dataset.a); draw(); }
+      if(r){ QZ.order.splice(+r.dataset.r,1); draw(); }
+    };
+    draw();
+  }
+  $('#q-submit').onclick=grade;
+  $('#q-next').onclick=()=>{ QZ.i++; QZ.picked=null; QZ.graded=false;
+    if(QZ.i>=QZ.qs.length) finishQuiz(); else renderQuestion(); };
+  $('#q-quit').onclick=()=>{ QZ=null; setView('quiz'); };
+}
+
+const norm = s => String(s).replace(/\r/g,'').replace(/[ \t]+/g,' ').replace(/\s+$/gm,'').trim();
+
+async function grade(){
+  if(QZ.graded) return;
+  const q=QZ.qs[QZ.i];
+  let mine, ok, feedback='';
+
+  if(q.mode==='mc'){
+    if(!QZ.picked) return toast('보기를 하나 고르세요');
+    mine=QZ.picked; ok = mine===q.answer;
+    $$('.opt').forEach(b=>{ b.disabled=true;
+      if(b.dataset.o===q.answer) b.classList.add('right');
+      else if(b.dataset.o===mine) b.classList.add('wrong'); });
+  }else if(q.mode==='order'){
+    mine=QZ.order.join('\n'); ok = mine===q.answer;
+    if(!QZ.order.length) return toast('순서를 먼저 고르세요');
+  }else if(q.mode==='text'){
+    mine=$('#q-text').value; if(!mine.trim()) return toast('답을 입력하세요');
+    ok = norm(mine)===norm(q.answer);
+  }else{ /* essay */
+    mine=$('#q-text').value; if(!mine.trim()) return toast('답을 입력하세요');
+    $('#q-submit').disabled=true; $('#q-submit').textContent='채점 중…';
+    try{
+      const j=await api('/ai',{task:'grade',question:q.stem,rubric:q.rubric,answer:mine});
+      ok=!!j.correct; feedback=j.feedback||''; q.answer=j.model_answer||q.answer;
+    }catch(e){ $('#q-submit').disabled=false; $('#q-submit').textContent='제출'; return toast('채점 실패: '+e.message); }
+  }
+
+  QZ.graded=true;
+  if(ok) QZ.right++;
+  $('#q-verdict').innerHTML=`
+    <div class="verdict ${ok?'ok':'bad'}">
+      <b>${ok?'맞았습니다':'틀렸습니다'}</b>
+      ${feedback?esc(feedback)+'<br>':''}
+      ${ok?'':`정답<span class="ans">${esc(q.answer)}</span>`}
+      <div style="margin-top:7px;color:var(--ink-soft);font-size:12.5px">${q.why}</div>
+    </div>`;
+  $('#q-submit').classList.add('hidden'); $('#q-next').classList.remove('hidden'); $('#q-next').focus();
+
+  await record(q, mine, ok);
+}
+
+async function record(q, mine, ok){
+  if(readOnly()) return;
+  const path = q.path || QZ.nb.path;
+  const nbName = q.nb || QZ.nb.name;
+  const st=S.data.quiz.stats[path]||(S.data.quiz.stats[path]={asked:0,correct:0});
+  st.asked++; if(ok) st.correct++;
+  S.data.quiz.attempts.push({t:Date.now(),path,type:q.typeKey,ok});
+  if(S.data.quiz.attempts.length>800) S.data.quiz.attempts.splice(0,200);
+
+  const key = await sha256(q.typeKey+'|'+(q.code||'')+'|'+q.answer);
+  const idx = S.data.wrong.findIndex(w=>w.key===key);
+  if(ok){
+    if(idx>=0){ S.data.wrong[idx].streak=(S.data.wrong[idx].streak||0)+1;
+      if(S.data.wrong[idx].streak>=2) S.data.wrong.splice(idx,1); }
+  }else{
+    const entry={key,path,nb:nbName,type:q.type,typeKey:q.typeKey,stem:q.stem,code:q.code||'',
+      options:q.options||null,answer:q.answer,mine,why:q.why,at:Date.now(),streak:0};
+    if(idx>=0) S.data.wrong[idx]=entry; else S.data.wrong.push(entry);
+  }
+  await persist(); updateWrongDot();
+}
+
+function finishQuiz(){
+  const n=QZ.qs.length, r=QZ.right, nb=QZ.nb;
+  $('#view').innerHTML=`
+    <div class="page-head"><div class="eyebrow">Result</div><h2>${esc(nb.name)}</h2></div>
+    <div class="stat-row">
+      <div class="stat"><div class="n">${r}/${n}</div><div class="l">정답</div></div>
+      <div class="stat"><div class="n">${Math.round(r/n*100)}%</div><div class="l">정답률</div></div>
+      <div class="stat"><div class="n">${n-r}</div><div class="l">오답 기록</div></div>
+    </div>
+    <div class="row" style="justify-content:flex-start">
+      <button class="btn btn-primary" id="rs-again">같은 노트북 다시</button>
+      <button class="btn" id="rs-wrong">오답 노트 보기</button>
+      <button class="btn btn-ghost" id="rs-back">노트북으로</button>
+    </div>`;
+  const path=nb.path;
+  $('#rs-again').onclick=()=>{ QZ=null; setView('quiz',{preset:path}); setTimeout(()=>$('#qz-start')?.click(),30); };
+  $('#rs-wrong').onclick=()=>{ QZ=null; setView('wrong'); };
+  $('#rs-back').onclick =()=>{ QZ=null; openNotebook(path); };
+}
+
+/* ════════════════════════════════════════════════════════
+   화면: 오답 노트
+   ════════════════════════════════════════════════════════ */
+function updateWrongDot(){ $('#wrong-dot').classList.toggle('hidden', !(S.data?.wrong?.length)); }
+
+function viewWrong(){
+  const list=[...(S.data.wrong||[])].sort((a,b)=>b.at-a.at);
+  $('#view').innerHTML=`
+    <div class="page-head">
+      <div class="eyebrow">Error Log</div>
+      <h2>오답 노트</h2>
+      <div class="sub">틀린 문제는 여기에 남습니다. 두 번 연속 맞히면 목록에서 사라집니다.</div>
+      ${list.length?`<div class="toolbar"><button class="btn btn-primary" id="w-retry">오답만 다시 풀기 (${list.length})</button>
+        <button class="btn btn-ghost btn-sm" id="w-export">내보내기</button>
+        <button class="btn btn-ghost btn-sm" id="w-import">불러오기</button></div>`:''}
+    </div>
+    <div id="w-list">${list.length?'':`<div class="empty"><div class="eyebrow">Empty</div>아직 틀린 문제가 없습니다. 문제를 풀면 여기에 쌓입니다.</div>`}</div>`;
+
+  const host=$('#w-list');
+  list.forEach((w,i)=>{
+    const d=document.createElement('div'); d.className='gut'; d.style.marginBottom='18px';
+    d.innerHTML=`
+      <div class="g-mark is-bad">Err[${list.length-i}]</div>
+      <div class="g-body">
+        <div class="q-meta"><span class="tag">${esc(w.type)}</span><span class="tag">${esc(w.nb)}</span>
+          ${w.streak?`<span class="tag" style="border-color:var(--ok);color:var(--ok)">연속 ${w.streak}</span>`:''}</div>
+        <p class="q-stem" style="font-size:14.5px">${w.stem}</p>
+        ${w.code?`<div class="q-code"><pre>${hl(w.code)}</pre></div>`:''}
+        <div class="verdict bad" style="margin-top:0">
+          <b>내가 쓴 답</b><span class="ans">${esc(w.mine||'(무응답)')}</span>
+          <div style="margin-top:8px"><b>정답</b><span class="ans">${esc(w.answer)}</span></div>
+        </div>
+        <button class="btn btn-ghost btn-sm" data-del="${escAttr(w.key)}">이 문제 지우기</button>
+      </div>`;
+    host.appendChild(d);
+  });
+
+  host.onclick=async e=>{
+    const b=e.target.closest('[data-del]'); if(!b) return;
+    if(readOnly()) return toast('읽기 전용입니다');
+    S.data.wrong=S.data.wrong.filter(w=>w.key!==b.dataset.del);
+    await persist(); updateWrongDot(); viewWrong();
+  };
+  if(!list.length) return;
+
+  $('#w-retry').onclick=()=>{
+    const qs=list.map(w=>({type:w.type,typeKey:w.typeKey,mode:w.options?'mc':(w.typeKey==='order'?'order':'text'),
+      stem:w.stem,code:w.code,options:w.options,answer:w.answer,why:w.why,
+      path:w.path,nb:w.nb,
+      lines:w.typeKey==='order'?w.answer.split('\n'):undefined}));
+    QZ={nb:{name:'오답 노트',path:list[0].path},qs:shuffle(qs),i:0,picked:null,order:[],graded:false,right:0};
+    S.view='quiz'; markNav(); renderQuestion();
+  };
+  $('#w-export').onclick=()=>{
+    const url=URL.createObjectURL(new Blob([JSON.stringify(S.data,null,2)],{type:'application/json'}));
+    const a=document.createElement('a');a.href=url;a.download=`${S.data.user}-학습기록.json`;a.click();
+    setTimeout(()=>URL.revokeObjectURL(url),1000);
+  };
+  $('#w-import').onclick=()=>{
+    if(readOnly()) return toast('읽기 전용입니다');
+    const f=document.createElement('input');f.type='file';f.accept='.json';
+    f.onchange=async()=>{
+      try{
+        const j=JSON.parse(await f.files[0].text());
+        if(!j.wrong||!j.quiz) throw new Error('형식이 맞지 않습니다');
+        S.data.wrong=j.wrong; S.data.quiz=j.quiz; S.data.edits={...j.edits,...S.data.edits};
+        await persist(); toast('불러왔습니다'); viewWrong(); updateWrongDot();
+      }catch(e){ toast('불러오지 못했습니다: '+e.message); }
+    };
+    f.click();
+  };
+}
+
+/* ════════════════════════════════════════════════════════
+   화면: 진행 상황
+   ════════════════════════════════════════════════════════ */
+function viewStats(){
+  const q=S.data.quiz||{attempts:[],stats:{}};
+  const total=Object.values(q.stats).reduce((a,s)=>a+s.asked,0);
+  const right=Object.values(q.stats).reduce((a,s)=>a+s.correct,0);
+  const editCount=Object.values(S.data.edits||{}).reduce((a,o)=>a+Object.keys(o).length,0);
+  const byType={};
+  q.attempts.forEach(a=>{ const t=byType[a.type]||(byType[a.type]={n:0,ok:0}); t.n++; if(a.ok) t.ok++; });
+  const TYPE_KO={blank:'빈칸',output:'출력 예측',value:'값 계산',concept:'개념',order:'순서',essay:'서술형'};
+
+  $('#view').innerHTML=`
+    <div class="page-head"><div class="eyebrow">Progress</div><h2>${esc(S.data.user)}</h2>
+      <div class="sub">${S.data.updatedAt?'마지막 저장 '+new Date(S.data.updatedAt).toLocaleString('ko-KR'):'아직 저장된 기록이 없습니다'}</div></div>
+    <div class="stat-row">
+      <div class="stat"><div class="n">${total}</div><div class="l">푼 문제</div></div>
+      <div class="stat"><div class="n">${total?Math.round(right/total*100):0}%</div><div class="l">정답률</div></div>
+      <div class="stat"><div class="n">${S.data.wrong.length}</div><div class="l">오답 대기</div></div>
+      <div class="stat"><div class="n">${editCount}</div><div class="l">수정한 셀</div></div>
+    </div>
+    <h3 class="eyebrow" style="margin:26px 0 8px">노트북별</h3>
+    ${Object.keys(q.stats).length?`<table class="tbl"><thead><tr><th>노트북</th><th>푼 문제</th><th>정답률</th></tr></thead><tbody>
+      ${Object.entries(q.stats).map(([p,s])=>{const pc=Math.round(s.correct/s.asked*100);
+        return `<tr><td>${esc(p.split('/').pop().replace(/\.ipynb$/,''))}</td><td class="mono">${s.asked}</td>
+        <td><span class="mono">${pc}%</span><div class="bar"><i style="width:${pc}%;background:${pc>=70?'var(--ok)':pc>=40?'var(--run)':'var(--bad)'}"></i></div></td></tr>`;}).join('')}
+      </tbody></table>`:`<div class="tiny">아직 기록이 없습니다.</div>`}
+    <h3 class="eyebrow" style="margin:26px 0 8px">유형별</h3>
+    ${Object.keys(byType).length?`<table class="tbl"><thead><tr><th>유형</th><th>푼 문제</th><th>정답률</th></tr></thead><tbody>
+      ${Object.entries(byType).map(([t,v])=>{const pc=Math.round(v.ok/v.n*100);
+        return `<tr><td>${TYPE_KO[t]||t}</td><td class="mono">${v.n}</td>
+        <td><span class="mono">${pc}%</span><div class="bar"><i style="width:${pc}%;background:${pc>=70?'var(--ok)':pc>=40?'var(--run)':'var(--bad)'}"></i></div></td></tr>`;}).join('')}
+      </tbody></table>`:`<div class="tiny">아직 기록이 없습니다.</div>`}`;
+}
+
+/* ════════════════════════════════════════════════════════
+   화면: 관리자
+   ════════════════════════════════════════════════════════ */
+async function saveShared(){
+  S.shared.updatedAt=new Date().toISOString();
+  try{ localStorage.setItem(LKEY('_shared'),JSON.stringify(S.shared)); }catch{}
+  if(hasWorker()) await api('/data/put',{user:'_shared',data:S.shared});
+}
+
+async function viewAdmin(){
+  $('#view').innerHTML=`<div class="page-head"><div class="eyebrow">Admin</div><h2>회원 관리</h2>
+    <div class="sub">각 회원의 진행 상황과 수정 내역을 보고, 그 회원 화면을 그대로 열어볼 수 있습니다.</div>
+    <div class="toolbar">
+      <label class="chk" style="font-size:13px;color:var(--ink)">
+        <input type="checkbox" id="ad-global" ${S.adminGlobal?'checked':''}> 공용 편집 모드 — 내가 고친 셀을 모두에게 적용
+      </label>
+    </div></div>
+    <div id="ad-body"><div class="empty">불러오는 중…</div></div>`;
+
+  $('#ad-global').onchange=e=>{ S.adminGlobal=e.target.checked;
+    toast(S.adminGlobal?'이제 셀을 고치면 모두에게 적용됩니다':'개인 편집 모드로 돌아왔습니다'); };
+
+  const body=$('#ad-body');
+  let users=[];
+  try{
+    if(hasWorker()) users=(await api('/users',{})).users;
+    else users=Object.keys(localAccounts()).map(id=>({id}));
+  }catch(e){ body.innerHTML=`<div class="empty">${esc(e.message)}</div>`; return; }
+  if(!users.length){ body.innerHTML=`<div class="empty"><div class="eyebrow">Empty</div>아직 가입한 회원이 없습니다.</div>`; return; }
+
+  body.innerHTML=`<table class="tbl"><thead><tr>
+    <th>아이디</th><th>푼 문제</th><th>정답률</th><th>오답</th><th>수정한 셀</th><th>마지막 저장</th><th></th>
+    </tr></thead><tbody id="ad-rows"></tbody></table>`;
+
+  for(const u of users){
+    const d = await Store.load(u.id).catch(()=>blankData(u.id));
+    const st=Object.values(d.quiz?.stats||{});
+    const asked=st.reduce((a,s)=>a+s.asked,0), ok=st.reduce((a,s)=>a+s.correct,0);
+    const edits=Object.values(d.edits||{}).reduce((a,o)=>a+Object.keys(o).length,0);
+    const pc=asked?Math.round(ok/asked*100):0;
+    const tr=document.createElement('tr');
+    tr.innerHTML=`
+      <td class="mono">${esc(u.id)}${u.id===CONFIG.ADMIN_ID?' <span class="tag" style="border-color:var(--accent);color:var(--accent)">관리자</span>':''}</td>
+      <td class="mono">${asked}</td>
+      <td><span class="mono">${pc}%</span><div class="bar"><i style="width:${pc}%"></i></div></td>
+      <td class="mono">${d.wrong?.length||0}</td>
+      <td class="mono">${edits}</td>
+      <td class="tiny">${d.updatedAt?new Date(d.updatedAt).toLocaleString('ko-KR'):'—'}</td>
+      <td><button class="btn btn-sm" data-imp="${escAttr(u.id)}">화면 보기</button>
+          <button class="btn btn-sm btn-ghost" data-diff="${escAttr(u.id)}">수정 내역</button></td>`;
+    tr._data=d;
+    $('#ad-rows').appendChild(tr);
+  }
+
+  $('#ad-rows').onclick=e=>{
+    const imp=e.target.closest('[data-imp]'), diff=e.target.closest('[data-diff]');
+    const tr=e.target.closest('tr');
+    if(imp) return impersonate(imp.dataset.imp, tr._data);
+    if(diff) return showDiff(diff.dataset.diff, tr._data);
+  };
+}
+
+function showDiff(id, d){
+  const rows=[];
+  Object.entries(d.edits||{}).forEach(([path,cells])=>
+    Object.entries(cells).forEach(([idx,src])=>rows.push({path,idx,src})));
+  const m=modal(`
+    <h3>${esc(id)} 님의 수정 내역</h3>
+    <div class="sub">${rows.length?`셀 ${rows.length}개를 고쳤습니다.`:'수정한 셀이 없습니다.'}</div>
+    <div style="max-height:52vh;overflow:auto">
+      ${rows.map(r=>`<div style="margin-bottom:12px">
+        <div class="eyebrow">${esc(r.path.split('/').pop())} · 셀 ${+r.idx+1}</div>
+        <div class="q-code" style="margin-top:5px"><pre>${hl(r.src.slice(0,900))}</pre></div>
+      </div>`).join('')}
+    </div>
+    <div class="row"><button class="btn btn-primary" id="df-close">닫기</button></div>`);
+  $('#df-close').onclick=m.close;
+}
+
+function impersonate(id, d){
+  if(id===S.me.id) return toast('이미 내 화면입니다');
+  S.viewingAs=id; S.data=d;
+  $('#imp-banner').classList.remove('hidden');
+  $('#imp-who').textContent=id;
+  updateWrongDot();
+  toast(`${id} 님의 화면입니다`);
+  setView('stats');
+}
+function exitImpersonate(){
+  S.viewingAs=null; S.data=S.myData;
+  $('#imp-banner').classList.add('hidden');
+  updateWrongDot(); toast('내 화면으로 돌아왔습니다'); setView('stats');
+}
+
+/* ════════════════════════════════════════════════════════
+   라우팅 / 부팅
+   ════════════════════════════════════════════════════════ */
+function markNav(){
+  $$('.nav-item').forEach(b=>b.classList.toggle('active',
+    (b.dataset.view && b.dataset.view===S.view) || (b.dataset.path && S.view==='nb' && b.dataset.path===S.nb?.path)));
+}
+function setView(v,opts){
+  S.view=v; markNav(); window.scrollTo(0,0);
+  if(window.innerWidth<=860) $('#side').classList.add('closed');
+  if(v==='quiz')  return viewQuiz(opts);
+  if(v==='wrong') return viewWrong();
+  if(v==='stats') return viewStats();
+  if(v==='admin') return viewAdmin();
+  if(v==='nb')    return viewNotebook();
+}
+async function openNotebook(path){
+  const meta=S.notebooks.find(n=>n.path===path); if(!meta) return;
+  $('#view').innerHTML=`<div class="empty">불러오는 중…</div>`;
+  try{
+    const cells=await fetchNotebook(path);
+    S.nb={path,name:meta.name,cells};
+    QZ=null; setView('nb');
+  }catch(e){ $('#view').innerHTML=`<div class="empty"><div class="eyebrow">Error</div>${esc(e.message)}</div>`; }
+}
+
+async function start(me){
+  S.me=me;
+  $('#login').classList.add('hidden');
+  $('#app').classList.remove('hidden');
+  $('#user-chip').innerHTML=`<span class="mono">${esc(me.id)}</span>`;
+  if(me.admin){ $('#user-chip').classList.add('admin'); $('#admin-sec').classList.remove('hidden'); }
+
+  S.myData = await Store.load(me.id);
+  S.data = S.myData;
+  S.shared = await Store.load('_shared');
+  S.adminGlobal=false;
+  updateWrongDot();
+
+  try{
+    S.notebooks = await fetchNotebookList();
+    $('#nb-list').innerHTML = S.notebooks.length
+      ? S.notebooks.map((n,i)=>`<button class="nav-item" data-path="${escAttr(n.path)}"><span class="nav-n">${String(i+1).padStart(2,'0')}</span>${esc(n.name)}</button>`).join('')
+      : `<div class="tiny" style="padding:6px 9px">노트북이 없습니다. <span class="mono">${esc(CONFIG.NOTEBOOK_DIR)}/</span> 폴더에 .ipynb 파일을 올려 주세요.</div>`;
+  }catch(e){
+    $('#nb-list').innerHTML=`<div class="tiny" style="padding:6px 9px;color:var(--bad)">${esc(e.message)}</div>`;
+  }
+
+  $('#nb-list').onclick=e=>{ const b=e.target.closest('[data-path]'); if(b) openNotebook(b.dataset.path); };
+  $$('.nav-item[data-view]').forEach(b=>b.onclick=()=>setView(b.dataset.view));
+  setView('quiz');
+}
+
+$('#logout').onclick=()=>{ localStorage.removeItem('cnb:auto'); location.reload(); };
+$('#imp-exit').onclick=exitImpersonate;
+$('#menu-btn').onclick=()=>$('#side').classList.toggle('closed');
+
+(async function boot(){
+  bindLogin();
+  marked.setOptions({breaks:true,gfm:true});
+  try{
+    const auto=JSON.parse(localStorage.getItem('cnb:auto'));
+    if(auto?.id){ await start(auto); return; }
+  }catch{}
+  $('#lg-id').focus();
+})();
+</script>
+</body>
+</html>
