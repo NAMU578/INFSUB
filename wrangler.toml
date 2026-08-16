@@ -9,7 +9,7 @@ GITHUB_BRANCH = "main"
 ADMIN_ID      = "ohh5259"
 
 # GitHub Pages 주소로 바꾸세요. "*" 로 두면 아무 사이트에서나 이 서버를 부를 수 있습니다.
-ALLOWED_ORIGIN = "https://namu578.github.io/INFSUB/"
+ALLOWED_ORIGIN = "https://namu578.github.io"
 
 # 서술형 문제에 쓸 모델
 MODEL = "claude-sonnet-5"
