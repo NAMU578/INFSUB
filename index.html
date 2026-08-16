@@ -182,6 +182,13 @@ main{min-width:0;padding:26px 0 90px}
 .tag{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.06em;padding:2px 7px;border:1px solid var(--rule);border-radius:100px;color:var(--ink-soft)}
 .tag.t-ai{border-color:var(--accent);color:var(--accent)}
 .q-stem{font-size:15.5px;line-height:1.6;margin:0 0 14px}
+.q-intro{font-size:13.5px;line-height:1.65;color:var(--ink-soft);border-left:2px solid var(--rule);padding:1px 0 1px 13px;margin:0 0 14px}
+.q-intro > *:first-child{margin-top:0}
+.q-intro > *:last-child{margin-bottom:0}
+.q-intro code{font-family:var(--f-mono);font-size:12.5px}
+.q-expect{background:var(--ok-soft);border-left:2px solid var(--ok);border-radius:var(--r);padding:10px 13px;margin:0 0 14px}
+.q-expect b{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.06em;display:block;margin-bottom:5px;color:var(--ink-soft)}
+.q-expect pre{margin:0;font-family:var(--f-mono);font-size:12.5px;line-height:1.55;white-space:pre-wrap;word-break:break-word}
 .q-code{background:var(--slate);border-radius:var(--r);padding:12px 14px;overflow-x:auto;margin:0 0 14px}
 .q-code pre{margin:0;font-family:var(--f-mono);font-size:13px;line-height:1.6;color:var(--slate-ink);white-space:pre}
 .blank{color:var(--run);font-weight:600;background:rgba(176,120,0,.16);padding:0 3px;border-radius:2px}
@@ -279,7 +286,7 @@ main{min-width:0;padding:26px 0 90px}
 
     <div class="login-foot">
       <label class="chk"><input type="checkbox" id="lg-auto"> 자동 로그인</label>
-      <button class="linkish" id="lg-hash">비밀번호 해시 만들기</button>
+      <span class="tiny">비밀번호를 잊었으면 관리자에게 초기화를 요청하세요</span>
     </div>
   </div>
 </section>
@@ -293,6 +300,7 @@ main{min-width:0;padding:26px 0 90px}
       <div class="spacer"></div>
       <span class="chip" id="py-chip" title="Python 실행 환경">python <span class="mono" id="py-state">대기</span></span>
       <span class="chip" id="user-chip"></span>
+      <button class="btn btn-ghost btn-sm" id="chpw">비밀번호 바꾸기</button>
       <button class="btn btn-ghost btn-sm" id="logout">로그아웃</button>
     </div>
     <div class="banner hidden" id="imp-banner">
@@ -345,9 +353,8 @@ const CONFIG = {
 
   ADMIN_ID     : 'ohh5259',
 
-  // 로컬 모드에서만 쓰이는 관리자 비밀번호 해시 (SHA-256, 소문자 16진수).
-  // 로그인 화면의 '비밀번호 해시 만들기'로 뽑아서 여기에 붙여넣으세요.
-  ADMIN_PW_SHA256 : '4cff7fb3b8d9701d4aa6b86d4d6923271dcec6a1cca991cbc1b1a27cf5badc53',
+  // 계정과 비밀번호는 Worker가 처리합니다. 이 파일에는 비밀번호 관련 값이 없습니다.
+  MIN_PW_LEN   : 8,
 
   QUIZ_COUNT   : 10,
 };
@@ -467,6 +474,9 @@ const AKEY = 'cnb:accounts';
 const localAccounts = () => { try{ return JSON.parse(localStorage.getItem(AKEY))||{} }catch{ return {} } };
 const saveAccounts = a => localStorage.setItem(AKEY, JSON.stringify(a));
 
+/* 비밀번호 원문은 이 함수 밖으로 나가지 않습니다.
+   Worker 모드: SHA-256 → 서버에서 SESSION_SECRET을 섞어 HMAC으로 한 번 더 → 그 결과만 저장
+   로컬 모드 : SHA-256 결과만 localStorage에 저장 */
 async function doAuth(kind, id, pw){
   const h = await sha256(pw);
   if(hasWorker()){
@@ -476,33 +486,34 @@ async function doAuth(kind, id, pw){
   const accs = localAccounts();
   if(kind==='register'){
     if(accs[id]) throw new Error('이미 있는 아이디입니다');
-    if(id===CONFIG.ADMIN_ID && CONFIG.ADMIN_PW_SHA256 && h!==CONFIG.ADMIN_PW_SHA256)
-      throw new Error('관리자 아이디는 지정된 비밀번호로만 만들 수 있습니다');
     accs[id]=h; saveAccounts(accs);
     return {id, admin:id===CONFIG.ADMIN_ID, token:null};
-  }
-  if(id===CONFIG.ADMIN_ID && CONFIG.ADMIN_PW_SHA256){
-    if(h!==CONFIG.ADMIN_PW_SHA256) throw new Error('아이디 또는 비밀번호가 맞지 않습니다');
-    return {id, admin:true, token:null};
   }
   if(!accs[id]) throw new Error('없는 아이디입니다. 계정을 먼저 만들어 주세요');
   if(accs[id]!==h) throw new Error('아이디 또는 비밀번호가 맞지 않습니다');
   return {id, admin:id===CONFIG.ADMIN_ID, token:null};
 }
 
+/* 비밀번호 규칙 — 통과하면 null, 아니면 사유 문자열 */
+function pwProblem(id, pw, pw2){
+  if(pw.length < CONFIG.MIN_PW_LEN) return `비밀번호는 ${CONFIG.MIN_PW_LEN}자 이상이어야 합니다`;
+  if(pw2 !== undefined && pw !== pw2) return '비밀번호와 비밀번호 확인이 서로 다릅니다';
+  if(id && pw.toLowerCase().includes(id.toLowerCase())) return '비밀번호에 아이디를 넣지 마세요';
+  if(/^(\d+|[a-zA-Z]+)$/.test(pw)) return '숫자와 영문을 섞어 주세요';
+  return null;
+}
+
 function bindLogin(){
   const idEl=$('#lg-id'), pwEl=$('#lg-pw'), msg=$('#lg-msg');
   const say=(t,ok)=>msg.innerHTML=t?`<div class="msg ${ok?'msg-ok':'msg-bad'}">${esc(t)}</div>`:'';
 
-  const run = async kind => {
+  const login = async () => {
     const id=idEl.value.trim(), pw=pwEl.value;
     if(!id||!pw) return say('아이디와 비밀번호를 모두 입력하세요');
-    if(!/^[A-Za-z0-9_.-]{2,24}$/.test(id)) return say('아이디는 영문·숫자·_.- 2~24자로 지어 주세요');
-    if(pw.length<6) return say('비밀번호는 6자 이상이어야 합니다');
     say('');
     $('#lg-go').disabled=$('#lg-reg').disabled=true;
     try{
-      const me = await doAuth(kind,id,pw);
+      const me = await doAuth('login',id,pw);
       if($('#lg-auto').checked) localStorage.setItem('cnb:auto', JSON.stringify(me));
       else localStorage.removeItem('cnb:auto');
       await start(me);
@@ -510,24 +521,79 @@ function bindLogin(){
     finally{ $('#lg-go').disabled=$('#lg-reg').disabled=false; }
   };
 
-  $('#lg-go').onclick  = ()=>run('login');
-  $('#lg-reg').onclick = ()=>run('register');
-  pwEl.onkeydown = e => { if(e.key==='Enter') run('login'); };
+  $('#lg-go').onclick  = login;
+  $('#lg-reg').onclick = openRegister;
+  pwEl.onkeydown = e => { if(e.key==='Enter') login(); };
   idEl.onkeydown = e => { if(e.key==='Enter') pwEl.focus(); };
+}
 
-  $('#lg-hash').onclick = ()=>{
-    const m = modal(`
-      <h3>비밀번호 해시 만들기</h3>
-      <div class="sub">여기서 만든 값을 <span class="mono">index.html</span>의 <span class="mono">ADMIN_PW_SHA256</span>에 붙여넣으세요. 비밀번호 원문은 어디에도 저장되지 않습니다.</div>
-      <input class="field mono" id="hz-in" type="text" placeholder="비밀번호 입력" autocomplete="off">
-      <div class="hashout" id="hz-out">—</div>
-      <div class="row"><button class="btn" id="hz-copy">복사</button><button class="btn btn-primary" id="hz-close">닫기</button></div>`);
-    const inp=$('#hz-in'), out=$('#hz-out');
-    inp.focus();
-    inp.oninput = async ()=>{ out.textContent = inp.value ? await sha256(inp.value) : '—'; };
-    $('#hz-copy').onclick = ()=>{ navigator.clipboard?.writeText(out.textContent); toast('복사했습니다'); };
-    $('#hz-close').onclick = m.close;
+/* ── 계정 만들기 ──────────────────────────────────────── */
+function openRegister(){
+  const m = modal(`
+    <h3>계정 만들기</h3>
+    <div class="sub">비밀번호는 ${CONFIG.MIN_PW_LEN}자 이상, 영문과 숫자를 섞어 주세요. 아무도 원문을 볼 수 없으니 본인이 기억할 수 있는 것으로 정하세요.</div>
+    <label class="login-label" for="rg-id">아이디</label>
+    <input class="field mono" id="rg-id" autocomplete="username" spellcheck="false" placeholder="영문·숫자·_.- 2~24자">
+    <label class="login-label" for="rg-pw">비밀번호</label>
+    <input class="field mono" id="rg-pw" type="password" autocomplete="new-password">
+    <label class="login-label" for="rg-pw2">비밀번호 확인</label>
+    <input class="field mono" id="rg-pw2" type="password" autocomplete="new-password">
+    <div id="rg-msg"></div>
+    <div class="row"><button class="btn" id="rg-cancel">취소</button><button class="btn btn-primary" id="rg-go">만들기</button></div>`);
+
+  const say = t => $('#rg-msg').innerHTML = t ? `<div class="msg msg-bad">${esc(t)}</div>` : '';
+  const submit = async () => {
+    const id=$('#rg-id').value.trim(), pw=$('#rg-pw').value, pw2=$('#rg-pw2').value;
+    if(!/^[A-Za-z0-9_.-]{2,24}$/.test(id)) return say('아이디는 영문·숫자·_.- 2~24자로 지어 주세요');
+    const bad = pwProblem(id, pw, pw2);
+    if(bad) return say(bad);
+    say(''); $('#rg-go').disabled=true;
+    try{
+      const me = await doAuth('register', id, pw);
+      localStorage.removeItem('cnb:auto');
+      m.close();
+      await start(me);
+    }catch(e){ say(e.message); $('#rg-go').disabled=false; }
   };
+  $('#rg-cancel').onclick = m.close;
+  $('#rg-go').onclick = submit;
+  $('#rg-pw2').onkeydown = e => { if(e.key==='Enter') submit(); };
+  $('#rg-id').focus();
+}
+
+/* ── 비밀번호 바꾸기 (본인) ───────────────────────────── */
+function openChangePw(){
+  if(!hasWorker()) return toast('로컬 모드에서는 쓸 수 없습니다');
+  const m = modal(`
+    <h3>비밀번호 바꾸기</h3>
+    <div class="sub"><span class="mono">${esc(S.me.id)}</span> 님의 비밀번호를 바꿉니다.</div>
+    <label class="login-label" for="cp-cur">현재 비밀번호</label>
+    <input class="field mono" id="cp-cur" type="password" autocomplete="current-password">
+    <label class="login-label" for="cp-new">새 비밀번호</label>
+    <input class="field mono" id="cp-new" type="password" autocomplete="new-password">
+    <label class="login-label" for="cp-new2">새 비밀번호 확인</label>
+    <input class="field mono" id="cp-new2" type="password" autocomplete="new-password">
+    <div id="cp-msg"></div>
+    <div class="row"><button class="btn" id="cp-cancel">취소</button><button class="btn btn-primary" id="cp-go">바꾸기</button></div>`);
+
+  const say = t => $('#cp-msg').innerHTML = t ? `<div class="msg msg-bad">${esc(t)}</div>` : '';
+  $('#cp-cancel').onclick = m.close;
+  $('#cp-go').onclick = async () => {
+    const cur=$('#cp-cur').value, next=$('#cp-new').value, next2=$('#cp-new2').value;
+    if(!cur) return say('현재 비밀번호를 입력하세요');
+    const bad = pwProblem(S.me.id, next, next2);
+    if(bad) return say(bad);
+    if(cur===next) return say('이전과 다른 비밀번호를 쓰세요');
+    say(''); $('#cp-go').disabled=true;
+    try{
+      await api('/auth/change',{cur: await sha256(cur), next: await sha256(next)});
+      m.close();
+      toast('비밀번호를 바꿨습니다. 다시 로그인해 주세요');
+      localStorage.removeItem('cnb:auto');
+      setTimeout(()=>location.reload(), 1400);
+    }catch(e){ say(e.message); $('#cp-go').disabled=false; }
+  };
+  $('#cp-cur').focus();
 }
 
 /* ════════════════════════════════════════════════════════
@@ -589,6 +655,39 @@ function cellEditedBy(path, cell){
   if(S.shared?.edits?.[path]?.[cell.idx]!=null) return '관리자 수정';
   return null;
 }
+
+/* ── 셀 묶음(unit) ────────────────────────────────────────
+   코드 셀 하나를, 바로 앞의 마크다운 설명 + 노트북에 저장된 실행 결과와
+   한 덩어리로 묶습니다. 문제는 이 덩어리 안에서만 만듭니다.
+   그래야 학생이 노트북 전체를 외우지 않아도 화면에 주어진 설명과
+   실행 결과만으로 답을 결정할 수 있습니다.
+   ──────────────────────────────────────────────────────── */
+const plainOutput = outs => (outs||[]).map(o =>
+    o.output_type==='stream'  ? [].concat(o.text||[]).join('')
+  : o.output_type==='error'   ? ''
+  : o.data?.['text/plain']    ? [].concat(o.data['text/plain']).join('')
+  : ''
+).join('').trim().slice(0,320);
+
+function buildUnits(path, cells){
+  const units=[]; let lead=[];
+  cells.forEach(c=>{
+    const src = cellSource(path, c);
+    if(c.type==='md'){ if(src.trim()) lead.push(src.trim()); return; }
+    if(src.trim()) units.push({ intro: lead.join('\n\n').trim(), code: src, out: plainOutput(c.outputs) });
+    lead=[];
+  });
+  return units;
+}
+
+/* 설명도 실행 결과도 없는 셀에서는 "원래 뭐였는지 외웠는가"밖에 물을 수 없습니다.
+   그런 셀은 출제 대상에서 제외합니다. */
+const introLen = u => u.intro.replace(/[#*`>\-\s]/g,'').length;
+const solvable = u => introLen(u) >= 12 || u.out.length > 0;
+
+/* 실행 결과를 문제와 함께 보여줘도 되는 유형.
+   출력 예측·값 계산은 그 출력이 곧 정답이므로 절대 포함하지 않습니다. */
+const SHOW_EXPECT = new Set(['blank','order']);
 
 /* ════════════════════════════════════════════════════════
    Pyodide 실행 환경
@@ -853,27 +952,34 @@ function randomizeNumbers(src){
   return restore(changed);
 }
 
-/* 1. 빈칸 채우기 */
+/* 1. 빈칸 채우기 — 설명과 실행 결과를 근거로 답이 정해지는 자리만 비웁니다 */
 function genBlank(nb){
-  const codes = nb.codeCells.filter(s=>s.split('\n').filter(l=>l.trim()).length>=2);
-  for(const src of shuffle(codes)){
-    const {out,restore}=maskStrings(src);
-    const cands=[];
-    const re=new RegExp('\\b('+PY_KW.concat(PY_BI).join('|')+')\\b','g');
-    let m; while((m=re.exec(out))) cands.push({tok:m[1],i:m.index});
+  const units = shuffle(nb.units.filter(solvable)
+    .filter(u=>u.code.split('\n').filter(l=>l.trim()).length>=2));
+  for(const u of units){
+    const {out,restore}=maskStrings(u.code);
+    /* 문법 키워드(for, in, if...)는 후보에서 뺍니다.
+       맥락으로 좁혀지지 않고 결국 암기 문제가 되기 때문입니다. */
+    const re=new RegExp('\\b('+PY_BI.join('|')+')\\b','g');
+    const cands=[]; let m;
+    while((m=re.exec(out))) cands.push({tok:m[1],i:m.index});
     if(!cands.length) continue;
     const hit=pick(cands);
-    const pool = PY_KW.includes(hit.tok)?PY_KW:PY_BI;
-    const others = shuffle(pool.filter(t=>t!==hit.tok && !new RegExp('\\b'+t+'\\b').test(out))).slice(0,3);
+    const others=shuffle(PY_BI.filter(t=>t!==hit.tok && !new RegExp('\\b'+t+'\\b').test(out))).slice(0,3);
     if(others.length<3) continue;
-    const blanked = restore(out.slice(0,hit.i)+'____'+out.slice(hit.i+hit.tok.length));
+    const blanked=restore(out.slice(0,hit.i)+'____'+out.slice(hit.i+hit.tok.length));
     return {
       type:'빈칸', typeKey:'blank', mode:'mc',
-      stem:'빈칸 <span class="blank">____</span> 에 들어갈 것으로 알맞은 것은?',
+      intro:u.intro, expect:u.out,
+      stem: (u.intro && u.out)
+        ? '아래 설명을 읽고, 코드가 <span class="mono">실행 결과</span>처럼 동작하도록 빈칸 <span class="blank">____</span> 에 들어갈 것을 고르시오.'
+        : u.out
+          ? '코드가 아래 <span class="mono">실행 결과</span>처럼 동작하도록 빈칸 <span class="blank">____</span> 에 들어갈 것을 고르시오.'
+          : '아래 설명대로 동작하도록 빈칸 <span class="blank">____</span> 에 들어갈 것을 고르시오.',
       code:blanked,
       options:shuffle([hit.tok,...others]),
       answer:hit.tok,
-      why:`원래 코드에서는 <span class="mono">${esc(hit.tok)}</span> 이 자리에 쓰였습니다.`
+      why:`<span class="mono">${esc(hit.tok)}</span> 입니다. 위 설명과 실행 결과를 보면 이 자리에서 무엇을 해야 하는지 정해집니다.`
     };
   }
   return null;
@@ -881,14 +987,16 @@ function genBlank(nb){
 
 /* 2. 출력 결과 예측 (실제 실행) */
 async function genOutput(nb){
-  for(const src of shuffle(nb.codeCells.filter(isSelfContained)).slice(0,6)){
-    if(!/print\s*\(/.test(src)) continue;
-    const code = randomizeNumbers(src);
+  const units = shuffle(nb.units.filter(u=>isSelfContained(u.code))).slice(0,6);
+  for(const u of units){
+    if(!/print\s*\(/.test(u.code)) continue;
+    const code = randomizeNumbers(u.code);
     const r = await Py.run(code,{fresh:true});
     if(r.err || !r.out.trim() || r.out.length>400) continue;
     return {
       type:'출력 예측', typeKey:'output', mode:'text',
-      stem:'다음 코드를 실행했을 때 출력되는 내용을 쓰시오.',
+      intro:u.intro,
+      stem:'다음 코드를 실행했을 때 출력되는 내용을 쓰시오. 숫자는 노트북 원본과 다를 수 있으니 코드를 직접 따라가 보세요.',
       code, answer:r.out.trim(),
       why:'실제로 실행한 결과입니다.'
     };
@@ -898,19 +1006,21 @@ async function genOutput(nb){
 
 /* 3. 변수 값 계산 */
 async function genValue(nb){
-  for(const src of shuffle(nb.codeCells.filter(isSelfContained)).slice(0,6)){
-    const {out}=maskStrings(src);
+  const units = shuffle(nb.units.filter(u=>isSelfContained(u.code))).slice(0,6);
+  for(const u of units){
+    const {out}=maskStrings(u.code);
     const vars = uniq([...out.matchAll(/^\s*([A-Za-z_]\w*)\s*=(?!=)/gm)].map(m=>m[1]))
                  .filter(v=>!['self','_'].includes(v));
     if(!vars.length) continue;
     const v = pick(vars);
-    const code = randomizeNumbers(src).replace(/\n*$/,'');
+    const code = randomizeNumbers(u.code).replace(/\n*$/,'');
     const probe = code.split('\n').filter(l=>!/^\s*print\s*\(/.test(l)).join('\n');
     const r = await Py.run(probe+`\nprint(repr(${v}))`,{fresh:true});
     if(r.err || !r.out.trim() || r.out.length>200) continue;
     return {
       type:'값 계산', typeKey:'value', mode:'text',
-      stem:`다음 코드를 끝까지 실행한 뒤 변수 <span class="mono blank">${esc(v)}</span> 의 값은?`,
+      intro:u.intro,
+      stem:`다음 코드를 끝까지 실행한 뒤 변수 <span class="mono blank">${esc(v)}</span> 의 값은? 숫자는 노트북 원본과 다를 수 있습니다.`,
       code:probe, answer:r.out.trim(),
       why:`<span class="mono">print(repr(${esc(v)}))</span> 를 붙여 실제로 확인한 값입니다.`
     };
@@ -918,7 +1028,7 @@ async function genValue(nb){
   return null;
 }
 
-/* 4. 개념 (마크다운 용어) */
+/* 4. 개념 (마크다운 설명 문장) */
 function genConcept(nb){
   const terms = uniq(nb.mdCells.flatMap(t=>[
     ...[...t.matchAll(/`([^`\n]{2,24})`/g)].map(m=>m[1]),
@@ -949,28 +1059,36 @@ function genConcept(nb){
 
 /* 5. 줄 순서 맞추기 */
 function genOrder(nb){
-  for(const src of shuffle(nb.codeCells)){
-    const lines = src.split('\n').filter(l=>l.trim() && !/^\s*#/.test(l));
+  for(const u of shuffle(nb.units.filter(solvable))){
+    const lines=u.code.split('\n').filter(l=>l.trim() && !/^\s*#/.test(l));
     if(lines.length<3 || lines.length>6) continue;
     if(new Set(lines).size!==lines.length) continue;
     return {
       type:'순서', typeKey:'order', mode:'order',
-      stem:'코드가 올바르게 동작하도록 줄을 순서대로 배열하시오.',
+      intro:u.intro, expect:u.out,
+      stem: u.out
+        ? '아래 <span class="mono">실행 결과</span>가 나오도록 줄을 순서대로 배열하시오.'
+        : '위 설명대로 동작하도록 줄을 순서대로 배열하시오.',
       lines, answer:lines.join('\n'),
-      why:'노트북의 원래 셀 순서입니다.'
+      why:'변수는 쓰이기 전에 정의돼야 하고, 출력은 계산이 끝난 뒤에 옵니다.'
     };
   }
   return null;
 }
 
-/* 6. 서술형 (Claude API, Worker 필요) */
+/* 6. 서술형 (Claude API, Worker 필요) — 노트북 전체가 아니라 덩어리 하나만 넘깁니다 */
 async function genEssay(nb){
   if(!hasWorker()) return null;
-  const ctx = (nb.mdCells.join('\n\n').slice(0,1500)) + '\n\n```python\n' + nb.codeCells.slice(0,6).join('\n\n').slice(0,2500) + '\n```';
+  const rich = nb.units.filter(u=>introLen(u)>25);
+  const u = pick(rich.length?rich:nb.units.filter(solvable));
+  if(!u) return null;
+  const ctx = `${u.intro}\n\n\`\`\`python\n${u.code.slice(0,1200)}\n\`\`\``
+            + (u.out?`\n\n실행 결과:\n${u.out}`:'');
   const j = await api('/ai',{task:'make', notebook:nb.name, context:ctx});
   if(!j.question) return null;
   return {
     type:'서술형', typeKey:'essay', mode:'essay', ai:true,
+    intro:u.intro,
     stem:esc(j.question), code:j.code||'', rubric:j.rubric||'', answer:j.model_answer||'',
     why:'AI 채점 결과입니다.'
   };
@@ -1039,10 +1157,13 @@ async function startQuiz(){
     const cells = await fetchNotebook(path);
     const nb = {
       name:meta.name, path,
+      units: buildUnits(path, cells),
       codeCells: cells.filter(c=>c.type==='code').map(c=>cellSource(path,c)).filter(s=>s.trim()),
       mdCells:  cells.filter(c=>c.type==='md').map(c=>cellSource(path,c)).filter(s=>s.trim()),
     };
-    if(!nb.codeCells.length && !nb.mdCells.length) throw new Error('이 노트북에는 문제로 만들 내용이 없습니다');
+    if(!nb.units.length && !nb.mdCells.length) throw new Error('이 노트북에는 문제로 만들 내용이 없습니다');
+    if(!nb.units.some(solvable) && !nb.mdCells.length)
+      throw new Error('이 노트북은 코드에 설명이나 실행 결과가 없어 문제를 만들 수 없습니다');
     await Py.get().catch(()=>{});
     let qs = await buildQuiz(nb, useAI?Math.max(1,n-2):n);
     if(useAI){
@@ -1068,8 +1189,10 @@ function renderQuestion(){
           <span class="tag${q.ai?' t-ai':''}">${esc(q.type)}</span>
           <span class="tag">${esc(QZ.nb.name)}</span>
         </div>
+        ${q.intro?`<div class="q-intro">${DOMPurify.sanitize(marked.parse(q.intro))}</div>`:''}
         <p class="q-stem">${q.stem}</p>
         ${q.code?`<div class="q-code"><pre>${hl(q.code)}</pre></div>`:''}
+        ${(q.expect && SHOW_EXPECT.has(q.typeKey))?`<div class="q-expect"><b>실행 결과</b><pre>${esc(q.expect)}</pre></div>`:''}
         <div id="q-input"></div>
         <div id="q-verdict"></div>
         <div class="row" style="justify-content:flex-start">
@@ -1170,6 +1293,7 @@ async function record(q, mine, ok){
       if(S.data.wrong[idx].streak>=2) S.data.wrong.splice(idx,1); }
   }else{
     const entry={key,path,nb:nbName,type:q.type,typeKey:q.typeKey,stem:q.stem,code:q.code||'',
+      intro:q.intro||'',expect:q.expect||'',
       options:q.options||null,answer:q.answer,mine,why:q.why,at:Date.now(),streak:0};
     if(idx>=0) S.data.wrong[idx]=entry; else S.data.wrong.push(entry);
   }
@@ -1222,8 +1346,10 @@ function viewWrong(){
       <div class="g-body">
         <div class="q-meta"><span class="tag">${esc(w.type)}</span><span class="tag">${esc(w.nb)}</span>
           ${w.streak?`<span class="tag" style="border-color:var(--ok);color:var(--ok)">연속 ${w.streak}</span>`:''}</div>
+        ${w.intro?`<div class="q-intro">${DOMPurify.sanitize(marked.parse(w.intro))}</div>`:''}
         <p class="q-stem" style="font-size:14.5px">${w.stem}</p>
         ${w.code?`<div class="q-code"><pre>${hl(w.code)}</pre></div>`:''}
+        ${(w.expect && SHOW_EXPECT.has(w.typeKey))?`<div class="q-expect"><b>실행 결과</b><pre>${esc(w.expect)}</pre></div>`:''}
         <div class="verdict bad" style="margin-top:0">
           <b>내가 쓴 답</b><span class="ans">${esc(w.mine||'(무응답)')}</span>
           <div style="margin-top:8px"><b>정답</b><span class="ans">${esc(w.answer)}</span></div>
@@ -1243,7 +1369,8 @@ function viewWrong(){
 
   $('#w-retry').onclick=()=>{
     const qs=list.map(w=>({type:w.type,typeKey:w.typeKey,mode:w.options?'mc':(w.typeKey==='order'?'order':'text'),
-      stem:w.stem,code:w.code,options:w.options,answer:w.answer,why:w.why,
+      stem:w.stem,code:w.code,intro:w.intro||'',expect:w.expect||'',
+      options:w.options,answer:w.answer,why:w.why,
       path:w.path,nb:w.nb,
       lines:w.typeKey==='order'?w.answer.split('\n'):undefined}));
     QZ={nb:{name:'오답 노트',path:list[0].path},qs:shuffle(qs),i:0,picked:null,order:[],graded:false,right:0};
@@ -1353,17 +1480,37 @@ async function viewAdmin(){
       <td class="mono">${edits}</td>
       <td class="tiny">${d.updatedAt?new Date(d.updatedAt).toLocaleString('ko-KR'):'—'}</td>
       <td><button class="btn btn-sm" data-imp="${escAttr(u.id)}">화면 보기</button>
-          <button class="btn btn-sm btn-ghost" data-diff="${escAttr(u.id)}">수정 내역</button></td>`;
+          <button class="btn btn-sm btn-ghost" data-diff="${escAttr(u.id)}">수정 내역</button>
+          <button class="btn btn-sm btn-ghost" data-reset="${escAttr(u.id)}">비번 초기화</button></td>`;
     tr._data=d;
     $('#ad-rows').appendChild(tr);
   }
 
   $('#ad-rows').onclick=e=>{
     const imp=e.target.closest('[data-imp]'), diff=e.target.closest('[data-diff]');
+    const rst=e.target.closest('[data-reset]');
     const tr=e.target.closest('tr');
     if(imp) return impersonate(imp.dataset.imp, tr._data);
     if(diff) return showDiff(diff.dataset.diff, tr._data);
+    if(rst) return resetPw(rst.dataset.reset);
   };
+}
+
+/* 비밀번호는 복원할 수 없으므로, 잊은 회원에게는 임시 비밀번호를 새로 발급합니다.
+   이 값은 발급 직후 한 번만 보이고 서버에도 해시로만 남습니다. */
+async function resetPw(id){
+  if(!hasWorker()) return toast('로컬 모드에서는 초기화할 수 없습니다');
+  if(!confirm(`${id} 님의 비밀번호를 초기화합니다.\n기존 비밀번호는 즉시 쓸 수 없게 됩니다. 진행할까요?`)) return;
+  try{
+    const j = await api('/auth/reset',{id});
+    const m = modal(`
+      <h3>임시 비밀번호</h3>
+      <div class="sub"><span class="mono">${esc(id)}</span> 님에게 아래 비밀번호를 전달하고, 로그인한 뒤 바로 바꾸도록 안내하세요. 이 값은 지금만 보입니다.</div>
+      <div class="hashout" id="rp-out">${esc(j.temp)}</div>
+      <div class="row"><button class="btn" id="rp-copy">복사</button><button class="btn btn-primary" id="rp-close">닫기</button></div>`);
+    $('#rp-copy').onclick=()=>{ navigator.clipboard?.writeText(j.temp); toast('복사했습니다'); };
+    $('#rp-close').onclick=m.close;
+  }catch(e){ toast('초기화 실패: '+e.message); }
 }
 
 function showDiff(id, d){
@@ -1452,6 +1599,7 @@ async function start(me){
 }
 
 $('#logout').onclick=()=>{ localStorage.removeItem('cnb:auto'); location.reload(); };
+$('#chpw').onclick=openChangePw;
 $('#imp-exit').onclick=exitImpersonate;
 $('#menu-btn').onclick=()=>$('#side').classList.toggle('closed');
 

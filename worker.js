@@ -2,7 +2,8 @@
  * 정보수업 노트북 — Cloudflare Worker
  *
  * 하는 일
- *  1. 로그인·가입 처리 (비밀번호는 서버 비밀값을 섞어 해시로만 보관)
+ *  1. 로그인·가입·비밀번호 변경·관리자 초기화
+ *     (비밀번호는 서버 비밀값을 섞은 일방향 해시로만 보관하며 원문은 저장하지 않습니다)
  *  2. 회원별 학습 기록을 깃허브 저장소의 userdata/<아이디>.json 으로 저장
  *  3. 노트북 목록 조회 (깃허브 API 사용 한도를 브라우저 대신 흡수)
  *  4. Claude API 중계 — API 키는 이 서버에만 있고 브라우저로 나가지 않습니다
@@ -44,6 +45,8 @@ export default {
 
       // 여기부터는 로그인 필요
       const me = await requireAuth(req, env);
+      if (path === '/auth/change') return json(await changePw(env, me, body));
+      if (path === '/auth/reset')  return json(await adminReset(env, me, body));
       if (path === '/data/get')  return json(await dataGet(env, me, body));
       if (path === '/data/put')  return json(await dataPut(env, me, body));
       if (path === '/users')     return json(await listUsers(env, me));
@@ -64,6 +67,7 @@ const fail = (msg, status = 400) => { const e = new Error(msg); e.status = statu
 /* ── 암호 / 토큰 ───────────────────────────────────────── */
 const enc = new TextEncoder();
 const hex = buf => [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+const sha256hex = async s => hex(await crypto.subtle.digest('SHA-256', enc.encode(s)));
 
 async function hmac(secret, msg) {
   const key = await crypto.subtle.importKey('raw', enc.encode(secret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
@@ -175,7 +179,42 @@ async function login(env, body) {
   if (!rec) fail('없는 아이디입니다. 계정을 먼저 만들어 주세요');
   if (rec.h !== await pwHash(env, id, pw)) fail('아이디 또는 비밀번호가 맞지 않습니다');
   const admin = id === env.ADMIN_ID;
-  return { id, admin, token: await makeToken(env, id, admin) };
+  return { id, admin, temp: !!rec.temp, token: await makeToken(env, id, admin) };
+}
+
+/** 본인 비밀번호 변경. 현재 비밀번호를 알아야만 통과합니다. */
+async function changePw(env, me, body) {
+  const cur = String(body.cur || ''), next = String(body.next || '');
+  if (!/^[0-9a-f]{64}$/.test(cur) || !/^[0-9a-f]{64}$/.test(next)) fail('비밀번호 형식이 올바르지 않습니다');
+  if (cur === next) fail('이전과 다른 비밀번호를 쓰세요');
+  const { json: accs } = await ghRead(env, ACCOUNTS);
+  const rec = accs?.[me.id];
+  if (!rec) fail('계정을 찾을 수 없습니다', 404);
+  if (rec.h !== await pwHash(env, me.id, cur)) fail('현재 비밀번호가 맞지 않습니다');
+  rec.h = await pwHash(env, me.id, next);
+  rec.changedAt = new Date().toISOString();
+  delete rec.temp;
+  await ghWrite(env, ACCOUNTS, accs, `비밀번호 변경: ${me.id}`);
+  return { ok: true };
+}
+
+/** 관리자용 초기화. 저장된 해시는 되돌릴 수 없으므로 임시 비밀번호를 새로 발급합니다.
+ *  발급된 원문은 이 응답에만 실려 나가고 서버에는 해시로만 남습니다. */
+async function adminReset(env, me, body) {
+  if (!me.admin) fail('관리자만 할 수 있습니다', 403);
+  const id = String(body.id || '').trim();
+  if (!OK_ID.test(id)) fail('잘못된 아이디입니다');
+  if (id === env.ADMIN_ID && me.id !== env.ADMIN_ID) fail('관리자 계정은 초기화할 수 없습니다', 403);
+  const { json: accs } = await ghRead(env, ACCOUNTS);
+  const rec = accs?.[id];
+  if (!rec) fail('없는 아이디입니다');
+  const bytes = crypto.getRandomValues(new Uint8Array(6));
+  const temp = 'tmp' + [...bytes].map(b => 'abcdefghjkmnpqrstuvwxyz23456789'[b % 31]).join('');
+  rec.h = await pwHash(env, id, await sha256hex(temp));
+  rec.temp = true;
+  rec.resetAt = new Date().toISOString();
+  await ghWrite(env, ACCOUNTS, accs, `비밀번호 초기화: ${id}`);
+  return { ok: true, temp };
 }
 
 /* ── 학습 기록 ─────────────────────────────────────────── */
@@ -206,7 +245,14 @@ async function dataPut(env, me, body) {
 async function listUsers(env, me) {
   if (!me.admin) fail('관리자만 볼 수 있습니다', 403);
   const { json: accs } = await ghRead(env, ACCOUNTS);
-  return { users: Object.entries(accs || {}).map(([id, v]) => ({ id, joined: v.joined || null })) };
+  return {
+    users: Object.entries(accs || {}).map(([id, v]) => ({
+      id,
+      joined: v.joined || null,
+      resetAt: v.resetAt || null,
+      temp: !!v.temp,          // 임시 비밀번호를 아직 안 바꾼 계정
+    })),
+  };
 }
 
 /* ── 노트북 목록 ───────────────────────────────────────── */
@@ -226,6 +272,8 @@ const MAKE_SYS = `너는 한국 고등학교 정보 과목의 출제 교사다.
 규칙
 - 한국어로 쓴다.
 - 노트북에 실제로 나온 개념만 다룬다. 노트북 밖 지식을 요구하지 않는다.
+- 주어진 설명과 코드 조각만 보고 답할 수 있어야 한다. 노트북의 다른 셀이나 앞뒤 맥락을 알아야만 풀리는 문제는 절대 내지 않는다.
+- 문제 안에 필요한 정보를 모두 담는다. "위에서 만든 배열", "아까 정의한 함수"처럼 화면에 없는 것을 가리키지 않는다.
 - 서술형이므로 답이 한 단어로 끝나면 안 된다. "왜", "어떻게", "무슨 차이", "어떤 일이 일어나는지" 같은 설명을 요구한다.
 - 코드가 필요하면 code 필드에 짧은 파이썬 코드를 넣고, 필요 없으면 빈 문자열로 둔다.
 - rubric에는 정답으로 인정할 핵심 요소를 2~4개 적는다.
