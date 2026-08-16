@@ -14,7 +14,8 @@
  *  ANTHROPIC_API_KEY  Claude API 키 (서술형 문제를 안 쓸 거면 생략 가능)
  *
  * 일반 변수 (wrangler.toml [vars])
- *  GITHUB_OWNER, GITHUB_REPO, GITHUB_BRANCH, ADMIN_ID, ALLOWED_ORIGIN, MODEL
+ *  GITHUB_OWNER, GITHUB_REPO, GITHUB_BRANCH, ADMIN_ID, ALLOWED_ORIGIN
+ *  MODEL              서술형 출제·채점에 쓸 모델. 생략하면 claude-sonnet-5
  */
 
 const OK_ID = /^[A-Za-z0-9_.-]{2,24}$/;
@@ -302,7 +303,7 @@ async function callClaude(env, system, user, maxTokens = 1200) {
       'anthropic-version': '2023-06-01',
     },
     body: JSON.stringify({
-      model: env.MODEL || 'claude-opus-5',
+      model: env.MODEL || 'claude-sonnet-5',
       max_tokens: maxTokens,
       system,
       messages: [{ role: 'user', content: user }],
@@ -310,6 +311,11 @@ async function callClaude(env, system, user, maxTokens = 1200) {
   });
   if (!r.ok) {
     const t = await r.text().catch(() => '');
+    // 401/403 은 문항 내용이 아니라 키·계정 문제입니다. 원인을 짚어 줍니다.
+    if (r.status === 401) fail('Claude API 키가 올바르지 않습니다. wrangler secret put ANTHROPIC_API_KEY 로 다시 넣어 주세요', 502);
+    if (r.status === 403) fail('Claude API가 이 요청을 거부했습니다 (403). 키가 폐기되었거나, 결제가 설정되지 않았거나, 계정에 이 모델 권한이 없을 때 납니다. console.anthropic.com 에서 키와 결제 상태를 확인해 주세요', 502);
+    if (r.status === 404) fail(`요청한 모델을 찾을 수 없습니다 (${env.MODEL || 'claude-sonnet-5'}). wrangler.toml 의 MODEL 값을 확인해 주세요`, 502);
+    if (r.status === 429) fail('요청이 몰렸습니다. 잠시 뒤 다시 시도해 주세요', 502);
     fail(`Claude 호출 실패 (${r.status}) ${t.slice(0, 160)}`, 502);
   }
   const j = await r.json();

@@ -11,7 +11,9 @@ ADMIN_ID      = "ohh5259"
 # GitHub Pages 주소로 바꾸세요. "*" 로 두면 아무 사이트에서나 이 서버를 부를 수 있습니다.
 ALLOWED_ORIGIN = "https://namu578.github.io"
 
-# 서술형 문제에 쓸 모델
+# 서술형 출제와 채점에 쓸 모델.
+# 채점은 채점 기준이 이미 주어진 상태에서 대조하는 일이라 Sonnet 으로 충분합니다.
+# Opus 로 올리면 비용이 2.4배가 되는데 학생이 느끼는 차이는 거의 없습니다.
 MODEL = "claude-sonnet-5"
 
 # 아래 셋은 여기에 적지 말고 `wrangler secret put` 으로 넣으세요.
