@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "ohh5259",
- "updatedAt": "2026-08-16T11:13:35.777Z",
+ "updatedAt": "2026-08-16T16:27:46.794Z",
  "edits": {},
  "quiz": {
   "attempts": [
@@ -16,12 +16,22 @@
     "path": "notebooks/1_넘파이_기초(개념).ipynb",
     "type": "essay",
     "ok": false
+   },
+   {
+    "t": 1786897666794,
+    "path": "notebooks/2_넘파이_심화.ipynb",
+    "type": "concept",
+    "ok": true
    }
   ],
   "stats": {
    "notebooks/1_넘파이_기초(개념).ipynb": {
     "asked": 2,
     "correct": 0
+   },
+   "notebooks/2_넘파이_심화.ipynb": {
+    "asked": 1,
+    "correct": 1
    }
   }
  },
