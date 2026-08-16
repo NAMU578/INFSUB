@@ -254,7 +254,7 @@ async function callClaude(env, system, user, maxTokens = 1200) {
       'anthropic-version': '2023-06-01',
     },
     body: JSON.stringify({
-      model: env.MODEL || 'claude-sonnet-5',
+      model: env.MODEL || 'claude-opus-5',
       max_tokens: maxTokens,
       system,
       messages: [{ role: 'user', content: user }],
