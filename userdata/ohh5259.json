@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "ohh5259",
- "updatedAt": "2026-08-16T16:38:11.755Z",
+ "updatedAt": "2026-08-16T16:38:26.582Z",
  "edits": {},
  "quiz": {
   "attempts": [
@@ -34,6 +34,12 @@
     "path": "notebooks/2_넘파이_심화.ipynb",
     "type": "blank",
     "ok": true
+   },
+   {
+    "t": 1786898306582,
+    "path": "notebooks/2_넘파이_심화.ipynb",
+    "type": "concept",
+    "ok": true
    }
   ],
   "stats": {
@@ -42,8 +48,8 @@
     "correct": 0
    },
    "notebooks/2_넘파이_심화.ipynb": {
-    "asked": 3,
-    "correct": 2
+    "asked": 4,
+    "correct": 3
    }
   }
  },
