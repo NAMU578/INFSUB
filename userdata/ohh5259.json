@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "ohh5259",
- "updatedAt": "2026-08-16T10:45:55.940Z",
+ "updatedAt": "2026-08-16T11:13:35.777Z",
  "edits": {},
  "quiz": {
   "attempts": [
@@ -25,41 +25,5 @@
    }
   }
  },
- "wrong": [
-  {
-   "key": "7eeab003ee085897063a6682e54c7da858280d1b4c15ebe59addaf73fb027016",
-   "path": "notebooks/1_넘파이_기초(개념).ipynb",
-   "nb": "1_넘파이_기초(개념)",
-   "type": "빈칸",
-   "typeKey": "blank",
-   "stem": "빈칸 <span class=\"blank\">____</span> 에 들어갈 것으로 알맞은 것은?",
-   "code": "# 차이점이 뭘까?\n____(data)\nprint(array)\n# print(array.dtype) # 넘파이 배열의 데이터 타입 확인",
-   "options": [
-    "pop",
-    "sorted",
-    "enumerate",
-    "print"
-   ],
-   "answer": "print",
-   "mine": "enumerate",
-   "why": "원래 코드에서는 <span class=\"mono\">print</span> 이 자리에 쓰였습니다.",
-   "at": 1786873983046,
-   "streak": 0
-  },
-  {
-   "key": "690d8ca34875a80bcb21ba2b382c8d17457d5947226e26d7648476d0ceeeb2a9",
-   "path": "notebooks/1_넘파이_기초(개념).ipynb",
-   "nb": "1_넘파이_기초(개념)",
-   "type": "서술형",
-   "typeKey": "essay",
-   "stem": "파이썬 리스트 data = [2, 1, 21, '홍길동', 90, 75, 80]를 np.array()로 변환하면 배열의 dtype이 '&lt;U21'로 나타난다. 이 배열에 저장된 각 요소들의 실제 데이터 타입은 무엇이 되며, 서로 다른 타입(정수와 문자열)이 섞여 있던 리스트가 넘파이 배열로 변환될 때 왜 이런 결과가 나타나는지 넘파이 배열의 특징과 관련지어 설명하시오.",
-   "code": "",
-   "options": null,
-   "answer": "넘파이 배열은 하나의 데이터 타입만 가질 수 있는 동종(homogeneous) 배열이므로, 리스트에 문자열이 하나라도 섞여 있으면 모든 요소가 문자열(유니코드)로 통일되어 저장됩니다. 이때 dtype '<U21'에서 U는 유니코드 문자열을, 21은 배열에 저장된 요소 중 가장 긴 문자열의 최대 길이를 의미합니다.",
-   "mine": "유니코드(스트링)\n",
-   "why": "AI 채점 결과입니다.",
-   "at": 1786877155940,
-   "streak": 0
-  }
- ]
+ "wrong": []
 }
