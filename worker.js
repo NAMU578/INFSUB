@@ -22,7 +22,7 @@ const OK_ID = /^[A-Za-z0-9_.-]{2,24}$/;
 const DAY = 86400;
 const TOKEN_DAYS = 30;
 
-const WORKER_VERSION = '2026-08-17-diag2';
+const WORKER_VERSION = '2026-08-17-probe';
 
 export default {
   async fetch(req, env) {
@@ -309,8 +309,10 @@ async function callClaude(env, system, user, maxTokens = 1200) {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
-      'x-api-key': env.ANTHROPIC_API_KEY,
+      'x-api-key': String(env.ANTHROPIC_API_KEY).trim(),
       'anthropic-version': '2023-06-01',
+      // user-agent 가 없으면 방화벽이 자동화 요청으로 보고 막는 경우가 있습니다.
+      'user-agent': 'INFSUB/1.0 (+https://namu578.github.io/INFSUB)',
     },
     body: JSON.stringify({
       model: env.MODEL || 'claude-sonnet-5',
@@ -341,13 +343,16 @@ async function callClaude(env, system, user, maxTokens = 1200) {
 
 /* AI 연결 점검 — 관리자만 부를 수 있습니다.
    키 값은 절대 돌려주지 않습니다. 앞머리와 길이만 알려 줍니다.
-   그것만으로도 잘못된 종류의 키인지, 복사할 때 공백이 붙었는지 알 수 있습니다. */
+
+   403 이 났을 때 원인이 (가) 키·계정인지 (나) 출발지 차단인지 가르려고
+   몇 가지 형태로 나눠서 찔러 봅니다. 특히 '키 없이 보낸 요청'이 핵심입니다.
+   그게 401 이면 길은 뚫려 있다는 뜻이고, 403 이면 길 자체가 막힌 것입니다. */
 async function diag(env, me) {
   if (!me.admin) fail('관리자만 볼 수 있습니다', 403);
 
   const key = env.ANTHROPIC_API_KEY;
   const model = env.MODEL || 'claude-sonnet-5';
-  const out = { model, keySet: !!key };
+  const out = { model, keySet: !!key, probes: [] };
 
   if (!key) {
     out.verdict = '이 워커에 ANTHROPIC_API_KEY 가 없습니다. Cloudflare 대시보드에서 넣어 주세요.';
@@ -360,37 +365,60 @@ async function diag(env, me) {
   out.looksLikeApiKey = key.trim().startsWith('sk-ant-api');
   out.looksLikeOAuth = key.trim().startsWith('sk-ant-oat');
 
-  const r = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-      'x-api-key': key.trim(),
-      'anthropic-version': '2023-06-01',
-    },
-    body: JSON.stringify({
-      model, max_tokens: 4,
-      messages: [{ role: 'user', content: 'hi' }],
-    }),
-  });
-  out.status = r.status;
-  out.body = (await r.text().catch(() => '')).slice(0, 300);
+  const k = key.trim();
+  const msgBody = JSON.stringify({ model, max_tokens: 4, messages: [{ role: 'user', content: 'hi' }] });
 
-  // request-id 가 있으면 요청이 Anthropic 내부까지 도달한 것이고(= 계정·키 문제),
-  // 없으면 그 앞 관문에서 잘린 것입니다(= 네트워크·지역·출발지 IP 차단).
-  out.requestId = r.headers.get('request-id') || r.headers.get('x-request-id') || null;
-  out.reached = !!out.requestId;
+  async function probe(name, url, init) {
+    try {
+      const r = await fetch(url, init);
+      const txt = (await r.text().catch(() => '')).replace(/\s+/g, ' ').slice(0, 120);
+      out.probes.push({
+        name, status: r.status,
+        requestId: r.headers.get('request-id') || r.headers.get('x-request-id') || null,
+        cfRay: r.headers.get('cf-ray') || null,
+        body: txt,
+      });
+      return r.status;
+    } catch (e) {
+      out.probes.push({ name, status: 0, error: String(e).slice(0, 120) });
+      return 0;
+    }
+  }
+
+  const H = extra => ({ 'content-type': 'application/json', 'anthropic-version': '2023-06-01', ...extra });
+
+  // 1) 지금 코드와 똑같이
+  const s1 = await probe('기본', 'https://api.anthropic.com/v1/messages',
+    { method: 'POST', headers: H({ 'x-api-key': k }), body: msgBody });
+
+  // 2) 브라우저처럼 보이는 user-agent 를 붙여서 (WAF 가 UA 로 거를 때 대비)
+  const s2 = await probe('UA 추가', 'https://api.anthropic.com/v1/messages',
+    { method: 'POST', headers: H({ 'x-api-key': k, 'user-agent': 'INFSUB/1.0 (+https://namu578.github.io/INFSUB)' }), body: msgBody });
+
+  // 3) 키 없이. 길이 뚫려 있으면 401(인증 실패), 막혀 있으면 403 이 나옵니다.
+  const s3 = await probe('키 없이', 'https://api.anthropic.com/v1/models',
+    { method: 'GET', headers: H({}) });
+
+  // 4) 키를 붙여 가벼운 GET
+  const s4 = await probe('모델 목록', 'https://api.anthropic.com/v1/models',
+    { method: 'GET', headers: H({ 'x-api-key': k }) });
+
+  out.status = s1;
+  out.reached = !!out.probes[0].requestId;
 
   if (out.hasSpace)              out.verdict = '키 앞뒤에 공백이나 줄바꿈이 붙어 있습니다. 다시 넣어 주세요.';
-  else if (out.looksLikeOAuth)   out.verdict = 'Claude Code 용 OAuth 토큰입니다. 이 API에는 쓸 수 없습니다. sk-ant-api 로 시작하는 키가 필요합니다.';
-  else if (!out.looksLikeApiKey) out.verdict = 'API 키 형식이 아닙니다. console.anthropic.com 에서 새로 발급해 주세요.';
-  else if (r.ok)                 out.verdict = '정상입니다. AI 기능이 동작해야 합니다.';
-  else if (r.status === 401)     out.verdict = '키가 유효하지 않습니다. 폐기되었거나 잘못 복사되었습니다.';
-  else if (r.status === 403 && out.reached)
-    out.verdict = '요청은 Anthropic 계정까지 닿았는데 거부되었습니다. 키 권한, 워크스페이스 지출 한도, 결제 설정을 확인해 주세요.';
-  else if (r.status === 403)
-    out.verdict = '요청이 Anthropic 계정에 닿기 전에 차단되었습니다. 키 문제가 아니라 출발지(네트워크·지역) 차단일 가능성이 큽니다.';
-  else if (r.status === 404)     out.verdict = `모델 이름이 잘못되었습니다 (${model}).`;
-  else                           out.verdict = '알 수 없는 응답입니다. 아래 body 를 확인해 주세요.';
+  else if (out.looksLikeOAuth)   out.verdict = 'Claude Code 용 OAuth 토큰입니다. sk-ant-api 로 시작하는 키가 필요합니다.';
+  else if (!out.looksLikeApiKey) out.verdict = 'API 키 형식이 아닙니다. 새로 발급해 주세요.';
+  else if (s1 === 200)           out.verdict = '정상입니다. AI 기능이 동작해야 합니다.';
+  else if (s1 === 401)           out.verdict = '키가 유효하지 않습니다. 폐기되었거나 잘못 복사되었습니다.';
+  else if (s1 === 403 && s2 === 200)
+    out.verdict = 'user-agent 헤더가 없어서 막혔습니다. 코드에 user-agent 를 추가하면 해결됩니다.';
+  else if (s1 === 403 && s3 === 403)
+    out.verdict = '키 없이 보낸 요청도 403 입니다. 키와 무관하게 이 워커의 출발지가 차단된 상태입니다.';
+  else if (s1 === 403 && (s3 === 401 || s3 === 200))
+    out.verdict = '길은 뚫려 있는데 이 키로 보낸 요청만 403 입니다. 키 권한이나 워크스페이스 지출 한도를 확인해 주세요.';
+  else if (s1 === 404)           out.verdict = `모델 이름이 잘못되었습니다 (${model}).`;
+  else                           out.verdict = '아래 탐침 결과를 확인해 주세요.';
 
   return out;
 }
