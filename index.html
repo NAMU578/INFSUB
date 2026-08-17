@@ -1627,10 +1627,16 @@ async function viewAdmin(){
       <label class="chk" style="font-size:13px;color:var(--ink)">
         <input type="checkbox" id="ad-global" ${S.adminGlobal?'checked':''}> 공용 편집 모드 — 내가 고친 셀을 모두에게 적용
       </label>
-      <button class="btn ghost" id="ad-diag">AI 연결 점검</button>
+      <button class="btn ghost" id="ad-diag">Cloudflare 키 점검</button>
+      <button class="btn ghost" id="ad-diag3">지금 쓰는 AI 서버 점검</button>
       <button class="btn ghost" id="ad-diag2">브라우저에서 직접 테스트</button>
     </div></div>
+    <div class="tiny" style="margin:6px 0 10px">
+      "Cloudflare 키 점검"은 Cloudflare Worker에 저장된 키만 봅니다.
+      ${CONFIG.AI_URL?'지금 문제 생성·채점은 별도 서버(<span class="mono">'+esc(CONFIG.AI_URL)+'</span>)를 쓰므로, 실제 동작을 보려면 "지금 쓰는 AI 서버 점검"을 눌러 주세요.':'AI_URL 이 따로 설정되어 있지 않아 Cloudflare Worker가 그대로 쓰입니다.'}
+    </div>
     <div id="ad-diagout"></div>
+    <div id="ad-diagout3"></div>
     <div id="ad-diagout2"></div>
     <div id="ad-body"><div class="empty">불러오는 중…</div></div>`;
 
@@ -1664,6 +1670,21 @@ async function viewAdmin(){
      Anthropic 이 막혀 있지 않다는 뜻이고, 그러면 남은 원인은 Worker 가
      실행되는 위치(데이터센터)로 좁혀집니다.
      키는 어디에도 저장하지 않고, 테스트가 끝나면 화면에서 지웁니다. */
+  /* 지금 실제로 문제 생성·채점이 쓰는 경로(AI_URL 이 있으면 거기로,
+     없으면 Worker 로) 그대로 호출해 봅니다. 어느 서버를 보고 있는지
+     헷갈리지 않도록, Cloudflare 키 점검과는 완전히 분리했습니다. */
+  $('#ad-diag3').onclick=async()=>{
+    const box=$('#ad-diagout3');
+    box.innerHTML=`<div class="q-expect"><b>지금 쓰는 AI 서버 점검</b><pre>요청 중…</pre></div>`;
+    try{
+      const j=await api('/ai',{task:'make',notebook:'점검',
+        context:'`ndarray` 는 넘파이의 배열 자료형이다. 파이썬 리스트와 비슷하지만 더 빠르고 메모리를 효율적으로 관리한다.'});
+      box.innerHTML=`<div class="q-expect"><b>지금 쓰는 AI 서버 점검</b><pre>정상입니다.\n\n생성된 문제 예시:\n${esc(j.question||JSON.stringify(j))}</pre></div>`;
+    }catch(e){
+      box.innerHTML=`<div class="q-expect"><b>지금 쓰는 AI 서버 점검</b><pre>실패: ${esc(e.message)}</pre></div>`;
+    }
+  };
+
   $('#ad-diag2').onclick=()=>{
     const box=$('#ad-diagout2');
     box.innerHTML=`<div class="q-expect"><b>브라우저 직접 테스트</b>
