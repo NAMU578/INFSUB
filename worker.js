@@ -53,6 +53,7 @@ export default {
       if (path === '/users')     return json(await listUsers(env, me));
       if (path === '/repo/list') return json(await repoList(env, body));
       if (path === '/ai')        return json(await ai(env, body));
+      if (path === '/diag')      return json(await diag(env, me));
 
       return json({ error: '없는 주소입니다' }, 404);
     } catch (e) {
@@ -327,6 +328,54 @@ async function callClaude(env, system, user, maxTokens = 1200) {
     if (m) { try { return JSON.parse(m[0]); } catch {} }
     fail('AI 응답을 이해하지 못했습니다. 다시 시도해 주세요', 502);
   }
+}
+
+/* AI 연결 점검 — 관리자만 부를 수 있습니다.
+   키 값은 절대 돌려주지 않습니다. 앞머리와 길이만 알려 줍니다.
+   그것만으로도 잘못된 종류의 키인지, 복사할 때 공백이 붙었는지 알 수 있습니다. */
+async function diag(env, me) {
+  if (!me.admin) fail('관리자만 볼 수 있습니다', 403);
+
+  const key = env.ANTHROPIC_API_KEY;
+  const model = env.MODEL || 'claude-sonnet-5';
+  const out = { model, keySet: !!key };
+
+  if (!key) {
+    out.verdict = '이 워커에 ANTHROPIC_API_KEY 가 없습니다. Cloudflare 대시보드에서 넣어 주세요.';
+    return out;
+  }
+
+  out.keyLength = key.length;
+  out.keyHead = key.slice(0, 14);
+  out.hasSpace = /^\s|\s$/.test(key);
+  out.looksLikeApiKey = key.trim().startsWith('sk-ant-api');
+  out.looksLikeOAuth = key.trim().startsWith('sk-ant-oat');
+
+  const r = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      'x-api-key': key.trim(),
+      'anthropic-version': '2023-06-01',
+    },
+    body: JSON.stringify({
+      model, max_tokens: 4,
+      messages: [{ role: 'user', content: 'hi' }],
+    }),
+  });
+  out.status = r.status;
+  out.body = (await r.text().catch(() => '')).slice(0, 300);
+
+  if (out.hasSpace)              out.verdict = '키 앞뒤에 공백이나 줄바꿈이 붙어 있습니다. 다시 넣어 주세요.';
+  else if (out.looksLikeOAuth)   out.verdict = 'Claude Code 용 OAuth 토큰입니다. 이 API에는 쓸 수 없습니다. sk-ant-api 로 시작하는 키가 필요합니다.';
+  else if (!out.looksLikeApiKey) out.verdict = 'API 키 형식이 아닙니다. console.anthropic.com 에서 새로 발급해 주세요.';
+  else if (r.ok)                 out.verdict = '정상입니다. AI 기능이 동작해야 합니다.';
+  else if (r.status === 401)     out.verdict = '키가 유효하지 않습니다. 폐기되었거나 잘못 복사되었습니다.';
+  else if (r.status === 403)     out.verdict = '키는 형식이 맞지만 계정 쪽에서 막혀 있습니다. 결제 설정과 워크스페이스 지출 한도를 확인해 주세요.';
+  else if (r.status === 404)     out.verdict = `모델 이름이 잘못되었습니다 (${model}).`;
+  else                           out.verdict = '알 수 없는 응답입니다. 아래 body 를 확인해 주세요.';
+
+  return out;
 }
 
 async function ai(env, body) {
