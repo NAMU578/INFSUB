@@ -1622,8 +1622,31 @@ async function viewAdmin(){
       <label class="chk" style="font-size:13px;color:var(--ink)">
         <input type="checkbox" id="ad-global" ${S.adminGlobal?'checked':''}> 공용 편집 모드 — 내가 고친 셀을 모두에게 적용
       </label>
+      <button class="btn ghost" id="ad-diag">AI 연결 점검</button>
     </div></div>
+    <div id="ad-diagout"></div>
     <div id="ad-body"><div class="empty">불러오는 중…</div></div>`;
+
+  /* 서술형이 안 될 때 원인을 짚어 줍니다. 키 값은 보이지 않습니다. */
+  $('#ad-diag').onclick=async()=>{
+    const box=$('#ad-diagout');
+    box.innerHTML=`<div class="q-expect"><b>점검 중…</b></div>`;
+    if(!hasWorker()){ box.innerHTML=`<div class="q-expect"><b>점검</b><pre>서버가 연결되어 있지 않습니다.</pre></div>`; return; }
+    try{
+      const d=await api('/diag',{});
+      const line=[
+        `판정      ${d.verdict}`,
+        `모델      ${d.model}`,
+        `키 등록   ${d.keySet?'있음':'없음'}`,
+        d.keySet?`키 모양   ${d.keyHead}…  (길이 ${d.keyLength}${d.hasSpace?', 앞뒤 공백 있음':''})`:'',
+        d.status!=null?`응답      ${d.status}`:'',
+        d.body?`본문      ${d.body}`:'',
+      ].filter(Boolean).join('\n');
+      box.innerHTML=`<div class="q-expect"><b>AI 연결 점검</b><pre>${esc(line)}</pre></div>`;
+    }catch(e){
+      box.innerHTML=`<div class="q-expect"><b>AI 연결 점검</b><pre>${esc(e.message)}</pre></div>`;
+    }
+  };
 
   $('#ad-global').onchange=e=>{ S.adminGlobal=e.target.checked;
     toast(S.adminGlobal?'이제 셀을 고치면 모두에게 적용됩니다':'개인 편집 모드로 돌아왔습니다'); };
