@@ -10,26 +10,27 @@
 <style>
 /* ── 토큰 ─────────────────────────────────────────────── */
 :root{
-  --paper:#F2F1EC;
-  --paper-raised:#FBFAF7;
-  --grid:rgba(22,35,58,.055);
-  --ink:#16233A;
-  --ink-soft:#5D6A80;
-  --ink-faint:#98A2B3;
-  --rule:#D9D8D1;
-  --slate:#111A2B;
-  --slate-2:#1B2639;
-  --slate-ink:#DCE3EF;
-  --accent:#3B2FD6;
-  --accent-soft:#EAE8FB;
-  --ok:#0E7C66;
-  --ok-soft:#DDF0EA;
-  --bad:#C42847;
-  --bad-soft:#FADDE3;
-  --run:#B07800;
-  --run-soft:#FBEFD2;
+  --paper:#F6F7F8;
+  --paper-raised:#FFFFFF;
+  --ink:#1C2126;
+  --ink-soft:#586170;
+  --ink-faint:#8A939F;
+  --rule:#E1E4E8;
+  --rule-strong:#C9CFD6;
+  --tint:rgba(28,33,38,.045);
+  --slate:#1D2229;
+  --slate-2:#252B33;
+  --slate-ink:#E3E7EB;
+  --accent:#3A6EA5;
+  --accent-soft:#EDF2F7;
+  --ok:#2F7A5B;
+  --ok-soft:#EAF3EE;
+  --bad:#B23B44;
+  --bad-soft:#FAECED;
+  --run:#8F6516;
+  --run-soft:#FAF3E3;
 
-  --t-kw:#C792EA; --t-str:#A5D6A7; --t-num:#FFCC80; --t-cmt:#6B7A94; --t-bi:#82B1FF;
+  --t-kw:#C39BD8; --t-str:#8FBF9F; --t-num:#D9A86C; --t-cmt:#7D8794; --t-bi:#7FA8D9;
 
   --f-sans:'IBM Plex Sans KR',system-ui,-apple-system,sans-serif;
   --f-mono:'IBM Plex Mono','D2Coding','Menlo','Consolas',monospace;
@@ -41,8 +42,6 @@ html,body{margin:0;padding:0}
 body{
   font-family:var(--f-sans);font-weight:400;color:var(--ink);
   background-color:var(--paper);
-  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
-  background-size:24px 24px;
   font-size:15px;line-height:1.65;-webkit-font-smoothing:antialiased;
 }
 button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
@@ -61,10 +60,10 @@ a{color:var(--accent)}
 }
 .btn:hover{border-color:var(--ink-soft)}
 .btn:disabled{opacity:.4;cursor:not-allowed}
-.btn-primary{background:var(--accent);border-color:var(--accent);color:#fff}
-.btn-primary:hover{background:#3226b8;border-color:#3226b8}
+.btn-primary{background:var(--ink);border-color:var(--ink);color:#fff}
+.btn-primary:hover{background:#333B45;border-color:#333B45}
 .btn-ghost{background:transparent;border-color:transparent;color:var(--ink-soft);padding:6px 8px}
-.btn-ghost:hover{color:var(--ink);background:rgba(22,35,58,.05);border-color:transparent}
+.btn-ghost:hover{color:var(--ink);background:var(--tint);border-color:transparent}
 .btn-sm{padding:4px 9px;font-size:11.5px}
 .field{width:100%;padding:10px 12px;border:1px solid var(--rule);border-radius:var(--r);background:var(--paper-raised)}
 .field:focus{border-color:var(--accent);outline:none}
@@ -104,11 +103,12 @@ a{color:var(--accent)}
 /* ── 셸 ───────────────────────────────────────────────── */
 #app{min-height:100dvh;display:flex;flex-direction:column}
 header{
-  position:sticky;top:0;z-index:40;background:rgba(242,241,236,.92);backdrop-filter:blur(8px);
+  position:sticky;top:0;z-index:40;background:rgba(246,247,248,.93);backdrop-filter:blur(8px);
   border-bottom:1px solid var(--rule);
 }
 .hbar{display:flex;align-items:center;gap:14px;padding:10px 20px}
-.brand{font-family:var(--f-mono);font-size:12.5px;letter-spacing:.04em;font-weight:500}
+.brand{font-family:var(--f-mono);font-size:12.5px;letter-spacing:.04em;font-weight:500;background:none;border:0;padding:0;color:var(--ink)}
+.brand:hover span{color:var(--ink-soft)}
 .brand span{color:var(--ink-faint)}
 .spacer{flex:1}
 .chip{
@@ -116,7 +116,7 @@ header{
   border-radius:100px;background:var(--paper-raised);display:inline-flex;align-items:center;gap:6px
 }
 .chip.admin{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
-.banner{background:var(--run-soft);border-bottom:1px solid #E3CE96;padding:7px 20px;font-size:12.5px;display:flex;align-items:center;gap:12px}
+.banner{background:var(--run-soft);border-bottom:1px solid #E5D6AE;padding:7px 20px;font-size:12.5px;display:flex;align-items:center;gap:12px}
 .banner .mono{font-weight:500}
 
 .layout{flex:1;display:grid;grid-template-columns:262px 1fr;min-height:0}
@@ -125,11 +125,13 @@ aside{border-right:1px solid var(--rule);padding:18px 0 40px;overflow-y:auto;max
 .nav-sec h3{margin:0 0 8px;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);font-weight:500}
 .nav-item{
   display:flex;align-items:baseline;gap:9px;width:100%;text-align:left;
-  padding:6px 9px;border:0;background:none;border-radius:var(--r);font-size:13.5px;line-height:1.45;
+  padding:6px 9px 6px 11px;border:0;border-left:2px solid transparent;background:none;
+  border-radius:0 var(--r) var(--r) 0;font-size:13.5px;line-height:1.45;color:var(--ink-soft);
+  transition:background .12s,color .12s;
 }
-.nav-item:hover{background:rgba(22,35,58,.055)}
-.nav-item.active{background:var(--ink);color:var(--paper-raised)}
-.nav-item.active .nav-n{color:rgba(255,255,255,.55)}
+.nav-item:hover{background:var(--tint);color:var(--ink)}
+.nav-item.active{background:var(--tint);border-left-color:var(--ink);color:var(--ink);font-weight:500}
+.nav-item.active .nav-n{color:var(--ink-soft)}
 .nav-n{font-family:var(--f-mono);font-size:10.5px;color:var(--ink-faint);flex:none}
 .nav-item .dot{width:5px;height:5px;border-radius:50%;background:var(--accent);flex:none;align-self:center}
 main{min-width:0;padding:26px 0 90px}
@@ -146,7 +148,7 @@ main{min-width:0;padding:26px 0 90px}
 .md :is(h1,h2,h3,h4){font-weight:600;letter-spacing:-.015em;line-height:1.3;margin:20px 0 8px}
 .md h1{font-size:22px} .md h2{font-size:19px} .md h3{font-size:16px} .md h4{font-size:14.5px}
 .md p{margin:8px 0} .md ul,.md ol{margin:8px 0;padding-left:22px} .md li{margin:3px 0}
-.md code{font-family:var(--f-mono);font-size:.88em;background:rgba(59,47,214,.08);color:var(--accent);padding:1px 5px;border-radius:2px}
+.md code{font-family:var(--f-mono);font-size:.88em;background:var(--accent-soft);color:#2C4C6E;border:1px solid #DDE5EE;padding:.5px 5px;border-radius:2px}
 .md pre{background:var(--slate);color:var(--slate-ink);padding:12px 14px;border-radius:var(--r);overflow-x:auto}
 .md pre code{background:none;color:inherit;padding:0}
 .md blockquote{margin:10px 0;padding-left:14px;border-left:2px solid var(--rule);color:var(--ink-soft)}
@@ -155,7 +157,7 @@ main{min-width:0;padding:26px 0 90px}
 .md th,.md td{border:1px solid var(--rule);padding:5px 9px;text-align:left}
 .md hr{border:0;border-top:1px solid var(--rule);margin:18px 0}
 
-.code-shell{background:var(--slate);border-radius:var(--r);overflow:hidden;position:relative}
+.code-shell{background:var(--slate);border:1px solid #2E353E;border-radius:var(--r);overflow:hidden;position:relative}
 .code-shell pre{margin:0;padding:12px 14px;overflow-x:auto;font-family:var(--f-mono);font-size:13px;line-height:1.6;color:var(--slate-ink);tab-size:4}
 .code-shell textarea{
   display:block;width:100%;background:var(--slate-2);color:var(--slate-ink);border:0;
@@ -163,18 +165,27 @@ main{min-width:0;padding:26px 0 90px}
 }
 .code-shell textarea:focus{outline:2px solid var(--accent);outline-offset:-2px}
 .cell-acts{display:flex;gap:2px;padding:4px 6px;background:rgba(255,255,255,.04);border-top:1px solid rgba(255,255,255,.07)}
-.cell-acts .btn{background:transparent;border-color:transparent;color:#9FB0CC;font-size:11.5px;padding:3px 8px}
+.cell-acts .btn{background:transparent;border-color:transparent;color:#A3ACB8;font-size:11.5px;padding:3px 8px}
 .cell-acts .btn:hover{background:rgba(255,255,255,.08);color:#fff;border-color:transparent}
 .edited-tag{font-family:var(--f-mono);font-size:10px;color:var(--run);margin-left:auto;align-self:center;padding-right:6px}
 
 .t-kw{color:var(--t-kw)} .t-str{color:var(--t-str)} .t-num{color:var(--t-num)}
 .t-cmt{color:var(--t-cmt);font-style:italic} .t-bi{color:var(--t-bi)}
 
-.out{margin-top:6px;font-family:var(--f-mono);font-size:12.5px;line-height:1.55}
-.out pre{margin:0;white-space:pre-wrap;word-break:break-word;padding:8px 12px;background:rgba(22,35,58,.045);border-radius:var(--r);border-left:2px solid var(--rule)}
-.out.err pre{background:var(--bad-soft);border-left-color:var(--bad);color:#8A1B31}
-.out img{max-width:100%;background:#fff;border-radius:var(--r);border:1px solid var(--rule)}
-.out table{border-collapse:collapse;font-size:12px}
+.out{margin-top:9px;font-family:var(--f-mono);font-size:12.5px;line-height:1.55}
+.out::before{
+  content:'출력';display:block;font-size:10px;letter-spacing:.14em;
+  color:var(--ink-faint);margin-bottom:4px;
+}
+.out.err::before{content:'오류';color:var(--bad)}
+.out pre{
+  margin:0;white-space:pre-wrap;word-break:break-word;padding:10px 13px;
+  background:var(--paper-raised);color:var(--ink);
+  border:1px solid var(--rule);border-left:3px solid var(--rule-strong);border-radius:var(--r);
+}
+.out.err pre{background:var(--bad-soft);border-color:#EFD3D5;border-left-color:var(--bad);color:#8C2F37}
+.out img{max-width:100%;background:#fff;border-radius:var(--r);border:1px solid var(--rule);padding:6px}
+.out table{border-collapse:collapse;font-size:12px;background:var(--paper-raised)}
 .out th,.out td{border:1px solid var(--rule);padding:3px 7px}
 
 /* ── 퀴즈 ─────────────────────────────────────────────── */
@@ -207,11 +218,11 @@ main{min-width:0;padding:26px 0 90px}
 .verdict.ok{background:var(--ok-soft);border-left:2px solid var(--ok)}
 .verdict.bad{background:var(--bad-soft);border-left:2px solid var(--bad)}
 .verdict b{font-family:var(--f-mono);font-size:12.5px;letter-spacing:.04em;display:block;margin-bottom:4px}
-.verdict .ans{font-family:var(--f-mono);white-space:pre-wrap;background:rgba(255,255,255,.55);padding:6px 9px;border-radius:2px;margin-top:6px;display:block;font-size:12.5px}
+.verdict .ans{font-family:var(--f-mono);white-space:pre-wrap;background:var(--paper-raised);border:1px solid var(--rule);padding:6px 9px;border-radius:2px;margin-top:6px;display:block;font-size:12.5px}
 .order-pool,.order-picked{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
 .order-line{
   font-family:var(--f-mono);font-size:12.5px;text-align:left;width:100%;padding:8px 11px;
-  border:1px dashed var(--rule);border-radius:var(--r);background:var(--paper-raised);white-space:pre
+  border:1px dashed var(--rule-strong);border-radius:var(--r);background:var(--paper-raised);white-space:pre
 }
 .order-picked .order-line{border-style:solid;border-color:var(--accent);background:var(--accent-soft)}
 .progress{height:2px;background:var(--rule);border-radius:2px;overflow:hidden;margin-bottom:20px}
@@ -224,7 +235,7 @@ main{min-width:0;padding:26px 0 90px}
   text-align:left;font-weight:500;padding:7px 10px;border-bottom:1px solid var(--rule)
 }
 .tbl td{padding:9px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
-.tbl tr:hover td{background:rgba(22,35,58,.03)}
+.tbl tr:hover td{background:rgba(28,33,38,.03)}
 .stat-row{display:flex;gap:26px;flex-wrap:wrap;margin-bottom:22px}
 .stat{min-width:78px}
 .stat .n{font-family:var(--f-mono);font-size:26px;font-weight:500;letter-spacing:-.02em;line-height:1.1}
@@ -234,8 +245,24 @@ main{min-width:0;padding:26px 0 90px}
 .empty{padding:44px 20px;text-align:center;color:var(--ink-soft);font-size:13.5px}
 .empty .eyebrow{margin-bottom:8px}
 
+/* ── 홈 ───────────────────────────────────────────────── */
+.home-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin-bottom:30px}
+.home-card{
+  display:block;text-align:left;width:100%;padding:14px 15px;
+  background:var(--paper-raised);border:1px solid var(--rule);border-radius:var(--r);
+  transition:border-color .12s,box-shadow .12s;
+}
+.home-card:hover{border-color:var(--rule-strong);box-shadow:0 1px 3px rgba(28,33,38,.06)}
+.home-card .t{font-size:14px;font-weight:500;line-height:1.4}
+.home-card .d{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5}
+.home-sec{margin-bottom:12px}
+.home-sec h3{
+  margin:0 0 10px;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--ink-faint);font-weight:500;
+}
+
 /* ── 모달 ─────────────────────────────────────────────── */
-.modal{position:fixed;inset:0;z-index:80;display:grid;place-items:center;padding:20px;background:rgba(22,35,58,.35)}
+.modal{position:fixed;inset:0;z-index:80;display:grid;place-items:center;padding:20px;background:rgba(28,33,38,.34)}
 .modal-box{width:100%;max-width:460px;background:var(--paper-raised);border:1px solid var(--rule);border-radius:var(--r);padding:22px}
 .modal-box h3{margin:0 0 4px;font-size:17px;font-weight:600}
 .modal-box .sub{color:var(--ink-soft);font-size:13px;margin-bottom:16px}
@@ -249,7 +276,7 @@ main{min-width:0;padding:26px 0 90px}
 @media (max-width:860px){
   :root{--gutter:52px}
   .layout{grid-template-columns:1fr}
-  aside{position:fixed;inset:46px 0 auto 0;z-index:35;background:var(--paper-raised);max-height:calc(100dvh - 46px);border-right:0;border-bottom:1px solid var(--rule);box-shadow:0 12px 30px rgba(22,35,58,.1)}
+  aside{position:fixed;inset:46px 0 auto 0;z-index:35;background:var(--paper-raised);max-height:calc(100dvh - 46px);border-right:0;border-bottom:1px solid var(--rule);box-shadow:0 12px 30px rgba(28,33,38,.1)}
   aside.closed{display:none}
   .menu-btn{display:inline-flex}
   .gut>.g-mark{padding-right:9px;font-size:10.5px}
@@ -296,7 +323,7 @@ main{min-width:0;padding:26px 0 90px}
   <header>
     <div class="hbar">
       <button class="btn btn-ghost menu-btn" id="menu-btn">☰</button>
-      <div class="brand">정보수업 <span>/ notebook</span></div>
+      <button class="brand" id="go-home" title="홈으로">정보수업 <span>/ notebook</span></button>
       <div class="spacer"></div>
       <span class="chip" id="py-chip" title="Python 실행 환경">python <span class="mono" id="py-state">대기</span></span>
       <span class="chip" id="user-chip"></span>
@@ -1097,7 +1124,7 @@ function genConcept(nb){
     return {
       type:'개념', typeKey:'concept', mode:'mc',
       intro: sec.head ? `다음은 **${sec.head}** 에 대한 설명이다.` : '',
-      stem:`다음 설명의 빈칸에 들어갈 것으로 알맞은 것은?<br><span style="display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px">${esc(clean(sec.body).split(hit).join('____'))}</span>`,
+      stem:`다음 설명의 빈칸에 들어갈 것으로 알맞은 것은?<br><span style="display:block;margin-top:9px;padding:9px 12px;background:var(--paper-raised);border:1px solid var(--rule);border-left:3px solid var(--rule-strong);border-radius:var(--r)">${esc(clean(sec.body).split(hit).join('____'))}</span>`,
       options: shuffle([hit, ...others]),
       answer: hit,
       why:`노트북 설명 부분에서 <span class="mono">${esc(hit)}</span> 를 다룬 문장입니다.`
@@ -1992,9 +2019,43 @@ function markNav(){
   $$('.nav-item').forEach(b=>b.classList.toggle('active',
     (b.dataset.view && b.dataset.view===S.view) || (b.dataset.path && S.view==='nb' && b.dataset.path===S.nb?.path)));
 }
+function viewHome(){
+  const nbs = S.notebooks || [];
+  $('#view').innerHTML=`
+    <div class="page-head">
+      <div class="eyebrow">Workbench</div>
+      <h2>${esc(S.me?.id||'')} 님, 안녕하세요</h2>
+      <div class="sub">왼쪽에서 노트북을 고르거나, 아래에서 바로 시작하세요.</div>
+    </div>
+    <div class="home-sec">
+      <h3>노트북</h3>
+      ${nbs.length
+        ? `<div class="home-grid">${nbs.map(n=>
+            `<button class="home-card" data-go-nb="${escAttr(n.path)}">
+               <div class="t">${esc(n.name)}</div>
+               <div class="d">읽고 실행해 보기</div>
+             </button>`).join('')}</div>`
+        : `<div class="empty"><div class="eyebrow">No notebooks</div>
+            <span class="mono">${esc(CONFIG.NOTEBOOK_DIR)}/</span> 폴더에 <span class="mono">.ipynb</span> 파일을 올려 주세요.</div>`}
+    </div>
+    <div class="home-sec">
+      <h3>학습</h3>
+      <div class="home-grid">
+        <button class="home-card" data-go="quiz"><div class="t">문제 풀기</div><div class="d">노트북 내용으로 문제를 만들어 풉니다</div></button>
+        <button class="home-card" data-go="wrong"><div class="t">오답 노트</div><div class="d">틀린 문제를 모아서 다시 봅니다</div></button>
+        <button class="home-card" data-go="stats"><div class="t">진행 상황</div><div class="d">지금까지 푼 기록을 확인합니다</div></button>
+      </div>
+    </div>`;
+  $('#view').onclick=e=>{
+    const nb=e.target.closest('[data-go-nb]'); if(nb) return openNotebook(nb.dataset.goNb);
+    const go=e.target.closest('[data-go]');    if(go) return setView(go.dataset.go);
+  };
+}
 function setView(v,opts){
   S.view=v; markNav(); window.scrollTo(0,0);
+  $('#view').onclick=null;
   if(window.innerWidth<=860) $('#side').classList.add('closed');
+  if(v==='home')  return viewHome();
   if(v==='quiz')  return viewQuiz(opts);
   if(v==='wrong') return viewWrong();
   if(v==='stats') return viewStats();
@@ -2036,13 +2097,14 @@ async function start(me){
 
   $('#nb-list').onclick=e=>{ const b=e.target.closest('[data-path]'); if(b) openNotebook(b.dataset.path); };
   $$('.nav-item[data-view]').forEach(b=>b.onclick=()=>setView(b.dataset.view));
-  setView('quiz');
+  setView('home');
 }
 
 $('#logout').onclick=()=>{ localStorage.removeItem('cnb:auto'); location.reload(); };
 $('#chpw').onclick=openChangePw;
 $('#imp-exit').onclick=exitImpersonate;
 $('#menu-btn').onclick=()=>$('#side').classList.toggle('closed');
+$('#go-home').onclick=()=>setView('home');
 
 (async function boot(){
   bindLogin();
