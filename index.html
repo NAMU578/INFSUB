@@ -350,6 +350,9 @@ const CONFIG = {
 
   // Cloudflare Worker 주소. 비워두면 이 브라우저에만 저장되는 로컬 모드로 동작합니다.
   WORKER_URL   : 'https://info-notebook.infsub.workers.dev',                 // 예: 'https://info-nb.your-name.workers.dev'
+  // 서술형 AI(문제 생성·채점)만 여기로 보냅니다. Anthropic 이 Cloudflare Worker의
+  // 실행 위치를 막아서 별도로 뒀습니다. 비워 두면 WORKER_URL 의 /ai 를 그대로 씁니다.
+  AI_URL       : 'https://YOUR-VERCEL-PROJECT.vercel.app/api/ai',
 
   ADMIN_ID     : 'ohh5259',
 
@@ -435,7 +438,9 @@ const hasWorker = () => !!CONFIG.WORKER_URL;
 const LKEY = id => `cnb:data:${id}`;
 
 async function api(path, body, method='POST'){
-  const res = await fetch(CONFIG.WORKER_URL.replace(/\/$/,'') + path, {
+  // /ai 는 별도 서버(AI_URL)로. 나머지는 그대로 Cloudflare Worker로.
+  const base = (path==='/ai' && CONFIG.AI_URL) ? CONFIG.AI_URL.replace(/\/ai\/?$/,'') : CONFIG.WORKER_URL;
+  const res = await fetch(base.replace(/\/$/,'') + path, {
     method,
     headers:{'content-type':'application/json', ...(S.me?.token?{authorization:'Bearer '+S.me.token}:{})},
     body: method==='GET'?undefined:JSON.stringify(body||{})
