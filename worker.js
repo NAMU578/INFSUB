@@ -22,6 +22,8 @@ const OK_ID = /^[A-Za-z0-9_.-]{2,24}$/;
 const DAY = 86400;
 const TOKEN_DAYS = 30;
 
+const WORKER_VERSION = '2026-08-17-diag';
+
 export default {
   async fetch(req, env) {
     const origin = env.ALLOWED_ORIGIN || '*';
@@ -40,7 +42,14 @@ export default {
       const path = new URL(req.url).pathname.replace(/\/+$/, '') || '/';
       const body = req.method === 'POST' ? await req.json().catch(() => ({})) : {};
 
-      if (path === '/')              return json({ ok: true, service: 'info-notebook' });
+      // 주소창에서 이 워커를 열면 어느 버전이 배포되어 있는지 보입니다.
+      // GitHub 에 파일을 올려도 Cloudflare 는 자동으로 바뀌지 않으므로,
+      // 코드를 고친 뒤에는 여기서 version 이 바뀌었는지 꼭 확인하세요.
+      if (path === '/') return json({
+        ok: true, service: 'info-notebook', version: WORKER_VERSION,
+        routes: ['/auth/register', '/auth/login', '/auth/change', '/auth/reset',
+                 '/data/get', '/data/put', '/users', '/repo/list', '/ai', '/diag'],
+      });
       if (path === '/auth/register') return json(await register(env, body));
       if (path === '/auth/login')    return json(await login(env, body));
 
