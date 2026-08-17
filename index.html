@@ -1640,6 +1640,7 @@ async function viewAdmin(){
         `키 등록   ${d.keySet?'있음':'없음'}`,
         d.keySet?`키 모양   ${d.keyHead}…  (길이 ${d.keyLength}${d.hasSpace?', 앞뒤 공백 있음':''})`:'',
         d.status!=null?`응답      ${d.status}`:'',
+        d.reached!=null?`도달      ${d.reached?'Anthropic 계정까지 닿음 ('+d.requestId+')':'닿기 전에 차단됨 — request-id 없음'}`:'',
         d.body?`본문      ${d.body}`:'',
       ].filter(Boolean).join('\n');
       box.innerHTML=`<div class="q-expect"><b>AI 연결 점검</b><pre>${esc(line)}</pre></div>`;
