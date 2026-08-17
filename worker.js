@@ -22,7 +22,7 @@ const OK_ID = /^[A-Za-z0-9_.-]{2,24}$/;
 const DAY = 86400;
 const TOKEN_DAYS = 30;
 
-const WORKER_VERSION = '2026-08-17-diag';
+const WORKER_VERSION = '2026-08-17-diag2';
 
 export default {
   async fetch(req, env) {
@@ -375,12 +375,20 @@ async function diag(env, me) {
   out.status = r.status;
   out.body = (await r.text().catch(() => '')).slice(0, 300);
 
+  // request-id 가 있으면 요청이 Anthropic 내부까지 도달한 것이고(= 계정·키 문제),
+  // 없으면 그 앞 관문에서 잘린 것입니다(= 네트워크·지역·출발지 IP 차단).
+  out.requestId = r.headers.get('request-id') || r.headers.get('x-request-id') || null;
+  out.reached = !!out.requestId;
+
   if (out.hasSpace)              out.verdict = '키 앞뒤에 공백이나 줄바꿈이 붙어 있습니다. 다시 넣어 주세요.';
   else if (out.looksLikeOAuth)   out.verdict = 'Claude Code 용 OAuth 토큰입니다. 이 API에는 쓸 수 없습니다. sk-ant-api 로 시작하는 키가 필요합니다.';
   else if (!out.looksLikeApiKey) out.verdict = 'API 키 형식이 아닙니다. console.anthropic.com 에서 새로 발급해 주세요.';
   else if (r.ok)                 out.verdict = '정상입니다. AI 기능이 동작해야 합니다.';
   else if (r.status === 401)     out.verdict = '키가 유효하지 않습니다. 폐기되었거나 잘못 복사되었습니다.';
-  else if (r.status === 403)     out.verdict = '키는 형식이 맞지만 계정 쪽에서 막혀 있습니다. 결제 설정과 워크스페이스 지출 한도를 확인해 주세요.';
+  else if (r.status === 403 && out.reached)
+    out.verdict = '요청은 Anthropic 계정까지 닿았는데 거부되었습니다. 키 권한, 워크스페이스 지출 한도, 결제 설정을 확인해 주세요.';
+  else if (r.status === 403)
+    out.verdict = '요청이 Anthropic 계정에 닿기 전에 차단되었습니다. 키 문제가 아니라 출발지(네트워크·지역) 차단일 가능성이 큽니다.';
   else if (r.status === 404)     out.verdict = `모델 이름이 잘못되었습니다 (${model}).`;
   else                           out.verdict = '알 수 없는 응답입니다. 아래 body 를 확인해 주세요.';
 
