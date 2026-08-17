@@ -326,6 +326,7 @@ main{min-width:0;padding:26px 0 90px}
       <div class="nav-sec hidden" id="admin-sec">
         <h3>관리자</h3>
         <button class="nav-item" data-view="admin"><span class="nav-n">A</span>회원 관리</button>
+        <button class="nav-item" data-view="essay"><span class="nav-n">B</span>서술형 문제 관리<span class="dot hidden" id="essay-dot"></span></button>
       </div>
     </aside>
 
@@ -1124,6 +1125,72 @@ function genOrder(nb){
   return null;
 }
 
+/* ════════════════════════════════════════════════════════
+   AI 서술형 문제 보관
+   AI가 만든 문제를 한 번 쓰고 버리지 않고 모아 둡니다.
+
+   학생은 공용 데이터에 쓸 수 없으므로(서버가 관리자만 허용),
+   학생이 푸는 동안 생긴 문제는 각자 데이터에 '초안'으로 쌓입니다.
+   관리자가 검토해서 승인하면 공용 은행으로 올라가고,
+   그때부터는 새로 만들지 않고 그 문제를 다시 출제합니다.
+   채점은 답안이 매번 다르므로 계속 AI가 합니다.
+   ════════════════════════════════════════════════════════ */
+
+/* 같은 문제가 여러 학생에게서 올라와도 하나로 묶으려고 문제 글로 id를 만듭니다. */
+function essayId(question){
+  const t = String(question||'').replace(/\s+/g,' ').trim();
+  let h = 0;
+  for(let i=0;i<t.length;i++){ h = (h*31 + t.charCodeAt(i)) | 0; }
+  return 'e' + (h>>>0).toString(36) + '_' + t.length;
+}
+
+function essayBank(){
+  if(!S.shared) return [];
+  if(!Array.isArray(S.shared.essayBank)) S.shared.essayBank = [];
+  return S.shared.essayBank;
+}
+function essayRejected(){
+  if(!S.shared) return [];
+  if(!Array.isArray(S.shared.essayRejected)) S.shared.essayRejected = [];
+  return S.shared.essayRejected;
+}
+function essayDrafts(){
+  if(!S.data) return [];
+  if(!Array.isArray(S.data.essayDrafts)) S.data.essayDrafts = [];
+  return S.data.essayDrafts;
+}
+
+/* 노트북 이름 맞추기 — 괄호·밑줄 차이는 무시합니다. */
+const essayNbKey = s => String(s||'').replace(/\.ipynb$/,'')
+  .replace(/[^0-9A-Za-z가-힣]/g,'').toLowerCase();
+
+function essaySaveDraft(nbName, j, intro){
+  const id = essayId(j.question);
+  if(essayBank().some(x=>x.id===id)) return;        // 이미 승인된 문제
+  if(essayRejected().includes(id)) return;          // 관리자가 이미 버린 문제
+  const d = essayDrafts();
+  if(d.some(x=>x.id===id)) return;
+  d.push({id, nb:nbName, question:j.question, code:j.code||'',
+          rubric:j.rubric||'', answer:j.model_answer||'', intro:intro||'',
+          at:Date.now()});
+  if(d.length>60) d.splice(0, d.length-60);         // 무한정 쌓이지 않게
+  persist().catch(()=>{});
+}
+
+/* 승인된 문제 중 이 노트북 것을 골라 옵니다. */
+function essayFromBank(nbName, count){
+  const key = essayNbKey(nbName);
+  const pool = essayBank().filter(x=>{
+    const a = essayNbKey(x.nb);
+    return a===key || a.startsWith(key) || key.startsWith(a);
+  });
+  return shuffle(pool).slice(0, count).map(x=>({
+    type:'서술형', typeKey:'essay', mode:'essay', ai:true, fromBank:true,
+    intro:x.intro||'', stem:esc(x.question), code:x.code||'',
+    rubric:x.rubric||'', answer:x.answer||'', why:'AI 채점 결과입니다.'
+  }));
+}
+
 /* 6. 서술형 (Claude API, Worker 필요) — 노트북 전체가 아니라 덩어리 하나만 넘깁니다 */
 async function genEssay(nb){
   if(!hasWorker()) return null;
@@ -1134,6 +1201,7 @@ async function genEssay(nb){
             + (u.out?`\n\n실행 결과:\n${u.out}`:'');
   const j = await api('/ai',{task:'make', notebook:nb.name, context:ctx});
   if(!j.question) return null;
+  essaySaveDraft(nb.name, j, u.intro);   // 한 번 쓰고 버리지 않고 초안으로 남깁니다
   return {
     type:'서술형', typeKey:'essay', mode:'essay', ai:true,
     intro:u.intro,
@@ -1344,7 +1412,14 @@ async function startQuiz(){
     await Py.get().catch(()=>{});
     let qs = await buildQuiz(nb, useAI?Math.max(1,n-2):n);
     if(useAI){
-      for(let i=0;i<2;i++){ try{ const e=await genEssay(nb); if(e) qs.push(e); }catch(err){ toast('서술형 생성 실패: '+err.message); break; } }
+      const need = 2;
+      // 관리자가 승인해 둔 문제를 먼저 씁니다. AI 호출이 줄고 품질도 검증된 것만 나갑니다.
+      const reused = essayFromBank(nb.name, need);
+      qs.push(...reused);
+      for(let i=reused.length;i<need;i++){
+        try{ const e=await genEssay(nb); if(e) qs.push(e); }
+        catch(err){ toast('서술형 생성 실패: '+err.message); break; }
+      }
     }
     if(!qs.length) throw new Error('문제를 만들지 못했습니다. 다른 노트북을 골라 보세요');
     QZ={nb, qs:shuffle(qs), i:0, picked:null, order:[], graded:false, right:0};
@@ -1611,6 +1686,111 @@ function viewStats(){
       </tbody></table>`:`<div class="tiny">아직 기록이 없습니다.</div>`}`;
 }
 
+
+/* ════════════════════════════════════════════════════════
+   화면: AI 서술형 문제 관리 (관리자)
+   학생들이 푸는 동안 AI가 만든 문제를 모아 보여 주고,
+   검토해서 승인하거나 버릴 수 있게 합니다. 승인한 문제는
+   다음부터 새로 만들지 않고 그대로 다시 출제됩니다.
+   ════════════════════════════════════════════════════════ */
+async function viewEssayAdmin(){
+  $('#view').innerHTML=`<div class="page-head"><div class="eyebrow">Admin</div><h2>서술형 문제 관리</h2>
+    <div class="sub">AI가 만든 서술형 문제를 검토합니다. 승인하면 다음부터 새로 만들지 않고 이 문제를 다시 냅니다.
+      채점은 답안이 매번 다르므로 계속 AI가 합니다.</div></div>
+    <div id="es-body"><div class="empty">불러오는 중…</div></div>`;
+
+  const body=$('#es-body');
+
+  // 학생들이 각자 데이터에 쌓아 둔 초안을 모읍니다.
+  let drafts=[];
+  try{
+    let users=[];
+    if(hasWorker()) users=(await api('/users',{})).users;
+    else users=Object.keys(localAccounts()).map(id=>({id}));
+    for(const u of users){
+      const d=await Store.load(u.id).catch(()=>null);
+      for(const x of (d?.essayDrafts||[])) drafts.push({...x, by:u.id});
+    }
+  }catch(e){ body.innerHTML=`<div class="empty">${esc(e.message)}</div>`; return; }
+
+  const bank=essayBank(), rejected=essayRejected();
+  const seen=new Set();
+  drafts = drafts.filter(x=>{
+    if(bank.some(b=>b.id===x.id)) return false;      // 이미 승인됨
+    if(rejected.includes(x.id))   return false;      // 이미 버림
+    if(seen.has(x.id)) return false;                 // 여러 학생이 같은 문제를 받은 경우
+    seen.add(x.id); return true;
+  }).sort((a,b)=>b.at-a.at);
+
+  const card = (x, kind) => `
+    <div class="q-expect" data-id="${escAttr(x.id)}" data-kind="${kind}" style="margin-bottom:12px">
+      <b>${kind==='bank'?'승인됨':'검토 대기'} · ${esc(x.nb||'')}${x.by?' · '+esc(x.by)+' 풀이 중 생성':''}</b>
+      <div style="margin:8px 0">
+        <label class="tiny">문제</label>
+        <textarea class="inp es-q" rows="3" style="width:100%">${esc(x.question)}</textarea>
+      </div>
+      ${x.code?`<div style="margin:8px 0"><label class="tiny">코드</label>
+        <textarea class="inp es-c" rows="3" style="width:100%;font-family:var(--f-mono)">${esc(x.code)}</textarea></div>`:''}
+      <div style="margin:8px 0">
+        <label class="tiny">채점 기준</label>
+        <textarea class="inp es-r" rows="2" style="width:100%">${esc(x.rubric)}</textarea>
+      </div>
+      <div style="margin:8px 0">
+        <label class="tiny">모범 답안</label>
+        <textarea class="inp es-a" rows="2" style="width:100%">${esc(x.answer)}</textarea>
+      </div>
+      <div class="toolbar">
+        ${kind==='draft'
+          ? `<button class="btn btn-sm" data-act="approve">승인하고 저장</button>
+             <button class="btn btn-sm btn-ghost" data-act="reject">버리기</button>`
+          : `<button class="btn btn-sm" data-act="save">수정 저장</button>
+             <button class="btn btn-sm btn-ghost" data-act="remove">은행에서 빼기</button>`}
+      </div>
+    </div>`;
+
+  body.innerHTML = `
+    <h3 style="margin:18px 0 10px">검토 대기 ${drafts.length}건</h3>
+    ${drafts.length?drafts.map(x=>card(x,'draft')).join(''):'<div class="empty">새로 만들어진 문제가 없습니다.</div>'}
+    <h3 style="margin:26px 0 10px">승인된 문제 ${bank.length}건</h3>
+    ${bank.length?bank.map(x=>card(x,'bank')).join(''):'<div class="empty">아직 승인한 문제가 없습니다.</div>'}`;
+
+  const readCard = el => ({
+    question: el.querySelector('.es-q').value.trim(),
+    code:     el.querySelector('.es-c')?.value ?? '',
+    rubric:   el.querySelector('.es-r').value.trim(),
+    answer:   el.querySelector('.es-a').value.trim(),
+  });
+
+  body.onclick = async e => {
+    const btn=e.target.closest('[data-act]'); if(!btn) return;
+    const el=e.target.closest('[data-id]');
+    const id=el.dataset.id, kind=el.dataset.kind, act=btn.dataset.act;
+    const src = kind==='draft' ? drafts.find(x=>x.id===id) : bank.find(x=>x.id===id);
+    if(!src) return;
+    const edited = readCard(el);
+    if(!edited.question){ return toast('문제 내용이 비어 있습니다'); }
+
+    if(act==='approve'){
+      essayBank().push({id, nb:src.nb, intro:src.intro||'', at:Date.now(), ...edited});
+      await saveShared(); toast('승인했습니다'); return viewEssayAdmin();
+    }
+    if(act==='reject'){
+      essayRejected().push(id);
+      await saveShared(); toast('버렸습니다'); return viewEssayAdmin();
+    }
+    if(act==='save'){
+      Object.assign(src, edited);
+      await saveShared(); toast('저장했습니다'); return;
+    }
+    if(act==='remove'){
+      const i=essayBank().findIndex(x=>x.id===id);
+      if(i>=0) essayBank().splice(i,1);
+      essayRejected().push(id);
+      await saveShared(); toast('은행에서 뺐습니다'); return viewEssayAdmin();
+    }
+  };
+}
+
 /* ════════════════════════════════════════════════════════
    화면: 관리자
    ════════════════════════════════════════════════════════ */
@@ -1819,6 +1999,7 @@ function setView(v,opts){
   if(v==='wrong') return viewWrong();
   if(v==='stats') return viewStats();
   if(v==='admin') return viewAdmin();
+  if(v==='essay') return viewEssayAdmin();
   if(v==='nb')    return viewNotebook();
 }
 async function openNotebook(path){
