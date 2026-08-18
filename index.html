@@ -1913,7 +1913,7 @@ function askAI(context, label){
 
   const m = modal(`
     <h3>AI에게 질문</h3>
-    <div class="sub">${esc(label)}${CHAT.nb?' · '+esc(CHAT.nb.split('/').pop()):''} — 이 대화는 관리자에게 그대로 보입니다.</div>
+    <div class="sub">${esc(label)}${CHAT.nb?' · '+esc(CHAT.nb.split('/').pop()):''} — 이 대화가 길어지면 내 지갑이 거덜납니다.</div>
     <div class="q-code" style="max-height:120px;overflow:auto"><pre>${esc(context)}</pre></div>
     <div class="ch-log" id="ch-log"></div>
     <textarea class="field" id="ch-in" rows="2" placeholder="이 부분에 대해 무엇이 궁금한가요? (Ctrl+Enter 로 보내기)"></textarea>
