@@ -282,7 +282,17 @@ var GRADE_SYS = `\uB108\uB294 \uD55C\uAD6D \uACE0\uB4F1\uD559\uAD50 \uC815\uBCF4
 
 \uCD9C\uB825\uC740 \uC544\uB798 \uD615\uD0DC\uC758 JSON \uD558\uB098\uBFD0\uC774\uB2E4. \uC124\uBA85, \uC778\uC0AC\uB9D0, \uB9C8\uD06C\uB2E4\uC6B4 \uCF54\uB4DC\uD39C\uC2A4\uB97C \uC808\uB300 \uBD99\uC774\uC9C0 \uC54A\uB294\uB2E4.
 {"correct":true,"feedback":"...","model_answer":"..."}`;
-async function callClaude(env, system, user, maxTokens = 1200) {
+var CHAT_SYS = `너는 한국 고등학교 정보 과목의 보조 교사다. 학생이 수업 노트북에서 직접 고른 부분에 대해 질문한다.
+
+규칙
+- 한국어로, 세 문단을 넘기지 않게 짧게 답한다.
+- 학생이 고른 부분을 근거로 설명한다. 거기에 없는 내용을 말할 때는 추측임을 밝힌다.
+- 코드 예시는 필요할 때만, 짧게 넣는다.
+- 과제 답을 통째로 대신 써 주지 않는다. 스스로 풀도록 원리와 힌트를 준다.
+- 정보 과목·프로그래밍과 관계없는 잡담에는 답하지 않고 한 줄로 거절한다.
+
+마크다운으로 답한다.`;
+async function callClaude(env, system, user, maxTokens = 1200, raw = false) {
   if (!env.ANTHROPIC_API_KEY) fail("\uC11C\uC220\uD615 \uAE30\uB2A5\uC774 \uC124\uC815\uB418\uC9C0 \uC54A\uC558\uC2B5\uB2C8\uB2E4 (ANTHROPIC_API_KEY \uC5C6\uC74C)", 503);
   const r = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
@@ -297,7 +307,7 @@ async function callClaude(env, system, user, maxTokens = 1200) {
       model: env.MODEL || "claude-sonnet-5",
       max_tokens: maxTokens,
       system,
-      messages: [{ role: "user", content: user }]
+      messages: Array.isArray(user) ? user : [{ role: "user", content: user }]
     })
   });
   if (!r.ok) {
@@ -310,6 +320,7 @@ async function callClaude(env, system, user, maxTokens = 1200) {
   }
   const j = await r.json();
   const text = (j.content || []).filter((c) => c.type === "text").map((c) => c.text).join("\n");
+  if (raw) return { text };
   const clean = text.replace(/```json|```/g, "").trim();
   try {
     return JSON.parse(clean);
@@ -422,6 +433,19 @@ ${ctx}`
 \uD559\uC0DD \uB2F5\uC548: ${String(body.answer || "").slice(0, 3e3)}`,
       700
     );
+  }
+  if (body.task === "chat") {
+    const ctx = String(body.context || "").slice(0, 3e3);
+    if (!ctx.trim()) fail("\uC9C8\uBB38\uD560 \uBD80\uBD84\uC774 \uBE44\uC5B4 \uC788\uC2B5\uB2C8\uB2E4");
+    const msgs = (Array.isArray(body.messages) ? body.messages : []).slice(-16).map((m) => ({
+      role: m.role === "assistant" ? "assistant" : "user",
+      content: String(m.content || "").slice(0, 2e3)
+    })).filter((m) => m.content);
+    if (!msgs.length || msgs[msgs.length - 1].role !== "user") fail("\uC9C8\uBB38\uC774 \uBE44\uC5B4 \uC788\uC2B5\uB2C8\uB2E4");
+    return await callClaude(env, `${CHAT_SYS}
+
+=== \uD559\uC0DD\uC774 \uACE0\uB978 \uBD80\uBD84 ===
+${ctx}`, msgs, 700, true);
   }
   fail("\uC54C \uC218 \uC5C6\uB294 \uC694\uCCAD\uC785\uB2C8\uB2E4");
 }
