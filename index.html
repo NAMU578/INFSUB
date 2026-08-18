@@ -169,6 +169,15 @@ main{min-width:0;padding:26px 0 90px}
 .cell-acts .btn:hover{background:rgba(255,255,255,.08);color:#fff;border-color:transparent}
 .edited-tag{font-family:var(--f-mono);font-size:10px;color:var(--run);margin-left:auto;align-self:center;padding-right:6px}
 
+#ask-fab{position:absolute;z-index:60;display:none;padding:5px 10px;font-size:12px;box-shadow:0 4px 14px rgba(0,0,0,.18)}
+.ch-log{max-height:38vh;overflow:auto;margin:10px 0;display:flex;flex-direction:column;gap:8px}
+.ch-msg{padding:8px 11px;border-radius:var(--r);font-size:13.5px;line-height:1.6}
+.ch-me{background:rgba(59,47,214,.08);align-self:flex-end;max-width:85%;white-space:pre-wrap}
+.ch-ai{background:rgba(22,35,58,.045);max-width:95%}
+.ch-ai pre{background:var(--slate);color:var(--slate-ink);padding:10px;border-radius:var(--r);overflow-x:auto}
+.ch-ai :is(code,pre){font-family:var(--f-mono);font-size:.88em}
+.ch-ai p:first-child{margin-top:0} .ch-ai p:last-child{margin-bottom:0}
+
 .t-kw{color:var(--t-kw)} .t-str{color:var(--t-str)} .t-num{color:var(--t-num)}
 .t-cmt{color:var(--t-cmt);font-style:italic} .t-bi{color:var(--t-bi)}
 
@@ -497,7 +506,7 @@ const S = {
   view:'quiz',
 };
 const readOnly = () => !!S.viewingAs;
-const blankData = id => ({version:1,user:id,updatedAt:null,edits:{},quiz:{attempts:[],stats:{}},wrong:[]});
+const blankData = id => ({version:1,user:id,updatedAt:null,edits:{},quiz:{attempts:[],stats:{}},wrong:[],chats:[]});
 
 /* ════════════════════════════════════════════════════════
    저장소 — Worker 있으면 깃허브, 없으면 이 브라우저
@@ -885,6 +894,7 @@ function viewNotebook(){
             <div class="cell-acts">
               <button class="btn act-run">▶ 실행</button>
               <button class="btn act-edit">편집</button>
+              <button class="btn act-ask">AI 질문</button>
               ${tag?`<span class="edited-tag">${tag}</span>`:''}
             </div>
           </div>
@@ -904,6 +914,7 @@ function viewNotebook(){
     if(e.target.closest('.act-edit')) return openEditor(cellEl, cell);
     if(e.target.closest('.act-save')) return saveEditor(cellEl, cell);
     if(e.target.closest('.act-cancel')) return closeEditor(cellEl, cell);
+    if(e.target.closest('.act-ask')) return askAI(cellSource(S.nb.path, cell), `셀 ${idx+1}`);
   });
 
   $('#nb-run-all').onclick = async ()=>{
@@ -987,6 +998,7 @@ function closeEditor(cellEl, cell){
     <div class="cell-acts">
       <button class="btn act-run">▶ 실행</button>
       <button class="btn act-edit">편집</button>
+      <button class="btn act-ask">AI 질문</button>
       ${tag?`<span class="edited-tag">${tag}</span>`:''}
     </div>`;
 }
@@ -1862,6 +1874,126 @@ async function viewEssayAdmin(){
 }
 
 /* ════════════════════════════════════════════════════════
+   AI 질문 — 선택한 텍스트/셀에 대해 묻고 대화. 기록은 내 userdata 에 남습니다.
+   ════════════════════════════════════════════════════════ */
+let CHAT = null;
+
+/* 선택 → 떠 있는 버튼. 라이브러리 없이 브라우저 기본 Selection 만 씁니다. */
+const askFab = Object.assign(document.createElement('button'),
+  {id:'ask-fab', className:'btn btn-primary', textContent:'AI에게 질문'});
+document.body.appendChild(askFab);
+askFab.onmousedown = e => e.preventDefault();          // 눌러도 선택이 풀리지 않게
+askFab.onclick = () => { askFab.style.display='none'; askAI(askFab._sel, '선택한 부분'); };
+
+function selCheck(){
+  const sel = window.getSelection();
+  const t = sel && String(sel).trim();
+  const host = $('#view');
+  if(!t || t.length < 2 || !host || !sel.anchorNode || !host.contains(sel.anchorNode)){
+    askFab.style.display='none'; return;
+  }
+  const r = sel.getRangeAt(0).getBoundingClientRect();
+  askFab._sel = t;
+  askFab.style.display = 'block';
+  askFab.style.left = Math.max(8, Math.min(innerWidth-130, r.left+scrollX)) + 'px';
+  askFab.style.top  = (r.bottom + scrollY + 8) + 'px';
+}
+document.addEventListener('mouseup',  ()=>setTimeout(selCheck, 0));
+document.addEventListener('touchend', ()=>setTimeout(selCheck, 80));
+document.addEventListener('scroll',   ()=>askFab.style.display='none', true);
+
+function askAI(context, label){
+  if(!hasWorker()) return toast('AI 질문은 서버 연결이 필요합니다');
+  if(readOnly())   return toast('읽기 전용입니다. 내 화면에서만 질문할 수 있습니다');
+  context = String(context||'').trim().slice(0, 3000);
+  if(!context) return toast('질문할 부분을 먼저 골라 주세요');
+
+  CHAT = {id:Date.now().toString(36), at:new Date().toISOString(),
+          nb:S.nb?.path||null, label, context, msgs:[]};
+
+  const m = modal(`
+    <h3>AI에게 질문</h3>
+    <div class="sub">${esc(label)}${CHAT.nb?' · '+esc(CHAT.nb.split('/').pop()):''} — 이 대화는 관리자에게 그대로 보입니다.</div>
+    <div class="q-code" style="max-height:120px;overflow:auto"><pre>${esc(context)}</pre></div>
+    <div class="ch-log" id="ch-log"></div>
+    <textarea class="field" id="ch-in" rows="2" placeholder="이 부분에 대해 무엇이 궁금한가요? (Ctrl+Enter 로 보내기)"></textarea>
+    <div class="row" style="justify-content:flex-start">
+      <button class="btn btn-primary" id="ch-send">보내기</button>
+      <button class="btn btn-ghost btn-sm" id="ch-close">닫기</button>
+      <span class="tiny" id="ch-left" style="margin-left:auto"></span>
+    </div>`);
+  $('#ch-close').onclick = m.close;
+  $('#ch-send').onclick  = chatSend;
+  $('#ch-in').addEventListener('keydown', e=>{
+    if(e.key==='Enter' && (e.ctrlKey||e.metaKey)){ e.preventDefault(); chatSend(); }
+  });
+  drawChat();
+  $('#ch-in').focus();
+}
+
+const CHAT_MAX = 8;   // ponytail: 대화당 질문 한도. 요금 상한이 필요하면 이 숫자만 줄이면 됩니다.
+
+function drawChat(){
+  const log = $('#ch-log'); if(!log) return;
+  log.innerHTML = CHAT.msgs.map(x => x.role==='user'
+    ? `<div class="ch-msg ch-me">${esc(x.content)}</div>`
+    : `<div class="ch-msg ch-ai">${renderMd(x.content)}</div>`).join('')
+    || `<div class="tiny">고른 부분에 대해 물어보세요.</div>`;
+  log.scrollTop = log.scrollHeight;
+  typesetMath(log);
+  const used = CHAT.msgs.filter(x=>x.role==='user').length;
+  $('#ch-left').textContent = `${used}/${CHAT_MAX}`;
+}
+
+async function chatSend(){
+  const inp = $('#ch-in'), q = inp.value.trim();
+  if(!q) return;
+  if(CHAT.msgs.filter(x=>x.role==='user').length >= CHAT_MAX)
+    return toast(`한 대화에서 ${CHAT_MAX}번까지 물어볼 수 있습니다. 다시 선택해서 새 대화를 여세요`);
+
+  CHAT.msgs.push({role:'user', content:q});
+  inp.value = ''; drawChat();
+  const btn = $('#ch-send'); btn.disabled = true; btn.textContent = '답하는 중…';
+  try{
+    const j = await api('/ai', {task:'chat', context:CHAT.context, messages:CHAT.msgs});
+    CHAT.msgs.push({role:'assistant', content:j.text || '(빈 응답)'});
+  }catch(e){
+    CHAT.msgs.push({role:'assistant', content:'⚠ 응답 실패: ' + e.message});
+  }
+  btn.disabled = false; btn.textContent = '보내기';
+  drawChat(); saveChat();
+}
+
+function saveChat(){
+  if(readOnly()) return;
+  S.data.chats = S.data.chats || [];
+  const rec = {...CHAT, context:CHAT.context.slice(0,1200)};
+  const i = S.data.chats.findIndex(c => c.id === CHAT.id);
+  if(i < 0) S.data.chats.push(rec); else S.data.chats[i] = rec;
+  // ponytail: 오래된 것부터 버림. 900KB 저장 한도에 걸리기 전에 자르면 그만입니다.
+  if(S.data.chats.length > 60) S.data.chats.splice(0, S.data.chats.length - 60);
+  persist();
+}
+
+function showChats(id, d){
+  const cs = [...(d.chats||[])].reverse();
+  const asks = cs.reduce((a,c)=>a + c.msgs.filter(x=>x.role==='user').length, 0);
+  const m = modal(`
+    <h3>${esc(id)} 님의 AI 대화</h3>
+    <div class="sub">${cs.length ? `대화 ${cs.length}개 · 질문 ${asks}회` : 'AI에게 질문한 적이 없습니다.'}</div>
+    <div style="max-height:56vh;overflow:auto">
+      ${cs.map(c=>`<details style="margin-bottom:10px">
+        <summary class="mono tiny" style="cursor:pointer">${new Date(c.at).toLocaleString('ko-KR')} · ${esc((c.nb||'—').split('/').pop())} · ${esc(c.label||'')} · ${c.msgs.filter(x=>x.role==='user').length}문</summary>
+        <div class="q-code" style="margin:6px 0"><pre>${esc(String(c.context).slice(0,600))}</pre></div>
+        <div class="ch-log" style="max-height:none">${c.msgs.map(x=>
+          `<div class="ch-msg ${x.role==='user'?'ch-me':'ch-ai'}">${esc(x.content)}</div>`).join('')}</div>
+      </details>`).join('')}
+    </div>
+    <div class="row"><button class="btn btn-primary" id="cl-x">닫기</button></div>`);
+  $('#cl-x').onclick = m.close;
+}
+
+/* ════════════════════════════════════════════════════════
    화면: 관리자
    ════════════════════════════════════════════════════════ */
 async function saveShared(){
@@ -1991,6 +2123,7 @@ async function viewAdmin(){
       <td class="tiny">${d.updatedAt?new Date(d.updatedAt).toLocaleString('ko-KR'):'—'}</td>
       <td><button class="btn btn-sm" data-imp="${escAttr(u.id)}">화면 보기</button>
           <button class="btn btn-sm btn-ghost" data-diff="${escAttr(u.id)}">수정 내역</button>
+          <button class="btn btn-sm btn-ghost" data-chat="${escAttr(u.id)}">AI 대화 ${d.chats?.length||0}</button>
           <button class="btn btn-sm btn-ghost" data-reset="${escAttr(u.id)}">비번 초기화</button></td>`;
     tr._data=d;
     $('#ad-rows').appendChild(tr);
@@ -1998,11 +2131,12 @@ async function viewAdmin(){
 
   $('#ad-rows').onclick=e=>{
     const imp=e.target.closest('[data-imp]'), diff=e.target.closest('[data-diff]');
-    const rst=e.target.closest('[data-reset]');
+    const rst=e.target.closest('[data-reset]'), ch=e.target.closest('[data-chat]');
     const tr=e.target.closest('tr');
     if(imp) return impersonate(imp.dataset.imp, tr._data);
     if(diff) return showDiff(diff.dataset.diff, tr._data);
     if(rst) return resetPw(rst.dataset.reset);
+    if(ch) return showChats(ch.dataset.chat, tr._data);
   };
 }
 
