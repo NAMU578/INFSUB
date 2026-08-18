@@ -367,6 +367,19 @@ main{min-width:0;padding:26px 0 90px}
 <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
 <script>
+// 코랩처럼 $..$, $$..$$, \(..\), \[..\] 뿐 아니라 \begin{align}같은 환경도 델리미터 없이 인식합니다.
+window.MathJax = {
+  tex: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$'], ['\\[','\\]']],
+    processEnvironments: true,
+    processEscapes: true
+  },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" id="MathJax-script" async></script>
+<script>
 /* ════════════════════════════════════════════════════════
    설정 — 배포 전에 이 블록만 고치면 됩니다. README 참고.
    ════════════════════════════════════════════════════════ */
@@ -401,6 +414,33 @@ const $  = (s,r=document)=>r.querySelector(s);
 const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
 const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 const escAttr = s => esc(s).replace(/"/g,'&quot;');
+
+/* ════════════════════════════════════════════════════════
+   마크다운 + 수식(LaTeX) 렌더링
+   마크다운(marked)이 \_, \*, \\ 같은 LaTeX 문법을 강조/이스케이프로
+   오해하지 않도록, 수식 구간을 먼저 플레이스홀더로 빼두었다가
+   마크다운·새니타이즈가 끝난 뒤 원문 그대로 되돌려 넣는다.
+   그 다음 MathJax가 실제 렌더링을 담당한다(코랩과 같은 델리미터 지원). */
+const MATH_PATTERNS = [
+  /\\begin\{(equation|align|gather|multline|eqnarray)\*?\}[\s\S]*?\\end\{\1\*?\}/g, // $없이 쓰는 환경(코랩 방식)
+  /\$\$[\s\S]+?\$\$/g,
+  /\\\[[\s\S]+?\\\]/g,
+  /\\\([\s\S]+?\\\)/g,
+  /\$(?:\\.|[^$\\\n])+?\$/g,
+];
+function renderMd(src){
+  const store=[];
+  let out=String(src||'');
+  MATH_PATTERNS.forEach(re=>{
+    out = out.replace(re, m=>`\uE000${store.push(m)-1}\uE000`);
+  });
+  let html = DOMPurify.sanitize(marked.parse(out));
+  html = html.replace(/\uE000(\d+)\uE000/g, (_,i)=>esc(store[+i]));
+  return html;
+}
+function typesetMath(el){
+  if(window.MathJax?.typesetPromise) MathJax.typesetPromise([el]).catch(()=>{});
+}
 const rand = (a,b)=>a+Math.floor(Math.random()*(b-a+1));
 const pick = a => a[Math.floor(Math.random()*a.length)];
 const shuffle = a => { const x=[...a]; for(let i=x.length-1;i>0;i--){const j=rand(0,i);[x[i],x[j]]=[x[j],x[i]];} return x; };
@@ -835,7 +875,7 @@ function viewNotebook(){
     d.dataset.idx=c.idx;
     if(c.type==='md'){
       d.innerHTML=`<div class="g-mark"></div>
-        <div class="g-body"><div class="md">${DOMPurify.sanitize(marked.parse(src))}</div></div>`;
+        <div class="g-body"><div class="md">${renderMd(src)}</div></div>`;
     }else{
       d.innerHTML=`
         <div class="g-mark">In [${c.count??' '}]:</div>
@@ -854,6 +894,7 @@ function viewNotebook(){
     }
     host.appendChild(d);
   });
+  typesetMath(host);
 
   host.addEventListener('click', async e=>{
     const cellEl = e.target.closest('.cell'); if(!cellEl) return;
@@ -1468,7 +1509,7 @@ function renderQuestion(){
           <span class="tag${q.ai?' t-ai':''}">${esc(q.type)}</span>
           <span class="tag">${esc(QZ.nb.name)}</span>
         </div>
-        ${q.intro?`<div class="q-intro">${DOMPurify.sanitize(marked.parse(q.intro))}</div>`:''}
+        ${q.intro?`<div class="q-intro">${renderMd(q.intro)}</div>`:''}
         <p class="q-stem">${q.stem}</p>
         ${q.code?`<div class="q-code"><pre>${hl(q.code)}</pre></div>`:''}
         ${(q.expect && SHOW_EXPECT.has(q.typeKey))?`<div class="q-expect"><b>실행 결과</b><pre>${esc(q.expect)}</pre></div>`:''}
@@ -1481,6 +1522,7 @@ function renderQuestion(){
         </div>
       </div>
     </div>`;
+  typesetMath(el);
 
   const box=$('#q-input');
   if(q.mode==='mc'){
@@ -1626,7 +1668,7 @@ function viewWrong(){
       <div class="g-body">
         <div class="q-meta"><span class="tag">${esc(w.type)}</span><span class="tag">${esc(w.nb)}</span>
           ${w.streak?`<span class="tag" style="border-color:var(--ok);color:var(--ok)">연속 ${w.streak}</span>`:''}</div>
-        ${w.intro?`<div class="q-intro">${DOMPurify.sanitize(marked.parse(w.intro))}</div>`:''}
+        ${w.intro?`<div class="q-intro">${renderMd(w.intro)}</div>`:''}
         <p class="q-stem" style="font-size:14.5px">${w.stem}</p>
         ${w.code?`<div class="q-code"><pre>${hl(w.code)}</pre></div>`:''}
         ${(w.expect && SHOW_EXPECT.has(w.typeKey))?`<div class="q-expect"><b>실행 결과</b><pre>${esc(w.expect)}</pre></div>`:''}
@@ -1638,6 +1680,7 @@ function viewWrong(){
       </div>`;
     host.appendChild(d);
   });
+  typesetMath(host);
 
   host.onclick=async e=>{
     const b=e.target.closest('[data-del]'); if(!b) return;
