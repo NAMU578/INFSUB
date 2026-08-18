@@ -1,382 +1,356 @@
-/**
- * 정보수업 노트북 — Cloudflare Worker
- *
- * 하는 일
- *  1. 로그인·가입·비밀번호 변경·관리자 초기화
- *     (비밀번호는 서버 비밀값을 섞은 일방향 해시로만 보관하며 원문은 저장하지 않습니다)
- *  2. 회원별 학습 기록을 깃허브 저장소의 userdata/<아이디>.json 으로 저장
- *  3. 노트북 목록 조회 (깃허브 API 사용 한도를 브라우저 대신 흡수)
- *  4. Claude API 중계 — API 키는 이 서버에만 있고 브라우저로 나가지 않습니다
- *
- * 필요한 환경 변수 (wrangler secret put / 대시보드에서 설정)
- *  GITHUB_TOKEN       저장소 contents 읽기·쓰기 권한이 있는 파인그레인드 토큰
- *  SESSION_SECRET     아무 긴 무작위 문자열 (로그인 토큰 서명용)
- *  ANTHROPIC_API_KEY  Claude API 키 (서술형 문제를 안 쓸 거면 생략 가능)
- *
- * 일반 변수 (wrangler.toml [vars])
- *  GITHUB_OWNER, GITHUB_REPO, GITHUB_BRANCH, ADMIN_ID, ALLOWED_ORIGIN
- *  MODEL              서술형 출제·채점에 쓸 모델. 생략하면 claude-sonnet-5
- */
+var __defProp = Object.defineProperty;
+var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
 
-const OK_ID = /^[A-Za-z0-9_.-]{2,24}$/;
-const DAY = 86400;
-const TOKEN_DAYS = 30;
-
-const WORKER_VERSION = '2026-08-17-probe';
-
-export default {
+// worker.js
+var OK_ID = /^[A-Za-z0-9_.-]{2,24}$/;
+var DAY = 86400;
+var TOKEN_DAYS = 30;
+var WORKER_VERSION = "2026-08-17-probe";
+var worker_default = {
   async fetch(req, env) {
-    const origin = env.ALLOWED_ORIGIN || '*';
+    const origin = env.ALLOWED_ORIGIN || "*";
     const cors = {
-      'access-control-allow-origin': origin,
-      'access-control-allow-headers': 'content-type,authorization',
-      'access-control-allow-methods': 'POST,OPTIONS',
-      'vary': 'origin',
+      "access-control-allow-origin": origin,
+      "access-control-allow-headers": "content-type,authorization",
+      "access-control-allow-methods": "POST,OPTIONS",
+      "vary": "origin"
     };
-    if (req.method === 'OPTIONS') return new Response(null, { headers: cors });
-
-    const json = (obj, status = 200) =>
-      new Response(JSON.stringify(obj), { status, headers: { ...cors, 'content-type': 'application/json' } });
-
+    if (req.method === "OPTIONS") return new Response(null, { headers: cors });
+    const json = /* @__PURE__ */ __name((obj, status = 200) => new Response(JSON.stringify(obj), { status, headers: { ...cors, "content-type": "application/json" } }), "json");
     try {
-      const path = new URL(req.url).pathname.replace(/\/+$/, '') || '/';
-      const body = req.method === 'POST' ? await req.json().catch(() => ({})) : {};
-
-      // 주소창에서 이 워커를 열면 어느 버전이 배포되어 있는지 보입니다.
-      // GitHub 에 파일을 올려도 Cloudflare 는 자동으로 바뀌지 않으므로,
-      // 코드를 고친 뒤에는 여기서 version 이 바뀌었는지 꼭 확인하세요.
-      if (path === '/') return json({
-        ok: true, service: 'info-notebook', version: WORKER_VERSION,
-        routes: ['/auth/register', '/auth/login', '/auth/change', '/auth/reset',
-                 '/data/get', '/data/put', '/users', '/repo/list', '/ai', '/diag'],
+      const path = new URL(req.url).pathname.replace(/\/+$/, "") || "/";
+      const body = req.method === "POST" ? await req.json().catch(() => ({})) : {};
+      if (path === "/") return json({
+        ok: true,
+        service: "info-notebook",
+        version: WORKER_VERSION,
+        routes: [
+          "/auth/register",
+          "/auth/login",
+          "/auth/change",
+          "/auth/reset",
+          "/data/get",
+          "/data/put",
+          "/users",
+          "/repo/list",
+          "/ai",
+          "/diag"
+        ]
       });
-      if (path === '/auth/register') return json(await register(env, body));
-      if (path === '/auth/login')    return json(await login(env, body));
-
-      // 여기부터는 로그인 필요
+      if (path === "/auth/register") return json(await register(env, body));
+      if (path === "/auth/login") return json(await login(env, body));
       const me = await requireAuth(req, env);
-      if (path === '/auth/change') return json(await changePw(env, me, body));
-      if (path === '/auth/reset')  return json(await adminReset(env, me, body));
-      if (path === '/data/get')  return json(await dataGet(env, me, body));
-      if (path === '/data/put')  return json(await dataPut(env, me, body));
-      if (path === '/users')     return json(await listUsers(env, me));
-      if (path === '/repo/list') return json(await repoList(env, body));
-      if (path === '/ai')        return json(await ai(env, body));
-      if (path === '/diag')      return json(await diag(env, me));
-
-      return json({ error: '없는 주소입니다' }, 404);
+      if (path === "/auth/change") return json(await changePw(env, me, body));
+      if (path === "/auth/reset") return json(await adminReset(env, me, body));
+      if (path === "/data/get") return json(await dataGet(env, me, body));
+      if (path === "/data/put") return json(await dataPut(env, me, body));
+      if (path === "/users") return json(await listUsers(env, me));
+      if (path === "/repo/list") return json(await repoList(env, body));
+      if (path === "/ai") return json(await ai(env, body));
+      if (path === "/diag") return json(await diag(env, me));
+      return json({ error: "\uC5C6\uB294 \uC8FC\uC18C\uC785\uB2C8\uB2E4" }, 404);
     } catch (e) {
       const status = e.status || 500;
-      return json({ error: e.message || '서버 오류' }, status);
+      return json({ error: e.message || "\uC11C\uBC84 \uC624\uB958" }, status);
     }
-  },
+  }
 };
-
-/* ── 오류 도우미 ───────────────────────────────────────── */
-const fail = (msg, status = 400) => { const e = new Error(msg); e.status = status; throw e; };
-
-/* ── 암호 / 토큰 ───────────────────────────────────────── */
-const enc = new TextEncoder();
-const hex = buf => [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
-const sha256hex = async s => hex(await crypto.subtle.digest('SHA-256', enc.encode(s)));
-
+var fail = /* @__PURE__ */ __name((msg, status = 400) => {
+  const e = new Error(msg);
+  e.status = status;
+  throw e;
+}, "fail");
+var enc = new TextEncoder();
+var hex = /* @__PURE__ */ __name((buf) => [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join(""), "hex");
+var sha256hex = /* @__PURE__ */ __name(async (s) => hex(await crypto.subtle.digest("SHA-256", enc.encode(s))), "sha256hex");
 async function hmac(secret, msg) {
-  const key = await crypto.subtle.importKey('raw', enc.encode(secret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
-  return hex(await crypto.subtle.sign('HMAC', key, enc.encode(msg)));
+  const key = await crypto.subtle.importKey("raw", enc.encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+  return hex(await crypto.subtle.sign("HMAC", key, enc.encode(msg)));
 }
-const b64url = s => btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-const unb64url = s => atob(s.replace(/-/g, '+').replace(/_/g, '/'));
-
-/** 비밀번호는 브라우저에서 이미 SHA-256을 거쳐 옵니다. 서버 비밀값을 섞어 한 번 더 돌립니다. */
-const pwHash = (env, id, clientHash) => hmac(env.SESSION_SECRET, `pw:${id}:${clientHash}`);
-
+__name(hmac, "hmac");
+var b64url = /* @__PURE__ */ __name((s) => btoa(s).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, ""), "b64url");
+var unb64url = /* @__PURE__ */ __name((s) => atob(s.replace(/-/g, "+").replace(/_/g, "/")), "unb64url");
+var pwHash = /* @__PURE__ */ __name((env, id, clientHash) => hmac(env.SESSION_SECRET, `pw:${id}:${clientHash}`), "pwHash");
 async function makeToken(env, id, admin) {
-  const payload = b64url(JSON.stringify({ id, admin, exp: Math.floor(Date.now() / 1000) + TOKEN_DAYS * DAY }));
+  const payload = b64url(JSON.stringify({ id, admin, exp: Math.floor(Date.now() / 1e3) + TOKEN_DAYS * DAY }));
   return `${payload}.${await hmac(env.SESSION_SECRET, payload)}`;
 }
+__name(makeToken, "makeToken");
 async function readToken(env, token) {
-  const [payload, sig] = String(token || '').split('.');
+  const [payload, sig] = String(token || "").split(".");
   if (!payload || !sig) return null;
   if (sig !== await hmac(env.SESSION_SECRET, payload)) return null;
   try {
     const p = JSON.parse(unb64url(payload));
-    if (p.exp < Math.floor(Date.now() / 1000)) return null;
+    if (p.exp < Math.floor(Date.now() / 1e3)) return null;
     return p;
-  } catch { return null; }
+  } catch {
+    return null;
+  }
 }
+__name(readToken, "readToken");
 async function requireAuth(req, env) {
-  const t = (req.headers.get('authorization') || '').replace(/^Bearer\s+/i, '');
+  const t = (req.headers.get("authorization") || "").replace(/^Bearer\s+/i, "");
   const p = await readToken(env, t);
-  if (!p) fail('로그인이 필요합니다', 401);
+  if (!p) fail("\uB85C\uADF8\uC778\uC774 \uD544\uC694\uD569\uB2C8\uB2E4", 401);
   return p;
 }
-
-/* ── 깃허브 파일 읽기·쓰기 ─────────────────────────────── */
-const GH = env => `https://api.github.com/repos/${env.GITHUB_OWNER}/${env.GITHUB_REPO}`;
-const ghHeaders = env => ({
+__name(requireAuth, "requireAuth");
+var GH = /* @__PURE__ */ __name((env) => `https://api.github.com/repos/${env.GITHUB_OWNER}/${env.GITHUB_REPO}`, "GH");
+var ghHeaders = /* @__PURE__ */ __name((env) => ({
   authorization: `Bearer ${env.GITHUB_TOKEN}`,
-  accept: 'application/vnd.github+json',
-  'user-agent': 'info-notebook-worker',
-});
-
+  accept: "application/vnd.github+json",
+  "user-agent": "info-notebook-worker"
+}), "ghHeaders");
 function b64encodeUtf8(str) {
   const bytes = enc.encode(str);
-  let bin = '';
+  let bin = "";
   for (const b of bytes) bin += String.fromCharCode(b);
   return btoa(bin);
 }
+__name(b64encodeUtf8, "b64encodeUtf8");
 function b64decodeUtf8(b64) {
-  const bin = atob(b64.replace(/\s/g, ''));
-  const bytes = Uint8Array.from(bin, c => c.charCodeAt(0));
+  const bin = atob(b64.replace(/\s/g, ""));
+  const bytes = Uint8Array.from(bin, (c) => c.charCodeAt(0));
   return new TextDecoder().decode(bytes);
 }
-
+__name(b64decodeUtf8, "b64decodeUtf8");
 async function ghRead(env, path) {
-  const r = await fetch(`${GH(env)}/contents/${path}?ref=${env.GITHUB_BRANCH || 'main'}`, { headers: ghHeaders(env) });
+  const r = await fetch(`${GH(env)}/contents/${path}?ref=${env.GITHUB_BRANCH || "main"}`, { headers: ghHeaders(env) });
   if (r.status === 404) return { json: null, sha: null };
-  if (!r.ok) fail(`깃허브 읽기 실패 (${r.status})`, 502);
+  if (!r.ok) fail(`\uAE43\uD5C8\uBE0C \uC77D\uAE30 \uC2E4\uD328 (${r.status})`, 502);
   const j = await r.json();
-  try { return { json: JSON.parse(b64decodeUtf8(j.content)), sha: j.sha }; }
-  catch { return { json: null, sha: j.sha }; }
+  try {
+    return { json: JSON.parse(b64decodeUtf8(j.content)), sha: j.sha };
+  } catch {
+    return { json: null, sha: j.sha };
+  }
 }
-
+__name(ghRead, "ghRead");
 async function ghWrite(env, path, obj, message) {
   for (let attempt = 0; attempt < 3; attempt++) {
     const { sha } = await ghRead(env, path);
     const r = await fetch(`${GH(env)}/contents/${path}`, {
-      method: 'PUT',
-      headers: { ...ghHeaders(env), 'content-type': 'application/json' },
+      method: "PUT",
+      headers: { ...ghHeaders(env), "content-type": "application/json" },
       body: JSON.stringify({
         message,
         content: b64encodeUtf8(JSON.stringify(obj, null, 1)),
-        branch: env.GITHUB_BRANCH || 'main',
-        ...(sha ? { sha } : {}),
-      }),
+        branch: env.GITHUB_BRANCH || "main",
+        ...sha ? { sha } : {}
+      })
     });
     if (r.ok) return true;
-    if (r.status !== 409 && r.status !== 422) fail(`깃허브 저장 실패 (${r.status})`, 502);
-    await new Promise(res => setTimeout(res, 250 * (attempt + 1)));   // 같은 파일에 동시 쓰기 → 잠깐 뒤 재시도
+    if (r.status !== 409 && r.status !== 422) fail(`\uAE43\uD5C8\uBE0C \uC800\uC7A5 \uC2E4\uD328 (${r.status})`, 502);
+    await new Promise((res) => setTimeout(res, 250 * (attempt + 1)));
   }
-  fail('깃허브 저장이 계속 충돌합니다. 잠시 뒤 다시 시도해 주세요', 503);
+  fail("\uAE43\uD5C8\uBE0C \uC800\uC7A5\uC774 \uACC4\uC18D \uCDA9\uB3CC\uD569\uB2C8\uB2E4. \uC7A0\uC2DC \uB4A4 \uB2E4\uC2DC \uC2DC\uB3C4\uD574 \uC8FC\uC138\uC694", 503);
 }
-
-const ACCOUNTS = 'userdata/_accounts.json';
-const userFile = id => `userdata/${id}.json`;
-
-/* ── 가입 / 로그인 ─────────────────────────────────────── */
+__name(ghWrite, "ghWrite");
+var ACCOUNTS = "userdata/_accounts.json";
+var userFile = /* @__PURE__ */ __name((id) => `userdata/${id}.json`, "userFile");
 function checkCreds(body) {
-  const id = String(body.id || '').trim();
-  const pw = String(body.pw || '');
-  if (!OK_ID.test(id)) fail('아이디는 영문·숫자·_.- 2~24자여야 합니다');
-  if (!/^[0-9a-f]{64}$/.test(pw)) fail('비밀번호 형식이 올바르지 않습니다');
+  const id = String(body.id || "").trim();
+  const pw = String(body.pw || "");
+  if (!OK_ID.test(id)) fail("\uC544\uC774\uB514\uB294 \uC601\uBB38\xB7\uC22B\uC790\xB7_.- 2~24\uC790\uC5EC\uC57C \uD569\uB2C8\uB2E4");
+  if (!/^[0-9a-f]{64}$/.test(pw)) fail("\uBE44\uBC00\uBC88\uD638 \uD615\uC2DD\uC774 \uC62C\uBC14\uB974\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4");
   return { id, pw };
 }
-
+__name(checkCreds, "checkCreds");
 async function register(env, body) {
   const { id, pw } = checkCreds(body);
   const { json: accs } = await ghRead(env, ACCOUNTS);
   const all = accs || {};
-  if (all[id]) fail('이미 있는 아이디입니다');
-  all[id] = { h: await pwHash(env, id, pw), joined: new Date().toISOString() };
-  await ghWrite(env, ACCOUNTS, all, `계정 추가: ${id}`);
+  if (all[id]) fail("\uC774\uBBF8 \uC788\uB294 \uC544\uC774\uB514\uC785\uB2C8\uB2E4");
+  all[id] = { h: await pwHash(env, id, pw), joined: (/* @__PURE__ */ new Date()).toISOString() };
+  await ghWrite(env, ACCOUNTS, all, `\uACC4\uC815 \uCD94\uAC00: ${id}`);
   const admin = id === env.ADMIN_ID;
   return { id, admin, token: await makeToken(env, id, admin) };
 }
-
+__name(register, "register");
 async function login(env, body) {
   const { id, pw } = checkCreds(body);
   const { json: accs } = await ghRead(env, ACCOUNTS);
   const rec = accs?.[id];
-  if (!rec) fail('없는 아이디입니다. 계정을 먼저 만들어 주세요');
-  if (rec.h !== await pwHash(env, id, pw)) fail('아이디 또는 비밀번호가 맞지 않습니다');
+  if (!rec) fail("\uC5C6\uB294 \uC544\uC774\uB514\uC785\uB2C8\uB2E4. \uACC4\uC815\uC744 \uBA3C\uC800 \uB9CC\uB4E4\uC5B4 \uC8FC\uC138\uC694");
+  if (rec.h !== await pwHash(env, id, pw)) fail("\uC544\uC774\uB514 \uB610\uB294 \uBE44\uBC00\uBC88\uD638\uAC00 \uB9DE\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4");
   const admin = id === env.ADMIN_ID;
   return { id, admin, temp: !!rec.temp, token: await makeToken(env, id, admin) };
 }
-
-/** 본인 비밀번호 변경. 현재 비밀번호를 알아야만 통과합니다. */
+__name(login, "login");
 async function changePw(env, me, body) {
-  const cur = String(body.cur || ''), next = String(body.next || '');
-  if (!/^[0-9a-f]{64}$/.test(cur) || !/^[0-9a-f]{64}$/.test(next)) fail('비밀번호 형식이 올바르지 않습니다');
-  if (cur === next) fail('이전과 다른 비밀번호를 쓰세요');
+  const cur = String(body.cur || ""), next = String(body.next || "");
+  if (!/^[0-9a-f]{64}$/.test(cur) || !/^[0-9a-f]{64}$/.test(next)) fail("\uBE44\uBC00\uBC88\uD638 \uD615\uC2DD\uC774 \uC62C\uBC14\uB974\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4");
+  if (cur === next) fail("\uC774\uC804\uACFC \uB2E4\uB978 \uBE44\uBC00\uBC88\uD638\uB97C \uC4F0\uC138\uC694");
   const { json: accs } = await ghRead(env, ACCOUNTS);
   const rec = accs?.[me.id];
-  if (!rec) fail('계정을 찾을 수 없습니다', 404);
-  if (rec.h !== await pwHash(env, me.id, cur)) fail('현재 비밀번호가 맞지 않습니다');
+  if (!rec) fail("\uACC4\uC815\uC744 \uCC3E\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4", 404);
+  if (rec.h !== await pwHash(env, me.id, cur)) fail("\uD604\uC7AC \uBE44\uBC00\uBC88\uD638\uAC00 \uB9DE\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4");
   rec.h = await pwHash(env, me.id, next);
-  rec.changedAt = new Date().toISOString();
+  rec.changedAt = (/* @__PURE__ */ new Date()).toISOString();
   delete rec.temp;
-  await ghWrite(env, ACCOUNTS, accs, `비밀번호 변경: ${me.id}`);
+  await ghWrite(env, ACCOUNTS, accs, `\uBE44\uBC00\uBC88\uD638 \uBCC0\uACBD: ${me.id}`);
   return { ok: true };
 }
-
-/** 관리자용 초기화. 저장된 해시는 되돌릴 수 없으므로 임시 비밀번호를 새로 발급합니다.
- *  발급된 원문은 이 응답에만 실려 나가고 서버에는 해시로만 남습니다. */
+__name(changePw, "changePw");
 async function adminReset(env, me, body) {
-  if (!me.admin) fail('관리자만 할 수 있습니다', 403);
-  const id = String(body.id || '').trim();
-  if (!OK_ID.test(id)) fail('잘못된 아이디입니다');
-  if (id === env.ADMIN_ID && me.id !== env.ADMIN_ID) fail('관리자 계정은 초기화할 수 없습니다', 403);
+  if (!me.admin) fail("\uAD00\uB9AC\uC790\uB9CC \uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4", 403);
+  const id = String(body.id || "").trim();
+  if (!OK_ID.test(id)) fail("\uC798\uBABB\uB41C \uC544\uC774\uB514\uC785\uB2C8\uB2E4");
+  if (id === env.ADMIN_ID && me.id !== env.ADMIN_ID) fail("\uAD00\uB9AC\uC790 \uACC4\uC815\uC740 \uCD08\uAE30\uD654\uD560 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4", 403);
   const { json: accs } = await ghRead(env, ACCOUNTS);
   const rec = accs?.[id];
-  if (!rec) fail('없는 아이디입니다');
+  if (!rec) fail("\uC5C6\uB294 \uC544\uC774\uB514\uC785\uB2C8\uB2E4");
   const bytes = crypto.getRandomValues(new Uint8Array(6));
-  const temp = 'tmp' + [...bytes].map(b => 'abcdefghjkmnpqrstuvwxyz23456789'[b % 31]).join('');
+  const temp = "tmp" + [...bytes].map((b) => "abcdefghjkmnpqrstuvwxyz23456789"[b % 31]).join("");
   rec.h = await pwHash(env, id, await sha256hex(temp));
   rec.temp = true;
-  rec.resetAt = new Date().toISOString();
-  await ghWrite(env, ACCOUNTS, accs, `비밀번호 초기화: ${id}`);
+  rec.resetAt = (/* @__PURE__ */ new Date()).toISOString();
+  await ghWrite(env, ACCOUNTS, accs, `\uBE44\uBC00\uBC88\uD638 \uCD08\uAE30\uD654: ${id}`);
   return { ok: true, temp };
 }
-
-/* ── 학습 기록 ─────────────────────────────────────────── */
+__name(adminReset, "adminReset");
 function checkTarget(me, target) {
-  const t = String(target || '');
-  if (t !== '_shared' && !OK_ID.test(t)) fail('잘못된 사용자 이름입니다');
+  const t = String(target || "");
+  if (t !== "_shared" && !OK_ID.test(t)) fail("\uC798\uBABB\uB41C \uC0AC\uC6A9\uC790 \uC774\uB984\uC785\uB2C8\uB2E4");
   return t;
 }
-
+__name(checkTarget, "checkTarget");
 async function dataGet(env, me, body) {
   const t = checkTarget(me, body.user);
-  if (t !== me.id && t !== '_shared' && !me.admin) fail('다른 사람의 기록은 볼 수 없습니다', 403);
+  if (t !== me.id && t !== "_shared" && !me.admin) fail("\uB2E4\uB978 \uC0AC\uB78C\uC758 \uAE30\uB85D\uC740 \uBCFC \uC218 \uC5C6\uC2B5\uB2C8\uB2E4", 403);
   const { json } = await ghRead(env, userFile(t));
   return { data: json };
 }
-
+__name(dataGet, "dataGet");
 async function dataPut(env, me, body) {
   const t = checkTarget(me, body.user);
-  if (t === '_shared') { if (!me.admin) fail('공용 편집은 관리자만 할 수 있습니다', 403); }
-  else if (t !== me.id) fail('다른 사람의 기록은 고칠 수 없습니다', 403);
+  if (t === "_shared") {
+    if (!me.admin) fail("\uACF5\uC6A9 \uD3B8\uC9D1\uC740 \uAD00\uB9AC\uC790\uB9CC \uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4", 403);
+  } else if (t !== me.id) fail("\uB2E4\uB978 \uC0AC\uB78C\uC758 \uAE30\uB85D\uC740 \uACE0\uCE60 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4", 403);
   const data = body.data;
-  if (!data || typeof data !== 'object') fail('저장할 내용이 없습니다');
-  if (JSON.stringify(data).length > 900_000) fail('기록이 너무 큽니다. 오답 노트를 정리해 주세요');
-  await ghWrite(env, userFile(t), data, `기록 저장: ${t}`);
+  if (!data || typeof data !== "object") fail("\uC800\uC7A5\uD560 \uB0B4\uC6A9\uC774 \uC5C6\uC2B5\uB2C8\uB2E4");
+  if (JSON.stringify(data).length > 9e5) fail("\uAE30\uB85D\uC774 \uB108\uBB34 \uD07D\uB2C8\uB2E4. \uC624\uB2F5 \uB178\uD2B8\uB97C \uC815\uB9AC\uD574 \uC8FC\uC138\uC694");
+  await ghWrite(env, userFile(t), data, `\uAE30\uB85D \uC800\uC7A5: ${t}`);
   return { ok: true };
 }
-
+__name(dataPut, "dataPut");
 async function listUsers(env, me) {
-  if (!me.admin) fail('관리자만 볼 수 있습니다', 403);
+  if (!me.admin) fail("\uAD00\uB9AC\uC790\uB9CC \uBCFC \uC218 \uC788\uC2B5\uB2C8\uB2E4", 403);
   const { json: accs } = await ghRead(env, ACCOUNTS);
   return {
     users: Object.entries(accs || {}).map(([id, v]) => ({
       id,
       joined: v.joined || null,
       resetAt: v.resetAt || null,
-      temp: !!v.temp,          // 임시 비밀번호를 아직 안 바꾼 계정
-    })),
+      temp: !!v.temp
+      // 임시 비밀번호를 아직 안 바꾼 계정
+    }))
   };
 }
-
-/* ── 노트북 목록 ───────────────────────────────────────── */
+__name(listUsers, "listUsers");
 async function repoList(env, body) {
-  const dir = String(body.dir || 'notebooks').replace(/[^A-Za-z0-9_./-]/g, '');
-  const r = await fetch(`${GH(env)}/contents/${dir}?ref=${env.GITHUB_BRANCH || 'main'}`, { headers: ghHeaders(env) });
-  if (r.status === 404) fail('노트북 폴더를 찾을 수 없습니다', 404);
-  if (!r.ok) fail(`깃허브 목록 조회 실패 (${r.status})`, 502);
+  const dir = String(body.dir || "notebooks").replace(/[^A-Za-z0-9_./-]/g, "");
+  const r = await fetch(`${GH(env)}/contents/${dir}?ref=${env.GITHUB_BRANCH || "main"}`, { headers: ghHeaders(env) });
+  if (r.status === 404) fail("\uB178\uD2B8\uBD81 \uD3F4\uB354\uB97C \uCC3E\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4", 404);
+  if (!r.ok) fail(`\uAE43\uD5C8\uBE0C \uBAA9\uB85D \uC870\uD68C \uC2E4\uD328 (${r.status})`, 502);
   const items = await r.json();
-  return { items: items.map(f => ({ name: f.name, path: f.path, type: f.type })) };
+  return { items: items.map((f) => ({ name: f.name, path: f.path, type: f.type })) };
 }
+__name(repoList, "repoList");
+var MAKE_SYS = `\uB108\uB294 \uD55C\uAD6D \uACE0\uB4F1\uD559\uAD50 \uC815\uBCF4 \uACFC\uBAA9\uC758 \uCD9C\uC81C \uAD50\uC0AC\uB2E4.
+\uC8FC\uC5B4\uC9C4 \uC218\uC5C5 \uB178\uD2B8\uBD81 \uB0B4\uC6A9\uC5D0\uC11C \uD575\uC2EC \uAC1C\uB150 \uD558\uB098\uB97C \uACE8\uB77C \uC11C\uC220\uD615 \uBB38\uC81C 1\uAC1C\uB97C \uB0B8\uB2E4.
 
-/* ── Claude API 중계 ───────────────────────────────────── */
-const MAKE_SYS = `너는 한국 고등학교 정보 과목의 출제 교사다.
-주어진 수업 노트북 내용에서 핵심 개념 하나를 골라 서술형 문제 1개를 낸다.
+\uADDC\uCE59
+- \uD55C\uAD6D\uC5B4\uB85C \uC4F4\uB2E4.
+- \uB178\uD2B8\uBD81\uC5D0 \uC2E4\uC81C\uB85C \uB098\uC628 \uAC1C\uB150\uB9CC \uB2E4\uB8EC\uB2E4. \uB178\uD2B8\uBD81 \uBC16 \uC9C0\uC2DD\uC744 \uC694\uAD6C\uD558\uC9C0 \uC54A\uB294\uB2E4.
+- \uC8FC\uC5B4\uC9C4 \uC124\uBA85\uACFC \uCF54\uB4DC \uC870\uAC01\uB9CC \uBCF4\uACE0 \uB2F5\uD560 \uC218 \uC788\uC5B4\uC57C \uD55C\uB2E4. \uB178\uD2B8\uBD81\uC758 \uB2E4\uB978 \uC140\uC774\uB098 \uC55E\uB4A4 \uB9E5\uB77D\uC744 \uC54C\uC544\uC57C\uB9CC \uD480\uB9AC\uB294 \uBB38\uC81C\uB294 \uC808\uB300 \uB0B4\uC9C0 \uC54A\uB294\uB2E4.
+- \uBB38\uC81C \uC548\uC5D0 \uD544\uC694\uD55C \uC815\uBCF4\uB97C \uBAA8\uB450 \uB2F4\uB294\uB2E4. "\uC704\uC5D0\uC11C \uB9CC\uB4E0 \uBC30\uC5F4", "\uC544\uAE4C \uC815\uC758\uD55C \uD568\uC218"\uCC98\uB7FC \uD654\uBA74\uC5D0 \uC5C6\uB294 \uAC83\uC744 \uAC00\uB9AC\uD0A4\uC9C0 \uC54A\uB294\uB2E4.
+- \uC11C\uC220\uD615\uC774\uBBC0\uB85C \uB2F5\uC774 \uD55C \uB2E8\uC5B4\uB85C \uB05D\uB098\uBA74 \uC548 \uB41C\uB2E4. "\uC65C", "\uC5B4\uB5BB\uAC8C", "\uBB34\uC2A8 \uCC28\uC774", "\uC5B4\uB5A4 \uC77C\uC774 \uC77C\uC5B4\uB098\uB294\uC9C0" \uAC19\uC740 \uC124\uBA85\uC744 \uC694\uAD6C\uD55C\uB2E4.
+- \uCF54\uB4DC\uAC00 \uD544\uC694\uD558\uBA74 code \uD544\uB4DC\uC5D0 \uC9E7\uC740 \uD30C\uC774\uC36C \uCF54\uB4DC\uB97C \uB123\uACE0, \uD544\uC694 \uC5C6\uC73C\uBA74 \uBE48 \uBB38\uC790\uC5F4\uB85C \uB454\uB2E4.
+- rubric\uC5D0\uB294 \uC815\uB2F5\uC73C\uB85C \uC778\uC815\uD560 \uD575\uC2EC \uC694\uC18C\uB97C 2~4\uAC1C \uC801\uB294\uB2E4.
 
-규칙
-- 한국어로 쓴다.
-- 노트북에 실제로 나온 개념만 다룬다. 노트북 밖 지식을 요구하지 않는다.
-- 주어진 설명과 코드 조각만 보고 답할 수 있어야 한다. 노트북의 다른 셀이나 앞뒤 맥락을 알아야만 풀리는 문제는 절대 내지 않는다.
-- 문제 안에 필요한 정보를 모두 담는다. "위에서 만든 배열", "아까 정의한 함수"처럼 화면에 없는 것을 가리키지 않는다.
-- 서술형이므로 답이 한 단어로 끝나면 안 된다. "왜", "어떻게", "무슨 차이", "어떤 일이 일어나는지" 같은 설명을 요구한다.
-- 코드가 필요하면 code 필드에 짧은 파이썬 코드를 넣고, 필요 없으면 빈 문자열로 둔다.
-- rubric에는 정답으로 인정할 핵심 요소를 2~4개 적는다.
-
-출력은 아래 형태의 JSON 하나뿐이다. 설명, 인사말, 마크다운 코드펜스를 절대 붙이지 않는다.
+\uCD9C\uB825\uC740 \uC544\uB798 \uD615\uD0DC\uC758 JSON \uD558\uB098\uBFD0\uC774\uB2E4. \uC124\uBA85, \uC778\uC0AC\uB9D0, \uB9C8\uD06C\uB2E4\uC6B4 \uCF54\uB4DC\uD39C\uC2A4\uB97C \uC808\uB300 \uBD99\uC774\uC9C0 \uC54A\uB294\uB2E4.
 {"question":"...","code":"","rubric":"...","model_answer":"..."}`;
+var GRADE_SYS = `\uB108\uB294 \uD55C\uAD6D \uACE0\uB4F1\uD559\uAD50 \uC815\uBCF4 \uACFC\uBAA9\uC758 \uCC44\uC810 \uAD50\uC0AC\uB2E4. \uD559\uC0DD \uB2F5\uC548\uC744 \uCC44\uC810 \uAE30\uC900\uC5D0 \uBE44\uCD94\uC5B4 \uD3C9\uAC00\uD55C\uB2E4.
 
-const GRADE_SYS = `너는 한국 고등학교 정보 과목의 채점 교사다. 학생 답안을 채점 기준에 비추어 평가한다.
+\uADDC\uCE59
+- \uD55C\uAD6D\uC5B4\uB85C \uC4F4\uB2E4.
+- \uD575\uC2EC \uC694\uC18C\uB97C \uB300\uCCB4\uB85C \uB2F4\uC558\uC73C\uBA74 \uB9DE\uC740 \uAC83\uC73C\uB85C \uBCF8\uB2E4. \uD45C\uD604\uC774 \uC11C\uD234\uB7EC\uB3C4 \uB73B\uC774 \uB9DE\uC73C\uBA74 \uC778\uC815\uD55C\uB2E4.
+- feedback\uC740 \uB450 \uBB38\uC7A5 \uC774\uB0B4\uB85C, \uBB34\uC5C7\uC774 \uC88B\uC558\uACE0 \uBB34\uC5C7\uC774 \uBE60\uC84C\uB294\uC9C0 \uAD6C\uCCB4\uC801\uC73C\uB85C \uC9DA\uB294\uB2E4. \uD559\uC0DD\uC744 \uAE4E\uC544\uB0B4\uB9AC\uC9C0 \uC54A\uB294\uB2E4.
+- model_answer\uC5D0\uB294 \uBAA8\uBC94 \uB2F5\uC548\uC744 \uC138 \uBB38\uC7A5 \uC774\uB0B4\uB85C \uC4F4\uB2E4.
 
-규칙
-- 한국어로 쓴다.
-- 핵심 요소를 대체로 담았으면 맞은 것으로 본다. 표현이 서툴러도 뜻이 맞으면 인정한다.
-- feedback은 두 문장 이내로, 무엇이 좋았고 무엇이 빠졌는지 구체적으로 짚는다. 학생을 깎아내리지 않는다.
-- model_answer에는 모범 답안을 세 문장 이내로 쓴다.
-
-출력은 아래 형태의 JSON 하나뿐이다. 설명, 인사말, 마크다운 코드펜스를 절대 붙이지 않는다.
+\uCD9C\uB825\uC740 \uC544\uB798 \uD615\uD0DC\uC758 JSON \uD558\uB098\uBFD0\uC774\uB2E4. \uC124\uBA85, \uC778\uC0AC\uB9D0, \uB9C8\uD06C\uB2E4\uC6B4 \uCF54\uB4DC\uD39C\uC2A4\uB97C \uC808\uB300 \uBD99\uC774\uC9C0 \uC54A\uB294\uB2E4.
 {"correct":true,"feedback":"...","model_answer":"..."}`;
-
 async function callClaude(env, system, user, maxTokens = 1200) {
-  if (!env.ANTHROPIC_API_KEY) fail('서술형 기능이 설정되지 않았습니다 (ANTHROPIC_API_KEY 없음)', 503);
-  const r = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
+  if (!env.ANTHROPIC_API_KEY) fail("\uC11C\uC220\uD615 \uAE30\uB2A5\uC774 \uC124\uC815\uB418\uC9C0 \uC54A\uC558\uC2B5\uB2C8\uB2E4 (ANTHROPIC_API_KEY \uC5C6\uC74C)", 503);
+  const r = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
     headers: {
-      'content-type': 'application/json',
-      'x-api-key': String(env.ANTHROPIC_API_KEY).trim(),
-      'anthropic-version': '2023-06-01',
+      "content-type": "application/json",
+      "x-api-key": String(env.ANTHROPIC_API_KEY).trim(),
+      "anthropic-version": "2023-06-01",
       // user-agent 가 없으면 방화벽이 자동화 요청으로 보고 막는 경우가 있습니다.
-      'user-agent': 'INFSUB/1.0 (+https://namu578.github.io/INFSUB)',
+      "user-agent": "INFSUB/1.0 (+https://namu578.github.io/INFSUB)"
     },
     body: JSON.stringify({
-      model: env.MODEL || 'claude-sonnet-5',
+      model: env.MODEL || "claude-sonnet-5",
       max_tokens: maxTokens,
       system,
-      messages: [{ role: 'user', content: user }],
-    }),
+      messages: [{ role: "user", content: user }]
+    })
   });
   if (!r.ok) {
-    const t = await r.text().catch(() => '');
-    // 401/403 은 문항 내용이 아니라 키·계정 문제입니다. 원인을 짚어 줍니다.
-    if (r.status === 401) fail('Claude API 키가 올바르지 않습니다. wrangler secret put ANTHROPIC_API_KEY 로 다시 넣어 주세요', 502);
-    if (r.status === 403) fail('Claude API가 이 요청을 거부했습니다 (403). 키가 폐기되었거나, 결제가 설정되지 않았거나, 계정에 이 모델 권한이 없을 때 납니다. console.anthropic.com 에서 키와 결제 상태를 확인해 주세요', 502);
-    if (r.status === 404) fail(`요청한 모델을 찾을 수 없습니다 (${env.MODEL || 'claude-sonnet-5'}). wrangler.toml 의 MODEL 값을 확인해 주세요`, 502);
-    if (r.status === 429) fail('요청이 몰렸습니다. 잠시 뒤 다시 시도해 주세요', 502);
-    fail(`Claude 호출 실패 (${r.status}) ${t.slice(0, 160)}`, 502);
+    const t = await r.text().catch(() => "");
+    if (r.status === 401) fail("Claude API \uD0A4\uAC00 \uC62C\uBC14\uB974\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4. wrangler secret put ANTHROPIC_API_KEY \uB85C \uB2E4\uC2DC \uB123\uC5B4 \uC8FC\uC138\uC694", 502);
+    if (r.status === 403) fail("Claude API\uAC00 \uC774 \uC694\uCCAD\uC744 \uAC70\uBD80\uD588\uC2B5\uB2C8\uB2E4 (403). \uD0A4\uAC00 \uD3D0\uAE30\uB418\uC5C8\uAC70\uB098, \uACB0\uC81C\uAC00 \uC124\uC815\uB418\uC9C0 \uC54A\uC558\uAC70\uB098, \uACC4\uC815\uC5D0 \uC774 \uBAA8\uB378 \uAD8C\uD55C\uC774 \uC5C6\uC744 \uB54C \uB0A9\uB2C8\uB2E4. console.anthropic.com \uC5D0\uC11C \uD0A4\uC640 \uACB0\uC81C \uC0C1\uD0DC\uB97C \uD655\uC778\uD574 \uC8FC\uC138\uC694", 502);
+    if (r.status === 404) fail(`\uC694\uCCAD\uD55C \uBAA8\uB378\uC744 \uCC3E\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4 (${env.MODEL || "claude-sonnet-5"}). wrangler.toml \uC758 MODEL \uAC12\uC744 \uD655\uC778\uD574 \uC8FC\uC138\uC694`, 502);
+    if (r.status === 429) fail("\uC694\uCCAD\uC774 \uBAB0\uB838\uC2B5\uB2C8\uB2E4. \uC7A0\uC2DC \uB4A4 \uB2E4\uC2DC \uC2DC\uB3C4\uD574 \uC8FC\uC138\uC694", 502);
+    fail(`Claude \uD638\uCD9C \uC2E4\uD328 (${r.status}) ${t.slice(0, 160)}`, 502);
   }
   const j = await r.json();
-  const text = (j.content || []).filter(c => c.type === 'text').map(c => c.text).join('\n');
-  const clean = text.replace(/```json|```/g, '').trim();
-  try { return JSON.parse(clean); }
-  catch {
+  const text = (j.content || []).filter((c) => c.type === "text").map((c) => c.text).join("\n");
+  const clean = text.replace(/```json|```/g, "").trim();
+  try {
+    return JSON.parse(clean);
+  } catch {
     const m = clean.match(/\{[\s\S]*\}/);
-    if (m) { try { return JSON.parse(m[0]); } catch {} }
-    fail('AI 응답을 이해하지 못했습니다. 다시 시도해 주세요', 502);
+    if (m) {
+      try {
+        return JSON.parse(m[0]);
+      } catch {
+      }
+    }
+    fail("AI \uC751\uB2F5\uC744 \uC774\uD574\uD558\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4. \uB2E4\uC2DC \uC2DC\uB3C4\uD574 \uC8FC\uC138\uC694", 502);
   }
 }
-
-/* AI 연결 점검 — 관리자만 부를 수 있습니다.
-   키 값은 절대 돌려주지 않습니다. 앞머리와 길이만 알려 줍니다.
-
-   403 이 났을 때 원인이 (가) 키·계정인지 (나) 출발지 차단인지 가르려고
-   몇 가지 형태로 나눠서 찔러 봅니다. 특히 '키 없이 보낸 요청'이 핵심입니다.
-   그게 401 이면 길은 뚫려 있다는 뜻이고, 403 이면 길 자체가 막힌 것입니다. */
+__name(callClaude, "callClaude");
 async function diag(env, me) {
-  if (!me.admin) fail('관리자만 볼 수 있습니다', 403);
-
+  if (!me.admin) fail("\uAD00\uB9AC\uC790\uB9CC \uBCFC \uC218 \uC788\uC2B5\uB2C8\uB2E4", 403);
   const key = env.ANTHROPIC_API_KEY;
-  const model = env.MODEL || 'claude-sonnet-5';
+  const model = env.MODEL || "claude-sonnet-5";
   const out = { model, keySet: !!key, probes: [] };
-
   if (!key) {
-    out.verdict = '이 워커에 ANTHROPIC_API_KEY 가 없습니다. Cloudflare 대시보드에서 넣어 주세요.';
+    out.verdict = "\uC774 \uC6CC\uCEE4\uC5D0 ANTHROPIC_API_KEY \uAC00 \uC5C6\uC2B5\uB2C8\uB2E4. Cloudflare \uB300\uC2DC\uBCF4\uB4DC\uC5D0\uC11C \uB123\uC5B4 \uC8FC\uC138\uC694.";
     return out;
   }
-
   out.keyLength = key.length;
   out.keyHead = key.slice(0, 14);
   out.hasSpace = /^\s|\s$/.test(key);
-  out.looksLikeApiKey = key.trim().startsWith('sk-ant-api');
-  out.looksLikeOAuth = key.trim().startsWith('sk-ant-oat');
-
+  out.looksLikeApiKey = key.trim().startsWith("sk-ant-api");
+  out.looksLikeOAuth = key.trim().startsWith("sk-ant-oat");
   const k = key.trim();
-  const msgBody = JSON.stringify({ model, max_tokens: 4, messages: [{ role: 'user', content: 'hi' }] });
-
+  const msgBody = JSON.stringify({ model, max_tokens: 4, messages: [{ role: "user", content: "hi" }] });
   async function probe(name, url, init) {
     try {
       const r = await fetch(url, init);
-      const txt = (await r.text().catch(() => '')).replace(/\s+/g, ' ').slice(0, 120);
+      const txt = (await r.text().catch(() => "")).replace(/\s+/g, " ").slice(0, 120);
       out.probes.push({
-        name, status: r.status,
-        requestId: r.headers.get('request-id') || r.headers.get('x-request-id') || null,
-        cfRay: r.headers.get('cf-ray') || null,
-        body: txt,
+        name,
+        status: r.status,
+        requestId: r.headers.get("request-id") || r.headers.get("x-request-id") || null,
+        cfRay: r.headers.get("cf-ray") || null,
+        body: txt
       });
       return r.status;
     } catch (e) {
@@ -384,56 +358,75 @@ async function diag(env, me) {
       return 0;
     }
   }
-
-  const H = extra => ({ 'content-type': 'application/json', 'anthropic-version': '2023-06-01', ...extra });
-
-  // 1) 지금 코드와 똑같이
-  const s1 = await probe('기본', 'https://api.anthropic.com/v1/messages',
-    { method: 'POST', headers: H({ 'x-api-key': k }), body: msgBody });
-
-  // 2) 브라우저처럼 보이는 user-agent 를 붙여서 (WAF 가 UA 로 거를 때 대비)
-  const s2 = await probe('UA 추가', 'https://api.anthropic.com/v1/messages',
-    { method: 'POST', headers: H({ 'x-api-key': k, 'user-agent': 'INFSUB/1.0 (+https://namu578.github.io/INFSUB)' }), body: msgBody });
-
-  // 3) 키 없이. 길이 뚫려 있으면 401(인증 실패), 막혀 있으면 403 이 나옵니다.
-  const s3 = await probe('키 없이', 'https://api.anthropic.com/v1/models',
-    { method: 'GET', headers: H({}) });
-
-  // 4) 키를 붙여 가벼운 GET
-  const s4 = await probe('모델 목록', 'https://api.anthropic.com/v1/models',
-    { method: 'GET', headers: H({ 'x-api-key': k }) });
-
+  __name(probe, "probe");
+  const H = /* @__PURE__ */ __name((extra) => ({ "content-type": "application/json", "anthropic-version": "2023-06-01", ...extra }), "H");
+  const s1 = await probe(
+    "\uAE30\uBCF8",
+    "https://api.anthropic.com/v1/messages",
+    { method: "POST", headers: H({ "x-api-key": k }), body: msgBody }
+  );
+  const s2 = await probe(
+    "UA \uCD94\uAC00",
+    "https://api.anthropic.com/v1/messages",
+    { method: "POST", headers: H({ "x-api-key": k, "user-agent": "INFSUB/1.0 (+https://namu578.github.io/INFSUB)" }), body: msgBody }
+  );
+  const s3 = await probe(
+    "\uD0A4 \uC5C6\uC774",
+    "https://api.anthropic.com/v1/models",
+    { method: "GET", headers: H({}) }
+  );
+  const s4 = await probe(
+    "\uBAA8\uB378 \uBAA9\uB85D",
+    "https://api.anthropic.com/v1/models",
+    { method: "GET", headers: H({ "x-api-key": k }) }
+  );
   out.status = s1;
   out.reached = !!out.probes[0].requestId;
-
-  if (out.hasSpace)              out.verdict = '키 앞뒤에 공백이나 줄바꿈이 붙어 있습니다. 다시 넣어 주세요.';
-  else if (out.looksLikeOAuth)   out.verdict = 'Claude Code 용 OAuth 토큰입니다. sk-ant-api 로 시작하는 키가 필요합니다.';
-  else if (!out.looksLikeApiKey) out.verdict = 'API 키 형식이 아닙니다. 새로 발급해 주세요.';
-  else if (s1 === 200)           out.verdict = '정상입니다. AI 기능이 동작해야 합니다.';
-  else if (s1 === 401)           out.verdict = '키가 유효하지 않습니다. 폐기되었거나 잘못 복사되었습니다.';
+  if (out.hasSpace) out.verdict = "\uD0A4 \uC55E\uB4A4\uC5D0 \uACF5\uBC31\uC774\uB098 \uC904\uBC14\uAFC8\uC774 \uBD99\uC5B4 \uC788\uC2B5\uB2C8\uB2E4. \uB2E4\uC2DC \uB123\uC5B4 \uC8FC\uC138\uC694.";
+  else if (out.looksLikeOAuth) out.verdict = "Claude Code \uC6A9 OAuth \uD1A0\uD070\uC785\uB2C8\uB2E4. sk-ant-api \uB85C \uC2DC\uC791\uD558\uB294 \uD0A4\uAC00 \uD544\uC694\uD569\uB2C8\uB2E4.";
+  else if (!out.looksLikeApiKey) out.verdict = "API \uD0A4 \uD615\uC2DD\uC774 \uC544\uB2D9\uB2C8\uB2E4. \uC0C8\uB85C \uBC1C\uAE09\uD574 \uC8FC\uC138\uC694.";
+  else if (s1 === 200) out.verdict = "\uC815\uC0C1\uC785\uB2C8\uB2E4. AI \uAE30\uB2A5\uC774 \uB3D9\uC791\uD574\uC57C \uD569\uB2C8\uB2E4.";
+  else if (s1 === 401) out.verdict = "\uD0A4\uAC00 \uC720\uD6A8\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4. \uD3D0\uAE30\uB418\uC5C8\uAC70\uB098 \uC798\uBABB \uBCF5\uC0AC\uB418\uC5C8\uC2B5\uB2C8\uB2E4.";
   else if (s1 === 403 && s2 === 200)
-    out.verdict = 'user-agent 헤더가 없어서 막혔습니다. 코드에 user-agent 를 추가하면 해결됩니다.';
+    out.verdict = "user-agent \uD5E4\uB354\uAC00 \uC5C6\uC5B4\uC11C \uB9C9\uD614\uC2B5\uB2C8\uB2E4. \uCF54\uB4DC\uC5D0 user-agent \uB97C \uCD94\uAC00\uD558\uBA74 \uD574\uACB0\uB429\uB2C8\uB2E4.";
   else if (s1 === 403 && s3 === 403)
-    out.verdict = '키 없이 보낸 요청도 403 입니다. 키와 무관하게 이 워커의 출발지가 차단된 상태입니다.';
+    out.verdict = "\uD0A4 \uC5C6\uC774 \uBCF4\uB0B8 \uC694\uCCAD\uB3C4 403 \uC785\uB2C8\uB2E4. \uD0A4\uC640 \uBB34\uAD00\uD558\uAC8C \uC774 \uC6CC\uCEE4\uC758 \uCD9C\uBC1C\uC9C0\uAC00 \uCC28\uB2E8\uB41C \uC0C1\uD0DC\uC785\uB2C8\uB2E4.";
   else if (s1 === 403 && (s3 === 401 || s3 === 200))
-    out.verdict = '길은 뚫려 있는데 이 키로 보낸 요청만 403 입니다. 키 권한이나 워크스페이스 지출 한도를 확인해 주세요.';
-  else if (s1 === 404)           out.verdict = `모델 이름이 잘못되었습니다 (${model}).`;
-  else                           out.verdict = '아래 탐침 결과를 확인해 주세요.';
-
+    out.verdict = "\uAE38\uC740 \uB6AB\uB824 \uC788\uB294\uB370 \uC774 \uD0A4\uB85C \uBCF4\uB0B8 \uC694\uCCAD\uB9CC 403 \uC785\uB2C8\uB2E4. \uD0A4 \uAD8C\uD55C\uC774\uB098 \uC6CC\uD06C\uC2A4\uD398\uC774\uC2A4 \uC9C0\uCD9C \uD55C\uB3C4\uB97C \uD655\uC778\uD574 \uC8FC\uC138\uC694.";
+  else if (s1 === 404) out.verdict = `\uBAA8\uB378 \uC774\uB984\uC774 \uC798\uBABB\uB418\uC5C8\uC2B5\uB2C8\uB2E4 (${model}).`;
+  else out.verdict = "\uC544\uB798 \uD0D0\uCE68 \uACB0\uACFC\uB97C \uD655\uC778\uD574 \uC8FC\uC138\uC694.";
   return out;
 }
-
+__name(diag, "diag");
 async function ai(env, body) {
-  if (body.task === 'make') {
-    const ctx = String(body.context || '').slice(0, 6000);
-    if (!ctx.trim()) fail('노트북 내용이 비어 있습니다');
-    return await callClaude(env, MAKE_SYS,
-      `노트북 이름: ${String(body.notebook || '').slice(0, 80)}\n\n=== 노트북 내용 ===\n${ctx}`);
+  if (body.task === "make") {
+    const ctx = String(body.context || "").slice(0, 6e3);
+    if (!ctx.trim()) fail("\uB178\uD2B8\uBD81 \uB0B4\uC6A9\uC774 \uBE44\uC5B4 \uC788\uC2B5\uB2C8\uB2E4");
+    return await callClaude(
+      env,
+      MAKE_SYS,
+      `\uB178\uD2B8\uBD81 \uC774\uB984: ${String(body.notebook || "").slice(0, 80)}
+
+=== \uB178\uD2B8\uBD81 \uB0B4\uC6A9 ===
+${ctx}`
+    );
   }
-  if (body.task === 'grade') {
-    return await callClaude(env, GRADE_SYS,
-      `문제: ${String(body.question || '').slice(0, 1500)}\n\n채점 기준: ${String(body.rubric || '').slice(0, 1500)}\n\n학생 답안: ${String(body.answer || '').slice(0, 3000)}`,
-      700);
+  if (body.task === "grade") {
+    return await callClaude(
+      env,
+      GRADE_SYS,
+      `\uBB38\uC81C: ${String(body.question || "").slice(0, 1500)}
+
+\uCC44\uC810 \uAE30\uC900: ${String(body.rubric || "").slice(0, 1500)}
+
+\uD559\uC0DD \uB2F5\uC548: ${String(body.answer || "").slice(0, 3e3)}`,
+      700
+    );
   }
-  fail('알 수 없는 요청입니다');
+  fail("\uC54C \uC218 \uC5C6\uB294 \uC694\uCCAD\uC785\uB2C8\uB2E4");
 }
+__name(ai, "ai");
+export {
+  worker_default as default
+};
+//# sourceMappingURL=worker.js.map
