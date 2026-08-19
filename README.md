@@ -1,4 +1,4 @@
-# 해피해피 짭코랩
+# 해피해피 코랩
 
 구글 클래스룸에서 받은 코랩 파일을 깃허브에 올려두면, 웹에서 읽고 실행하고 문제로 확인할 수 있는 사이트입니다.
 
@@ -17,13 +17,17 @@
 
 ```
 INFSUB/
-├─ index.html          ← 이 파일
+├─ index.html          ← 사이트 전체 (프론트엔드)
+├─ worker.js           ← Cloudflare Worker (인증·저장·깃허브 쓰기)
+├─ wrangler.toml       ← Worker 설정
 ├─ notebooks/          ← 수업 코랩 파일(.ipynb)을 여기에 올립니다
-│   ├─ 01-파이썬-기초.ipynb
-│   └─ 02-리스트.ipynb
-├─ pdfs/               ← 수업 PDF (선택)
+│   ├─ 1_넘파이_기초(개념).ipynb
+│   └─ 2_넘파이_심화.ipynb
+├─ bank/               ← 미리 만들어 둔 문항 은행(JSON)
 └─ userdata/           ← 학습 기록이 자동으로 쌓이는 곳 (2단계 이후)
 ```
+
+AI(서술형 생성·채점, AI 질문)만 별도 저장소 `NAMU578/infsub-ai` 의 Vercel 함수가 처리합니다. 자세한 이유는 4-5단계에 있습니다.
 
 `notebooks/` 폴더에 파일을 새로 올리면 사이트에 자동으로 나타납니다. 코드를 고칠 필요 없습니다.
 
@@ -43,9 +47,12 @@ const CONFIG = {
   GITHUB_BRANCH: 'main',
   NOTEBOOK_DIR : 'notebooks',
   WORKER_URL   : '',          // 4단계에서 채웁니다
+  AI_URL       : '',          // 4-5단계에서 채웁니다 (AI 전용 서버)
   ADMIN_ID     : 'ohh5259',
   MIN_PW_LEN   : 8,           // 가입 시 최소 비밀번호 길이
   QUIZ_COUNT   : 10,
+  BANK_FILES   : ['bank/question-bank-numpy.json'],  // 문항 은행 파일들
+  BANK_VERIFY  : false,       // true 면 출제 직전 은행 문항 정답을 재실행 검증
 };
 ```
 
@@ -78,7 +85,7 @@ const CONFIG = {
 
 ### 왜 서버가 필요한가
 
-깃허브 쓰기 토큰과 Claude API 키를 `index.html` 안에 넣으면, 사이트에 들어온 누구나 개발자 도구로 그 값을 꺼낼 수 있습니다. 키가 새면 남이 대신 쓰고 **요금은 형님 앞으로 청구됩니다.** 그래서 키는 서버에만 두고, 브라우저는 서버에 요청만 보냅니다.
+깃허브 쓰기 토큰과 Claude API 키를 `index.html` 안에 넣으면, 사이트에 들어온 누구나 개발자 도구로 그 값을 꺼낼 수 있습니다. 키가 새면 남이 대신 쓰고 **요금은 키 주인에게 청구됩니다.** 그래서 키는 서버에만 두고, 브라우저는 서버에 요청만 보냅니다.
 
 Cloudflare Workers 무료 플랜은 하루 10만 요청까지라 학급 단위로는 넉넉합니다.
 
@@ -109,12 +116,12 @@ wrangler login
 
 wrangler secret put GITHUB_TOKEN        # 4-1에서 만든 토큰
 wrangler secret put SESSION_SECRET      # 아무 긴 무작위 문자열
-wrangler secret put ANTHROPIC_API_KEY   # 4-2에서 만든 키 (건너뛰어도 됨)
+# ANTHROPIC_API_KEY 는 Worker가 아니라 Vercel 쪽에 넣습니다 (4-5단계)
 
 wrangler deploy
 ```
 
-`SESSION_SECRET` 은 아무 값이나 길게 넣으면 됩니다. 만들기 귀찮으면:
+`SESSION_SECRET` 은 아무 값이나 길게 넣으면 됩니다. **한 번 정하면 절대 바꾸지 마세요 — 기존 계정의 비밀번호가 전부 무효가 됩니다.** 만들기 귀찮으면:
 
 ```bash
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
@@ -132,6 +139,42 @@ WORKER_URL : 'https://info-notebook.<계정>.workers.dev',
 **`ADMIN_ID` 로 지정한 아이디가 가입하면 자동으로 관리자**가 됩니다.
 
 배포 직후 사이트에서 아이디 `ohh5259` 로 **계정 만들기** 를 먼저 하세요. 비밀번호는 그때 정하는 값이 그대로 쓰입니다. 먼저 선점당하지 않도록 친구들에게 주소를 알려주기 전에 해두는 게 좋습니다.
+
+### 4-5. AI 서버 붙이기 (Vercel)
+
+서술형 출제·채점과 AI 질문은 **Cloudflare Worker가 아니라 Vercel** 이 처리합니다.
+
+Anthropic API가 Cloudflare Worker의 실행 위치(데이터센터)를 차단해서, 키가 정상인데도 Worker에서 보낸 요청만 403이 납니다. 같은 키를 브라우저에서 직접 쓰면 200이 나오는 것으로 네트워크 단 차단임을 확인했습니다. 그래서 AI 호출만 미국 리전에서 도는 Vercel 함수로 옮겼습니다.
+
+저장소는 `NAMU578/infsub-ai` 이고 구조는 이렇습니다.
+
+```
+infsub-ai/
+├─ api/ai.js      ← 서술형 생성·채점·AI 질문 (Vercel 서버리스 함수)
+└─ vercel.json
+```
+
+Vercel 프로젝트 **Settings → Environment Variables** 에 넣을 값:
+
+| 이름 | 필수 | 기본값 |
+|---|---|---|
+| `ANTHROPIC_API_KEY` | ✓ | — |
+| `MODEL` | | `claude-sonnet-5` |
+| `ALLOWED_ORIGIN` | | `https://namu578.github.io` |
+
+Cloudflare Worker 시크릿과는 **별개로** 여기 새로 넣어야 합니다. 배포되면 나온 주소를 `index.html` 의 `AI_URL` 에 넣으세요.
+
+```js
+AI_URL : 'https://infsub-ai.vercel.app/api/ai',
+```
+
+`index.html` 의 `api()` 함수가 `/ai` 요청만 이 주소로 보내고, 나머지(로그인·저장·회원 목록)는 전부 Cloudflare Worker로 갑니다. `AI_URL` 을 비우면 Worker의 `/ai` 로 되돌아가지만, 위의 차단 문제 때문에 Worker에는 AI 코드가 들어 있지 않습니다.
+
+---
+
+## 배포 순서
+
+두 파일을 함께 고쳤다면 **Worker를 먼저 배포하고 그다음 `index.html` 을 올리세요.** 반대로 하면 새 UI가 아직 없는 엔드포인트를 부릅니다.
 
 ---
 
@@ -156,6 +199,7 @@ WORKER_URL : 'https://info-notebook.<계정>.workers.dev',
 | 노트북 목록이 비어 있음 | `NOTEBOOK_DIR` 이름, 파일 확장자가 `.ipynb` 인지, Pages가 최신 커밋을 반영했는지 |
 | 목록 불러오기 실패 (403) | 로컬 모드는 시간당 60회 제한입니다. 학교처럼 같은 네트워크를 여러 명이 쓰면 금방 걸립니다 → Worker를 붙이면 해결됩니다 |
 | Python 준비가 안 끝남 | 첫 실행 때 약 10MB를 내려받습니다. 두 번째부터는 캐시됩니다 |
-| 서술형 버튼이 꺼져 있음 | `WORKER_URL` 이 비어 있거나 `ANTHROPIC_API_KEY` 를 안 넣은 경우입니다 |
+| 서술형 버튼이 꺼져 있음 | `WORKER_URL` 이 비어 있는 경우입니다 |
+| 서술형 생성·채점만 실패 | Vercel 쪽 `ANTHROPIC_API_KEY`·`ALLOWED_ORIGIN` 을 확인하세요. 관리자 화면의 **AI 서버 점검** 버튼이 실제 경로를 그대로 호출해 봅니다 |
 | 로그인은 되는데 저장이 안 됨 | `GITHUB_TOKEN` 의 Contents 권한, `wrangler.toml` 의 저장소 이름 |
 | CORS 오류 | `wrangler.toml` 의 `ALLOWED_ORIGIN` 이 실제 Pages 주소와 정확히 같아야 합니다 (끝에 `/` 없이) |
