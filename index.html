@@ -281,6 +281,17 @@ main{min-width:0;padding:26px 0 90px}
 #toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:90;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none}
 .toast{font-family:var(--f-mono);font-size:12.5px;background:var(--ink);color:var(--paper-raised);padding:8px 15px;border-radius:100px}
 
+/* ── PDF 자료실 ───────────────────────────────────────── */
+.pdf-pages{display:flex;flex-direction:column;align-items:center;gap:16px;padding-bottom:30px}
+.pdf-page{position:relative;box-shadow:0 1px 4px rgba(28,33,38,.12);background:#fff}
+.pdf-page canvas{display:block}
+.textLayer{
+  position:absolute;top:0;left:0;overflow:hidden;opacity:.25;line-height:1;
+  text-align:initial;transform-origin:0 0;
+}
+.textLayer :is(span,br){color:transparent;position:absolute;white-space:pre;cursor:text;transform-origin:0% 0%}
+.textLayer ::selection{background:#8bb4ff}
+
 .menu-btn{display:none}
 @media (max-width:860px){
   :root{--gutter:52px}
@@ -359,6 +370,10 @@ main{min-width:0;padding:26px 0 90px}
         <button class="nav-item" data-view="wrong"><span class="nav-n">E</span>오답 노트<span class="dot hidden" id="wrong-dot"></span></button>
         <button class="nav-item" data-view="stats"><span class="nav-n">S</span>진행 상황</button>
       </div>
+      <div class="nav-sec">
+        <h3>자료실</h3>
+        <button class="nav-item" data-view="pdfs"><span class="nav-n">P</span>PDF 자료실</button>
+      </div>
       <div class="nav-sec hidden" id="admin-sec">
         <h3>관리자</h3>
         <button class="nav-item" data-view="admin"><span class="nav-n">A</span>회원 관리</button>
@@ -375,6 +390,10 @@ main{min-width:0;padding:26px 0 90px}
 
 <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+</script>
 <script>
 // 코랩처럼 $..$, $$..$$, \(..\), \[..\] 뿐 아니라 \begin{align}같은 환경도 델리미터 없이 인식합니다.
 window.MathJax = {
@@ -397,6 +416,7 @@ const CONFIG = {
   GITHUB_REPO  : 'INFSUB',   // 저장소 이름
   GITHUB_BRANCH: 'main',
   NOTEBOOK_DIR : 'notebooks',        // .ipynb 파일이 들어있는 폴더
+  PDF_DIR      : 'pdfs',             // PDF 자료가 들어있는 폴더
 
   // Cloudflare Worker 주소. 비워두면 이 브라우저에만 저장되는 로컬 모드로 동작합니다.
   WORKER_URL   : 'https://info-notebook.infsub.workers.dev',                 // 예: 'https://info-nb.your-name.workers.dev'
@@ -503,6 +523,8 @@ const S = {
   viewingAs:null,     // 대리 보기 대상 아이디
   notebooks:[],       // [{name, path}]
   nb:null,            // 현재 노트북 {path, name, cells}
+  pdfs:[],            // [{name, path}]
+  pdf:null,           // 현재 PDF {path, name}
   view:'quiz',
 };
 const readOnly = () => !!S.viewingAs;
@@ -713,6 +735,43 @@ async function fetchNotebookList(){
     .sort((a,b)=>a.name.localeCompare(b.name,'ko',{numeric:true}));
   sessionStorage.setItem(cacheKey,JSON.stringify({t:Date.now(),v:list}));
   return list;
+}
+
+/* ════════════════════════════════════════════════════════
+   깃허브에서 PDF 자료 가져오기
+   ════════════════════════════════════════════════════════ */
+async function fetchPdfList(){
+  const cacheKey='cnb:pdflist';
+  try{
+    const c=JSON.parse(sessionStorage.getItem(cacheKey));
+    if(c && Date.now()-c.t < 6e5) return c.v;
+  }catch{}
+  const ghList = async () => {
+    const url=`https://api.github.com/repos/${CONFIG.GITHUB_OWNER}/${CONFIG.GITHUB_REPO}/contents/${CONFIG.PDF_DIR}?ref=${CONFIG.GITHUB_BRANCH}`;
+    const r=await fetch(url);
+    if(!r.ok) throw new Error(r.status===404?'PDF 폴더를 찾을 수 없습니다':'깃허브 목록을 불러오지 못했습니다 ('+r.status+')');
+    return r.json();
+  };
+  let items;
+  if(hasWorker()){
+    // 서버가 죽었거나 CORS가 막혀도 목록은 보이게 — 깃허브에서 직접 읽습니다
+    try{ items = (await api('/repo/list',{dir:CONFIG.PDF_DIR})).items; }
+    catch(e){ toast('서버 목록 실패 — 깃허브에서 직접 읽습니다'); }
+  }
+  if(!items) items = await ghList();
+  const list = items.filter(f=>f.name.toLowerCase().endsWith('.pdf'))
+    .map(f=>({name:f.name.replace(/\.pdf$/i,''), path:f.path}))
+    .sort((a,b)=>a.name.localeCompare(b.name,'ko',{numeric:true}));
+  sessionStorage.setItem(cacheKey,JSON.stringify({t:Date.now(),v:list}));
+  return list;
+}
+
+const pdfDocCache = new Map();
+async function loadPdfDoc(path){
+  if(pdfDocCache.has(path)) return pdfDocCache.get(path);
+  const doc = await pdfjsLib.getDocument(RAW(path)).promise;
+  pdfDocCache.set(path, doc);
+  return doc;
 }
 
 const nbCache = new Map();
@@ -1901,7 +1960,7 @@ function askAI(context, label){
   if(!context) return toast('질문할 부분을 먼저 골라 주세요');
 
   CHAT = {id:Date.now().toString(36), at:new Date().toISOString(),
-          nb:S.nb?.path||null, label, context, msgs:[]};
+          nb:S.nb?.path||S.pdf?.path||null, label, context, msgs:[]};
 
   const m = modal(`
     <h3>AI에게 질문</h3>
@@ -2121,11 +2180,99 @@ function exitImpersonate(){
 }
 
 /* ════════════════════════════════════════════════════════
+   PDF 자료실
+   ════════════════════════════════════════════════════════ */
+function viewPdfList(){
+  $('#view').innerHTML = `<div class="empty">불러오는 중…</div>`;
+  fetchPdfList().then(list=>{
+    S.pdfs = list;
+    $('#view').innerHTML = `
+      <div class="page-head">
+        <div class="eyebrow">Library</div>
+        <h2>PDF 자료실</h2>
+        <div class="sub">자료를 고른 뒤, 궁금한 부분을 선택하면 AI에게 물어볼 수 있습니다.</div>
+      </div>
+      ${list.length
+        ? `<div class="home-grid">${list.map(p=>
+            `<button class="home-card" data-open-pdf="${escAttr(p.path)}">
+               <div class="t">${esc(p.name)}</div>
+               <div class="d">PDF 열기</div>
+             </button>`).join('')}</div>`
+        : `<div class="empty"><div class="eyebrow">No PDFs</div>
+            <span class="mono">${esc(CONFIG.PDF_DIR)}/</span> 폴더에 <span class="mono">.pdf</span> 파일을 올려 주세요.</div>`}
+    `;
+    $('#view').onclick = e=>{
+      const b=e.target.closest('[data-open-pdf]'); if(b) openPdf(b.dataset.openPdf);
+    };
+  }).catch(e=>{
+    $('#view').innerHTML = `<div class="empty"><div class="eyebrow">Error</div>${esc(e.message)}</div>`;
+  });
+}
+function openPdf(path){
+  const meta = S.pdfs.find(p=>p.path===path);
+  S.pdf = {path, name: meta ? meta.name : path.split('/').pop()};
+  setView('pdf');
+}
+async function viewPdf(){
+  const pdf = S.pdf;
+  $('#view').innerHTML = `
+    <div class="page-head">
+      <button class="btn btn-ghost btn-sm" id="pdf-back">← 목록으로</button>
+      <h2>${esc(pdf.name)}</h2>
+      <div class="sub">본문을 드래그로 선택하면 AI에게 물어볼 수 있습니다.</div>
+    </div>
+    <div id="pdf-pages" class="pdf-pages"><div class="empty">불러오는 중…</div></div>`;
+  $('#pdf-back').onclick = () => setView('pdfs');
+  try{
+    await renderPdfPages(pdf.path, $('#pdf-pages'));
+  }catch(e){
+    $('#pdf-pages').innerHTML = `<div class="empty"><div class="eyebrow">Error</div>${esc(e.message)}</div>`;
+  }
+}
+async function renderPdfPages(path, host){
+  const doc = await loadPdfDoc(path);
+  host.innerHTML = '';
+  const targetW = Math.max(320, Math.min(760, host.clientWidth || 760));
+  for(let n=1; n<=doc.numPages; n++){
+    const page = await doc.getPage(n);
+    const base = page.getViewport({scale:1});
+    const viewport = page.getViewport({scale: targetW / base.width});
+
+    const wrap = document.createElement('div');
+    wrap.className = 'pdf-page';
+    wrap.style.width = viewport.width + 'px';
+    wrap.style.height = viewport.height + 'px';
+
+    const canvas = document.createElement('canvas');
+    canvas.width = viewport.width; canvas.height = viewport.height;
+
+    const textLayerDiv = document.createElement('div');
+    textLayerDiv.className = 'textLayer';
+    textLayerDiv.style.width = viewport.width + 'px';
+    textLayerDiv.style.height = viewport.height + 'px';
+
+    wrap.appendChild(canvas);
+    wrap.appendChild(textLayerDiv);
+    host.appendChild(wrap);
+
+    await page.render({canvasContext: canvas.getContext('2d'), viewport}).promise;
+    const textContent = await page.getTextContent();
+    await pdfjsLib.renderTextLayer({
+      textContentSource: textContent,
+      container: textLayerDiv,
+      viewport,
+      textDivs: []
+    }).promise;
+  }
+}
+
+/* ════════════════════════════════════════════════════════
    라우팅 / 부팅
    ════════════════════════════════════════════════════════ */
 function markNav(){
   $$('.nav-item').forEach(b=>b.classList.toggle('active',
-    (b.dataset.view && b.dataset.view===S.view) || (b.dataset.path && S.view==='nb' && b.dataset.path===S.nb?.path)));
+    (b.dataset.view && (b.dataset.view===S.view || (b.dataset.view==='pdfs' && S.view==='pdf')))
+    || (b.dataset.path && S.view==='nb' && b.dataset.path===S.nb?.path)));
 }
 function viewHome(){
   const nbs = S.notebooks || [];
@@ -2170,6 +2317,8 @@ function setView(v,opts){
   if(v==='admin') return viewAdmin();
   if(v==='essay') return viewEssayAdmin();
   if(v==='nb')    return viewNotebook();
+  if(v==='pdfs')  return viewPdfList();
+  if(v==='pdf')   return viewPdf();
 }
 async function openNotebook(path){
   const meta=S.notebooks.find(n=>n.path===path); if(!meta) return;
