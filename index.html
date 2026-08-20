@@ -93,8 +93,8 @@ a{color:var(--accent)}
 .login-label{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:5px;display:block}
 .login-foot{margin-top:14px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
 .tiny{font-size:11.5px;color:var(--ink-faint)}
-.tiny a,.linkish{color:var(--ink-faint);text-decoration:underline;text-underline-offset:2px;background:none;border:0;padding:0;font-size:11.5px;cursor:pointer}
-.tiny a:hover,.linkish:hover{color:var(--ink)}
+.tiny a{color:var(--ink-faint);text-decoration:underline;text-underline-offset:2px}
+.tiny a:hover{color:var(--ink)}
 .chk{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--ink-faint);cursor:pointer}
 .msg{font-size:12.5px;padding:8px 11px;border-radius:var(--r);margin-top:4px}
 .msg-bad{background:var(--bad-soft);color:var(--bad)}
@@ -1240,10 +1240,6 @@ function essayDrafts(){
   return S.data.essayDrafts;
 }
 
-/* 노트북 이름 맞추기 — 괄호·밑줄 차이는 무시합니다. */
-const essayNbKey = s => String(s||'').replace(/\.ipynb$/,'')
-  .replace(/[^0-9A-Za-z가-힣]/g,'').toLowerCase();
-
 function essaySaveDraft(nbName, j, intro){
   const id = essayId(j.question);
   if(essayBank().some(x=>x.id===id)) return;        // 이미 승인된 문제
@@ -1259,11 +1255,7 @@ function essaySaveDraft(nbName, j, intro){
 
 /* 승인된 문제 중 이 노트북 것을 골라 옵니다. */
 function essayFromBank(nbName, count){
-  const key = essayNbKey(nbName);
-  const pool = essayBank().filter(x=>{
-    const a = essayNbKey(x.nb);
-    return a===key || a.startsWith(key) || key.startsWith(a);
-  });
+  const pool = essayBank().filter(x=>nbMatches(x.nb, nbName));
   return shuffle(pool).slice(0, count).map(x=>({
     type:'서술형', typeKey:'essay', mode:'essay', ai:true, fromBank:true,
     intro:x.intro||'', stem:esc(x.question), code:x.code||'',
@@ -1336,8 +1328,8 @@ async function loadBank(){
    괄호·밑줄만 다른 이름도 같은 노트북으로 봅니다. */
 const bankKey = s => String(s||'').replace(/\.ipynb$/,'')
   .replace(/[^0-9A-Za-z가-힣]/g,'').toLowerCase();
-function bankMatches(q, nbName){
-  const a=bankKey(q.src), b=bankKey(nbName);
+function nbMatches(x, y){
+  const a=bankKey(x), b=bankKey(y);
   return !!a && !!b && (a===b || a.startsWith(b) || b.startsWith(a));
 }
 
@@ -1369,7 +1361,7 @@ function bankAllocate(types, n, avail){
 /* 최근에 낸 문항은 뒤로 미뤄 같은 문제가 연달아 나오지 않게 합니다. */
 function pickFromBank(nbName, count){
   const recent = new Set(S.data?.quiz?.recentBank || []);
-  const pool = BANK.questions.filter(q=>bankMatches(q, nbName));
+  const pool = BANK.questions.filter(q=>nbMatches(q.src, nbName));
   if(!pool.length) return [];
   const byType={};
   for(const q of pool) (byType[q.typeKey] ||= []).push(q);
@@ -1789,10 +1781,10 @@ async function viewEssayAdmin(){
     let users=[];
     if(hasWorker()) users=(await api('/users',{})).users;
     else users=Object.keys(localAccounts()).map(id=>({id}));
-    for(const u of users){
-      const d=await Store.load(u.id).catch(()=>null);
-      for(const x of (d?.essayDrafts||[])) drafts.push({...x, by:u.id});
-    }
+    const loaded = await Promise.all(users.map(u =>
+      Store.load(u.id).then(d=>({id:u.id, d})).catch(()=>({id:u.id, d:null}))));
+    for(const {id,d} of loaded)
+      for(const x of (d?.essayDrafts||[])) drafts.push({...x, by:id});
   }catch(e){ body.innerHTML=`<div class="empty">${esc(e.message)}</div>`; return; }
 
   const bank=essayBank(), rejected=essayRejected();
@@ -1809,17 +1801,17 @@ async function viewEssayAdmin(){
       <b>${kind==='bank'?'승인됨':'검토 대기'} · ${esc(x.nb||'')}${x.by?' · '+esc(x.by)+' 풀이 중 생성':''}</b>
       <div style="margin:8px 0">
         <label class="tiny">문제</label>
-        <textarea class="inp es-q" rows="3" style="width:100%">${esc(x.question)}</textarea>
+        <textarea class="field es-q" rows="3" style="width:100%">${esc(x.question)}</textarea>
       </div>
       ${x.code?`<div style="margin:8px 0"><label class="tiny">코드</label>
-        <textarea class="inp es-c" rows="3" style="width:100%;font-family:var(--f-mono)">${esc(x.code)}</textarea></div>`:''}
+        <textarea class="field es-c" rows="3" style="width:100%;font-family:var(--f-mono)">${esc(x.code)}</textarea></div>`:''}
       <div style="margin:8px 0">
         <label class="tiny">채점 기준</label>
-        <textarea class="inp es-r" rows="2" style="width:100%">${esc(x.rubric)}</textarea>
+        <textarea class="field es-r" rows="2" style="width:100%">${esc(x.rubric)}</textarea>
       </div>
       <div style="margin:8px 0">
         <label class="tiny">모범 답안</label>
-        <textarea class="inp es-a" rows="2" style="width:100%">${esc(x.answer)}</textarea>
+        <textarea class="field es-a" rows="2" style="width:100%">${esc(x.answer)}</textarea>
       </div>
       <div class="toolbar">
         ${kind==='draft'
@@ -2009,90 +2001,28 @@ async function viewAdmin(){
       <label class="chk" style="font-size:13px;color:var(--ink)">
         <input type="checkbox" id="ad-global" ${S.adminGlobal?'checked':''}> 공용 편집 모드 — 내가 고친 셀을 모두에게 적용
       </label>
-      <button class="btn ghost" id="ad-diag">Cloudflare 키 점검</button>
-      <button class="btn ghost" id="ad-diag3">지금 쓰는 AI 서버 점검</button>
-      <button class="btn ghost" id="ad-diag2">브라우저에서 직접 테스트</button>
+      <button class="btn btn-ghost" id="ad-diag3">AI 서버 점검</button>
     </div></div>
     <div class="tiny" style="margin:6px 0 10px">
-      "Cloudflare 키 점검"은 Cloudflare Worker에 저장된 키만 봅니다.
-      ${CONFIG.AI_URL?'지금 문제 생성·채점은 별도 서버(<span class="mono">'+esc(CONFIG.AI_URL)+'</span>)를 쓰므로, 실제 동작을 보려면 "지금 쓰는 AI 서버 점검"을 눌러 주세요.':'AI_URL 이 따로 설정되어 있지 않아 Cloudflare Worker가 그대로 쓰입니다.'}
+      문제 생성·채점은 <span class="mono">${esc(CONFIG.AI_URL || CONFIG.WORKER_URL + '/ai')}</span> 로 갑니다.
     </div>
-    <div id="ad-diagout"></div>
     <div id="ad-diagout3"></div>
-    <div id="ad-diagout2"></div>
     <div id="ad-body"><div class="empty">불러오는 중…</div></div>`;
-
-  /* 서술형이 안 될 때 원인을 짚어 줍니다. 키 값은 보이지 않습니다. */
-  $('#ad-diag').onclick=async()=>{
-    const box=$('#ad-diagout');
-    box.innerHTML=`<div class="q-expect"><b>점검 중…</b></div>`;
-    if(!hasWorker()){ box.innerHTML=`<div class="q-expect"><b>점검</b><pre>서버가 연결되어 있지 않습니다.</pre></div>`; return; }
-    try{
-      const d=await api('/diag',{});
-      const line=[
-        `판정      ${d.verdict}`,
-        `모델      ${d.model}`,
-        `키 등록   ${d.keySet?'있음':'없음'}`,
-        d.keySet?`키 모양   ${d.keyHead}…  (길이 ${d.keyLength}${d.hasSpace?', 앞뒤 공백 있음':''})`:'',
-        d.status!=null?`응답      ${d.status}`:'',
-        ...(d.probes||[]).map(p=>`탐침 ${String(p.name).padEnd(8)} ${p.status}${p.requestId?'  request-id 있음':''}${p.error?'  '+p.error:''}`),
-      ].filter(Boolean).join('\n');
-      box.innerHTML=`<div class="q-expect"><b>AI 연결 점검</b><pre>${esc(line)}</pre></div>`;
-    }catch(e){
-      box.innerHTML=`<div class="q-expect"><b>AI 연결 점검</b><pre>${esc(e.message)}</pre></div>`;
-    }
-  };
 
   $('#ad-global').onchange=e=>{ S.adminGlobal=e.target.checked;
     toast(S.adminGlobal?'이제 셀을 고치면 모두에게 적용됩니다':'개인 편집 모드로 돌아왔습니다'); };
 
-  /* 개발자도구가 막혀 있어도 이 페이지 자체의 스크립트는 정상 동작합니다.
-     그 점을 이용해, Worker 를 거치지 않고 이 브라우저에서 바로 Anthropic 에
-     요청을 보내 봅니다. 여기서 200 이 뜨면 이 컴퓨터·이 네트워크에서는
-     Anthropic 이 막혀 있지 않다는 뜻이고, 그러면 남은 원인은 Worker 가
-     실행되는 위치(데이터센터)로 좁혀집니다.
-     키는 어디에도 저장하지 않고, 테스트가 끝나면 화면에서 지웁니다. */
-  /* 지금 실제로 문제 생성·채점이 쓰는 경로(AI_URL 이 있으면 거기로,
-     없으면 Worker 로) 그대로 호출해 봅니다. 어느 서버를 보고 있는지
-     헷갈리지 않도록, Cloudflare 키 점검과는 완전히 분리했습니다. */
+  /* 문제 생성·채점이 실제로 쓰는 경로를 그대로 한 번 호출해 봅니다. */
   $('#ad-diag3').onclick=async()=>{
     const box=$('#ad-diagout3');
-    box.innerHTML=`<div class="q-expect"><b>지금 쓰는 AI 서버 점검</b><pre>요청 중…</pre></div>`;
+    box.innerHTML=`<div class="q-expect"><b>AI 서버 점검</b><pre>요청 중…</pre></div>`;
     try{
       const j=await api('/ai',{task:'make',notebook:'점검',
         context:'`ndarray` 는 넘파이의 배열 자료형이다. 파이썬 리스트와 비슷하지만 더 빠르고 메모리를 효율적으로 관리한다.'});
-      box.innerHTML=`<div class="q-expect"><b>지금 쓰는 AI 서버 점검</b><pre>정상입니다.\n\n생성된 문제 예시:\n${esc(j.question||JSON.stringify(j))}</pre></div>`;
+      box.innerHTML=`<div class="q-expect"><b>AI 서버 점검</b><pre>정상입니다.\n\n생성된 문제 예시:\n${esc(j.question||JSON.stringify(j))}</pre></div>`;
     }catch(e){
-      box.innerHTML=`<div class="q-expect"><b>지금 쓰는 AI 서버 점검</b><pre>실패: ${esc(e.message)}</pre></div>`;
+      box.innerHTML=`<div class="q-expect"><b>AI 서버 점검</b><pre>실패: ${esc(e.message)}</pre></div>`;
     }
-  };
-
-  $('#ad-diag2').onclick=()=>{
-    const box=$('#ad-diagout2');
-    box.innerHTML=`<div class="q-expect"><b>브라우저 직접 테스트</b>
-      <div style="margin:8px 0">Worker 를 거치지 않고 이 화면에서 바로 Anthropic 에 요청을 보냅니다.
-      테스트용으로 콘솔에 쓰던 실제 API 키를 아래에 붙여넣고 눌러 주세요.
-      키는 저장되지 않으며 테스트가 끝나면 지워집니다.</div>
-      <input type="password" id="ad-key-temp" placeholder="sk-ant-api03-..." class="inp" style="width:100%;max-width:420px;margin-bottom:8px">
-      <br><button class="btn" id="ad-key-go">지금 테스트</button>
-      <pre id="ad-key-result" style="margin-top:10px"></pre></div>`;
-    $('#ad-key-go').onclick=async()=>{
-      const key=$('#ad-key-temp').value.trim();
-      const out=$('#ad-key-result');
-      if(!key){ out.textContent='키를 먼저 붙여넣어 주세요.'; return; }
-      out.textContent='요청 중…';
-      try{
-        const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{
-          'content-type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01',
-          'anthropic-dangerous-direct-browser-access':'true'
-        },body:JSON.stringify({model:'claude-sonnet-5',max_tokens:16,messages:[{role:'user',content:'hi'}]})});
-        const t=await r.text();
-        out.textContent=`상태 ${r.status}\n${t.slice(0,300)}`;
-        if(r.ok) out.textContent += '\n\n→ 이 브라우저에서는 정상입니다. Worker 실행 위치가 원인일 가능성이 큽니다.';
-        else if(r.status===403) out.textContent += '\n\n→ 여기서도 403 이면 이 컴퓨터·계정 쪽 원인입니다.';
-      }catch(e){ out.textContent='요청 실패: '+e.message; }
-      $('#ad-key-temp').value='';   // 테스트 후 즉시 지웁니다
-    };
   };
 
   const body=$('#ad-body');
@@ -2107,8 +2037,9 @@ async function viewAdmin(){
     <th>아이디</th><th>푼 문제</th><th>정답률</th><th>오답</th><th>수정한 셀</th><th>마지막 저장</th><th></th>
     </tr></thead><tbody id="ad-rows"></tbody></table>`;
 
-  for(const u of users){
-    const d = await Store.load(u.id).catch(()=>blankData(u.id));
+  const loaded = await Promise.all(users.map(u =>
+    Store.load(u.id).catch(()=>blankData(u.id)).then(d=>({u, d}))));
+  for(const {u, d} of loaded){
     const st=Object.values(d.quiz?.stats||{});
     const asked=st.reduce((a,s)=>a+s.asked,0), ok=st.reduce((a,s)=>a+s.correct,0);
     const edits=Object.values(d.edits||{}).reduce((a,o)=>a+Object.keys(o).length,0);
