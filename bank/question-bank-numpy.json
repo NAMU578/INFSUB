@@ -1,9 +1,10 @@
 {
- "version": 1,
- "generatedAt": "2026-08-16",
+ "version": 2,
+ "generatedAt": "2026-08-20",
  "source": [
   "1_넘파이_기초(개념).ipynb",
-  "2_넘파이_심화.ipynb"
+  "2_넘파이_심화.ipynb",
+  "기출_넘파이모듈관련.pdf (출제 유형·주제 참고, 문항은 신규 작성)"
  ],
  "verified": true,
  "types": [
@@ -191,30 +192,6 @@
    "verifyExpect": "1 999 True"
   },
   {
-   "id": "C06",
-   "type": "개념 분류",
-   "typeKey": "classify",
-   "mode": "mc",
-   "src": "2_넘파이_심화",
-   "stem": "다음 코드에 대한 설명으로 옳은 것만 <보기>에서 모두 고른 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) 두 연산의 결과는 서로 같다.<br>(나) n * n 은 같은 위치의 원소끼리 곱한다.<br>(다) m * m 은 행렬곱 연산을 수행한다.</span>",
-   "code": "n = np.arange(1, 5).reshape(2, 2)\nm = np.asmatrix(n)\nprint(n * n)\nprint(m * m)",
-   "answer": "(나), (다)",
-   "why": "ndarray의 <span class=\"mono\">*</span> 는 원소별 곱셈, matrix의 <span class=\"mono\">*</span> 는 행렬곱입니다. 같은 값을 담고 있어도 클래스가 다르면 같은 기호가 다른 연산을 뜻하게 됩니다.",
-   "options": [
-    "(가)",
-    "(다)",
-    "(가), (나)",
-    "(나), (다)",
-    "(가), (나), (다)"
-   ],
-   "tags": [
-    "ndarray",
-    "matrix"
-   ],
-   "verifyCode": "n=np.arange(1,5).reshape(2,2)\nm=np.asmatrix(n)\nprint(np.array_equal(np.asarray(n*n), np.asarray(m*m)))",
-   "verifyExpect": "False"
-  },
-  {
    "id": "C07",
    "type": "개념 분류",
    "typeKey": "classify",
@@ -306,6 +283,151 @@
    ],
    "verifyCode": "a=np.arange(1,7).reshape(2,3)\nb=np.arange(1,3)\nprint(a.size, b.size, end=\" \")\ntry:\n    a+b\n    print(\"ok\")\nexcept ValueError:\n    print(\"ValueError\")",
    "verifyExpect": "6 2 ValueError"
+  },
+  {
+   "id": "C11",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "1_넘파이_기초(개념)",
+   "stem": "다음 코드에 대한 설명으로 옳은 것만 <보기>에서 모두 고른 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) ㉠ 에서 출력되는 것은 [7, 0, 3, 2.5, 1] 이다.<br>(나) b의 원소는 모두 같은 자료형으로 통일된다.<br>(다) b의 dtype은 float64 이다.</span>",
+   "code": "a = [7, 0, 3, 2.5, 1]\nb = np.array(a)\nprint(a)   # ㉠\nprint(b)",
+   "answer": "(가), (나), (다)",
+   "why": "a는 파이썬 리스트이므로 <span class=\"mono\">print(a)</span> 는 리스트 그대로 출력됩니다. 넘파이 배열은 원소의 자료형이 하나로 통일되는데, 정수와 실수가 섞여 있으면 정보 손실이 없는 쪽인 실수로 맞춰집니다. 정수 4개와 실수 1개가 섞여 있으므로 dtype은 float64가 됩니다.",
+   "options": [
+    "(가)",
+    "(다)",
+    "(가), (나)",
+    "(나), (다)",
+    "(가), (나), (다)"
+   ],
+   "tags": [
+    "ndarray",
+    "dtype"
+   ],
+   "verifyCode": "a=[7,0,3,2.5,1]\nb=np.array(a)\nprint(b.dtype)",
+   "verifyExpect": "float64"
+  },
+  {
+   "id": "C12",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "1_넘파이_기초(개념)",
+   "stem": "다음 코드에 대한 설명으로 옳은 것만 <보기>에서 모두 고른 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) any() 는 모든 원소가 0이 아닐 때만 True를 돌려준다.<br>(나) 위 코드의 두 출력은 모두 True 이다.<br>(다) 0은 False로, 0이 아닌 값은 True로 간주된다.</span>",
+   "code": "bools = np.array([1, 1, 0, 1])\nprint(bools.any())\nprint(bools.all())",
+   "answer": "(다)",
+   "why": "넘파이는 0을 False, 0이 아닌 값을 True로 봅니다. 모든 원소가 True여야 하는 것은 <span class=\"mono\">all()</span> 이고, <span class=\"mono\">any()</span> 는 하나만 True여도 True이므로 (가)는 두 함수를 뒤바꾼 설명입니다. 배열에 0이 하나 있어 <span class=\"mono\">any()</span> 는 True, <span class=\"mono\">all()</span> 은 False라 (나)도 틀립니다.",
+   "options": [
+    "(가)",
+    "(다)",
+    "(가), (나)",
+    "(나), (다)",
+    "(가), (나), (다)"
+   ],
+   "tags": [
+    "all",
+    "any"
+   ],
+   "verifyCode": "bools=np.array([1,1,0,1])\nprint(bools.any(), bools.all())",
+   "verifyExpect": "True False"
+  },
+  {
+   "id": "C13",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "1_넘파이_기초(개념)",
+   "stem": "다음 코드에 대한 설명으로 옳은 것만 <보기>에서 모두 고른 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) 0부터 8까지의 정수 중에서 4개를 뽑는다.<br>(나) 같은 수가 두 번 뽑히는 일은 없다.<br>(다) replace 를 True 로 바꾸면 같은 수가 중복될 수 있다.</span>",
+   "code": "np.random.choice(8, 4, replace=False)",
+   "answer": "(나), (다)",
+   "why": "첫 인자에 정수 8을 주면 0부터 7까지, 즉 8 미만의 정수에서 뽑습니다. 8은 포함되지 않으므로 (가)는 틀립니다. <span class=\"mono\">replace=False</span> 는 중복을 허용하지 않는다는 뜻이고, True로 바꾸면 같은 수가 여러 번 나올 수 있습니다.",
+   "options": [
+    "(가)",
+    "(다)",
+    "(가), (나)",
+    "(나), (다)",
+    "(가), (나), (다)"
+   ],
+   "tags": [
+    "random.choice",
+    "replace"
+   ],
+   "verifyCode": "np.random.seed(0)\nr=np.random.choice(8,4,replace=False)\nprint(bool(r.max()<8), len(set(r.tolist()))==4)",
+   "verifyExpect": "True True"
+  },
+  {
+   "id": "C14",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "1_넘파이_기초(개념)",
+   "stem": "다음 코드에 대한 설명으로 옳은 것만 <보기>에서 모두 고른 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) 출력되는 것은 True와 False로 이루어진 배열이다.<br>(나) 출력된 배열의 shape 은 (3, 2) 이다.<br>(다) 출력된 배열의 원소는 모두 True 이다.</span>",
+   "code": "a = np.arange(1, 7).reshape(2, 3)\nb = np.arange(9, 3, -1).reshape(2, 3)\nprint(b > a)",
+   "answer": "(가)",
+   "why": "비교 연산자를 배열에 쓰면 같은 자리끼리 비교한 불리언 배열이 나옵니다. 모양은 원래 배열과 같은 (2, 3)이지 (3, 2)가 아닙니다. a는 [[1 2 3] [4 5 6]], b는 [[9 8 7] [6 5 4]] 이므로 아랫줄의 5 &gt; 5 와 4 &gt; 6 은 False가 되어 (다)는 틀립니다.",
+   "options": [
+    "(가)",
+    "(다)",
+    "(가), (나)",
+    "(나), (다)",
+    "(가), (나), (다)"
+   ],
+   "tags": [
+    "비교 연산",
+    "불리언 배열"
+   ],
+   "verifyCode": "a=np.arange(1,7).reshape(2,3)\nb=np.arange(9,3,-1).reshape(2,3)\nprint((b>a).tolist())",
+   "verifyExpect": "[[True, True, True], [True, False, False]]"
+  },
+  {
+   "id": "C15",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "2_넘파이_심화",
+   "stem": "다음 코드에 대한 설명으로 옳은 것만 <보기>에서 모두 고른 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) ㉠ 을 출력해 보면 a가 numpy.ndarray 임을 알 수 있다.<br>(나) ㉡ 에서 출력되는 것은 [[3 1] [1 4]] 이다.<br>(다) ㉢ 에서 출력되는 것은 [[10 7] [7 17]] 이다.</span>",
+   "code": "a = np.array([[3, 1], [1, 4]])\nb = np.matrix(a)\nprint(type(a))   # ㉠\nprint(b.T)       # ㉡\nprint(b * b)     # ㉢",
+   "answer": "(가), (나), (다)",
+   "why": "a는 <span class=\"mono\">np.array</span> 로 만들었으므로 ndarray 이고, matrix인 것은 b입니다. a가 대칭행렬이라 전치해도 값이 같아 (나)는 맞습니다. matrix의 <span class=\"mono\">*</span> 는 원소별 곱이 아니라 행렬곱이므로 3×3+1×1=10, 3×1+1×4=7, 1×3+4×1=7, 1×1+4×4=17 이 됩니다.",
+   "options": [
+    "(가)",
+    "(다)",
+    "(가), (나)",
+    "(나), (다)",
+    "(가), (나), (다)"
+   ],
+   "tags": [
+    "matrix",
+    "행렬곱",
+    "전치"
+   ],
+   "verifyCode": "a=np.array([[3,1],[1,4]])\nb=np.matrix(a)\nprint(type(a).__name__, b.T.tolist(), (b*b).tolist())",
+   "verifyExpect": "ndarray [[3, 1], [1, 4]] [[10, 7], [7, 17]]"
+  },
+  {
+   "id": "C16",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "1_넘파이_기초(개념)",
+   "stem": "다음 코드에 대한 설명으로 옳은 것만 <보기>에서 모두 고른 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) 만들어지는 랜덤 수 중 3이 나올 수 있다.<br>(나) 만들어지는 랜덤 수의 개수는 8개이다.<br>(다) 만들어지는 랜덤 수 중 12가 나올 수 있다.</span>",
+   "code": "np.random.randint(3, 12, size=8)",
+   "answer": "(가), (나)",
+   "why": "<span class=\"mono\">randint(k, n, size=m)</span> 은 k 이상 n 미만의 정수를 m개 뽑습니다. 시작값 3은 포함되지만 종료값 12는 포함되지 않아 최대 11까지만 나옵니다. size가 8이므로 개수는 8개입니다.",
+   "options": [
+    "(가)",
+    "(다)",
+    "(가), (나)",
+    "(나), (다)",
+    "(가), (나), (다)"
+   ],
+   "tags": [
+    "random.randint",
+    "종료값 미포함"
+   ],
+   "verifyCode": "np.random.seed(1)\nr=np.random.randint(3,12,size=8)\nprint(r.size, bool(r.min()>=3), bool(r.max()<=11))",
+   "verifyExpect": "8 True True"
   },
   {
    "id": "B01",
@@ -402,54 +524,6 @@
    "verifyExpect": "[[6, 8], [10, 12]] [[3, 7], [11, 15]]"
   },
   {
-   "id": "B05",
-   "type": "빈칸",
-   "typeKey": "blank2",
-   "mode": "mc",
-   "src": "2_넘파이_심화",
-   "stem": "코드의 빈칸 ㉠, ㉡ 에 들어갈 것으로 맞는 것만 모두 모은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">(2, 1) (1, 2)</span></span>",
-   "code": "x = np.array([1, 2])\ny = np.expand_dims(x, axis=㉠)\nz = x[np.newaxis, ㉡]\nprint(y.shape, z.shape)",
-   "answer": "㉠ 1  ·  ㉡ :",
-   "why": "<span class=\"mono\">expand_dims(x, axis=1)</span> 은 뒤쪽에 축을 하나 끼워 (2, 1)을 만듭니다. <span class=\"mono\">x[np.newaxis, :]</span> 는 앞쪽에 축을 끼워 (1, 2)를 만듭니다. 축을 넣는 위치가 반대입니다.",
-   "options": [
-    "㉠ 1  ·  ㉡ :",
-    "㉠ 0  ·  ㉡ 1",
-    "㉠ 0  ·  ㉡ :",
-    "㉠ 1  ·  ㉡ 0",
-    "㉠ 1  ·  ㉡ 1"
-   ],
-   "tags": [
-    "expand_dims",
-    "newaxis"
-   ],
-   "verifyCode": "x=np.array([1,2])\nprint(np.expand_dims(x,axis=1).shape, x[np.newaxis,:].shape)",
-   "verifyExpect": "(2, 1) (1, 2)"
-  },
-  {
-   "id": "B06",
-   "type": "빈칸",
-   "typeKey": "blank2",
-   "mode": "mc",
-   "src": "2_넘파이_심화",
-   "stem": "코드의 빈칸 ㉠, ㉡ 에 들어갈 것으로 맞는 것만 모두 모은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">(3, 3, 4, 5)<br>(5, 3, 4, 3)</span></span>",
-   "code": "ra = np.ones((3, 4, 5, 3))\nprint(np.rollaxis(ra, 3, ㉠).shape)\nprint(np.rollaxis(ra, ㉡).shape)",
-   "answer": "㉠ 1  ·  ㉡ 2",
-   "why": "<span class=\"mono\">rollaxis(a, axis, start)</span> 는 axis 축을 뽑아 start 자리에 끼웁니다. 첫 줄은 3번 축을 1번 자리로 옮겨 (3, 3, 4, 5)가 되고, 둘째 줄은 start를 생략했으므로 2번 축이 맨 앞으로 가서 (5, 3, 4, 3)이 됩니다.",
-   "options": [
-    "㉠ 0  ·  ㉡ 3",
-    "㉠ 1  ·  ㉡ 2",
-    "㉠ 1  ·  ㉡ 3",
-    "㉠ 2  ·  ㉡ 1",
-    "㉠ 0  ·  ㉡ 2"
-   ],
-   "tags": [
-    "rollaxis",
-    "축"
-   ],
-   "verifyCode": "ra=np.ones((3,4,5,3))\nprint(np.rollaxis(ra,3,1).shape, np.rollaxis(ra,2).shape)",
-   "verifyExpect": "(3, 3, 4, 5) (5, 3, 4, 3)"
-  },
-  {
    "id": "B07",
    "type": "빈칸",
    "typeKey": "blank2",
@@ -543,6 +617,152 @@
    ],
    "verifyCode": "a=np.arange(10,151,10)\na[4:7]=55\nprint(a)",
    "verifyExpect": "[ 10  20  30  40  55  55  55  80  90 100 110 120 130 140 150]"
+  },
+  {
+   "id": "B11",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "1_넘파이_기초(개념)",
+   "stem": "코드의 빈칸 ㉠, ㉡ 에 들어갈 것으로 맞는 것만 모두 모은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">[1 2 3 4 5]<br>[2 5 3 1 4]</span></span>",
+   "code": "np.random.㉠(42)\nd = np.arange(1, 6)\nprint(d)\nnp.random.㉡(d)\nprint(d)",
+   "answer": "㉠ seed  ·  ㉡ shuffle",
+   "why": "<span class=\"mono\">seed()</span> 는 난수 알고리즘의 출발점을 고정해 실행할 때마다 같은 결과가 나오게 합니다. <span class=\"mono\">shuffle()</span> 은 배열을 제자리에서 뒤섞으므로 반환값을 받지 않아도 d 자체가 바뀝니다.",
+   "options": [
+    "㉠ seed  ·  ㉡ shuffle",
+    "㉠ seed  ·  ㉡ choice",
+    "㉠ shuffle  ·  ㉡ seed",
+    "㉠ rand  ·  ㉡ shuffle",
+    "㉠ seed  ·  ㉡ randint"
+   ],
+   "tags": [
+    "random.seed",
+    "random.shuffle"
+   ],
+   "verifyCode": "np.random.seed(42)\nd=np.arange(1,6)\nnp.random.shuffle(d)\nprint(d.tolist())",
+   "verifyExpect": "[2, 5, 3, 1, 4]"
+  },
+  {
+   "id": "B12",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "1_넘파이_기초(개념)",
+   "stem": "코드의 빈칸 ㉠, ㉡ 에 들어갈 것으로 맞는 것만 모두 모은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">[ 1  3  6 10 15]<br>[  1   2   6  24 120]</span></span>",
+   "code": "a = np.arange(1, 6)\nprint(a.㉠())\nprint(a.㉡())",
+   "answer": "㉠ cumsum  ·  ㉡ cumprod",
+   "why": "첫 줄은 1, 1+2, 1+2+3 … 으로 앞에서부터 더해 나간 누적 합이고, 둘째 줄은 1, 1×2, 1×2×3 … 으로 곱해 나간 누적 곱입니다. 누적 함수는 결과 배열의 길이가 원본과 같다는 점도 <span class=\"mono\">sum</span> · <span class=\"mono\">prod</span> 와 다릅니다.",
+   "options": [
+    "㉠ cumsum  ·  ㉡ cumprod",
+    "㉠ sum  ·  ㉡ prod",
+    "㉠ cumprod  ·  ㉡ cumsum",
+    "㉠ cumsum  ·  ㉡ prod",
+    "㉠ mean  ·  ㉡ cumprod"
+   ],
+   "tags": [
+    "cumsum",
+    "cumprod"
+   ],
+   "verifyCode": "a=np.arange(1,6)\nprint(a.cumsum().tolist(), a.cumprod().tolist())",
+   "verifyExpect": "[1, 3, 6, 10, 15] [1, 2, 6, 24, 120]"
+  },
+  {
+   "id": "B13",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "2_넘파이_심화",
+   "stem": "코드의 빈칸 ㉠, ㉡ 에 들어갈 것으로 맞는 것만 모두 모은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">행 렬 값<br> 0  0  1<br> 0  1  2<br> 1  0  3<br> 1  1  4<br> 2  0  5<br> 2  1  6</span></span>",
+   "code": "a = np.arange(1, 7).reshape(3, 2)\nprint(\"행 렬 값\")\nfor ㉠ in enumerate(a):\n    for ㉡ in enumerate(x):\n        print(f\" {i}  {j}  {y}\")",
+   "answer": "㉠ i, x  ·  ㉡ j, y",
+   "why": "<span class=\"mono\">enumerate</span> 는 (순번, 값) 짝을 돌려주므로 앞이 번호, 뒤가 값입니다. 안쪽 반복문이 <span class=\"mono\">enumerate(x)</span> 를 돌고 출력이 <span class=\"mono\">y</span> 이므로, 바깥은 행 번호 i와 행 자체인 x를, 안쪽은 열 번호 j와 원소 y를 받아야 합니다.",
+   "options": [
+    "㉠ i, a  ·  ㉡ j, b",
+    "㉠ x, i  ·  ㉡ y, j",
+    "㉠ a, x  ·  ㉡ b, y",
+    "㉠ i, y  ·  ㉡ j, x",
+    "㉠ i, x  ·  ㉡ j, y"
+   ],
+   "tags": [
+    "enumerate",
+    "이중 반복문"
+   ],
+   "verifyCode": "a=np.arange(1,7).reshape(3,2)\nout=[]\nfor i,x in enumerate(a):\n    for j,y in enumerate(x):\n        out.append((i,j,int(y)))\nprint(out)",
+   "verifyExpect": "[(0, 0, 1), (0, 1, 2), (1, 0, 3), (1, 1, 4), (2, 0, 5), (2, 1, 6)]"
+  },
+  {
+   "id": "B14",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "1_넘파이_기초(개념)",
+   "stem": "코드의 빈칸 ㉠, ㉡ 에 들어갈 것으로 맞는 것만 모두 모은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">[[4]<br> [6]<br> [8]]</span></span>",
+   "code": "a = np.array([[2, 4, 6], [3, 6, 9], [4, 8, 12]])\nprint(a[㉠, ㉡])",
+   "answer": "㉠ :  ·  ㉡ 1:2",
+   "why": "모든 행을 쓰므로 앞은 <span class=\"mono\">:</span> 입니다. 1열만 뽑되 결과가 2차원 그대로 남으려면 정수 1이 아니라 슬라이스 <span class=\"mono\">1:2</span> 를 써야 합니다. 정수를 쓰면 그 축이 사라져 1차원 [4 6 8] 이 됩니다.",
+   "options": [
+    "㉠ :  ·  ㉡ 1",
+    "㉠ 1:2  ·  ㉡ :",
+    "㉠ :  ·  ㉡ 1:2",
+    "㉠ :  ·  ㉡ :1",
+    "㉠ 1  ·  ㉡ :"
+   ],
+   "tags": [
+    "슬라이싱",
+    "차원 유지"
+   ],
+   "verifyCode": "a=np.array([[2,4,6],[3,6,9],[4,8,12]])\nprint(a[:,1:2].tolist())",
+   "verifyExpect": "[[4], [6], [8]]"
+  },
+  {
+   "id": "B15",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "2_넘파이_심화",
+   "stem": "코드의 빈칸 ㉠, ㉡ 에 들어갈 것으로 맞는 것만 모두 모은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">2 (1, 2, 2)</span></span>",
+   "code": "a = np.array([[[1, 2], [3, 4]]], dtype=np.㉠)\nprint(a.itemsize, a.㉡)",
+   "answer": "㉠ int16  ·  ㉡ shape",
+   "why": "<span class=\"mono\">itemsize</span> 는 원소 하나가 차지하는 바이트 수입니다. int16은 16비트, 즉 2바이트라 2가 출력됩니다. 대괄호가 3겹이므로 3차원이고 바깥부터 세면 면 1개, 행 2개, 열 2개라 <span class=\"mono\">shape</span> 는 (1, 2, 2) 입니다.",
+   "options": [
+    "㉠ int16  ·  ㉡ shape",
+    "㉠ int8  ·  ㉡ shape",
+    "㉠ int16  ·  ㉡ strides",
+    "㉠ int64  ·  ㉡ shape",
+    "㉠ int16  ·  ㉡ size"
+   ],
+   "tags": [
+    "dtype",
+    "itemsize",
+    "shape"
+   ],
+   "verifyCode": "a=np.array([[[1,2],[3,4]]],dtype=np.int16)\nprint(a.itemsize, a.shape)",
+   "verifyExpect": "2 (1, 2, 2)"
+  },
+  {
+   "id": "B16",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "1_넘파이_기초(개념)",
+   "stem": "코드의 빈칸 ㉠, ㉡ 에 들어갈 것으로 맞는 것만 모두 모은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">[ 6 12]<br>[0 6]</span></span>",
+   "code": "a = np.arange(0, 16, 3)\nprint(a[㉠])\nprint(a[:-㉡:2])",
+   "answer": "㉠ [2, 4]  ·  ㉡ 2",
+   "why": "a는 [0 3 6 9 12 15] 입니다. 인덱스 목록을 대괄호로 넘기면 그 자리의 값만 골라내므로 2번과 4번 자리인 6과 12가 나옵니다. <span class=\"mono\">[:-2:2]</span> 는 끝에서 두 번째 앞까지, 즉 0~3번 자리를 두 칸씩 건너뛰어 0번과 2번인 0과 6을 고릅니다.",
+   "options": [
+    "㉠ [1, 3]  ·  ㉡ 2",
+    "㉠ [2, 4]  ·  ㉡ 2",
+    "㉠ [2, 4]  ·  ㉡ 4",
+    "㉠ [6, 12]  ·  ㉡ 2",
+    "㉠ [2, 4]  ·  ㉡ 1"
+   ],
+   "tags": [
+    "팬시 인덱싱",
+    "음수 인덱스",
+    "슬라이싱"
+   ],
+   "verifyCode": "a=np.arange(0,16,3)\nprint(a[[2,4]].tolist(), a[:-2:2].tolist())",
+   "verifyExpect": "[6, 12] [0, 6]"
   },
   {
    "id": "D01",
@@ -784,6 +1004,154 @@
    "verifyExpect": "9"
   },
   {
+   "id": "D11",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "mode": "mc",
+   "src": "1_넘파이_기초(개념)",
+   "stem": "다음 코드를 실행했을 때 출력될 값으로 가장 알맞은 것은?",
+   "code": "r = np.random.randint(4, 10, size=500)\nprint(len(np.unique(r)))",
+   "answer": "6",
+   "why": "<span class=\"mono\">randint(4, 10, ...)</span> 은 4 이상 10 미만의 정수를 뽑으므로 나올 수 있는 값은 4, 5, 6, 7, 8, 9 의 6가지입니다. 500개나 뽑으면 여섯 값이 모두 한 번씩은 나오므로 중복을 제거한 개수는 6입니다. 10을 포함한다고 착각하면 7로 잘못 세게 됩니다.",
+   "options": [
+    "7",
+    "6",
+    "500",
+    "5",
+    "10"
+   ],
+   "tags": [
+    "random.randint",
+    "종료값 미포함",
+    "unique"
+   ],
+   "verifyCode": "np.random.seed(3)\nr=np.random.randint(4,10,size=500)\nprint(len(np.unique(r)))",
+   "verifyExpect": "6"
+  },
+  {
+   "id": "D12",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "mode": "mc",
+   "src": "1_넘파이_기초(개념)",
+   "stem": "다음 코드를 실행한 결과로 알맞은 것은?",
+   "code": "np.random.choice(6, 9, replace=False)",
+   "answer": "오류가 발생한다",
+   "why": "<span class=\"mono\">replace=False</span> 는 한 번 뽑은 값을 다시 뽑지 않는다는 뜻입니다. 뽑을 수 있는 값은 0부터 5까지 6개뿐인데 9개를 요구했으므로 중복 없이는 채울 수 없어 오류가 납니다. <span class=\"mono\">replace=True</span> 였다면 9개가 정상적으로 만들어집니다.",
+   "options": [
+    "오류가 발생한다",
+    "0 이상 6 미만의 정수 9개가 만들어진다",
+    "0 이상 6 미만의 정수 6개가 만들어진다",
+    "0 이상 9 미만의 정수 9개가 만들어진다",
+    "빈 배열이 만들어진다"
+   ],
+   "tags": [
+    "random.choice",
+    "replace",
+    "오류"
+   ],
+   "verifyCode": "try:\n    np.random.choice(6,9,replace=False)\n    print('ok')\nexcept ValueError:\n    print('error')",
+   "verifyExpect": "error"
+  },
+  {
+   "id": "D13",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "mode": "mc",
+   "src": "1_넘파이_기초(개념)",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "a_2d = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])\nprint(a_2d[:, :1].shape)",
+   "answer": "(3, 1)",
+   "why": "<span class=\"mono\">:1</span> 은 1 미만, 즉 0열 하나만 고르는 슬라이스입니다. 슬라이스는 개수가 하나여도 축을 없애지 않으므로 3행 1열인 2차원 배열이 되어 shape은 (3, 1) 입니다. <span class=\"mono\">a_2d[:, 0]</span> 처럼 정수를 쓰면 축이 사라져 (3,) 가 됩니다.",
+   "options": [
+    "(3,)",
+    "(3, 1)",
+    "(1, 3)",
+    "(3, 3)",
+    "(1,)"
+   ],
+   "tags": [
+    "슬라이싱",
+    "차원 유지"
+   ],
+   "verifyCode": "a=np.array([[1,2,3],[4,5,6],[7,8,9]])\nprint(a[:,:1].shape)",
+   "verifyExpect": "(3, 1)"
+  },
+  {
+   "id": "D14",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "mode": "mc",
+   "src": "1_넘파이_기초(개념)",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "a = np.arange(10, 151, 10)\nprint(a[:-4:2].size)",
+   "answer": "6",
+   "why": "a는 10부터 150까지 10씩 늘어나는 15개짜리 배열입니다. <span class=\"mono\">-4</span> 는 끝에서 네 번째 자리를 가리키고 그 자리는 포함되지 않으므로 0번부터 10번까지가 대상입니다. 여기서 두 칸씩 건너뛰면 0, 2, 4, 6, 8, 10번의 6개가 남습니다.",
+   "options": [
+    "6",
+    "5",
+    "7",
+    "11",
+    "15"
+   ],
+   "tags": [
+    "슬라이싱",
+    "음수 인덱스",
+    "경계값"
+   ],
+   "verifyCode": "a=np.arange(10,151,10)\nprint(a[:-4:2].size)",
+   "verifyExpect": "6"
+  },
+  {
+   "id": "D15",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "mode": "mc",
+   "src": "1_넘파이_기초(개념)",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "b = np.arange(9, 3, -1)\nprint(b.size, b[-1])",
+   "answer": "6 4",
+   "why": "간격이 음수면 시작값에서 하나씩 줄어들고, 종료값은 여전히 포함되지 않습니다. 9부터 4까지 내려오므로 원소는 9, 8, 7, 6, 5, 4 의 6개이고 마지막 값은 3이 아니라 4입니다.",
+   "options": [
+    "7 3",
+    "6 3",
+    "5 4",
+    "7 4",
+    "6 4"
+   ],
+   "tags": [
+    "arange",
+    "음수 간격",
+    "종료값 미포함"
+   ],
+   "verifyCode": "b=np.arange(9,3,-1)\nprint(b.size, b[-1])",
+   "verifyExpect": "6 4"
+  },
+  {
+   "id": "D16",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "mode": "mc",
+   "src": "1_넘파이_기초(개념)",
+   "stem": "다음 코드로 만들어지는 랜덤 수의 범위와 개수로 알맞은 것은?",
+   "code": "r = np.random.randint(10, size=15)",
+   "answer": "0 이상 9 이하의 정수 15개",
+   "why": "인자를 하나만 주면 그것이 종료값이 되어 0부터 시작합니다. 종료값은 포함되지 않으므로 범위는 0 이상 9 이하이고, 개수는 size로 지정한 15개입니다. 10이 나올 수 있다고 생각하기 쉬운 부분입니다.",
+   "options": [
+    "0 이상 10 이하의 정수 15개",
+    "1 이상 10 이하의 정수 15개",
+    "0 이상 9 이하의 정수 10개",
+    "0 이상 15 미만의 정수 10개",
+    "0 이상 9 이하의 정수 15개"
+   ],
+   "tags": [
+    "random.randint",
+    "종료값 미포함"
+   ],
+   "verifyCode": "np.random.seed(5)\nr=np.random.randint(10,size=15)\nprint(bool(r.min()>=0), bool(r.max()<=9), r.size)",
+   "verifyExpect": "True True 15"
+  },
+  {
    "id": "R01",
    "type": "상태 예측",
    "typeKey": "trace",
@@ -854,75 +1222,6 @@
    ],
    "verifyCode": "print(np.sum(np.arange(3*4*2).reshape(3,4,2),axis=0).tolist())",
    "verifyExpect": "[[24, 27], [30, 33], [36, 39], [42, 45]]"
-  },
-  {
-   "id": "R04",
-   "type": "상태 예측",
-   "typeKey": "trace",
-   "mode": "mc",
-   "src": "2_넘파이_심화",
-   "stem": "다음 코드를 실행했을 때 출력되는 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">a4.shape → (3, 4, 2)</span></span>",
-   "code": "a4 = np.arange(3*4*2).reshape(3, 4, 2)\nprint(np.sum(a4, axis=2).tolist())",
-   "answer": "[[1, 5, 9, 13], [17, 21, 25, 29], [33, 37, 41, 45]]",
-   "why": "axis=2는 가장 안쪽 축을 따라 더합니다. 각 행의 원소 2개씩 짝지어 더하므로 0+1, 2+3, 4+5 … 이 되고, 결과 모양은 (3, 4)가 됩니다.",
-   "options": [
-    "[[12, 16], [44, 48], [76, 80]]",
-    "[[0, 1], [2, 3], [4, 5]]",
-    "[[1, 5], [9, 13], [17, 21]]",
-    "[[24, 27], [30, 33], [36, 39], [42, 45]]",
-    "[[1, 5, 9, 13], [17, 21, 25, 29], [33, 37, 41, 45]]"
-   ],
-   "tags": [
-    "axis"
-   ],
-   "verifyCode": "print(np.sum(np.arange(3*4*2).reshape(3,4,2),axis=2).tolist())",
-   "verifyExpect": "[[1, 5, 9, 13], [17, 21, 25, 29], [33, 37, 41, 45]]"
-  },
-  {
-   "id": "R05",
-   "type": "상태 예측",
-   "typeKey": "trace",
-   "mode": "mc",
-   "src": "2_넘파이_심화",
-   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
-   "code": "t1 = np.arange(3*4*2).reshape(3, 4, 2)\nprint(t1.transpose(2, 1, 0).shape)",
-   "answer": "(2, 4, 3)",
-   "why": "<span class=\"mono\">transpose(2, 1, 0)</span> 은 새 배열의 0·1·2번 축을 각각 원래의 2·1·0번 축에서 가져옵니다. 원래 모양 (3, 4, 2)의 축을 그 순서로 재배열하면 (2, 4, 3)이 됩니다.",
-   "options": [
-    "(2, 4, 3)",
-    "(3, 2, 4)",
-    "(4, 2, 3)",
-    "(2, 3, 4)",
-    "(3, 4, 2)"
-   ],
-   "tags": [
-    "transpose"
-   ],
-   "verifyCode": "print(np.arange(3*4*2).reshape(3,4,2).transpose(2,1,0).shape)",
-   "verifyExpect": "(2, 4, 3)"
-  },
-  {
-   "id": "R06",
-   "type": "상태 예측",
-   "typeKey": "trace",
-   "mode": "mc",
-   "src": "2_넘파이_심화",
-   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
-   "code": "ra = np.ones((3, 4, 5, 3))\nprint(np.rollaxis(ra, 2, 1).shape)",
-   "answer": "(3, 5, 4, 3)",
-   "why": "2번 축(크기 5)을 뽑아 start인 1번 자리에 끼웁니다. 나머지 축은 순서를 유지하므로 (3, 4, 5, 3) → (3, 5, 4, 3)이 됩니다. start를 생략했다면 맨 앞에 끼워져 (5, 3, 4, 3)이 됩니다.",
-   "options": [
-    "(3, 3, 4, 5)",
-    "(3, 5, 4, 3)",
-    "(3, 4, 5, 3)",
-    "(5, 3, 4, 3)",
-    "(4, 5, 3, 3)"
-   ],
-   "tags": [
-    "rollaxis"
-   ],
-   "verifyCode": "print(np.rollaxis(np.ones((3,4,5,3)),2,1).shape)",
-   "verifyExpect": "(3, 5, 4, 3)"
   },
   {
    "id": "R07",
@@ -1016,6 +1315,151 @@
    ],
    "verifyCode": "a=np.array([[1,2,3],[4,5,6],[7,8,9]])\nprint(a[[0,1],[2,0]])",
    "verifyExpect": "[3 4]"
+  },
+  {
+   "id": "R11",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "1_넘파이_기초(개념)",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "a = np.array([[2, 4, 6], [3, 6, 9], [4, 8, 12]])\nprint(a[:, 1:2])",
+   "answer": "[[4] [6] [8]]",
+   "why": "앞의 <span class=\"mono\">:</span> 로 세 행을 모두 고르고, 뒤의 <span class=\"mono\">1:2</span> 로 1열 하나만 고릅니다. 슬라이스를 썼으므로 열 축이 살아남아 3행 1열 모양이 되고, 각 행의 1열 값인 4, 6, 8 이 세로로 출력됩니다.",
+   "options": [
+    "[4 6 8]",
+    "[[4] [6] [8]]",
+    "[[3 6 9]]",
+    "[[4 6] [6 9] [8 12]]",
+    "[[2 4] [3 6] [4 8]]"
+   ],
+   "tags": [
+    "슬라이싱",
+    "차원 유지"
+   ],
+   "verifyCode": "a=np.array([[2,4,6],[3,6,9],[4,8,12]])\nprint(a[:,1:2].tolist())",
+   "verifyExpect": "[[4], [6], [8]]"
+  },
+  {
+   "id": "R12",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "2_넘파이_심화",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "a = np.array([[[1, 2], [3, 4]]], dtype=np.int16)\nprint(a.itemsize, a.strides)",
+   "answer": "2 (8, 4, 2)",
+   "why": "int16은 2바이트이므로 <span class=\"mono\">itemsize</span> 는 2입니다. <span class=\"mono\">strides</span> 는 각 축에서 다음 원소로 건너뛸 바이트 수인데, 모양이 (1, 2, 2) 이므로 한 면은 2×2×2=8바이트, 한 행은 2×2=4바이트, 원소 하나는 2바이트입니다.",
+   "options": [
+    "2 (4, 2, 1)",
+    "8 (32, 16, 8)",
+    "2 (2, 4, 8)",
+    "4 (16, 8, 4)",
+    "2 (8, 4, 2)"
+   ],
+   "tags": [
+    "itemsize",
+    "strides",
+    "dtype"
+   ],
+   "verifyCode": "a=np.array([[[1,2],[3,4]]],dtype=np.int16)\nprint(a.itemsize, a.strides)",
+   "verifyExpect": "2 (8, 4, 2)"
+  },
+  {
+   "id": "R13",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "1_넘파이_기초(개념)",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "a = np.array([2, 3, 1, 4])\nprint(a.cumprod())",
+   "answer": "[ 2  6  6 24]",
+   "why": "<span class=\"mono\">cumprod()</span> 는 앞에서부터 차례로 곱해 나간 값을 모두 남깁니다. 2, 2×3=6, 6×1=6, 6×4=24 순서입니다. 세 번째 자리에서 1을 곱해 값이 그대로인 점을 놓치기 쉽습니다.",
+   "options": [
+    "[ 2  5  6 10]",
+    "[ 2  6  6 24]",
+    "[24]",
+    "[ 2  3  1  4]",
+    "[ 2  6  7 28]"
+   ],
+   "tags": [
+    "cumprod"
+   ],
+   "verifyCode": "a=np.array([2,3,1,4])\nprint(a.cumprod())",
+   "verifyExpect": "[ 2  6  6 24]"
+  },
+  {
+   "id": "R14",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "2_넘파이_심화",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "a = np.array([3, 1, 4, 1, 5])\nprint(np.add.accumulate(a))",
+   "answer": "[ 3  4  8  9 14]",
+   "why": "<span class=\"mono\">np.add.accumulate()</span> 는 덧셈을 누적해 나가는 함수로 <span class=\"mono\">cumsum()</span> 과 결과가 같습니다. 3, 3+1=4, 4+4=8, 8+1=9, 9+5=14 가 됩니다.",
+   "options": [
+    "[14]",
+    "[ 3  1  4  1  5]",
+    "[ 3  3 12 12 60]",
+    "[ 3  4  8  9 14]",
+    "[ 5  9 10 14 14]"
+   ],
+   "tags": [
+    "add.accumulate",
+    "cumsum"
+   ],
+   "verifyCode": "a=np.array([3,1,4,1,5])\nprint(np.add.accumulate(a))",
+   "verifyExpect": "[ 3  4  8  9 14]"
+  },
+  {
+   "id": "R15",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "1_넘파이_기초(개념)",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "a1 = np.array([1, 1, 0, 1])\na2 = np.array([0, 0, 1, 1])\nb1 = a1[1:]\nb2 = a2[:-2]\nprint(b1.all(), b2.any())",
+   "answer": "False False",
+   "why": "b1은 1번 자리부터 끝까지인 [1 0 1] 이라 0이 섞여 있어 <span class=\"mono\">all()</span> 은 False입니다. b2는 끝에서 두 번째 앞까지인 [0 0] 이라 True로 볼 값이 하나도 없어 <span class=\"mono\">any()</span> 도 False입니다.",
+   "options": [
+    "False False",
+    "True True",
+    "True False",
+    "False True",
+    "오류 발생"
+   ],
+   "tags": [
+    "all",
+    "any",
+    "슬라이싱"
+   ],
+   "verifyCode": "a1=np.array([1,1,0,1])\na2=np.array([0,0,1,1])\nprint(a1[1:].all(), a2[:-2].any())",
+   "verifyExpect": "False False"
+  },
+  {
+   "id": "R16",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "1_넘파이_기초(개념)",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "array = np.array([3, -1, 4, -5, 2, -6])\nprint((array > 0).sum(), array[array > 0].sum())",
+   "answer": "3 9",
+   "why": "<span class=\"mono\">array > 0</span> 은 불리언 배열을 만듭니다. 여기에 바로 <span class=\"mono\">sum()</span> 을 쓰면 True를 1로 세므로 0보다 큰 값의 개수인 3이 나옵니다. 반면 불리언 배열을 인덱스로 넣으면 해당 값만 골라내므로 3+4+2=9 가 됩니다.",
+   "options": [
+    "9 3",
+    "3 3",
+    "3 9",
+    "6 9",
+    "9 9"
+   ],
+   "tags": [
+    "비교 연산",
+    "불리언 인덱싱"
+   ],
+   "verifyCode": "array=np.array([3,-1,4,-5,2,-6])\nprint((array>0).sum(), array[array>0].sum())",
+   "verifyExpect": "3 9"
   },
   {
    "id": "X01",
@@ -1253,6 +1697,128 @@
    "verifyExpect": "(3, 2, 4) (2, 4, 3)"
   },
   {
+   "id": "X11",
+   "type": "대조",
+   "typeKey": "contrast",
+   "mode": "mc",
+   "src": "1_넘파이_기초(개념)",
+   "stem": "다음은 거의 같은 두 코드와 실행결과다. ㉠, ㉡ 에 출력되는 값으로 맞는 것만 모두 모은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">방법1 → ㉠<br>방법2 → ㉡</span></span>",
+   "code": "# 방법1\nb1 = np.array([2, 5, 0, 7])\nprint(b1.all())\n\n# 방법2\nb2 = np.array([0, 0, 3, 0])\nprint(b2.any())",
+   "answer": "㉠ False  ·  ㉡ True",
+   "why": "<span class=\"mono\">all()</span> 은 모든 원소가 True(0이 아닌 값)여야 True인데 b1에는 0이 있어 False입니다. <span class=\"mono\">any()</span> 는 하나만 True여도 True인데 b2에 3이 있어 True입니다. 둘 다 0을 False로 본다는 점은 같지만 판정 기준이 반대입니다.",
+   "options": [
+    "㉠ True  ·  ㉡ False",
+    "㉠ True  ·  ㉡ True",
+    "㉠ False  ·  ㉡ True",
+    "㉠ False  ·  ㉡ False",
+    "㉠ False  ·  ㉡ 오류 발생"
+   ],
+   "tags": [
+    "all",
+    "any"
+   ],
+   "verifyCode": "print(np.array([2,5,0,7]).all(), np.array([0,0,3,0]).any())",
+   "verifyExpect": "False True"
+  },
+  {
+   "id": "X12",
+   "type": "대조",
+   "typeKey": "contrast",
+   "mode": "mc",
+   "src": "1_넘파이_기초(개념)",
+   "stem": "다음은 거의 같은 두 코드와 실행결과다. ㉠, ㉡ 에 출력되는 값으로 맞는 것만 모두 모은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">방법1 → ㉠<br>방법2 → ㉡</span></span>",
+   "code": "a = np.array([[2, 4, 6], [3, 6, 9], [4, 8, 12]])\n\n# 방법1\nprint(a[:, 1].shape)\n\n# 방법2\nprint(a[:, 1:2].shape)",
+   "answer": "㉠ (3,)  ·  ㉡ (3, 1)",
+   "why": "두 코드 모두 1열의 값 4, 6, 8 을 가져옵니다. 다만 정수 인덱스는 그 축을 없애 1차원 (3,) 이 되고, 슬라이스는 원소가 하나여도 축을 남겨 2차원 (3, 1) 이 됩니다. 값은 같아도 차원이 달라 이후 계산에서 결과가 갈립니다.",
+   "options": [
+    "㉠ (3,)  ·  ㉡ (3,)",
+    "㉠ (3, 1)  ·  ㉡ (3,)",
+    "㉠ (3,)  ·  ㉡ (3, 1)",
+    "㉠ (1, 3)  ·  ㉡ (3, 1)",
+    "㉠ (3, 3)  ·  ㉡ (3, 1)"
+   ],
+   "tags": [
+    "슬라이싱",
+    "차원 유지"
+   ],
+   "verifyCode": "a=np.array([[2,4,6],[3,6,9],[4,8,12]])\nprint(a[:,1].shape, a[:,1:2].shape)",
+   "verifyExpect": "(3,) (3, 1)"
+  },
+  {
+   "id": "X13",
+   "type": "대조",
+   "typeKey": "contrast",
+   "mode": "mc",
+   "src": "1_넘파이_기초(개념)",
+   "stem": "다음은 거의 같은 두 코드와 실행결과다. ㉠, ㉡ 에 출력되는 값으로 맞는 것만 모두 모은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">방법1 → ㉠<br>방법2 → ㉡</span></span>",
+   "code": "a = np.arange(1, 5)\n\n# 방법1\nprint(a.cumsum())\n\n# 방법2\nprint(a.cumprod())",
+   "answer": "㉠ [ 1  3  6 10]  ·  ㉡ [ 1  2  6 24]",
+   "why": "둘 다 앞에서부터 누적해 나가며 원본과 같은 길이의 배열을 돌려줍니다. 차이는 누적하는 연산으로, <span class=\"mono\">cumsum</span> 은 더하고 <span class=\"mono\">cumprod</span> 는 곱합니다. 1, 3, 6, 10 은 누적 합이고 1, 2, 6, 24 는 누적 곱입니다.",
+   "options": [
+    "㉠ [ 1  2  6 24]  ·  ㉡ [ 1  3  6 10]",
+    "㉠ [10]  ·  ㉡ [24]",
+    "㉠ [ 1  3  6 10]  ·  ㉡ [ 1  3  6 10]",
+    "㉠ [ 1  3  6 10]  ·  ㉡ [ 1  2  6 24]",
+    "㉠ [ 1  2  3  4]  ·  ㉡ [ 1  2  6 24]"
+   ],
+   "tags": [
+    "cumsum",
+    "cumprod"
+   ],
+   "verifyCode": "a=np.arange(1,5)\nprint(a.cumsum(), a.cumprod())",
+   "verifyExpect": "[ 1  3  6 10] [ 1  2  6 24]"
+  },
+  {
+   "id": "X14",
+   "type": "대조",
+   "typeKey": "contrast",
+   "mode": "mc",
+   "src": "1_넘파이_기초(개념)",
+   "stem": "다음은 거의 같은 두 코드와 실행결과다. ㉠, ㉡ 에 출력되는 값으로 맞는 것만 모두 모은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">방법1 → ㉠<br>방법2 → ㉡</span></span>",
+   "code": "# 방법1\nprint(np.random.choice(4, 6, replace=True).size)\n\n# 방법2\nprint(np.random.choice(4, 6, replace=False).size)",
+   "answer": "㉠ 6  ·  ㉡ 오류 발생",
+   "why": "뽑을 수 있는 값은 0부터 3까지 4개뿐입니다. 중복을 허용하면 같은 값을 여러 번 써서 6개를 채울 수 있지만, 중복을 허용하지 않으면 4개를 넘길 수 없어 오류가 납니다. 뽑을 개수가 후보 개수보다 클 때 <span class=\"mono\">replace</span> 값이 성패를 가릅니다.",
+   "options": [
+    "㉠ 6  ·  ㉡ 6",
+    "㉠ 4  ·  ㉡ 4",
+    "㉠ 오류 발생  ·  ㉡ 6",
+    "㉠ 6  ·  ㉡ 오류 발생",
+    "㉠ 6  ·  ㉡ 4"
+   ],
+   "tags": [
+    "random.choice",
+    "replace",
+    "오류"
+   ],
+   "verifyCode": "np.random.seed(0)\nprint(np.random.choice(4,6,replace=True).size)\ntry:\n    np.random.choice(4,6,replace=False)\n    print('ok')\nexcept ValueError:\n    print('error')",
+   "verifyExpect": "6\nerror"
+  },
+  {
+   "id": "X15",
+   "type": "대조",
+   "typeKey": "contrast",
+   "mode": "mc",
+   "src": "2_넘파이_심화",
+   "stem": "다음은 거의 같은 두 코드와 실행결과다. ㉠, ㉡ 에 출력되는 값으로 맞는 것만 모두 모은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">방법1 → ㉠<br>방법2 → ㉡</span></span>",
+   "code": "# 방법1\na = np.arange(1, 7, dtype=np.int16).reshape(2, 3)\nprint(a.itemsize, a.strides)\n\n# 방법2\nb = np.arange(1, 7, dtype=np.int64).reshape(2, 3)\nprint(b.itemsize, b.strides)",
+   "answer": "㉠ 2 (6, 2)  ·  ㉡ 8 (24, 8)",
+   "why": "모양은 둘 다 (2, 3) 으로 같지만 원소 하나의 크기가 다릅니다. int16은 2바이트라 한 행이 2×3=6바이트, int64는 8바이트라 한 행이 8×3=24바이트입니다. <span class=\"mono\">strides</span> 는 모양뿐 아니라 자료형에 따라서도 달라집니다.",
+   "options": [
+    "㉠ 2 (2, 6)  ·  ㉡ 8 (8, 24)",
+    "㉠ 2 (6, 2)  ·  ㉡ 4 (12, 4)",
+    "㉠ 2 (6, 2)  ·  ㉡ 8 (24, 8)",
+    "㉠ 8 (24, 8)  ·  ㉡ 2 (6, 2)",
+    "㉠ 2 (6, 2)  ·  ㉡ 8 (6, 2)"
+   ],
+   "tags": [
+    "itemsize",
+    "strides",
+    "dtype"
+   ],
+   "verifyCode": "a=np.arange(1,7,dtype=np.int16).reshape(2,3)\nb=np.arange(1,7,dtype=np.int64).reshape(2,3)\nprint(a.itemsize, a.strides, b.itemsize, b.strides)",
+   "verifyExpect": "2 (6, 2) 8 (24, 8)"
+  },
+  {
    "id": "S01",
    "type": "조건 매핑",
    "typeKey": "spec",
@@ -1487,6 +2053,126 @@
    "verifyExpect": "(2, 2) [[6, 8], [10, 12]]"
   },
   {
+   "id": "S11",
+   "type": "조건 매핑",
+   "typeKey": "spec",
+   "mode": "mc",
+   "src": "1_넘파이_기초(개념)",
+   "stem": "다음 [조건]을 모두 만족하는 코드로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>[조건]</b><br>○ 0부터 9까지의 정수 중에서 5개를 뽑는다.<br>○ 같은 수가 두 번 이상 뽑히지 않는다.</span>",
+   "code": "____",
+   "answer": "np.random.choice(10, 5, replace=False)",
+   "why": "첫 인자에 10을 주면 0 이상 10 미만, 즉 0부터 9까지에서 뽑습니다. 중복을 막으려면 <span class=\"mono\">replace=False</span> 를 써야 합니다. <span class=\"mono\">randint</span> 는 중복을 막을 수 없고, 인자 순서를 바꾸면 뽑는 범위와 개수가 뒤바뀝니다.",
+   "options": [
+    "np.random.randint(10, size=5)",
+    "np.random.choice(10, 5, replace=True)",
+    "np.random.choice(5, 10, replace=False)",
+    "np.random.choice(10, 5, replace=False)",
+    "np.random.shuffle(np.arange(10))"
+   ],
+   "tags": [
+    "random.choice",
+    "replace"
+   ],
+   "verifyCode": "np.random.seed(11)\nr=np.random.choice(10,5,replace=False)\nprint(r.size, len(set(r.tolist())), bool(r.max()<10))",
+   "verifyExpect": "5 5 True"
+  },
+  {
+   "id": "S12",
+   "type": "조건 매핑",
+   "typeKey": "spec",
+   "mode": "mc",
+   "src": "1_넘파이_기초(개념)",
+   "stem": "다음 [조건]을 모두 만족하는 코드로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>[조건]</b><br>○ 실행할 때마다 항상 같은 랜덤 수가 나오게 한다.<br>○ 0 이상 1 미만의 실수를 3개 뽑는다.</span>",
+   "code": "____\nprint(x)",
+   "answer": "np.random.seed(7)\nx = np.random.rand(3)",
+   "why": "같은 결과를 재현하려면 <span class=\"mono\">seed()</span> 로 출발점을 고정해야 합니다. 0 이상 1 미만의 균일분포 실수는 <span class=\"mono\">rand()</span> 가 만듭니다. <span class=\"mono\">randn</span> 은 평균 0, 표준편차 1의 정규분포라 음수도 나오고, <span class=\"mono\">randint</span> 는 정수만 만듭니다.",
+   "options": [
+    "x = np.random.rand(3)",
+    "np.random.seed(7)\nx = np.random.rand(3)",
+    "np.random.seed(7)\nx = np.random.randn(3)",
+    "np.random.seed(7)\nx = np.random.randint(3)",
+    "np.random.shuffle(7)\nx = np.random.rand(3)"
+   ],
+   "tags": [
+    "random.seed",
+    "random.rand",
+    "재현성"
+   ],
+   "verifyCode": "np.random.seed(7)\nx=np.random.rand(3)\nnp.random.seed(7)\ny=np.random.rand(3)\nprint(np.array_equal(x,y), bool(x.min()>=0), bool(x.max()<1), x.size)",
+   "verifyExpect": "True True True 3"
+  },
+  {
+   "id": "S13",
+   "type": "조건 매핑",
+   "typeKey": "spec",
+   "mode": "mc",
+   "src": "1_넘파이_기초(개념)",
+   "stem": "다음 [조건]을 모두 만족하는 코드로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>[조건]</b><br>○ 배열 a에 0보다 큰 값이 하나라도 있으면 True를 얻는다.<br>○ 하나도 없으면 False를 얻는다.<br>○ 결과는 배열이 아니라 값 하나여야 한다.</span>",
+   "code": "a = np.array([-2, -5, 3])\nprint(____)",
+   "answer": "(a > 0).any()",
+   "why": "<span class=\"mono\">a > 0</span> 은 불리언 배열을 만들고, <span class=\"mono\">any()</span> 는 그중 하나라도 True면 True를 돌려줍니다. <span class=\"mono\">all()</span> 은 모두 True여야 하므로 조건과 반대이고, <span class=\"mono\">(a > 0)</span> 만 쓰면 값 하나가 아니라 배열이 나옵니다.",
+   "options": [
+    "a > 0",
+    "(a > 0).all()",
+    "(a > 0).sum()",
+    "(a > 0).any()",
+    "a.any(0)"
+   ],
+   "tags": [
+    "any",
+    "비교 연산"
+   ],
+   "verifyCode": "a=np.array([-2,-5,3])\nb=np.array([-2,-5,-3])\nprint((a>0).any(), (b>0).any())",
+   "verifyExpect": "True False"
+  },
+  {
+   "id": "S14",
+   "type": "조건 매핑",
+   "typeKey": "spec",
+   "mode": "mc",
+   "src": "1_넘파이_기초(개념)",
+   "stem": "다음 [조건]을 모두 만족하는 코드로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>[조건]</b><br>○ 3행 3열 배열 a에서 1열의 값만 뽑는다.<br>○ 결과가 1차원이 아니라 3행 1열인 2차원이어야 한다.</span>",
+   "code": "a = np.array([[2, 4, 6], [3, 6, 9], [4, 8, 12]])\nb = ____\nprint(b.shape)",
+   "answer": "a[:, 1:2]",
+   "why": "열을 정수 하나로 지정하면 그 축이 사라져 1차원이 됩니다. 축을 남기려면 원소가 하나뿐이더라도 <span class=\"mono\">1:2</span> 처럼 슬라이스로 지정해야 합니다. <span class=\"mono\">:1</span> 은 1열이 아니라 0열을 고릅니다.",
+   "options": [
+    "a[:, 1]",
+    "a[:, :1]",
+    "a[1, :]",
+    "a[:, 1:2]",
+    "a[1:2]"
+   ],
+   "tags": [
+    "슬라이싱",
+    "차원 유지"
+   ],
+   "verifyCode": "a=np.array([[2,4,6],[3,6,9],[4,8,12]])\nb=a[:,1:2]\nprint(b.shape, b.tolist())",
+   "verifyExpect": "(3, 1) [[4], [6], [8]]"
+  },
+  {
+   "id": "S15",
+   "type": "조건 매핑",
+   "typeKey": "spec",
+   "mode": "mc",
+   "src": "1_넘파이_기초(개념)",
+   "stem": "다음 [조건]을 모두 만족하는 코드로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>[조건]</b><br>○ 배열 a의 원소를 앞에서부터 차례로 곱해 나간 값을 모두 얻는다.<br>○ 결과 배열의 길이는 a와 같아야 한다.</span>",
+   "code": "a = np.array([2, 3, 4])\nprint(____)",
+   "answer": "a.cumprod()",
+   "why": "누적 곱을 구하되 중간값을 모두 남겨야 하므로 <span class=\"mono\">cumprod()</span> 입니다. <span class=\"mono\">prod()</span> 는 최종 곱 하나만 돌려줘 길이 조건을 어기고, <span class=\"mono\">cumsum()</span> 은 곱이 아니라 합을 누적합니다.",
+   "options": [
+    "a.prod()",
+    "a.cumsum()",
+    "a.cumprod()",
+    "np.add.accumulate(a)",
+    "a * a"
+   ],
+   "tags": [
+    "cumprod"
+   ],
+   "verifyCode": "a=np.array([2,3,4])\nprint(a.cumprod().tolist(), a.cumprod().size==a.size)",
+   "verifyExpect": "[2, 6, 24] True"
+  },
+  {
    "id": "W01",
    "type": "서답형",
    "typeKey": "short",
@@ -1699,6 +2385,133 @@
    ],
    "verifyCode": "x=np.arange(9).reshape(3,3)\ny=x.flatten()\nz=x.ravel()\nprint(np.may_share_memory(x,y))\nprint(np.may_share_memory(x,z))",
    "verifyExpect": "False\nTrue"
+  },
+  {
+   "id": "W11",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "1_넘파이_기초(개념)",
+   "stem": "넘파이 모듈을 가져와 np로 이름을 바꾸려고 한다. 코드의 빈칸 ㉠ 에 들어갈 코드를 적으시오.<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">[1 2 3 4]</span></span>",
+   "code": "㉠\na = np.arange(1, 5)\nprint(a)",
+   "answer": "import numpy as np",
+   "why": "<span class=\"mono\">import</span> 로 모듈을 가져오고 <span class=\"mono\">as</span> 로 별칭을 붙입니다. 별칭을 np로 두면 이후 코드에서 <span class=\"mono\">np.</span> 로 짧게 쓸 수 있습니다.",
+   "accept": [
+    "import numpy as np",
+    "import  numpy  as  np"
+   ],
+   "tags": [
+    "import",
+    "별칭"
+   ],
+   "verifyCode": "print(np.arange(1,5))",
+   "verifyExpect": "[1 2 3 4]"
+  },
+  {
+   "id": "W12",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "1_넘파이_기초(개념)",
+   "stem": "배열 d의 원소 순서를 제자리에서 랜덤하게 섞으려고 한다. 코드의 빈칸 ㉠ 에 들어갈 코드를 적으시오.<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">[2 5 3 1 4]</span></span>",
+   "code": "np.random.seed(42)\nd = np.arange(1, 6)\nnp.random.㉠(d)\nprint(d)",
+   "answer": "shuffle",
+   "why": "<span class=\"mono\">shuffle()</span> 은 배열을 제자리에서 뒤섞으므로 반환값을 따로 받지 않아도 원본 d가 바뀝니다. <span class=\"mono\">choice()</span> 는 새 배열을 돌려주고 원본을 바꾸지 않는다는 점에서 다릅니다.",
+   "accept": [
+    "shuffle",
+    "shuffle(d)",
+    "np.random.shuffle"
+   ],
+   "tags": [
+    "random.shuffle",
+    "random.seed"
+   ],
+   "verifyCode": "np.random.seed(42)\nd=np.arange(1,6)\nnp.random.shuffle(d)\nprint(d)",
+   "verifyExpect": "[2 5 3 1 4]"
+  },
+  {
+   "id": "W13",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "1_넘파이_기초(개념)",
+   "stem": "코드의 빈칸 ㉠ 에 들어갈 코드를 적으시오.<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">[  1   2   6  24 120]</span></span>",
+   "code": "a = np.arange(1, 6)\nprint(a.㉠())",
+   "answer": "cumprod",
+   "why": "1, 1×2, 1×2×3 … 처럼 앞에서부터 곱해 나간 값이 모두 남아 있으므로 누적 곱인 <span class=\"mono\">cumprod()</span> 입니다. <span class=\"mono\">prod()</span> 였다면 120 하나만 나옵니다.",
+   "accept": [
+    "cumprod",
+    "cumprod()",
+    "a.cumprod"
+   ],
+   "tags": [
+    "cumprod"
+   ],
+   "verifyCode": "print(np.arange(1,6).cumprod())",
+   "verifyExpect": "[  1   2   6  24 120]"
+  },
+  {
+   "id": "W14",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "1_넘파이_기초(개념)",
+   "stem": "5 이상 25 미만의 정수 랜덤 수를 10개 만들려고 한다. 코드의 빈칸 ㉠ 에 들어갈 코드를 적으시오.",
+   "code": "r = np.random.㉠(5, 25, size=10)",
+   "answer": "randint",
+   "why": "<span class=\"mono\">randint(k, n, size=m)</span> 은 k 이상 n 미만의 정수를 m개 만듭니다. 시작값은 포함하고 종료값은 포함하지 않습니다. <span class=\"mono\">rand</span> 나 <span class=\"mono\">randn</span> 은 실수를 만들기 때문에 조건에 맞지 않습니다.",
+   "accept": [
+    "randint",
+    "np.random.randint"
+   ],
+   "tags": [
+    "random.randint",
+    "종료값 미포함"
+   ],
+   "verifyCode": "np.random.seed(2)\nr=np.random.randint(5,25,size=10)\nprint(bool(r.min()>=5), bool(r.max()<=24), r.size)",
+   "verifyExpect": "True True 10"
+  },
+  {
+   "id": "W15",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "2_넘파이_심화",
+   "stem": "반복문에서 행 번호와 행의 값을 함께 얻으려고 한다. 코드의 빈칸 ㉠ 에 들어갈 코드를 적으시오.<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">0 [1 2]<br>1 [3 4]</span></span>",
+   "code": "m = np.arange(1, 5).reshape(2, 2)\nfor i, a in ㉠(m):\n    print(i, a)",
+   "answer": "enumerate",
+   "why": "<span class=\"mono\">enumerate</span> 는 반복할 때마다 (순번, 값) 짝을 돌려줍니다. 2차원 배열을 그냥 돌면 행 단위로 꺼내지므로 i는 행 번호, a는 그 행 전체가 됩니다.",
+   "accept": [
+    "enumerate",
+    "enumerate(m)"
+   ],
+   "tags": [
+    "enumerate"
+   ],
+   "verifyCode": "m=np.arange(1,5).reshape(2,2)\nfor i,a in enumerate(m):\n    print(i, a)",
+   "verifyExpect": "0 [1 2]\n1 [3 4]"
+  },
+  {
+   "id": "W16",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "1_넘파이_기초(개념)",
+   "stem": "코드의 빈칸 ㉠ 에 들어갈 코드를 적으시오.<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">[[2]<br> [5]<br> [8]]</span></span>",
+   "code": "a_2d = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])\nprint(a_2d[㉠])",
+   "answer": ":, 1:2",
+   "why": "모든 행을 고르므로 앞은 <span class=\"mono\">:</span> 입니다. 출력이 세로로 한 줄씩 나온 것은 열 축이 사라지지 않았다는 뜻이므로, 정수 1이 아니라 슬라이스 <span class=\"mono\">1:2</span> 를 써야 합니다.",
+   "accept": [
+    ":, 1:2",
+    ":,1:2",
+    ":, 1:2:1"
+   ],
+   "tags": [
+    "슬라이싱",
+    "차원 유지"
+   ],
+   "verifyCode": "a=np.array([[1,2,3],[4,5,6],[7,8,9]])\nprint(a[:,1:2])",
+   "verifyExpect": "[[2]\n [5]\n [8]]"
   }
  ]
 }
