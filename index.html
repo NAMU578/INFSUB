@@ -417,6 +417,7 @@ const CONFIG = {
   GITHUB_BRANCH: 'main',
   NOTEBOOK_DIR : 'notebooks',        // .ipynb 파일이 들어있는 폴더
   PDF_DIR      : 'pdfs',             // PDF 자료가 들어있는 폴더
+  DATA_DIR     : 'data',             // 노트북에서 불러 쓰는 csv/이미지 파일 폴더
 
   // Cloudflare Worker 주소. 비워두면 이 브라우저에만 저장되는 로컬 모드로 동작합니다.
   WORKER_URL   : 'https://info-notebook.infsub.workers.dev',                 // 예: 'https://info-nb.your-name.workers.dev'
@@ -766,6 +767,34 @@ async function fetchPdfList(){
   return list;
 }
 
+/* ════════════════════════════════════════════════════════
+   깃허브에서 수업 데이터 파일(csv/이미지 등) 목록 가져오기
+   폴더가 없으면 빈 목록을 돌려주고 조용히 넘어갑니다.
+   ════════════════════════════════════════════════════════ */
+async function fetchDataList(){
+  const cacheKey='cnb:datalist';
+  try{
+    const c=JSON.parse(sessionStorage.getItem(cacheKey));
+    if(c && Date.now()-c.t < 6e5) return c.v;
+  }catch{}
+  const ghList = async () => {
+    const url=`https://api.github.com/repos/${CONFIG.GITHUB_OWNER}/${CONFIG.GITHUB_REPO}/contents/${CONFIG.DATA_DIR}?ref=${CONFIG.GITHUB_BRANCH}`;
+    const r=await fetch(url);
+    if(!r.ok) return [];                       // 폴더가 아직 없어도 실행은 계속됩니다
+    return r.json();
+  };
+  let items;
+  if(hasWorker()){
+    try{ items = (await api('/repo/list',{dir:CONFIG.DATA_DIR})).items; }catch{}
+  }
+  if(!items) items = await ghList();
+  const list = (Array.isArray(items)?items:[])
+    .filter(f=>f.type!=='dir' && !/^README/i.test(f.name))
+    .map(f=>({name:f.name, path:f.path}));
+  sessionStorage.setItem(cacheKey,JSON.stringify({t:Date.now(),v:list}));
+  return list;
+}
+
 const pdfDocCache = new Map();
 async function loadPdfDoc(path){
   if(pdfDocCache.has(path)) return pdfDocCache.get(path);
@@ -839,6 +868,85 @@ const SHOW_EXPECT = new Set(['blank','order']);
 const OPT_MARK = ['①','②','③','④','⑤','⑥'];
 
 /* ════════════════════════════════════════════════════════
+   코랩 호환 셰임
+   선생님이 주신 코랩 노트북을 고치지 않고 그대로 실행하기 위해
+   google.colab 계열 모듈을 흉내 내서 등록합니다.
+   ════════════════════════════════════════════════════════ */
+const COLAB_SHIM = `
+import sys, types
+
+_rt = types.ModuleType('infsub_runtime')
+_rt.images = []
+
+def _pop_images():
+    out = list(_rt.images)
+    _rt.images.clear()
+    return out
+_rt.pop_images = _pop_images
+sys.modules['infsub_runtime'] = _rt
+
+def _cv2_imshow(a):
+    """코랩 google.colab.patches.cv2_imshow 와 같은 규칙(BGR, 0~255 클립)."""
+    import base64
+    import numpy as np
+    arr = np.asarray(a).clip(0, 255).astype('uint8')
+    try:
+        import cv2
+        ok, buf = cv2.imencode('.png', arr)
+        if not ok:
+            raise RuntimeError('PNG 변환 실패')
+        _rt.images.append(base64.b64encode(buf.tobytes()).decode())
+        return
+    except ImportError:
+        pass
+    try:
+        import io
+        from PIL import Image
+        rgb = arr[:, :, ::-1] if arr.ndim == 3 and arr.shape[2] >= 3 else arr
+        b = io.BytesIO()
+        Image.fromarray(rgb).save(b, format='PNG')
+        _rt.images.append(base64.b64encode(b.getvalue()).decode())
+    except Exception:
+        print('[INFSUB] 이미지를 표시하려면 cv2 또는 PIL 이 필요합니다. shape =', arr.shape)
+
+def _mount(mountpoint='/content/drive', **kw):
+    print('[INFSUB] 구글 드라이브 연동은 생략합니다. 수업 데이터 파일은 이미 /content 안에 있습니다.')
+
+def _upload(*a, **k):
+    print('[INFSUB] 브라우저 업로드는 지원하지 않습니다. 깃허브 data 폴더에 올린 파일이 /content 안에 있습니다.')
+    return {}
+
+def _download(*a, **k):
+    print('[INFSUB] 파일 내려받기는 지원하지 않습니다.')
+
+_google = sys.modules.get('google')
+if _google is None:
+    _google = types.ModuleType('google')
+    _google.__path__ = []
+    sys.modules['google'] = _google
+
+_colab   = types.ModuleType('google.colab')
+_drive   = types.ModuleType('google.colab.drive')
+_patches = types.ModuleType('google.colab.patches')
+_files   = types.ModuleType('google.colab.files')
+
+_drive.mount     = _mount
+_patches.cv2_imshow = _cv2_imshow
+_files.upload    = _upload
+_files.download  = _download
+
+_colab.drive = _drive
+_colab.patches = _patches
+_colab.files = _files
+_google.colab = _colab
+
+sys.modules['google.colab']         = _colab
+sys.modules['google.colab.drive']   = _drive
+sys.modules['google.colab.patches'] = _patches
+sys.modules['google.colab.files']   = _files
+`;
+
+/* ════════════════════════════════════════════════════════
    Pyodide 실행 환경
    ════════════════════════════════════════════════════════ */
 const Py = {
@@ -856,11 +964,32 @@ const Py = {
         document.head.appendChild(s);
       });
       const py = await loadPyodide({indexURL:'https://cdn.jsdelivr.net/pyodide/v0.26.4/full/'});
-      this.inst=py; this.setState('준비됨');
+      try{ py.runPython(COLAB_SHIM); }catch(e){ console.warn('코랩 셰임 실패', e); }
+      const n = await this.preloadData(py);
+      this.inst=py; this.setState(n ? `준비됨 · 자료 ${n}개` : '준비됨');
       return py;
     })();
     try{ return await this.loading; }
     catch(e){ this.setState('실패'); this.loading=null; throw e; }
+  },
+  /* data/ 폴더의 파일을 파이썬 가상 디스크의 /content 에 미리 올려 둡니다.
+     코랩 기본 작업 폴더가 /content 라 노트북 코드를 고치지 않아도 그대로 열립니다. */
+  async preloadData(py){
+    let files=[];
+    try{ files = await fetchDataList(); }catch{ return 0; }
+    try{ py.FS.mkdirTree('/content'); }catch{}
+    let ok=0;
+    this.setState(files.length ? `자료 받는 중 0/${files.length}` : '준비 중');
+    await Promise.all(files.map(async f=>{
+      try{
+        const r = await fetch(RAW(f.path));
+        if(!r.ok) return;
+        py.FS.writeFile('/content/'+f.name, new Uint8Array(await r.arrayBuffer()));
+        ok++; this.setState(`자료 받는 중 ${ok}/${files.length}`);
+      }catch(e){ console.warn('자료 적재 실패', f.path, e); }
+    }));
+    try{ py.FS.chdir('/content'); }catch{}
+    return ok;
   },
   /* 코드 한 덩어리 실행 → {out, err, images} */
   async run(code, {fresh=false}={}){
@@ -896,6 +1025,13 @@ except Exception:
       }
     }catch(e){ err = String(e.message||e); }
     finally{ if(ns) ns.destroy?.(); }
+    // cv2_imshow 같은 셰임이 만들어 둔 이미지를 가져옵니다 (오류가 나도 남은 건 표시)
+    try{
+      const px = py.runPython('import infsub_runtime as _r; _r.pop_images()');
+      const extra = px?.toJs?.() || [];
+      px?.destroy?.();
+      if(extra.length) images = images.concat(extra);
+    }catch{}
     return {out:buf.join(''), err, images};
   }
 };
