@@ -1007,8 +1007,9 @@ const Py = {
   async run(code, {fresh=false}={}){
     const py = await this.get();
     const buf=[];
-    py.setStdout({batched:s=>buf.push(s)});
-    py.setStderr({batched:s=>buf.push(s)});
+    // batched 콜백은 줄 단위로 불리면서 줄바꿈을 떼고 넘겨줍니다. 다시 붙여야 여러 줄로 보입니다.
+    py.setStdout({batched:s=>buf.push(s+'\n')});
+    py.setStderr({batched:s=>buf.push(s+'\n')});
     try{ await py.loadPackagesFromImports(code); }catch{}
     const ns = fresh ? py.runPython('dict()') : undefined;   // 문제 채점용 격리 네임스페이스
     let err=null, images=[], value=null;
@@ -1053,7 +1054,7 @@ except Exception:
       px?.destroy?.();
       if(extra.length) images = images.concat(extra);
     }catch{}
-    return {out:buf.join(''), err, images, value};
+    return {out:buf.join('').replace(/\n$/,''), err, images, value};
   }
 };
 
