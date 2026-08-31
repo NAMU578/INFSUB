@@ -883,6 +883,18 @@ def _pop_images():
     _rt.images.clear()
     return out
 _rt.pop_images = _pop_images
+
+def _repr_value(v):
+    """주피터/코랩이 셀 마지막 값을 표시하는 방식에 맞춥니다."""
+    if isinstance(v, type):
+        m = getattr(v, '__module__', '')
+        n = getattr(v, '__qualname__', getattr(v, '__name__', ''))
+        return n if m in ('builtins', '') else m + '.' + n
+    try:
+        return repr(v)
+    except Exception as e:
+        return '<표시 실패: %s>' % e
+_rt.repr_value = _repr_value
 sys.modules['infsub_runtime'] = _rt
 
 def _cv2_imshow(a):
@@ -999,9 +1011,18 @@ const Py = {
     py.setStderr({batched:s=>buf.push(s)});
     try{ await py.loadPackagesFromImports(code); }catch{}
     const ns = fresh ? py.runPython('dict()') : undefined;   // 문제 채점용 격리 네임스페이스
-    let err=null, images=[];
+    let err=null, images=[], value=null;
     try{
-      await py.runPythonAsync(code, ns?{globals:ns}:undefined);
+      const ret = await py.runPythonAsync(code, ns?{globals:ns}:undefined);
+      // 주피터처럼 셀 마지막 표현식의 값을 표시합니다 (print 없이 type(x) 만 쓴 셀 등)
+      if(!fresh && ret!==undefined && ret!==null){
+        try{
+          py.globals.set('_infsub_ret', ret);
+          value = py.runPython('import infsub_runtime as _r; _r.repr_value(_infsub_ret)');
+        }catch{}
+        try{ py.runPython("globals().pop('_infsub_ret', None)"); }catch{}
+      }
+      try{ ret?.destroy?.(); }catch{}
       // matplotlib 그림이 있으면 이미지로 뽑아냅니다
       if(/matplotlib|plt\./.test(code)){
         try{
@@ -1032,7 +1053,7 @@ except Exception:
       px?.destroy?.();
       if(extra.length) images = images.concat(extra);
     }catch{}
-    return {out:buf.join(''), err, images};
+    return {out:buf.join(''), err, images, value};
   }
 };
 
@@ -1094,7 +1115,7 @@ function viewNotebook(){
             </div>
           </div>
           <div class="live"></div>
-          ${renderOutputs(c.outputs)}
+          <div class="saved">${renderOutputs(c.outputs)}</div>
         </div>`;
     }
     host.appendChild(d);
@@ -1131,18 +1152,20 @@ async function runCell(cellEl, cell){
   if(cell.type!=='code') return;
   const mark = cellEl.querySelector('.g-mark');
   const live = cellEl.querySelector('.live');
+  const saved = cellEl.querySelector('.saved');
   const prev = mark.textContent;
   mark.textContent='In [*]:'; mark.className='g-mark is-run';
   live.innerHTML='';
+  if(saved) saved.hidden = true;          // 노트북에 저장돼 있던 출력은 감춥니다
   try{
     const src = cellEl.querySelector('.code-shell textarea')?.value ?? cellSource(S.nb.path,cell);
     const r = await Py.run(src);
     let html='';
     if(r.out) html+=`<div class="out"><pre>${esc(r.out)}</pre></div>`;
     r.images.forEach(b=>html+=`<div class="out"><img src="data:image/png;base64,${b}" alt="그래프"></div>`);
+    if(r.value!=null) html+=`<div class="out"><pre>${esc(r.value)}</pre></div>`;
     if(r.err) html+=`<div class="out err"><pre>${esc(r.err)}</pre></div>`;
-    if(!html) html=`<div class="out"><pre style="color:var(--ink-faint)">(출력 없음)</pre></div>`;
-    live.innerHTML=html;
+    live.innerHTML=html;                   // 출력이 없는 셀은 아무것도 그리지 않습니다
     mark.textContent=prev; mark.className='g-mark '+(r.err?'is-bad':'is-ok');
   }catch(e){
     live.innerHTML=`<div class="out err"><pre>${esc(e.message)}</pre></div>`;
