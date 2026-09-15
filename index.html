@@ -1473,33 +1473,94 @@ function essaySaveDraft(nbName, j, intro){
   persist().catch(()=>{});
 }
 
-/* 승인된 문제 중 이 노트북 것을 골라 옵니다. */
-function essayFromBank(nbName, count){
-  const pool = essayBank().filter(x=>nbMatches(x.nb, nbName));
-  return shuffle(pool).slice(0, count).map(x=>({
-    type:'서술형', typeKey:'essay', mode:'essay', ai:true, fromBank:true,
+/* 은행(승인된 문제) 한 건을 출제용 문항으로 바꿉니다. */
+function essayQuestion(x){
+  return {
+    type:'서술형', typeKey:'essay', mode:'essay', ai:true, fromBank:true, eid:x.id,
     intro:x.intro||'', stem:esc(x.question), code:x.code||'',
     rubric:x.rubric||'', answer:x.answer||'', why:'AI 채점 결과입니다.'
-  }));
+  };
 }
 
-/* 6. 서술형 (Claude API, Worker 필요) — 노트북 전체가 아니라 덩어리 하나만 넘깁니다 */
-async function genEssay(nb){
+/* AI가 새로 만든 결과를 출제용 문항으로 바꿉니다. */
+function essayGenerated(j, intro){
+  return {
+    type:'서술형', typeKey:'essay', mode:'essay', ai:true, eid:essayId(j.question),
+    intro:intro||'', stem:esc(j.question), code:j.code||'',
+    rubric:j.rubric||'', answer:j.model_answer||'', why:'AI 채점 결과입니다.'
+  };
+}
+
+/* AI에게 "이미 있는 문제"로 넘길 목록. 비슷한 문제를 다시 내지 않게 합니다. */
+function essayAvoid(name, picked){
+  const texts = [
+    ...picked.map(q=>q.rawQuestion||''),
+    ...essayBank().filter(x=>nbMatches(x.nb, name)).map(x=>x.question),
+    ...essayDrafts().filter(x=>nbMatches(x.nb, name)).map(x=>x.question),
+  ].map(t=>String(t).replace(/\s+/g,' ').trim().slice(0,160)).filter(Boolean);
+  return uniq(texts).slice(0, 20);
+}
+
+function rememberEssayIds(qs){
+  if(!S.data?.quiz) return;
+  const ids = qs.map(q=>q.eid).filter(Boolean);
+  if(!ids.length) return;
+  const prev = S.data.quiz.recentEssay || [];
+  S.data.quiz.recentEssay = [...ids, ...prev.filter(x=>!ids.includes(x))].slice(0,60);
+}
+
+/* 서술형 need개를 채웁니다. 노트북 퀴즈와 PDF 퀴즈가 같이 씁니다.
+   - 은행에서 몇 개 쓸지는 매번 0 ~ need 중 무작위로 정합니다.
+     그래서 승인된 문제가 쌓여도 새 문제가 계속 만들어집니다.
+   - 은행 문제는 이 학생이 최근에 보지 않은 것만 우선 씁니다.
+   - 새로 만든 문제가 은행·버린 문제·이번 퀴즈 문제와 같으면 버립니다.
+   - 생성이 끝내 안 되면 남은 은행 문제(최근에 본 것 포함)로 채웁니다.
+   gen(avoid) 는 문항 하나 또는 null 을 돌려줍니다. */
+async function buildEssays(name, gen, need=2){
+  const out=[], used=new Set();
+  const recent = new Set(S.data?.quiz?.recentEssay || []);
+  const pool  = essayBank().filter(x=>nbMatches(x.nb, name));
+  const fresh = shuffle(pool.filter(x=>!recent.has(x.id)));
+  const stale = shuffle(pool.filter(x=> recent.has(x.id)));
+  const add = q => { out.push(q); used.add(q.eid); };
+
+  const fromBank = Math.min(rand(0, need), fresh.length);
+  fresh.slice(0, fromBank).forEach(x=>add(essayQuestion(x)));
+
+  let fails=0;
+  while(out.length<need && fails<2){
+    let q;
+    try{ q = await gen(essayAvoid(name, out)); }
+    catch(err){ toast('서술형 생성 실패: '+err.message); break; }
+    const dup = q && (used.has(q.eid) || pool.some(x=>x.id===q.eid) || essayRejected().includes(q.eid));
+    if(!q || dup){ fails++; continue; }
+    add(q);
+  }
+
+  for(const x of [...fresh.slice(fromBank), ...stale]){
+    if(out.length>=need) break;
+    if(!used.has(x.id)) add(essayQuestion(x));
+  }
+  rememberEssayIds(out);
+  return out;
+}
+
+/* 6. 서술형 (Claude API) — 노트북 전체가 아니라 덩어리 하나만 넘깁니다.
+   usedUnits: 이번 퀴즈에서 이미 쓴 덩어리. 같은 셀로 두 문제를 만들지 않습니다. */
+async function genEssay(nb, avoid, usedUnits){
   if(!hasWorker()) return null;
   const rich = nb.units.filter(u=>introLen(u)>25);
-  const u = pick(rich.length?rich:nb.units.filter(solvable));
+  const base = rich.length ? rich : nb.units.filter(solvable);
+  const left = base.filter(u=>!usedUnits.has(u));
+  const u = pick(left.length ? left : base);
   if(!u) return null;
+  usedUnits.add(u);
   const ctx = `${u.intro}\n\n\`\`\`python\n${u.code.slice(0,1200)}\n\`\`\``
             + (u.out?`\n\n실행 결과:\n${u.out}`:'');
-  const j = await api('/ai',{task:'make', notebook:nb.name, context:ctx});
+  const j = await api('/ai',{task:'make', notebook:nb.name, context:ctx, avoid});
   if(!j.question) return null;
   essaySaveDraft(nb.name, j, u.intro);   // 한 번 쓰고 버리지 않고 초안으로 남깁니다
-  return {
-    type:'서술형', typeKey:'essay', mode:'essay', ai:true,
-    intro:u.intro,
-    stem:esc(j.question), code:j.code||'', rubric:j.rubric||'', answer:j.model_answer||'',
-    why:'AI 채점 결과입니다.'
-  };
+  return {...essayGenerated(j, u.intro), rawQuestion:j.question};
 }
 
 /* 노트북 내용에서 즉석으로 만드는 문항. 은행이 모자랄 때만 씁니다. */
@@ -1704,14 +1765,8 @@ async function startQuiz(){
     await Py.get().catch(()=>{});
     let qs = await buildQuiz(nb, useAI?Math.max(1,n-2):n);
     if(useAI){
-      const need = 2;
-      // 관리자가 승인해 둔 문제를 먼저 씁니다. AI 호출이 줄고 품질도 검증된 것만 나갑니다.
-      const reused = essayFromBank(nb.name, need);
-      qs.push(...reused);
-      for(let i=reused.length;i<need;i++){
-        try{ const e=await genEssay(nb); if(e) qs.push(e); }
-        catch(err){ toast('서술형 생성 실패: '+err.message); break; }
-      }
+      const usedUnits = new Set();
+      qs.push(...await buildEssays(nb.name, avoid=>genEssay(nb, avoid, usedUnits)));
     }
     if(!qs.length) throw new Error('문제를 만들지 못했습니다. 다른 노트북을 골라 보세요');
     QZ={nb, qs:shuffle(qs), i:0, picked:null, order:[], graded:false, right:0};
@@ -1804,7 +1859,8 @@ async function grade(){
     $('#q-submit').disabled=true; $('#q-submit').textContent='채점 중…';
     try{
       const j=await api('/ai',{task:'grade',question:q.stem,rubric:q.rubric,answer:mine});
-      ok=!!j.correct; feedback=j.feedback||''; q.answer=j.model_answer||q.answer;
+      ok=!!j.correct; feedback=j.feedback||'';
+      if(!q.answer) q.answer=j.model_answer||'';   // 저장된(승인·생성 시) 모범 답안은 그대로 둡니다
     }catch(e){ $('#q-submit').disabled=false; $('#q-submit').textContent='제출'; return toast('채점 실패: '+e.message); }
   }
 
@@ -1831,7 +1887,11 @@ async function record(q, mine, ok){
   S.data.quiz.attempts.push({t:Date.now(),path,type:q.typeKey,ok});
   if(S.data.quiz.attempts.length>800) S.data.quiz.attempts.splice(0,200);
 
-  const key = await sha256(q.typeKey+'|'+(q.code||'')+'|'+q.answer);
+  // 서술형은 모범 답안이 아니라 문제 자체로 묶습니다.
+  // 오답 노트에서 다시 푸는 문제는 원래 기록의 키를 그대로 씁니다(예전 방식 키 포함).
+  const key = q.wkey ? q.wkey : q.typeKey==='essay'
+    ? await sha256('essay|'+(q.eid||essayId(q.stem)))
+    : await sha256(q.typeKey+'|'+(q.code||'')+'|'+q.answer);
   const idx = S.data.wrong.findIndex(w=>w.key===key);
   if(ok){
     if(idx>=0){ S.data.wrong[idx].streak=(S.data.wrong[idx].streak||0)+1;
@@ -1840,6 +1900,7 @@ async function record(q, mine, ok){
     const entry={key,path,nb:nbName,type:q.type,typeKey:q.typeKey,stem:q.stem,code:q.code||'',
       intro:q.intro||'',expect:q.expect||'',
       options:q.options||null,answer:q.answer,accept:q.accept||null,
+      rubric:q.rubric||null,eid:q.eid||null,
       mine,why:q.why,at:Date.now(),streak:0};
     if(idx>=0) S.data.wrong[idx]=entry; else S.data.wrong.push(entry);
   }
@@ -1930,9 +1991,12 @@ async function viewPdfQuiz(opts={}){
 }
 
 /* PDF에서 글자만 뽑아 옵니다. 서술형 문제를 만들 때 AI에게 넘길 맥락으로 씁니다. */
-async function pdfExtractText(path, maxChars=1800){
+async function pdfExtractText(path, maxChars=1800, usedPages=new Set()){
   const doc = await loadPdfDoc(path);
-  const from = 1 + Math.floor(Math.random() * Math.max(1, doc.numPages - 2));
+  const starts = Array.from({length:Math.max(1, doc.numPages - 2)}, (_,i)=>i+1);
+  const left = starts.filter(n=>!usedPages.has(n));
+  const from = pick(left.length ? left : starts);
+  usedPages.add(from);
   let out='';
   for(let n=from; n<=doc.numPages && out.length<maxChars; n++){
     const tc = await (await doc.getPage(n)).getTextContent();
@@ -1943,18 +2007,14 @@ async function pdfExtractText(path, maxChars=1800){
 }
 
 /* PDF 본문 일부를 맥락으로 넘겨 서술형 문제를 만듭니다. 노트북용 genEssay와 같은 저장소를 씁니다. */
-async function genEssayPdf(meta){
+async function genEssayPdf(meta, avoid, usedPages){
   if(!hasWorker()) return null;
-  const ctx = await pdfExtractText(meta.path);
+  const ctx = await pdfExtractText(meta.path, 1800, usedPages);
   if(ctx.length < 120) return null;                 // 스캔본처럼 글자층이 없는 PDF
-  const j = await api('/ai',{task:'make', notebook:meta.name, context:ctx});
+  const j = await api('/ai',{task:'make', notebook:meta.name, context:ctx, avoid});
   if(!j.question) return null;
   essaySaveDraft(meta.name, j, '');
-  return {
-    type:'서술형', typeKey:'essay', mode:'essay', ai:true,
-    intro:'', stem:esc(j.question), code:j.code||'',
-    rubric:j.rubric||'', answer:j.model_answer||'', why:'AI 채점 결과입니다.'
-  };
+  return {...essayGenerated(j, ''), rawQuestion:j.question};
 }
 
 async function startPdfQuiz(){
@@ -1978,13 +2038,8 @@ async function startPdfQuiz(){
     rememberBankIds(qs);
 
     if(useAI){
-      const need = 2;
-      const reused = essayFromBank(meta.name, need);   // 관리자가 승인해 둔 문제 먼저
-      qs.push(...reused);
-      for(let i=reused.length;i<need;i++){
-        try{ const e=await genEssayPdf(meta); if(e) qs.push(e); }
-        catch(err){ toast('서술형 생성 실패: '+err.message); break; }
-      }
+      const usedPages = new Set();
+      qs.push(...await buildEssays(meta.name, avoid=>genEssayPdf(meta, avoid, usedPages)));
     }
     if(!qs.length) throw new Error('이 자료에는 준비된 문제가 없습니다');
 
@@ -2047,7 +2102,11 @@ function viewWrong(){
   if(!list.length) return;
 
   $('#w-retry').onclick=()=>{
-    const qs=list.map(w=>({type:w.type,typeKey:w.typeKey,mode:w.options?'mc':(w.typeKey==='order'?'order':'text'),
+    const modeOf = w => w.typeKey==='essay' ? 'essay' : w.options ? 'mc' : (w.typeKey==='order' ? 'order' : 'text');
+    const qs=list.map(w=>({type:w.type,typeKey:w.typeKey,mode:modeOf(w),ai:w.typeKey==='essay',
+      eid:w.eid||null, wkey:w.key,
+      // 예전 기록에는 채점 기준이 없어서 모범 답안을 기준으로 넘깁니다.
+      rubric:w.rubric || (w.typeKey==='essay' ? '모범 답안: '+w.answer : undefined),
       stem:w.stem,code:w.code,intro:w.intro||'',expect:w.expect||'',
       options:w.options,answer:w.answer,accept:w.accept||null,why:w.why,
       path:w.path,nb:w.nb,
