@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "ohh5259",
- "updatedAt": "2026-09-15T08:16:04.164Z",
+ "updatedAt": "2026-09-15T11:04:07.204Z",
  "edits": {},
  "quiz": {
   "attempts": [
@@ -46,6 +46,12 @@
     "path": "notebooks/2_넘파이_심화.ipynb",
     "type": "spec",
     "ok": true
+   },
+   {
+    "t": 1789470247203,
+    "path": "pdfs/06.인공지능의 역사.pdf",
+    "type": "pcase",
+    "ok": true
    }
   ],
   "stats": {
@@ -56,9 +62,23 @@
    "notebooks/2_넘파이_심화.ipynb": {
     "asked": 5,
     "correct": 4
+   },
+   "pdfs/06.인공지능의 역사.pdf": {
+    "asked": 1,
+    "correct": 1
    }
   },
   "recentBank": [
+   "PC10",
+   "PC02",
+   "PG03",
+   "PO01",
+   "PM03",
+   "PM09",
+   "PL03",
+   "PE04",
+   "PE02",
+   "PT05",
    "B03",
    "D03",
    "R04",
