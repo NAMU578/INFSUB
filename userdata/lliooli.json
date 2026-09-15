@@ -1,0 +1,71 @@
+{
+ "version": 1,
+ "user": "lliooli",
+ "updatedAt": "2026-09-15T08:20:44.716Z",
+ "edits": {},
+ "quiz": {
+  "attempts": [
+   {
+    "t": 1789460444715,
+    "path": "notebooks/1_넘파이_기초(개념).ipynb",
+    "type": "classify",
+    "ok": false
+   }
+  ],
+  "stats": {
+   "notebooks/1_넘파이_기초(개념).ipynb": {
+    "asked": 1,
+    "correct": 0
+   }
+  },
+  "recentBank": [
+   "C16",
+   "C12",
+   "B14",
+   "D13",
+   "D11",
+   "R09",
+   "X12",
+   "X14",
+   "S08",
+   "W13",
+   "C14",
+   "C11",
+   "B08",
+   "B16",
+   "D15",
+   "R15",
+   "X13",
+   "X05",
+   "S13",
+   "W14"
+  ]
+ },
+ "wrong": [
+  {
+   "key": "2b0e4f88facc023649f4574970379272c150651d4588be749f184418fd0cdb2c",
+   "path": "notebooks/1_넘파이_기초(개념).ipynb",
+   "nb": "1_넘파이_기초(개념)",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "stem": "다음 코드에 대한 설명으로 옳은 것만 <보기>에서 모두 고른 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) any() 는 모든 원소가 0이 아닐 때만 True를 돌려준다.<br>(나) 위 코드의 두 출력은 모두 True 이다.<br>(다) 0은 False로, 0이 아닌 값은 True로 간주된다.</span>",
+   "code": "bools = np.array([1, 1, 0, 1])\nprint(bools.any())\nprint(bools.all())",
+   "intro": "",
+   "expect": "",
+   "options": [
+    "(가)",
+    "(다)",
+    "(가), (나)",
+    "(나), (다)",
+    "(가), (나), (다)"
+   ],
+   "answer": "(다)",
+   "accept": null,
+   "mine": "(나), (다)",
+   "why": "넘파이는 0을 False, 0이 아닌 값을 True로 봅니다. 모든 원소가 True여야 하는 것은 <span class=\"mono\">all()</span> 이고, <span class=\"mono\">any()</span> 는 하나만 True여도 True이므로 (가)는 두 함수를 뒤바꾼 설명입니다. 배열에 0이 하나 있어 <span class=\"mono\">any()</span> 는 True, <span class=\"mono\">all()</span> 은 False라 (나)도 틀립니다.",
+   "at": 1789460444715,
+   "streak": 0
+  }
+ ],
+ "chats": []
+}
