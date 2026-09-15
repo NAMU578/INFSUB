@@ -367,6 +367,7 @@ main{min-width:0;padding:26px 0 90px}
       <div class="nav-sec">
         <h3>학습</h3>
         <button class="nav-item" data-view="quiz"><span class="nav-n">Q</span>문제 풀기</button>
+        <button class="nav-item" data-view="pdfquiz"><span class="nav-n">D</span>PDF 퀴즈</button>
         <button class="nav-item" data-view="wrong"><span class="nav-n">E</span>오답 노트<span class="dot hidden" id="wrong-dot"></span></button>
         <button class="nav-item" data-view="stats"><span class="nav-n">S</span>진행 상황</button>
       </div>
@@ -433,7 +434,7 @@ const CONFIG = {
   QUIZ_COUNT   : 10,
 
   // 미리 만들어 둔 문항 은행. 여러 개를 적으면 합쳐서 씁니다.
-  BANK_FILES   : ['bank/question-bank-numpy.json'],
+  BANK_FILES   : ['bank/question-bank-numpy.json', 'bank/question-bank-pdf.json'],
   // true 로 두면 출제 직전에 은행 문항의 정답을 브라우저에서 다시 실행해 확인합니다.
   // 문항을 새로 추가한 직후에만 잠깐 켜 보세요. 켜면 시작이 몇 초 느려집니다.
   BANK_VERIFY  : false,
@@ -1536,7 +1537,7 @@ async function loadBank(){
       const r = await fetch(RAW(f), {cache:'no-cache'});
       if(!r.ok) continue;
       const j = await r.json();
-      if(!BANK.types.length) BANK.types = j.types||[];
+      for(const t of (j.types||[])) if(!BANK.types.some(x=>x.key===t.key)) BANK.types.push(t);
       BANK.questions.push(...(j.questions||[]));
     }catch{ /* 은행이 없어도 생성기로 그대로 동작합니다 */ }
   }
@@ -1846,7 +1847,7 @@ async function record(q, mine, ok){
 }
 
 function finishQuiz(){
-  const n=QZ.qs.length, r=QZ.right, nb=QZ.nb;
+  const n=QZ.qs.length, r=QZ.right, nb=QZ.nb, isPdf = QZ.src==='pdf';
   $('#view').innerHTML=`
     <div class="page-head"><div class="eyebrow">Result</div><h2>${esc(nb.name)}</h2></div>
     <div class="stat-row">
@@ -1855,14 +1856,146 @@ function finishQuiz(){
       <div class="stat"><div class="n">${n-r}</div><div class="l">오답 기록</div></div>
     </div>
     <div class="row" style="justify-content:flex-start">
-      <button class="btn btn-primary" id="rs-again">같은 노트북 다시</button>
+      <button class="btn btn-primary" id="rs-again">${isPdf?'같은 자료 다시':'같은 노트북 다시'}</button>
       <button class="btn" id="rs-wrong">오답 노트 보기</button>
-      <button class="btn btn-ghost" id="rs-back">노트북으로</button>
+      <button class="btn btn-ghost" id="rs-back">${isPdf?'자료 보기':'노트북으로'}</button>
     </div>`;
   const path=nb.path;
-  $('#rs-again').onclick=()=>{ QZ=null; setView('quiz',{preset:path}); setTimeout(()=>$('#qz-start')?.click(),30); };
+  $('#rs-again').onclick=()=>{ QZ=null;
+    if(isPdf){ setView('pdfquiz',{preset:path}); setTimeout(()=>$('#pq-start')?.click(),30); }
+    else     { setView('quiz',{preset:path});    setTimeout(()=>$('#qz-start')?.click(),30); } };
   $('#rs-wrong').onclick=()=>{ QZ=null; setView('wrong'); };
-  $('#rs-back').onclick =()=>{ QZ=null; openNotebook(path); };
+  $('#rs-back').onclick =()=>{ QZ=null; if(isPdf) openPdf(path); else openNotebook(path); };
+}
+
+/* ════════════════════════════════════════════════════════
+   화면: PDF 퀴즈
+   PDF 자료는 노트북과 달리 실행할 코드가 없으므로, 미리 만들어 둔
+   개념 문항 은행(bank/question-bank-pdf.json)만 사용합니다.
+   문항의 src 값이 PDF 파일 이름(확장자 제외)과 같아야 짝지어집니다.
+   ════════════════════════════════════════════════════════ */
+async function viewPdfQuiz(opts={}){
+  const el=$('#view');
+  el.innerHTML=`
+    <div class="page-head">
+      <div class="eyebrow">Practice</div>
+      <h2>PDF 퀴즈</h2>
+      <div class="sub">PDF 자료실의 자료를 고르면 그 내용으로 만든 개념 문제가 나옵니다.
+        코드 실행 문제가 아니라 용어·정의·사례를 확인하는 문제입니다.</div>
+    </div>
+    <div class="empty">자료 목록을 불러오는 중…</div>`;
+
+  let list=[];
+  try{ list = S.pdfs.length ? S.pdfs : (S.pdfs = await fetchPdfList()); }
+  catch(e){
+    el.innerHTML=`<div class="page-head"><div class="eyebrow">Error</div><h2>PDF 퀴즈</h2></div>
+      <div class="empty">${esc(e.message)}</div>`;
+    return;
+  }
+
+  await loadBank();
+  const withBank = list.filter(p=>BANK.questions.some(q=>nbMatches(q.src, p.name)));
+
+  if(!withBank.length){
+    el.innerHTML=`<div class="page-head"><div class="eyebrow">Practice</div><h2>PDF 퀴즈</h2></div>
+      <div class="empty"><div class="eyebrow">No questions</div>
+        아직 문제가 준비된 PDF 자료가 없습니다.
+        <span class="mono">bank/question-bank-pdf.json</span> 의 <span class="mono">src</span> 값이
+        <span class="mono">${esc(CONFIG.PDF_DIR)}/</span> 의 파일 이름과 같아야 합니다.</div>`;
+    return;
+  }
+
+  const countOf = name => BANK.questions.filter(q=>nbMatches(q.src, name)).length;
+  el.innerHTML=`
+    <div class="page-head">
+      <div class="eyebrow">Practice</div>
+      <h2>PDF 퀴즈</h2>
+      <div class="sub">PDF 자료실의 자료를 고르면 그 내용으로 만든 개념 문제가 나옵니다.
+        코드 실행 문제가 아니라 용어·정의·사례를 확인하는 문제입니다.</div>
+    </div>
+    <div style="max-width:420px">
+      <label class="login-label">자료</label>
+      <select class="field mono" id="pq-pdf">${withBank.map(p=>
+        `<option value="${escAttr(p.path)}"${opts.preset===p.path?' selected':''}>${esc(p.name)} (${countOf(p.name)}문항)</option>`).join('')}</select>
+      <label class="login-label" style="margin-top:14px">문항 수</label>
+      <select class="field mono" id="pq-n"><option>5</option><option selected>10</option><option>15</option><option>20</option></select>
+      <label class="chk" style="margin-top:14px;font-size:13px;color:var(--ink)">
+        <input type="checkbox" id="pq-ai" ${hasWorker()?'':'disabled'}> 서술형 문제 포함 ${hasWorker()?'':'<span class="tiny">(서버 연결 필요)</span>'}
+      </label>
+      <button class="btn btn-primary" id="pq-start" style="margin-top:18px;width:100%;padding:11px">시작</button>
+      <div class="tiny" style="margin-top:10px">문제는 미리 만들어 둔 개념 문항에서 유형별로 골고루 뽑습니다.
+        최근에 푼 문항은 뒤로 미뤄집니다.</div>
+    </div>`;
+  $('#pq-start').onclick=startPdfQuiz;
+}
+
+/* PDF에서 글자만 뽑아 옵니다. 서술형 문제를 만들 때 AI에게 넘길 맥락으로 씁니다. */
+async function pdfExtractText(path, maxChars=1800){
+  const doc = await loadPdfDoc(path);
+  const from = 1 + Math.floor(Math.random() * Math.max(1, doc.numPages - 2));
+  let out='';
+  for(let n=from; n<=doc.numPages && out.length<maxChars; n++){
+    const tc = await (await doc.getPage(n)).getTextContent();
+    const t = tc.items.map(i=>i.str).join(' ').replace(/\s+/g,' ').trim();
+    if(t) out += (out?'\n\n':'') + t;
+  }
+  return out.slice(0, maxChars);
+}
+
+/* PDF 본문 일부를 맥락으로 넘겨 서술형 문제를 만듭니다. 노트북용 genEssay와 같은 저장소를 씁니다. */
+async function genEssayPdf(meta){
+  if(!hasWorker()) return null;
+  const ctx = await pdfExtractText(meta.path);
+  if(ctx.length < 120) return null;                 // 스캔본처럼 글자층이 없는 PDF
+  const j = await api('/ai',{task:'make', notebook:meta.name, context:ctx});
+  if(!j.question) return null;
+  essaySaveDraft(meta.name, j, '');
+  return {
+    type:'서술형', typeKey:'essay', mode:'essay', ai:true,
+    intro:'', stem:esc(j.question), code:j.code||'',
+    rubric:j.rubric||'', answer:j.model_answer||'', why:'AI 채점 결과입니다.'
+  };
+}
+
+async function startPdfQuiz(){
+  const path=$('#pq-pdf').value, n=+$('#pq-n').value, useAI=$('#pq-ai').checked;
+  const meta=S.pdfs.find(x=>x.path===path);
+  if(!meta) return toast('자료를 찾지 못했습니다');
+  $('#view').innerHTML=`<div class="empty"><div class="eyebrow">Preparing</div>문제를 고르는 중입니다…</div>`;
+  try{
+    await loadBank();
+    const want = useAI ? Math.max(1, n-2) : n;
+    let qs = pickFromBank(meta.name, want);
+
+    // 코드가 붙은 문항(기출 대비)은 CONFIG.BANK_VERIFY 가 켜져 있으면
+    // 노트북 퀴즈와 똑같이 브라우저에서 정답을 다시 실행해 확인합니다.
+    if(CONFIG.BANK_VERIFY && qs.some(q=>q.verifyCode)){
+      await Py.get().catch(()=>{});
+      const checked=[];
+      for(const q of qs) if(await verifyBankQuestion(q)) checked.push(q);
+      qs = checked;
+    }
+    rememberBankIds(qs);
+
+    if(useAI){
+      const need = 2;
+      const reused = essayFromBank(meta.name, need);   // 관리자가 승인해 둔 문제 먼저
+      qs.push(...reused);
+      for(let i=reused.length;i<need;i++){
+        try{ const e=await genEssayPdf(meta); if(e) qs.push(e); }
+        catch(err){ toast('서술형 생성 실패: '+err.message); break; }
+      }
+    }
+    if(!qs.length) throw new Error('이 자료에는 준비된 문제가 없습니다');
+
+    QZ={nb:{name:meta.name, path:meta.path}, src:'pdf', qs:shuffle(qs),
+        i:0, picked:null, order:[], graded:false, right:0};
+    renderQuestion();
+  }catch(e){
+    $('#view').innerHTML=`<div class="empty"><div class="eyebrow">Error</div>${esc(e.message)}
+      <div style="margin-top:14px"><button class="btn" id="pq-retry">돌아가기</button></div></div>`;
+    $('#pq-retry').onclick=()=>setView('pdfquiz');
+  }
 }
 
 /* ════════════════════════════════════════════════════════
@@ -1954,7 +2087,9 @@ function viewStats(){
   q.attempts.forEach(a=>{ const t=byType[a.type]||(byType[a.type]={n:0,ok:0}); t.n++; if(a.ok) t.ok++; });
   const TYPE_KO={blank:'빈칸',output:'출력 예측',value:'값 계산',concept:'개념',order:'순서',essay:'서술형',
     classify:'개념 분류',blank2:'빈칸(㉠㉡)',boundary:'경계값',trace:'상태 예측',
-    contrast:'대조',spec:'조건 매핑',short:'서답형'};
+    contrast:'대조',spec:'조건 매핑',short:'서답형',
+    pconcept:'개념 이해',pgroup:'보기 조합',porder:'연대 순서',pmatch:'인물·업적',
+    pclass:'개념 분류',pcase:'사례 판단',pshort:'서답형(자료)'};
 
   $('#view').innerHTML=`
     <div class="page-head"><div class="eyebrow">Progress</div><h2>${esc(S.data.user)}</h2>
@@ -1965,10 +2100,10 @@ function viewStats(){
       <div class="stat"><div class="n">${S.data.wrong.length}</div><div class="l">오답 대기</div></div>
       <div class="stat"><div class="n">${editCount}</div><div class="l">수정한 셀</div></div>
     </div>
-    <h3 class="eyebrow" style="margin:26px 0 8px">노트북별</h3>
-    ${Object.keys(q.stats).length?`<table class="tbl"><thead><tr><th>노트북</th><th>푼 문제</th><th>정답률</th></tr></thead><tbody>
+    <h3 class="eyebrow" style="margin:26px 0 8px">자료별</h3>
+    ${Object.keys(q.stats).length?`<table class="tbl"><thead><tr><th>자료</th><th>푼 문제</th><th>정답률</th></tr></thead><tbody>
       ${Object.entries(q.stats).map(([p,s])=>{const pc=Math.round(s.correct/s.asked*100);
-        return `<tr><td>${esc(p.split('/').pop().replace(/\.ipynb$/,''))}</td><td class="mono">${s.asked}</td>
+        return `<tr><td>${esc(p.split('/').pop().replace(/\.(ipynb|pdf)$/i,''))}</td><td class="mono">${s.asked}</td>
         <td><span class="mono">${pc}%</span><div class="bar"><i style="width:${pc}%;background:${pc>=70?'var(--ok)':pc>=40?'var(--run)':'var(--bad)'}"></i></div></td></tr>`;}).join('')}
       </tbody></table>`:`<div class="tiny">아직 기록이 없습니다.</div>`}
     <h3 class="eyebrow" style="margin:26px 0 8px">유형별</h3>
@@ -2457,6 +2592,7 @@ function viewHome(){
       <h3>학습</h3>
       <div class="home-grid">
         <button class="home-card" data-go="quiz"><div class="t">문제 풀기</div><div class="d">노트북 내용으로 문제를 만들어 풉니다</div></button>
+        <button class="home-card" data-go="pdfquiz"><div class="t">PDF 퀴즈</div><div class="d">PDF 자료의 개념을 문제로 확인합니다</div></button>
         <button class="home-card" data-go="wrong"><div class="t">오답 노트</div><div class="d">틀린 문제를 모아서 다시 봅니다</div></button>
         <button class="home-card" data-go="stats"><div class="t">진행 상황</div><div class="d">지금까지 푼 기록을 확인합니다</div></button>
       </div>
@@ -2472,6 +2608,7 @@ function setView(v,opts){
   if(window.innerWidth<=860) $('#side').classList.add('closed');
   if(v==='home')  return viewHome();
   if(v==='quiz')  return viewQuiz(opts);
+  if(v==='pdfquiz') return viewPdfQuiz(opts);
   if(v==='wrong') return viewWrong();
   if(v==='stats') return viewStats();
   if(v==='admin') return viewAdmin();
