@@ -1,0 +1,1725 @@
+{
+ "version": 1,
+ "generatedAt": "2026-09-16",
+ "source": [
+  "4_판다스모듈.ipynb"
+ ],
+ "verified": "verifyCode 가 있는 문항은 사이트 파이썬(Pyodide 0.27.7)과 같은 버전에서 실행해 정답을 확인함. ref 가 있는 문항은 코드로 검증할 수 없는 개념이라 노트북 본문(해당 셀)을 근거로 둠.",
+ "types": [
+  {
+   "key": "classify",
+   "label": "개념 분류",
+   "pick": [
+    1,
+    2
+   ],
+   "note": "코드를 보고 <보기>에서 옳은 설명을 모두 고르는 문항"
+  },
+  {
+   "key": "blank2",
+   "label": "빈칸",
+   "pick": [
+    1,
+    2
+   ],
+   "note": "㉠, ㉡ 두 빈칸을 짝으로 고르는 문항"
+  },
+  {
+   "key": "boundary",
+   "label": "경계값",
+   "pick": [
+    1,
+    2
+   ],
+   "note": "포함/미포함, off-by-one을 판별하는 문항"
+  },
+  {
+   "key": "trace",
+   "label": "상태 예측",
+   "pick": [
+    1,
+    2
+   ],
+   "note": "shape·size·strides·배열 구조 등 중간 상태를 예측하는 문항"
+  },
+  {
+   "key": "contrast",
+   "label": "대조",
+   "pick": [
+    1,
+    2
+   ],
+   "note": "거의 같은 두 코드의 결정적 차이를 묻는 문항"
+  },
+  {
+   "key": "spec",
+   "label": "조건 매핑",
+   "pick": [
+    1,
+    1
+   ],
+   "note": "[조건]을 만족하는 코드를 고르는 문항"
+  },
+  {
+   "key": "short",
+   "label": "서답형",
+   "pick": [
+    1,
+    1
+   ],
+   "note": "빈칸에 들어갈 코드를 직접 쓰는 문항"
+  }
+ ],
+ "questions": [
+  {
+   "id": "4C01",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "다음 코드에 대한 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) <span class=\"mono\">age.index.tolist()</span> 는 ['철수', '영희', '민수', '지연'] 이다.<br>(나) <span class=\"mono\">age.name</span> 은 '나이' 이다.<br>(다) <span class=\"mono\">age['영희']</span> 와 <span class=\"mono\">age.iloc[0]</span> 은 같은 값이다.</span>",
+   "code": "age = pd.Series([22, 38, 26, 35], index=['철수', '영희', '민수', '지연'], name='나이')\n",
+   "answer": "(가), (나)",
+   "why": "Series 는 값(values)·인덱스(index, 이름표)·이름(name) 세 요소로 이루어집니다. <span class=\"mono\">age['영희']</span> 는 이름표로 찾은 38이고, <span class=\"mono\">iloc[0]</span> 은 위치 번호 0, 즉 첫 번째 값 22라 서로 다릅니다.",
+   "tags": [
+    "Series",
+    "index",
+    "iloc"
+   ],
+   "verifyCode": "import pandas as pd\nage = pd.Series([22, 38, 26, 35], index=['철수', '영희', '민수', '지연'], name='나이')\nprint(age.index.tolist() == ['철수', '영희', '민수', '지연'], age.name == '나이', age['영희'] == age.iloc[0])",
+   "verifyExpect": "True True False",
+   "options": [
+    "(가)",
+    "(다)",
+    "(가), (나)",
+    "(가), (다)",
+    "(나), (다)"
+   ]
+  },
+  {
+   "id": "4C02",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "다음 코드에 대한 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) <span class=\"mono\">a</span> 는 Series 이다.<br>(나) <span class=\"mono\">b</span> 는 DataFrame 이다.<br>(다) <span class=\"mono\">a.mean()</span> 을 실행하면 오류가 난다.</span>",
+   "code": "df_mini = pd.DataFrame({'나이': [22, 38, 26, 35], '성별': ['남', '여', '남', '여'], '탑승등급': [3, 1, 3, 1]},\n                       index=['철수', '영희', '민수', '지연'])\na = df_mini['나이']\nb = df_mini[['나이', '성별']]",
+   "answer": "(가), (나)",
+   "why": "열 하나를 대괄호 하나로 꺼내면 1차원 Series, 열 목록을 대괄호 두 개로 꺼내면 2차원 DataFrame 입니다. 열 하나가 Series 이므로 <span class=\"mono\">mean()</span> 같은 통계 함수를 바로 쓸 수 있어 30.25가 나옵니다.",
+   "tags": [
+    "Series",
+    "DataFrame",
+    "열 선택"
+   ],
+   "verifyCode": "import pandas as pd\ndf_mini = pd.DataFrame({'나이': [22, 38, 26, 35], '성별': ['남', '여', '남', '여'], '탑승등급': [3, 1, 3, 1]},\n                       index=['철수', '영희', '민수', '지연'])\na = df_mini['나이']; b = df_mini[['나이', '성별']]\ntry:\n    a.mean(); err = True\nexcept Exception:\n    err = False\nprint(isinstance(a, pd.Series), isinstance(b, pd.DataFrame), err is False)",
+   "verifyExpect": "True True False",
+   "options": [
+    "(가)",
+    "(가), (나)",
+    "(가), (다)",
+    "(나), (다)",
+    "(가), (나), (다)"
+   ]
+  },
+  {
+   "id": "4C03",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "<span class=\"mono\">t.info()</span> 결과에 대한 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;데이터프레임 t&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">   survived  pclass     sex   age     fare embarked deck<br>0         0       3    male  22.0   7.2500        S  NaN<br>1         1       1  female  38.0  71.2833        C    C<br>2         1       3  female  26.0   7.9250        S  NaN<br>3         1       1  female  35.0  53.1000        S    C<br>4         0       3    male  35.0   8.0500        S  NaN<br>5         0       3    male   NaN   8.4583        Q  NaN</span></span><span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) age 열의 Non-Null Count 는 5이다.<br>(나) sex 열의 Dtype 은 object 이다.<br>(다) deck 열에는 결측치가 없다.</span>",
+   "code": "t.info()",
+   "answer": "(가), (나)",
+   "why": "Non-Null Count 는 비어 있지 않은 값의 개수라 전체 행 수(6)보다 작으면 결측치가 있다는 뜻입니다. age 는 1개가 비어 5, deck 은 4개가 비어 2입니다. 문자 열의 Dtype 은 object 로 표시됩니다.",
+   "tags": [
+    "info",
+    "Non-Null Count",
+    "dtype"
+   ],
+   "verifyCode": "import pandas as pd\nt = pd.DataFrame({'survived': [0, 1, 1, 1, 0, 0], 'pclass': [3, 1, 3, 1, 3, 3],\n                  'sex': ['male', 'female', 'female', 'female', 'male', 'male'],\n                  'age': [22.0, 38.0, 26.0, 35.0, 35.0, np.nan],\n                  'fare': [7.25, 71.2833, 7.925, 53.1, 8.05, 8.4583],\n                  'embarked': ['S', 'C', 'S', 'S', 'S', 'Q'],\n                  'deck': [np.nan, 'C', np.nan, 'C', np.nan, np.nan]})\nprint(t['age'].notnull().sum() == 5, t['sex'].dtype == object, t['deck'].isnull().sum() == 0)",
+   "verifyExpect": "True True False",
+   "options": [
+    "(가)",
+    "(나)",
+    "(다)",
+    "(가), (나)",
+    "(가), (나), (다)"
+   ]
+  },
+  {
+   "id": "4C04",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "<span class=\"mono\">t.describe()</span> 결과에 대한 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;데이터프레임 t&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">   survived  pclass     sex   age     fare embarked deck<br>0         0       3    male  22.0   7.2500        S  NaN<br>1         1       1  female  38.0  71.2833        C    C<br>2         1       3  female  26.0   7.9250        S  NaN<br>3         1       1  female  35.0  53.1000        S    C<br>4         0       3    male  35.0   8.0500        S  NaN<br>5         0       3    male   NaN   8.4583        Q  NaN</span></span><span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) 결과에는 sex 열이 들어 있지 않다.<br>(나) age 열의 count 는 6이다.<br>(다) 결과의 행 이름에 25%, 50%, 75% 가 있다.</span>",
+   "code": "t.describe()",
+   "answer": "(가), (다)",
+   "why": "<span class=\"mono\">describe()</span> 는 수치형 열만 요약하므로 문자 열 sex 는 빠집니다(문자 열은 <span class=\"mono\">include='object'</span>). count 는 결측치를 빼고 세므로 age 는 5이고, 사분위수 25%·50%·75% 가 함께 나옵니다.",
+   "tags": [
+    "describe",
+    "count"
+   ],
+   "verifyCode": "import pandas as pd\nt = pd.DataFrame({'survived': [0, 1, 1, 1, 0, 0], 'pclass': [3, 1, 3, 1, 3, 3],\n                  'sex': ['male', 'female', 'female', 'female', 'male', 'male'],\n                  'age': [22.0, 38.0, 26.0, 35.0, 35.0, np.nan],\n                  'fare': [7.25, 71.2833, 7.925, 53.1, 8.05, 8.4583],\n                  'embarked': ['S', 'C', 'S', 'S', 'S', 'Q'],\n                  'deck': [np.nan, 'C', np.nan, 'C', np.nan, np.nan]})\nd = t.describe()\nprint('sex' not in d.columns, d.loc['count', 'age'] == 6, all(k in d.index for k in ['25%', '50%', '75%']))",
+   "verifyExpect": "True False True",
+   "options": [
+    "(가)",
+    "(나)",
+    "(다)",
+    "(가), (나)",
+    "(가), (다)"
+   ]
+  },
+  {
+   "id": "4C05",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "다음 코드에 대한 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) <span class=\"mono\">s.unique()</span> 에는 결측값(nan)도 들어 있다.<br>(나) <span class=\"mono\">s.nunique()</span> 는 4이다.<br>(다) <span class=\"mono\">s.value_counts()</span> 의 첫 번째 값은 3이다.</span>",
+   "code": "s = pd.Series(['S', 'C', 'S', 'Q', np.nan, 'S'])",
+   "answer": "(가), (다)",
+   "why": "<span class=\"mono\">unique()</span> 는 값의 종류를 결측값까지 보여 주지만, <span class=\"mono\">nunique()</span> 는 결측값을 빼고 종류 수를 세어 3입니다. <span class=\"mono\">value_counts()</span> 는 개수가 많은 순서로 정렬되므로 S 의 개수 3이 맨 앞입니다.",
+   "tags": [
+    "unique",
+    "nunique",
+    "value_counts"
+   ],
+   "verifyCode": "import pandas as pd\ns = pd.Series(['S', 'C', 'S', 'Q', np.nan, 'S'])\nprint(bool(pd.isna(s.unique()).any()), s.nunique() == 4, s.value_counts().iloc[0] == 3)",
+   "verifyExpect": "True False True",
+   "options": [
+    "(나)",
+    "(다)",
+    "(가), (다)",
+    "(나), (다)",
+    "(가), (나), (다)"
+   ]
+  },
+  {
+   "id": "4C06",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "다음 코드에 대한 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) <span class=\"mono\">m.isnull().sum().sum()</span> 는 표 전체의 결측값 개수 5이다.<br>(나) <span class=\"mono\">m.isnull().any(axis=1).sum()</span> 는 결측이 하나라도 있는 행의 수 4이다.<br>(다) <span class=\"mono\">m.isnull().sum()</span> 의 길이는 행의 개수와 같다.</span>",
+   "code": "m = pd.DataFrame({'age': [22, np.nan, np.nan, 35],\n                  'deck': [np.nan, 'C', np.nan, np.nan]})",
+   "answer": "(가), (나)",
+   "why": "<span class=\"mono\">isnull().sum()</span> 은 열마다 결측 개수를 세므로 길이는 열 개수(2)입니다. 한 번 더 <span class=\"mono\">sum()</span> 하면 전체 개수 2 + 3 = 5 입니다. <span class=\"mono\">any(axis=1)</span> 은 행마다 가로로 훑어 하나라도 True 인지 보므로, 네 행 모두 결측이 있어 4입니다.",
+   "tags": [
+    "isnull",
+    "any",
+    "axis"
+   ],
+   "verifyCode": "import pandas as pd\nm = pd.DataFrame({'age': [22, np.nan, np.nan, 35], 'deck': [np.nan, 'C', np.nan, np.nan]})\nprint(m.isnull().sum().sum() == 5, m.isnull().any(axis=1).sum() == 4, len(m.isnull().sum()) == len(m))",
+   "verifyExpect": "True True False",
+   "options": [
+    "(가)",
+    "(나)",
+    "(다)",
+    "(가), (나)",
+    "(가), (다)"
+   ]
+  },
+  {
+   "id": "4C07",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "다음 코드에 대한 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은? (df 의 age 열에는 결측치가 1개 있다)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) <span class=\"mono\">df1</span> 과 <span class=\"mono\">df</span> 는 같은 객체를 가리킨다.<br>(나) 실행 후 <span class=\"mono\">df</span> 의 age 결측치는 0개다.<br>(다) 실행 후 <span class=\"mono\">df2</span> 의 age 결측치도 0개다.</span>",
+   "code": "df1 = df\ndf2 = df.copy()\ndf1['age'] = df1['age'].fillna(0)",
+   "answer": "(가), (나)",
+   "why": "<span class=\"mono\">df1 = df</span> 는 복사가 아니라 같은 표에 이름을 하나 더 붙인 것이라 df1 을 고치면 df 도 바뀝니다. <span class=\"mono\">copy()</span> 로 만든 df2 는 따로 떨어진 복사본이라 결측치가 그대로 남습니다. 노트북이 처리 방법을 비교할 때 <span class=\"mono\">copy()</span> 를 쓰는 이유입니다.",
+   "tags": [
+    "copy",
+    "원본 보존"
+   ],
+   "verifyCode": "import pandas as pd\ndf = pd.DataFrame({'age': [22.0, np.nan, 26.0]})\ndf1 = df\ndf2 = df.copy()\ndf1['age'] = df1['age'].fillna(0)\nprint(df1 is df, df['age'].isnull().sum() == 0, df2['age'].isnull().sum() == 0)",
+   "verifyExpect": "True True False",
+   "options": [
+    "(나)",
+    "(가), (나)",
+    "(가), (다)",
+    "(나), (다)",
+    "(가), (나), (다)"
+   ]
+  },
+  {
+   "id": "4C08",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "다음 코드에 대한 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;데이터프레임 t&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">   survived  pclass     sex   age     fare embarked deck<br>0         0       3    male  22.0   7.2500        S  NaN<br>1         1       1  female  38.0  71.2833        C    C<br>2         1       3  female  26.0   7.9250        S  NaN<br>3         1       1  female  35.0  53.1000        S    C<br>4         0       3    male  35.0   8.0500        S  NaN<br>5         0       3    male   NaN   8.4583        Q  NaN</span></span><span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) <span class=\"mono\">g1</span> 의 길이는 성별 종류 수(2)이다.<br>(나) <span class=\"mono\">g2</span> 의 길이는 t 의 행 수(6)와 같다.<br>(다) <span class=\"mono\">g2</span> 에는 결측치가 남아 있다.</span>",
+   "code": "g1 = t.groupby('sex')['age'].mean()\ng2 = t.groupby('sex')['age'].transform(lambda x: x.fillna(x.mean()))",
+   "answer": "(가), (나)",
+   "why": "<span class=\"mono\">groupby(...).mean()</span> 은 그룹마다 값 하나로 줄어들어 성별 수만큼 나옵니다. <span class=\"mono\">transform</span> 은 그룹 단위로 계산하되 원래 행 자리에 결과를 돌려주므로 행 수가 유지되고, 각 그룹 평균으로 결측치를 채워 남는 결측이 없습니다.",
+   "tags": [
+    "groupby",
+    "transform",
+    "fillna"
+   ],
+   "verifyCode": "import pandas as pd\nt = pd.DataFrame({'survived': [0, 1, 1, 1, 0, 0], 'pclass': [3, 1, 3, 1, 3, 3],\n                  'sex': ['male', 'female', 'female', 'female', 'male', 'male'],\n                  'age': [22.0, 38.0, 26.0, 35.0, 35.0, np.nan],\n                  'fare': [7.25, 71.2833, 7.925, 53.1, 8.05, 8.4583],\n                  'embarked': ['S', 'C', 'S', 'S', 'S', 'Q'],\n                  'deck': [np.nan, 'C', np.nan, 'C', np.nan, np.nan]})\ng1 = t.groupby('sex')['age'].mean()\ng2 = t.groupby('sex')['age'].transform(lambda x: x.fillna(x.mean()))\nprint(len(g1) == 2, len(g2) == len(t), g2.isnull().sum() > 0)",
+   "verifyExpect": "True True False",
+   "options": [
+    "(가)",
+    "(다)",
+    "(가), (나)",
+    "(나), (다)",
+    "(가), (나), (다)"
+   ]
+  },
+  {
+   "id": "4C09",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "다음 코드에 대한 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;데이터프레임 t&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">   survived  pclass     sex   age     fare embarked deck<br>0         0       3    male  22.0   7.2500        S  NaN<br>1         1       1  female  38.0  71.2833        C    C<br>2         1       3  female  26.0   7.9250        S  NaN<br>3         1       1  female  35.0  53.1000        S    C<br>4         0       3    male  35.0   8.0500        S  NaN<br>5         0       3    male   NaN   8.4583        Q  NaN</span></span><span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) <span class=\"mono\">a</span> 는 결측이 하나라도 있는 행을 모두 지운 결과다.<br>(나) <span class=\"mono\">b</span> 는 age 가 비어 있는 행만 지운 결과다.<br>(다) <span class=\"mono\">c</span> 는 deck 이 비어 있는 행을 지운 결과다.</span>",
+   "code": "a = t.dropna()\nb = t.dropna(subset=['age'])\nc = t.drop(columns=['deck'])",
+   "answer": "(가), (나)",
+   "why": "<span class=\"mono\">dropna()</span> 는 어느 열이든 결측이 있으면 그 행을 지워 6행 중 2행만 남습니다. <span class=\"mono\">subset</span> 을 주면 그 열만 기준으로 봅니다. <span class=\"mono\">drop(columns=['deck'])</span> 는 행이 아니라 deck 열 자체를 지우므로 행은 6개 그대로입니다.",
+   "tags": [
+    "dropna",
+    "subset",
+    "drop"
+   ],
+   "verifyCode": "import pandas as pd\nt = pd.DataFrame({'survived': [0, 1, 1, 1, 0, 0], 'pclass': [3, 1, 3, 1, 3, 3],\n                  'sex': ['male', 'female', 'female', 'female', 'male', 'male'],\n                  'age': [22.0, 38.0, 26.0, 35.0, 35.0, np.nan],\n                  'fare': [7.25, 71.2833, 7.925, 53.1, 8.05, 8.4583],\n                  'embarked': ['S', 'C', 'S', 'S', 'S', 'Q'],\n                  'deck': [np.nan, 'C', np.nan, 'C', np.nan, np.nan]})\na = t.dropna(); b = t.dropna(subset=['age']); c = t.drop(columns=['deck'])\nprint(len(a) == 2 and bool(a.notnull().all().all()), len(b) == 5 and bool(b['age'].notnull().all()), len(c) == t['deck'].notnull().sum())",
+   "verifyExpect": "True True False",
+   "options": [
+    "(가)",
+    "(가), (나)",
+    "(가), (다)",
+    "(나), (다)",
+    "(가), (나), (다)"
+   ]
+  },
+  {
+   "id": "4C10",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "같은 내용을 CSV 파일과 엑셀 파일로 배포하는 경우에 대한 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) CSV 는 가볍고 어떤 프로그램에서나 열린다.<br>(나) 엑셀은 서식과 여러 시트를 담을 수 있다.<br>(다) 엑셀이 CSV 보다 가벼워서 공개 데이터셋은 대부분 엑셀로 배포된다.</span>",
+   "code": "",
+   "answer": "(가), (나)",
+   "why": "노트북 설명대로 CSV 는 가볍고 범용성이 높으며, 엑셀은 서식·여러 시트를 담을 수 있지만 무겁습니다. 그래서 AI 연구용 공개 데이터셋은 대부분 CSV 입니다.",
+   "tags": [
+    "CSV",
+    "엑셀"
+   ],
+   "ref": "셀 [19] 두 방법 비교",
+   "options": [
+    "(가)",
+    "(나)",
+    "(다)",
+    "(가), (나)",
+    "(가), (다)"
+   ]
+  },
+  {
+   "id": "4B01",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "㉠, ㉡에 들어갈 것으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">철수    22<br>영희    38<br>Name: 나이, dtype: int64</span></span>",
+   "code": "age = pd.Series([22, 38], ㉠=['철수', '영희'], ㉡='나이')\nprint(age)",
+   "answer": "㉠ index  ·  ㉡ name",
+   "why": "Series 의 이름표는 <span class=\"mono\">index</span>, Series 자체의 이름은 <span class=\"mono\">name</span> 으로 지정합니다. 출력 맨 아래의 Name: 나이 가 name 입니다. <span class=\"mono\">columns</span> 는 DataFrame 의 열 이름을 정할 때 씁니다.",
+   "tags": [
+    "Series",
+    "index",
+    "name"
+   ],
+   "verifyCode": "import pandas as pd\nage = pd.Series([22, 38], index=['철수', '영희'], name='나이')\nprint(age)",
+   "verifyExpect": "철수    22\n영희    38\nName: 나이, dtype: int64",
+   "options": [
+    "㉠ name  ·  ㉡ index",
+    "㉠ index  ·  ㉡ name",
+    "㉠ columns  ·  ㉡ name",
+    "㉠ index  ·  ㉡ title",
+    "㉠ label  ·  ㉡ name"
+   ]
+  },
+  {
+   "id": "4B02",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "㉠, ㉡에 들어갈 것으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">(2, 2) ['철수', '영희']</span></span>",
+   "code": "d = {'나이': [22, 38], '성별': ['남', '여']}\nnames = ['철수', '영희']\ndf_mini = pd.DataFrame(㉠, index=㉡)\nprint(df_mini.shape, df_mini.index.tolist())",
+   "answer": "㉠ d  ·  ㉡ names",
+   "why": "딕셔너리로 DataFrame 을 만들면 키가 열 이름, 값 리스트가 각 열의 데이터가 됩니다. 행 이름표는 <span class=\"mono\">index=</span> 로 따로 줍니다. <span class=\"mono\">['나이', '성별']</span> 을 index 로 주면 행 이름이 열 이름과 같아질 뿐 출력과 다릅니다.",
+   "tags": [
+    "DataFrame",
+    "딕셔너리"
+   ],
+   "verifyCode": "import pandas as pd\nd = {'나이': [22, 38], '성별': ['남', '여']}\nnames = ['철수', '영희']\ndf_mini = pd.DataFrame(d, index=names)\nprint(df_mini.shape, df_mini.index.tolist())",
+   "verifyExpect": "(2, 2) ['철수', '영희']",
+   "options": [
+    "㉠ names  ·  ㉡ d",
+    "㉠ [d]  ·  ㉡ names",
+    "㉠ d  ·  ㉡ names",
+    "㉠ d  ·  ㉡ ['나이', '성별']",
+    "㉠ d.keys()  ·  ㉡ names"
+   ]
+  },
+  {
+   "id": "4B03",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "필요한 열과 행만 읽으려고 한다. ㉠, ㉡에 들어갈 것으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">(10, 3)</span></span>",
+   "code": "df_part = pd.read_csv('titanic.csv', ㉠=['survived', 'sex', 'age'], ㉡=10)\nprint(df_part.shape)",
+   "answer": "㉠ usecols  ·  ㉡ nrows",
+   "why": "<span class=\"mono\">usecols</span> 는 읽을 열, <span class=\"mono\">nrows</span> 는 읽을 행 수입니다. 대용량 파일에서 필요한 부분만 읽을 때 씁니다. <span class=\"mono\">skiprows=10</span> 은 앞 10행을 건너뛰는 옵션이라 결과 행 수가 달라집니다.",
+   "tags": [
+    "read_csv",
+    "usecols",
+    "nrows"
+   ],
+   "verifyCode": "import pandas as pd\nimport os, tempfile\nf = os.path.join(tempfile.gettempdir(), 'titanic.csv')\npd.DataFrame({'survived': range(20), 'pclass': 3, 'sex': 'male', 'age': 22.0, 'fare': 7.25}).to_csv(f, index=False)\ndf_part = pd.read_csv(f, usecols=['survived', 'sex', 'age'], nrows=10)\nprint(df_part.shape)",
+   "verifyExpect": "(10, 3)",
+   "options": [
+    "㉠ columns  ·  ㉡ nrows",
+    "㉠ usecols  ·  ㉡ head",
+    "㉠ cols  ·  ㉡ nrows",
+    "㉠ usecols  ·  ㉡ skiprows",
+    "㉠ usecols  ·  ㉡ nrows"
+   ]
+  },
+  {
+   "id": "4B04",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "등급은 오름차순, 같은 등급에서는 나이 내림차순으로 정렬하려고 한다. ㉠, ㉡에 들어갈 것으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">[1, 3, 2, 0]</span></span>",
+   "code": "p = pd.DataFrame({'pclass': [3, 1, 3, 1], 'age': [22, 38, 26, 35]})\nprint(p.sort_values(㉠, ascending=㉡).index.tolist())",
+   "answer": "㉠ ['pclass', 'age']  ·  ㉡ [True, False]",
+   "why": "정렬 기준 목록의 앞쪽이 먼저 적용되고, <span class=\"mono\">ascending</span> 목록은 기준과 같은 순서로 짝지어집니다. 등급 1인 행(1, 3)을 나이 38 → 35 순으로, 등급 3인 행(2, 0)을 26 → 22 순으로 놓아 [1, 3, 2, 0] 이 됩니다.",
+   "tags": [
+    "sort_values",
+    "ascending"
+   ],
+   "verifyCode": "import pandas as pd\np = pd.DataFrame({'pclass': [3, 1, 3, 1], 'age': [22, 38, 26, 35]})\nprint(p.sort_values(['pclass', 'age'], ascending=[True, False]).index.tolist())",
+   "verifyExpect": "[1, 3, 2, 0]",
+   "options": [
+    "㉠ ['age', 'pclass']  ·  ㉡ [True, False]",
+    "㉠ ['pclass', 'age']  ·  ㉡ [False, True]",
+    "㉠ ['pclass', 'age']  ·  ㉡ False",
+    "㉠ ['pclass', 'age']  ·  ㉡ True",
+    "㉠ ['pclass', 'age']  ·  ㉡ [True, False]"
+   ]
+  },
+  {
+   "id": "4B05",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "㉠, ㉡에 들어갈 것으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">male      0.6<br>female    0.4<br>Name: proportion, dtype: float64</span></span>",
+   "code": "sex = pd.Series(['male', 'female', 'male', 'male', 'female'])\nprint(sex.㉠(㉡=True))",
+   "answer": "㉠ value_counts  ·  ㉡ normalize",
+   "why": "<span class=\"mono\">value_counts(normalize=True)</span> 는 개수 대신 전체 대비 비율을 돌려주고, 이름이 proportion 으로 표시됩니다. 5명 중 male 3명이라 0.6입니다.",
+   "tags": [
+    "value_counts",
+    "normalize"
+   ],
+   "verifyCode": "import pandas as pd\nsex = pd.Series(['male', 'female', 'male', 'male', 'female'])\nprint(sex.value_counts(normalize=True))",
+   "verifyExpect": "male      0.6\nfemale    0.4\nName: proportion, dtype: float64",
+   "options": [
+    "㉠ value_counts  ·  ㉡ normalize",
+    "㉠ value_counts  ·  ㉡ ascending",
+    "㉠ unique  ·  ㉡ normalize",
+    "㉠ count  ·  ㉡ normalize",
+    "㉠ value_counts  ·  ㉡ sort"
+   ]
+  },
+  {
+   "id": "4B06",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "㉠, ㉡에 들어갈 것으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">['survived', 'sex', 'age'] 3</span></span>",
+   "code": "df_part = pd.DataFrame({'survived': [0, 1], 'sex': ['male', 'female'], 'age': [22.0, 38.0]})\nprint(df_part.㉠.tolist(), df_part.㉡[1])",
+   "answer": "㉠ columns  ·  ㉡ shape",
+   "why": "<span class=\"mono\">columns</span> 는 열 이름 목록이고, <span class=\"mono\">shape</span> 는 (행 수, 열 수) 튜플이라 <span class=\"mono\">[1]</span> 이 열 수 3입니다. <span class=\"mono\">index</span> 는 행 이름표 [0, 1], <span class=\"mono\">size</span> 는 전체 칸 수 6이라 인덱스를 붙일 수 없습니다.",
+   "tags": [
+    "columns",
+    "shape"
+   ],
+   "verifyCode": "import pandas as pd\ndf_part = pd.DataFrame({'survived': [0, 1], 'sex': ['male', 'female'], 'age': [22.0, 38.0]})\nprint(df_part.columns.tolist(), df_part.shape[1])",
+   "verifyExpect": "['survived', 'sex', 'age'] 3",
+   "options": [
+    "㉠ index  ·  ㉡ shape",
+    "㉠ columns  ·  ㉡ size",
+    "㉠ values  ·  ㉡ shape",
+    "㉠ columns  ·  ㉡ ndim",
+    "㉠ columns  ·  ㉡ shape"
+   ]
+  },
+  {
+   "id": "4B07",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "같은 성별의 평균 나이로 결측치를 채우려고 한다. ㉠, ㉡에 들어갈 것으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;데이터프레임 t&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">   survived  pclass     sex   age     fare embarked deck<br>0         0       3    male  22.0   7.2500        S  NaN<br>1         1       1  female  38.0  71.2833        C    C<br>2         1       3  female  26.0   7.9250        S  NaN<br>3         1       1  female  35.0  53.1000        S    C<br>4         0       3    male  35.0   8.0500        S  NaN<br>5         0       3    male   NaN   8.4583        Q  NaN</span></span><span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">[22.0, 38.0, 26.0, 35.0, 35.0, 28.5]</span></span>",
+   "code": "t['age'] = t.groupby('sex')['age'].㉠(lambda x: x.㉡(x.mean()))\nprint(t['age'].tolist())",
+   "answer": "㉠ transform  ·  ㉡ fillna",
+   "why": "<span class=\"mono\">transform</span> 은 그룹마다 함수를 적용한 결과를 원래 행 위치에 돌려줘 그대로 열에 대입할 수 있습니다. 남성의 나이 22, 35의 평균 28.5로 5번 행을 <span class=\"mono\">fillna</span> 로 채웁니다. <span class=\"mono\">dropna</span> 는 채우는 것이 아니라 지웁니다.",
+   "tags": [
+    "groupby",
+    "transform",
+    "fillna"
+   ],
+   "verifyCode": "import pandas as pd\nt = pd.DataFrame({'survived': [0, 1, 1, 1, 0, 0], 'pclass': [3, 1, 3, 1, 3, 3],\n                  'sex': ['male', 'female', 'female', 'female', 'male', 'male'],\n                  'age': [22.0, 38.0, 26.0, 35.0, 35.0, np.nan],\n                  'fare': [7.25, 71.2833, 7.925, 53.1, 8.05, 8.4583],\n                  'embarked': ['S', 'C', 'S', 'S', 'S', 'Q'],\n                  'deck': [np.nan, 'C', np.nan, 'C', np.nan, np.nan]})\nt['age'] = t.groupby('sex')['age'].transform(lambda x: x.fillna(x.mean()))\nprint(t['age'].tolist())",
+   "verifyExpect": "[22.0, 38.0, 26.0, 35.0, 35.0, 28.5]",
+   "options": [
+    "㉠ mean  ·  ㉡ fillna",
+    "㉠ transform  ·  ㉡ fillna",
+    "㉠ transform  ·  ㉡ dropna",
+    "㉠ agg  ·  ㉡ fillna",
+    "㉠ apply  ·  ㉡ dropna"
+   ]
+  },
+  {
+   "id": "4B08",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "age 가 비어 있는 행을 지우고 결측이 많은 deck 열을 없애려고 한다. ㉠, ㉡에 들어갈 것으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;데이터프레임 t&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">   survived  pclass     sex   age     fare embarked deck<br>0         0       3    male  22.0   7.2500        S  NaN<br>1         1       1  female  38.0  71.2833        C    C<br>2         1       3  female  26.0   7.9250        S  NaN<br>3         1       1  female  35.0  53.1000        S    C<br>4         0       3    male  35.0   8.0500        S  NaN<br>5         0       3    male   NaN   8.4583        Q  NaN</span></span><span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">(5, 6)</span></span>",
+   "code": "c = t.㉠(subset=['age']).㉡(columns=['deck'])\nprint(c.shape)",
+   "answer": "㉠ dropna  ·  ㉡ drop",
+   "why": "<span class=\"mono\">dropna(subset=['age'])</span> 가 age 결측 행 1개를 지워 5행, <span class=\"mono\">drop(columns=['deck'])</span> 가 열 하나를 지워 6열이 됩니다. <span class=\"mono\">dropna</span> 에는 columns 옵션이 없고, <span class=\"mono\">fillna</span> 는 행을 지우지 않습니다.",
+   "tags": [
+    "dropna",
+    "drop"
+   ],
+   "verifyCode": "import pandas as pd\nt = pd.DataFrame({'survived': [0, 1, 1, 1, 0, 0], 'pclass': [3, 1, 3, 1, 3, 3],\n                  'sex': ['male', 'female', 'female', 'female', 'male', 'male'],\n                  'age': [22.0, 38.0, 26.0, 35.0, 35.0, np.nan],\n                  'fare': [7.25, 71.2833, 7.925, 53.1, 8.05, 8.4583],\n                  'embarked': ['S', 'C', 'S', 'S', 'S', 'Q'],\n                  'deck': [np.nan, 'C', np.nan, 'C', np.nan, np.nan]})\nc = t.dropna(subset=['age']).drop(columns=['deck'])\nprint(c.shape)",
+   "verifyExpect": "(5, 6)",
+   "options": [
+    "㉠ drop  ·  ㉡ dropna",
+    "㉠ dropna  ·  ㉡ dropna",
+    "㉠ fillna  ·  ㉡ drop",
+    "㉠ isnull  ·  ㉡ drop",
+    "㉠ dropna  ·  ㉡ drop"
+   ]
+  },
+  {
+   "id": "4B09",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "범주형 열의 최빈값을 구하려고 한다. ㉠, ㉡에 들어갈 것으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">S</span></span>",
+   "code": "s = pd.Series(['S', 'C', 'S', 'Q', np.nan, 'S'])\nprint(s.㉠()[㉡])",
+   "answer": "㉠ mode  ·  ㉡ 0",
+   "why": "<span class=\"mono\">mode()</span> 는 최빈값이 여러 개일 수 있어 Series 로 돌려주므로 <span class=\"mono\">[0]</span> 으로 첫 번째 값을 꺼냅니다. 문자열에는 평균이 없어 <span class=\"mono\">mean()</span> 은 오류가 나고, <span class=\"mono\">max()</span> 는 사전순으로 가장 뒤인 값이지 가장 많이 나온 값이 아닙니다.",
+   "tags": [
+    "mode",
+    "최빈값"
+   ],
+   "verifyCode": "import pandas as pd\ns = pd.Series(['S', 'C', 'S', 'Q', np.nan, 'S'])\nprint(s.mode()[0])",
+   "verifyExpect": "S",
+   "options": [
+    "㉠ mode  ·  ㉡ 0",
+    "㉠ mode  ·  ㉡ 1",
+    "㉠ max  ·  ㉡ 0",
+    "㉠ mean  ·  ㉡ 0",
+    "㉠ value_counts  ·  ㉡ 0"
+   ]
+  },
+  {
+   "id": "4B10",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "㉠, ㉡에 들어갈 것으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;데이터프레임 t&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">   survived  pclass     sex   age     fare embarked deck<br>0         0       3    male  22.0   7.2500        S  NaN<br>1         1       1  female  38.0  71.2833        C    C<br>2         1       3  female  26.0   7.9250        S  NaN<br>3         1       1  female  35.0  53.1000        S    C<br>4         0       3    male  35.0   8.0500        S  NaN<br>5         0       3    male   NaN   8.4583        Q  NaN</span></span><span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">[5] 5</span></span>",
+   "code": "print(t[t['age'].㉠()].index.tolist(), t['age'].㉡())",
+   "answer": "㉠ isnull  ·  ㉡ count",
+   "why": "<span class=\"mono\">t[t['age'].isnull()]</span> 는 age 가 비어 있는 행만 고르는 불리언 인덱싱으로 5번 행이 나옵니다. <span class=\"mono\">count()</span> 는 결측을 빼고 값이 있는 개수를 세어 5입니다. <span class=\"mono\">notnull</span> 이면 0~4번 행이 나오고, <span class=\"mono\">sum()</span> 은 나이의 합계입니다.",
+   "tags": [
+    "불리언 인덱싱",
+    "count"
+   ],
+   "verifyCode": "import pandas as pd\nt = pd.DataFrame({'survived': [0, 1, 1, 1, 0, 0], 'pclass': [3, 1, 3, 1, 3, 3],\n                  'sex': ['male', 'female', 'female', 'female', 'male', 'male'],\n                  'age': [22.0, 38.0, 26.0, 35.0, 35.0, np.nan],\n                  'fare': [7.25, 71.2833, 7.925, 53.1, 8.05, 8.4583],\n                  'embarked': ['S', 'C', 'S', 'S', 'S', 'Q'],\n                  'deck': [np.nan, 'C', np.nan, 'C', np.nan, np.nan]})\nprint(t[t['age'].isnull()].index.tolist(), t['age'].count())",
+   "verifyExpect": "[5] 5",
+   "options": [
+    "㉠ notnull  ·  ㉡ count",
+    "㉠ isnull  ·  ㉡ sum",
+    "㉠ dropna  ·  ㉡ count",
+    "㉠ isnull  ·  ㉡ count",
+    "㉠ notnull  ·  ㉡ sum"
+   ]
+  },
+  {
+   "id": "4D01",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은? (titanic.csv 는 20행짜리 파일)",
+   "code": "df_part = pd.read_csv('titanic.csv', nrows=10)\nprint(df_part.index[-1])",
+   "answer": "9",
+   "why": "<span class=\"mono\">nrows=10</span> 은 데이터 10행만 읽고, 인덱스는 0부터 붙으므로 마지막 인덱스는 9입니다. 제목 줄은 행으로 세지 않습니다.",
+   "tags": [
+    "read_csv",
+    "nrows",
+    "인덱스"
+   ],
+   "verifyCode": "import pandas as pd\nimport os, tempfile\nf = os.path.join(tempfile.gettempdir(), 'titanic.csv')\npd.DataFrame({'survived': range(20), 'pclass': 3, 'sex': 'male', 'age': 22.0, 'fare': 7.25}).to_csv(f, index=False)\ndf_part = pd.read_csv(f, nrows=10)\nprint(df_part.index[-1])",
+   "verifyExpect": "9",
+   "options": [
+    "10",
+    "11",
+    "19",
+    "9",
+    "8"
+   ]
+  },
+  {
+   "id": "4D02",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "891행인 DataFrame 에서 <span class=\"mono\">df.tail(3).index.tolist()</span> 의 결과는?",
+   "code": "",
+   "answer": "[888, 889, 890]",
+   "why": "인덱스는 0부터 890까지입니다. <span class=\"mono\">tail(3)</span> 은 뒤에서 3행이라 888, 889, 890 이고 891 은 없는 인덱스입니다.",
+   "tags": [
+    "tail",
+    "인덱스"
+   ],
+   "verifyCode": "import pandas as pd\nprint(pd.DataFrame({'a': range(891)}).tail(3).index.tolist())",
+   "verifyExpect": "[888, 889, 890]",
+   "options": [
+    "[889, 890, 891]",
+    "[888, 889, 890]",
+    "[888, 889, 890, 891]",
+    "[887, 888, 889]",
+    "[0, 1, 2]"
+   ]
+  },
+  {
+   "id": "4D03",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "m2 = pd.DataFrame({'a': [1, 2, 3], 'b': [np.nan, np.nan, np.nan]})\nprint((m2.isnull().mean() * 100).tolist())",
+   "answer": "[0.0, 100.0]",
+   "why": "<span class=\"mono\">isnull().mean()</span> 은 True 를 1로 보고 평균을 내므로 결측 비율(0~1)이 됩니다. 결측이 없으면 0, 모두 결측이면 1이고 100을 곱하면 백분율입니다. 300은 개수(<span class=\"mono\">sum</span>)에 100을 곱한 착각입니다.",
+   "tags": [
+    "isnull",
+    "결측 비율"
+   ],
+   "verifyCode": "import pandas as pd\nm2 = pd.DataFrame({'a': [1, 2, 3], 'b': [np.nan, np.nan, np.nan]})\nprint((m2.isnull().mean() * 100).tolist())",
+   "verifyExpect": "[0.0, 100.0]",
+   "options": [
+    "[0.0, 3.0]",
+    "[0, 1]",
+    "[100.0, 0.0]",
+    "[0.0, 300.0]",
+    "[0.0, 100.0]"
+   ]
+  },
+  {
+   "id": "4D04",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "a = pd.Series([22, np.nan, 26, 35, np.nan])\nprint(a.describe()['count'], len(a))",
+   "answer": "3.0 5",
+   "why": "<span class=\"mono\">describe()</span> 의 count 는 결측을 뺀 개수라 3.0(실수로 표시)이고, <span class=\"mono\">len</span> 은 결측까지 포함한 전체 길이 5입니다. 노트북 타이타닉 데이터에서 age 의 count 가 891이 아니라 714인 이유와 같습니다.",
+   "tags": [
+    "describe",
+    "count"
+   ],
+   "verifyCode": "import pandas as pd\na = pd.Series([22, np.nan, 26, 35, np.nan])\nprint(a.describe()['count'], len(a))",
+   "verifyExpect": "3.0 5",
+   "options": [
+    "5.0 5",
+    "3.0 3",
+    "5.0 3",
+    "2.0 5",
+    "3.0 5"
+   ]
+  },
+  {
+   "id": "4D05",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "891행 중 177개가 비어 있는 열의 결측 비율(%)을 <span class=\"mono\">round(1)</span> 로 나타낸 값은?",
+   "code": "",
+   "answer": "19.9",
+   "why": "177 ÷ 891 × 100 = 19.865… 이고 소수 첫째 자리까지 반올림하면 19.9입니다. 0.2는 100을 곱하지 않은 비율, 177은 개수 자체입니다.",
+   "tags": [
+    "결측 비율",
+    "round"
+   ],
+   "verifyCode": "print(round(177 / 891 * 100, 1))",
+   "verifyExpect": "19.9",
+   "options": [
+    "19.8",
+    "19.9",
+    "20.0",
+    "0.2",
+    "177.0"
+   ]
+  },
+  {
+   "id": "4D06",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "891행 데이터에서 <span class=\"mono\">df.isnull().any(axis=1).sum()</span> 이 709였다. <span class=\"mono\">len(df.dropna())</span> 의 값은?",
+   "code": "",
+   "answer": "182",
+   "why": "<span class=\"mono\">dropna()</span> 는 결측이 하나라도 있는 행을 전부 지웁니다. 그런 행이 709개이므로 891 − 709 = 182행이 남습니다. 714는 age 만 기준으로 지웠을 때(<span class=\"mono\">subset</span>)의 행 수입니다.",
+   "tags": [
+    "dropna",
+    "any"
+   ],
+   "verifyCode": "import pandas as pd\ndf = pd.DataFrame({'x': [np.nan] * 709 + [1.0] * 182})\nprint(len(df.dropna())) if df.isnull().any(axis=1).sum() == 709 else None",
+   "verifyExpect": "182",
+   "options": [
+    "182",
+    "709",
+    "891",
+    "714",
+    "0"
+   ]
+  },
+  {
+   "id": "4D07",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "t 는 타이타닉 데이터의 앞 6행이다. 다음 코드를 실행했을 때 출력되는 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;데이터프레임 t&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">   survived  pclass     sex   age     fare embarked deck<br>0         0       3    male  22.0   7.2500        S  NaN<br>1         1       1  female  38.0  71.2833        C    C<br>2         1       3  female  26.0   7.9250        S  NaN<br>3         1       1  female  35.0  53.1000        S    C<br>4         0       3    male  35.0   8.0500        S  NaN<br>5         0       3    male   NaN   8.4583        Q  NaN</span></span>",
+   "code": "print(t.sort_values('fare', ascending=False).head(2)['fare'].tolist())",
+   "answer": "[71.2833, 53.1]",
+   "why": "<span class=\"mono\">ascending=False</span> 는 내림차순이라 운임이 가장 비싼 71.2833 이 먼저이고, <span class=\"mono\">head(2)</span> 는 앞에서 정확히 2행만 가져옵니다.",
+   "tags": [
+    "sort_values",
+    "head"
+   ],
+   "verifyCode": "import pandas as pd\nt = pd.DataFrame({'survived': [0, 1, 1, 1, 0, 0], 'pclass': [3, 1, 3, 1, 3, 3],\n                  'sex': ['male', 'female', 'female', 'female', 'male', 'male'],\n                  'age': [22.0, 38.0, 26.0, 35.0, 35.0, np.nan],\n                  'fare': [7.25, 71.2833, 7.925, 53.1, 8.05, 8.4583],\n                  'embarked': ['S', 'C', 'S', 'S', 'S', 'Q'],\n                  'deck': [np.nan, 'C', np.nan, 'C', np.nan, np.nan]})\nprint(t.sort_values('fare', ascending=False).head(2)['fare'].tolist())",
+   "verifyExpect": "[71.2833, 53.1]",
+   "options": [
+    "[71.2833, 53.1]",
+    "[7.25, 7.925]",
+    "[71.2833]",
+    "[71.2833, 53.1, 8.4583]",
+    "[53.1, 71.2833]"
+   ]
+  },
+  {
+   "id": "4D08",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "s = pd.Series(['S', 'C', 'S', 'Q', np.nan, 'S'])\nprint(round(s.value_counts(normalize=True).sum(), 2))",
+   "answer": "1.0",
+   "why": "<span class=\"mono\">value_counts</span> 는 기본적으로 결측값을 세지 않으므로 비율도 결측을 뺀 5개 기준으로 계산되어 합이 1입니다. 0.83(5/6)은 결측값까지 전체로 나눴다고 착각한 경우입니다.",
+   "tags": [
+    "value_counts",
+    "normalize"
+   ],
+   "verifyCode": "import pandas as pd\ns = pd.Series(['S', 'C', 'S', 'Q', np.nan, 'S'])\nprint(round(s.value_counts(normalize=True).sum(), 2))",
+   "verifyExpect": "1.0",
+   "options": [
+    "0.83",
+    "6.0",
+    "5.0",
+    "0.5",
+    "1.0"
+   ]
+  },
+  {
+   "id": "4D09",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "m = pd.DataFrame({'age': [22, np.nan, np.nan, 35],\n                  'deck': [np.nan, 'C', np.nan, np.nan]})\nprint(m.isnull().any(axis=1).sum(), m.isnull().any(axis=0).sum())",
+   "answer": "4 2",
+   "why": "<span class=\"mono\">axis=1</span> 은 행마다 가로 방향으로 훑어 결측이 있는 행 수(4)를, <span class=\"mono\">axis=0</span> 은 열마다 세로 방향으로 훑어 결측이 있는 열 수(2)를 셉니다. 5는 결측값 전체 개수입니다.",
+   "tags": [
+    "any",
+    "axis"
+   ],
+   "verifyCode": "import pandas as pd\nm = pd.DataFrame({'age': [22, np.nan, np.nan, 35], 'deck': [np.nan, 'C', np.nan, np.nan]})\nprint(m.isnull().any(axis=1).sum(), m.isnull().any(axis=0).sum())",
+   "verifyExpect": "4 2",
+   "options": [
+    "4 2",
+    "2 4",
+    "5 2",
+    "4 4",
+    "3 2"
+   ]
+  },
+  {
+   "id": "4D10",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "age 가 다음과 같을 때 실행하면 오류가 나는 것은?",
+   "code": "age = pd.Series([22, 38, 26, 35], index=['철수', '영희', '민수', '지연'], name='나이')",
+   "answer": "age.iloc[4]",
+   "why": "원소가 4개라 위치 번호는 0~3이고 <span class=\"mono\">iloc[4]</span> 는 범위를 벗어납니다. <span class=\"mono\">iloc[-1]</span> 은 뒤에서 첫 번째(35)로 정상입니다.",
+   "tags": [
+    "iloc",
+    "인덱스 범위"
+   ],
+   "verifyCode": "import pandas as pd\nage = pd.Series([22, 38, 26, 35], index=['철수', '영희', '민수', '지연'], name='나이')\nbad = []\nfor e in ['age.iloc[3]', 'age.iloc[-1]', 'age.iloc[4]', \"age['지연']\", 'age.iloc[0]']:\n    try:\n        eval(e)\n    except IndexError:\n        bad.append(e)\nprint(bad[0])",
+   "verifyExpect": "age.iloc[4]",
+   "options": [
+    "age.iloc[3]",
+    "age.iloc[-1]",
+    "age['지연']",
+    "age.iloc[0]",
+    "age.iloc[4]"
+   ]
+  },
+  {
+   "id": "4R01",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "age = pd.Series([22, 38, 26, 35], index=['철수', '영희', '민수', '지연'], name='나이')\nprint((age + 1).tolist(), (age >= 30).tolist())",
+   "answer": "[23, 39, 27, 36] [False, True, False, True]",
+   "why": "Series 에 숫자를 더하면 모든 원소에 더해지고, 비교식은 원소마다 True/False 를 담은 Series 가 됩니다. 35 ≥ 30 도 True 입니다.",
+   "tags": [
+    "Series 연산",
+    "비교"
+   ],
+   "verifyCode": "import pandas as pd\nage = pd.Series([22, 38, 26, 35], index=['철수', '영희', '민수', '지연'], name='나이')\nprint((age + 1).tolist(), (age >= 30).tolist())",
+   "verifyExpect": "[23, 39, 27, 36] [False, True, False, True]",
+   "options": [
+    "[23, 39, 27, 36] [False, True, False, True]",
+    "[23, 39, 27, 36] [False, True, False, False]",
+    "[22, 38, 26, 35, 1] [False, True, False, True]",
+    "[23, 39, 27, 36] 2",
+    "[23] [False, True, False, True]"
+   ]
+  },
+  {
+   "id": "4R02",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "age = pd.Series([22, 38, 26, 35], index=['철수', '영희', '민수', '지연'], name='나이')\nprint(age.mean(), age.max())",
+   "answer": "30.25 38",
+   "why": "평균은 (22 + 38 + 26 + 35) ÷ 4 = 30.25 이고, <span class=\"mono\">max()</span> 는 이름표가 아니라 가장 큰 값 38을 돌려줍니다. 121은 합계입니다.",
+   "tags": [
+    "mean",
+    "max"
+   ],
+   "verifyCode": "import pandas as pd\nage = pd.Series([22, 38, 26, 35], index=['철수', '영희', '민수', '지연'], name='나이')\nprint(age.mean(), age.max())",
+   "verifyExpect": "30.25 38",
+   "options": [
+    "30 38",
+    "30.25 35",
+    "121 38",
+    "30.25 38",
+    "30.25 영희"
+   ]
+  },
+  {
+   "id": "4R03",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "df_mini = pd.DataFrame({'나이': [22, 38, 26, 35], '성별': ['남', '여', '남', '여'], '탑승등급': [3, 1, 3, 1]},\n                       index=['철수', '영희', '민수', '지연'])\nprint(type(df_mini['나이']).__name__, type(df_mini[['나이']]).__name__)",
+   "answer": "Series DataFrame",
+   "why": "대괄호 하나로 열 하나를 꺼내면 Series, 대괄호 두 개(열 이름 목록)로 꺼내면 열이 하나뿐이어도 DataFrame 입니다.",
+   "tags": [
+    "Series",
+    "DataFrame"
+   ],
+   "verifyCode": "import pandas as pd\ndf_mini = pd.DataFrame({'나이': [22, 38, 26, 35], '성별': ['남', '여', '남', '여'], '탑승등급': [3, 1, 3, 1]},\n                       index=['철수', '영희', '민수', '지연'])\nprint(type(df_mini['나이']).__name__, type(df_mini[['나이']]).__name__)",
+   "verifyExpect": "Series DataFrame",
+   "options": [
+    "DataFrame DataFrame",
+    "Series Series",
+    "DataFrame Series",
+    "Series DataFrame",
+    "list DataFrame"
+   ]
+  },
+  {
+   "id": "4R04",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "t 는 타이타닉 데이터의 앞 6행이다. 다음 코드를 실행했을 때 출력되는 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;데이터프레임 t&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">   survived  pclass     sex   age     fare embarked deck<br>0         0       3    male  22.0   7.2500        S  NaN<br>1         1       1  female  38.0  71.2833        C    C<br>2         1       3  female  26.0   7.9250        S  NaN<br>3         1       1  female  35.0  53.1000        S    C<br>4         0       3    male  35.0   8.0500        S  NaN<br>5         0       3    male   NaN   8.4583        Q  NaN</span></span>",
+   "code": "print(t.describe().shape)",
+   "answer": "(8, 4)",
+   "why": "<span class=\"mono\">describe()</span> 는 수치형 열(survived, pclass, age, fare) 4개만 요약하고, 행은 count·mean·std·min·25%·50%·75%·max 8개입니다. 문자 열 sex·embarked·deck 은 빠집니다.",
+   "tags": [
+    "describe"
+   ],
+   "verifyCode": "import pandas as pd\nt = pd.DataFrame({'survived': [0, 1, 1, 1, 0, 0], 'pclass': [3, 1, 3, 1, 3, 3],\n                  'sex': ['male', 'female', 'female', 'female', 'male', 'male'],\n                  'age': [22.0, 38.0, 26.0, 35.0, 35.0, np.nan],\n                  'fare': [7.25, 71.2833, 7.925, 53.1, 8.05, 8.4583],\n                  'embarked': ['S', 'C', 'S', 'S', 'S', 'Q'],\n                  'deck': [np.nan, 'C', np.nan, 'C', np.nan, np.nan]})\nprint(t.describe().shape)",
+   "verifyExpect": "(8, 4)",
+   "options": [
+    "(8, 7)",
+    "(8, 4)",
+    "(6, 4)",
+    "(4, 8)",
+    "(8, 5)"
+   ]
+  },
+  {
+   "id": "4R05",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "t 는 타이타닉 데이터의 앞 6행이다. 다음 코드를 실행했을 때 출력되는 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;데이터프레임 t&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">   survived  pclass     sex   age     fare embarked deck<br>0         0       3    male  22.0   7.2500        S  NaN<br>1         1       1  female  38.0  71.2833        C    C<br>2         1       3  female  26.0   7.9250        S  NaN<br>3         1       1  female  35.0  53.1000        S    C<br>4         0       3    male  35.0   8.0500        S  NaN<br>5         0       3    male   NaN   8.4583        Q  NaN</span></span>",
+   "code": "vc = t['pclass'].value_counts()\nprint(vc.index.tolist(), vc.tolist())",
+   "answer": "[3, 1] [4, 2]",
+   "why": "<span class=\"mono\">value_counts()</span> 는 값(등급)을 인덱스로, 개수를 값으로 담고 개수가 많은 순으로 정렬합니다. 3등급이 4명, 1등급이 2명입니다.",
+   "tags": [
+    "value_counts"
+   ],
+   "verifyCode": "import pandas as pd\nt = pd.DataFrame({'survived': [0, 1, 1, 1, 0, 0], 'pclass': [3, 1, 3, 1, 3, 3],\n                  'sex': ['male', 'female', 'female', 'female', 'male', 'male'],\n                  'age': [22.0, 38.0, 26.0, 35.0, 35.0, np.nan],\n                  'fare': [7.25, 71.2833, 7.925, 53.1, 8.05, 8.4583],\n                  'embarked': ['S', 'C', 'S', 'S', 'S', 'Q'],\n                  'deck': [np.nan, 'C', np.nan, 'C', np.nan, np.nan]})\nvc = t['pclass'].value_counts()\nprint(vc.index.tolist(), vc.tolist())",
+   "verifyExpect": "[3, 1] [4, 2]",
+   "options": [
+    "[3, 1] [4, 2]",
+    "[1, 3] [2, 4]",
+    "[3, 1] [2, 4]",
+    "[1, 3] [4, 2]",
+    "[3, 1] [0.67, 0.33]"
+   ]
+  },
+  {
+   "id": "4R06",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "t 는 타이타닉 데이터의 앞 6행이다. 다음 코드를 실행했을 때 출력되는 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;데이터프레임 t&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">   survived  pclass     sex   age     fare embarked deck<br>0         0       3    male  22.0   7.2500        S  NaN<br>1         1       1  female  38.0  71.2833        C    C<br>2         1       3  female  26.0   7.9250        S  NaN<br>3         1       1  female  35.0  53.1000        S    C<br>4         0       3    male  35.0   8.0500        S  NaN<br>5         0       3    male   NaN   8.4583        Q  NaN</span></span>",
+   "code": "print(t.isnull().sum().tolist())",
+   "answer": "[0, 0, 0, 1, 0, 0, 4]",
+   "why": "열 순서(survived, pclass, sex, age, fare, embarked, deck)대로 결측 개수를 셉니다. age 1개, deck 4개가 비어 있습니다. [0, 0, 0, 5, 0, 0, 2]는 값이 있는 개수(<span class=\"mono\">count</span>)입니다.",
+   "tags": [
+    "isnull",
+    "sum"
+   ],
+   "verifyCode": "import pandas as pd\nt = pd.DataFrame({'survived': [0, 1, 1, 1, 0, 0], 'pclass': [3, 1, 3, 1, 3, 3],\n                  'sex': ['male', 'female', 'female', 'female', 'male', 'male'],\n                  'age': [22.0, 38.0, 26.0, 35.0, 35.0, np.nan],\n                  'fare': [7.25, 71.2833, 7.925, 53.1, 8.05, 8.4583],\n                  'embarked': ['S', 'C', 'S', 'S', 'S', 'Q'],\n                  'deck': [np.nan, 'C', np.nan, 'C', np.nan, np.nan]})\nprint(t.isnull().sum().tolist())",
+   "verifyExpect": "[0, 0, 0, 1, 0, 0, 4]",
+   "options": [
+    "[0, 0, 0, 1, 0, 0, 4]",
+    "[0, 0, 0, 5, 0, 0, 2]",
+    "[1, 4]",
+    "[6, 6, 6, 5, 6, 6, 2]",
+    "[0, 0, 0, 1, 0, 0, 4, 5]"
+   ]
+  },
+  {
+   "id": "4R07",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "t 는 타이타닉 데이터의 앞 6행이다. 다음 코드를 실행했을 때 출력되는 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;데이터프레임 t&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">   survived  pclass     sex   age     fare embarked deck<br>0         0       3    male  22.0   7.2500        S  NaN<br>1         1       1  female  38.0  71.2833        C    C<br>2         1       3  female  26.0   7.9250        S  NaN<br>3         1       1  female  35.0  53.1000        S    C<br>4         0       3    male  35.0   8.0500        S  NaN<br>5         0       3    male   NaN   8.4583        Q  NaN</span></span>",
+   "code": "g = t.groupby(['pclass', 'sex'])['age'].mean()\nprint(len(g), g.loc[(3, 'male')])",
+   "answer": "3 28.5",
+   "why": "(1, female), (3, female), (3, male) 세 조합만 존재해 그룹은 3개입니다. 3등급 남성의 나이는 22, 35, 결측이고, 평균은 결측을 빼고 계산해 28.5입니다. 19.0은 결측을 0으로 넣고 셋으로 나눈 착각입니다.",
+   "tags": [
+    "groupby",
+    "mean"
+   ],
+   "verifyCode": "import pandas as pd\nt = pd.DataFrame({'survived': [0, 1, 1, 1, 0, 0], 'pclass': [3, 1, 3, 1, 3, 3],\n                  'sex': ['male', 'female', 'female', 'female', 'male', 'male'],\n                  'age': [22.0, 38.0, 26.0, 35.0, 35.0, np.nan],\n                  'fare': [7.25, 71.2833, 7.925, 53.1, 8.05, 8.4583],\n                  'embarked': ['S', 'C', 'S', 'S', 'S', 'Q'],\n                  'deck': [np.nan, 'C', np.nan, 'C', np.nan, np.nan]})\ng = t.groupby(['pclass', 'sex'])['age'].mean()\nprint(len(g), g.loc[(3, 'male')])",
+   "verifyExpect": "3 28.5",
+   "options": [
+    "4 28.5",
+    "6 28.5",
+    "3 19.0",
+    "3 28.5",
+    "2 28.5"
+   ]
+  },
+  {
+   "id": "4R08",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "t 는 타이타닉 데이터의 앞 6행이다. 다음 코드를 실행했을 때 출력되는 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;데이터프레임 t&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">   survived  pclass     sex   age     fare embarked deck<br>0         0       3    male  22.0   7.2500        S  NaN<br>1         1       1  female  38.0  71.2833        C    C<br>2         1       3  female  26.0   7.9250        S  NaN<br>3         1       1  female  35.0  53.1000        S    C<br>4         0       3    male  35.0   8.0500        S  NaN<br>5         0       3    male   NaN   8.4583        Q  NaN</span></span>",
+   "code": "print(type(t.iloc[[5]]).__name__, t.iloc[[5]].shape, type(t.iloc[5]).__name__)",
+   "answer": "DataFrame (1, 7) Series",
+   "why": "<span class=\"mono\">iloc[[5]]</span> 처럼 위치를 리스트로 주면 행이 1개여도 표 모양을 유지한 DataFrame (1행 7열)이 되고, <span class=\"mono\">iloc[5]</span> 는 한 행을 1차원 Series 로 꺼냅니다. 노트북이 결과를 표로 보려고 <span class=\"mono\">iloc[[5]]</span> 를 쓴 이유입니다.",
+   "tags": [
+    "iloc",
+    "DataFrame"
+   ],
+   "verifyCode": "import pandas as pd\nt = pd.DataFrame({'survived': [0, 1, 1, 1, 0, 0], 'pclass': [3, 1, 3, 1, 3, 3],\n                  'sex': ['male', 'female', 'female', 'female', 'male', 'male'],\n                  'age': [22.0, 38.0, 26.0, 35.0, 35.0, np.nan],\n                  'fare': [7.25, 71.2833, 7.925, 53.1, 8.05, 8.4583],\n                  'embarked': ['S', 'C', 'S', 'S', 'S', 'Q'],\n                  'deck': [np.nan, 'C', np.nan, 'C', np.nan, np.nan]})\nprint(type(t.iloc[[5]]).__name__, t.iloc[[5]].shape, type(t.iloc[5]).__name__)",
+   "verifyExpect": "DataFrame (1, 7) Series",
+   "options": [
+    "Series (7,) Series",
+    "DataFrame (7, 1) Series",
+    "DataFrame (1, 7) Series",
+    "DataFrame (1, 7) DataFrame",
+    "list (1, 7) Series"
+   ]
+  },
+  {
+   "id": "4R09",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "a = pd.Series([22, np.nan, 26, 35])\nprint(a.fillna(a.mean()).round(1).tolist())",
+   "answer": "[22.0, 27.7, 26.0, 35.0]",
+   "why": "<span class=\"mono\">mean()</span> 은 결측을 빼고 (22 + 26 + 35) ÷ 3 = 27.67 을 구하고, <span class=\"mono\">fillna</span> 가 빈칸을 그 값으로 채웁니다. 20.8은 결측을 0으로 보고 4로 나눈 값이고, <span class=\"mono\">fillna</span> 는 행을 지우지 않습니다.",
+   "tags": [
+    "fillna",
+    "mean"
+   ],
+   "verifyCode": "import pandas as pd\na = pd.Series([22, np.nan, 26, 35])\nprint(a.fillna(a.mean()).round(1).tolist())",
+   "verifyExpect": "[22.0, 27.7, 26.0, 35.0]",
+   "options": [
+    "[22.0, 20.8, 26.0, 35.0]",
+    "[22.0, 0.0, 26.0, 35.0]",
+    "[22.0, 27.7, 26.0, 35.0]",
+    "[22.0, 26.0, 35.0]",
+    "[22.0, nan, 26.0, 35.0]"
+   ]
+  },
+  {
+   "id": "4R10",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "t 는 타이타닉 데이터의 앞 6행이다. 다음 코드를 실행했을 때 출력되는 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;데이터프레임 t&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">   survived  pclass     sex   age     fare embarked deck<br>0         0       3    male  22.0   7.2500        S  NaN<br>1         1       1  female  38.0  71.2833        C    C<br>2         1       3  female  26.0   7.9250        S  NaN<br>3         1       1  female  35.0  53.1000        S    C<br>4         0       3    male  35.0   8.0500        S  NaN<br>5         0       3    male   NaN   8.4583        Q  NaN</span></span>",
+   "code": "print(t['age'].median(), t['age'].mean())",
+   "answer": "35.0 31.2",
+   "why": "결측을 뺀 나이 22, 26, 35, 35, 38 의 가운데 값(중앙값)은 35.0이고, 평균은 156 ÷ 5 = 31.2입니다. 30.5는 결측을 넣어 6개로 착각해 가운데 두 값을 평균낸 경우입니다.",
+   "tags": [
+    "median",
+    "mean"
+   ],
+   "verifyCode": "import pandas as pd\nt = pd.DataFrame({'survived': [0, 1, 1, 1, 0, 0], 'pclass': [3, 1, 3, 1, 3, 3],\n                  'sex': ['male', 'female', 'female', 'female', 'male', 'male'],\n                  'age': [22.0, 38.0, 26.0, 35.0, 35.0, np.nan],\n                  'fare': [7.25, 71.2833, 7.925, 53.1, 8.05, 8.4583],\n                  'embarked': ['S', 'C', 'S', 'S', 'S', 'Q'],\n                  'deck': [np.nan, 'C', np.nan, 'C', np.nan, np.nan]})\nprint(t['age'].median(), t['age'].mean())",
+   "verifyExpect": "35.0 31.2",
+   "options": [
+    "26.0 31.2",
+    "35.0 26.0",
+    "30.5 31.2",
+    "31.2 35.0",
+    "35.0 31.2"
+   ]
+  },
+  {
+   "id": "4X01",
+   "type": "대조",
+   "typeKey": "contrast",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "다음은 거의 같은 두 코드이다. ㉠, ㉡에 출력되는 값으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">방법1 → ㉠<br>방법2 → ㉡</span></span>",
+   "code": "age = pd.Series([22, 38, 26, 35], index=['철수', '영희', '민수', '지연'], name='나이')\nage2 = age.sort_values()\n# 방법1\nprint(age2['영희'])\n\n# 방법2\nprint(age2.iloc[1])",
+   "answer": "㉠ 38  ·  ㉡ 26",
+   "why": "정렬 후 순서는 철수(22), 민수(26), 지연(35), 영희(38) 입니다. 이름표로 찾는 <span class=\"mono\">age2['영희']</span> 는 위치와 상관없이 38이고, <span class=\"mono\">iloc[1]</span> 은 정렬된 순서의 두 번째 값 26입니다.",
+   "tags": [
+    "iloc",
+    "sort_values",
+    "인덱스"
+   ],
+   "verifyCode": "import pandas as pd\nage = pd.Series([22, 38, 26, 35], index=['철수', '영희', '민수', '지연'], name='나이')\nage2 = age.sort_values()\nprint(age2['영희'], '|', age2.iloc[1])",
+   "verifyExpect": "38 | 26",
+   "options": [
+    "㉠ 38  ·  ㉡ 38",
+    "㉠ 26  ·  ㉡ 38",
+    "㉠ 38  ·  ㉡ 26",
+    "㉠ 22  ·  ㉡ 26",
+    "㉠ 38  ·  ㉡ 22"
+   ]
+  },
+  {
+   "id": "4X02",
+   "type": "대조",
+   "typeKey": "contrast",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "다음은 거의 같은 두 코드이다. ㉠, ㉡에 출력되는 값으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">방법1 → ㉠<br>방법2 → ㉡</span></span>",
+   "code": "df_mini = pd.DataFrame({'나이': [22, 38, 26, 35], '성별': ['남', '여', '남', '여'], '탑승등급': [3, 1, 3, 1]},\n                       index=['철수', '영희', '민수', '지연'])\n# 방법1\nprint(df_mini['나이'].shape)\n\n# 방법2\nprint(df_mini[['나이']].shape)",
+   "answer": "㉠ (4,)  ·  ㉡ (4, 1)",
+   "why": "대괄호 하나는 1차원 Series 라 모양이 (4,), 대괄호 두 개는 열이 하나인 2차원 DataFrame 이라 (4, 1)입니다.",
+   "tags": [
+    "Series",
+    "DataFrame",
+    "shape"
+   ],
+   "verifyCode": "import pandas as pd\ndf_mini = pd.DataFrame({'나이': [22, 38, 26, 35], '성별': ['남', '여', '남', '여'], '탑승등급': [3, 1, 3, 1]},\n                       index=['철수', '영희', '민수', '지연'])\nprint(df_mini['나이'].shape, '|', df_mini[['나이']].shape)",
+   "verifyExpect": "(4,) | (4, 1)",
+   "options": [
+    "㉠ (4,)  ·  ㉡ (4, 1)",
+    "㉠ (4, 1)  ·  ㉡ (4,)",
+    "㉠ (4,)  ·  ㉡ (4,)",
+    "㉠ (4, 1)  ·  ㉡ (4, 1)",
+    "㉠ (1, 4)  ·  ㉡ (4, 1)"
+   ]
+  },
+  {
+   "id": "4X03",
+   "type": "대조",
+   "typeKey": "contrast",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "다음은 거의 같은 두 코드이다. ㉠, ㉡에 출력되는 값으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">방법1 → ㉠<br>방법2 → ㉡</span></span><span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;데이터프레임 t&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">   survived  pclass     sex   age     fare embarked deck<br>0         0       3    male  22.0   7.2500        S  NaN<br>1         1       1  female  38.0  71.2833        C    C<br>2         1       3  female  26.0   7.9250        S  NaN<br>3         1       1  female  35.0  53.1000        S    C<br>4         0       3    male  35.0   8.0500        S  NaN<br>5         0       3    male   NaN   8.4583        Q  NaN</span></span>",
+   "code": "# 방법1\nprint(t['pclass'].value_counts().iloc[0])\n\n# 방법2\nprint(round(t['pclass'].value_counts(normalize=True).iloc[0], 2))",
+   "answer": "㉠ 4  ·  ㉡ 0.67",
+   "why": "가장 많은 3등급이 4명이라 개수는 4, <span class=\"mono\">normalize=True</span> 면 6명 중 4명의 비율 0.67입니다.",
+   "tags": [
+    "value_counts",
+    "normalize"
+   ],
+   "verifyCode": "import pandas as pd\nt = pd.DataFrame({'survived': [0, 1, 1, 1, 0, 0], 'pclass': [3, 1, 3, 1, 3, 3],\n                  'sex': ['male', 'female', 'female', 'female', 'male', 'male'],\n                  'age': [22.0, 38.0, 26.0, 35.0, 35.0, np.nan],\n                  'fare': [7.25, 71.2833, 7.925, 53.1, 8.05, 8.4583],\n                  'embarked': ['S', 'C', 'S', 'S', 'S', 'Q'],\n                  'deck': [np.nan, 'C', np.nan, 'C', np.nan, np.nan]})\nprint(t['pclass'].value_counts().iloc[0], '|', round(t['pclass'].value_counts(normalize=True).iloc[0], 2))",
+   "verifyExpect": "4 | 0.67",
+   "options": [
+    "㉠ 0.67  ·  ㉡ 4",
+    "㉠ 4  ·  ㉡ 4",
+    "㉠ 4  ·  ㉡ 0.67",
+    "㉠ 3  ·  ㉡ 0.67",
+    "㉠ 4  ·  ㉡ 0.33"
+   ]
+  },
+  {
+   "id": "4X04",
+   "type": "대조",
+   "typeKey": "contrast",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "다음은 거의 같은 두 코드이다. ㉠, ㉡에 출력되는 값으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">방법1 → ㉠<br>방법2 → ㉡</span></span>",
+   "code": "s = pd.Series(['S', 'C', 'S', 'Q', np.nan])\n# 방법1\nprint(s.unique())\n\n# 방법2\nprint(s.nunique())",
+   "answer": "㉠ ['S' 'C' 'Q' nan]  ·  ㉡ 3",
+   "why": "<span class=\"mono\">unique()</span> 는 등장 순서대로 값의 종류를 보여 주며 결측값 nan 도 포함합니다. <span class=\"mono\">nunique()</span> 는 결측값을 빼고 종류 수를 세어 3입니다.",
+   "tags": [
+    "unique",
+    "nunique"
+   ],
+   "verifyCode": "import pandas as pd\ns = pd.Series(['S', 'C', 'S', 'Q', np.nan])\nprint(s.unique(), '|', s.nunique())",
+   "verifyExpect": "['S' 'C' 'Q' nan] | 3",
+   "options": [
+    "㉠ ['S' 'C' 'Q']  ·  ㉡ 3",
+    "㉠ ['S' 'C' 'Q' nan]  ·  ㉡ 3",
+    "㉠ ['S' 'C' 'Q' nan]  ·  ㉡ 4",
+    "㉠ ['S' 'C' 'S' 'Q' nan]  ·  ㉡ 5",
+    "㉠ 3  ·  ㉡ ['S' 'C' 'Q' nan]"
+   ]
+  },
+  {
+   "id": "4X05",
+   "type": "대조",
+   "typeKey": "contrast",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "다음은 거의 같은 두 코드이다. ㉠, ㉡에 출력되는 값으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">방법1 → ㉠<br>방법2 → ㉡</span></span><span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;데이터프레임 t&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">   survived  pclass     sex   age     fare embarked deck<br>0         0       3    male  22.0   7.2500        S  NaN<br>1         1       1  female  38.0  71.2833        C    C<br>2         1       3  female  26.0   7.9250        S  NaN<br>3         1       1  female  35.0  53.1000        S    C<br>4         0       3    male  35.0   8.0500        S  NaN<br>5         0       3    male   NaN   8.4583        Q  NaN</span></span>",
+   "code": "# 방법1\nprint(t['age'].isnull().sum())\n\n# 방법2\nprint(t['age'].count())",
+   "answer": "㉠ 1  ·  ㉡ 5",
+   "why": "<span class=\"mono\">isnull().sum()</span> 은 비어 있는 개수, <span class=\"mono\">count()</span> 는 값이 있는 개수를 셉니다. 두 값을 더하면 전체 행 수 6이 됩니다.",
+   "tags": [
+    "isnull",
+    "count"
+   ],
+   "verifyCode": "import pandas as pd\nt = pd.DataFrame({'survived': [0, 1, 1, 1, 0, 0], 'pclass': [3, 1, 3, 1, 3, 3],\n                  'sex': ['male', 'female', 'female', 'female', 'male', 'male'],\n                  'age': [22.0, 38.0, 26.0, 35.0, 35.0, np.nan],\n                  'fare': [7.25, 71.2833, 7.925, 53.1, 8.05, 8.4583],\n                  'embarked': ['S', 'C', 'S', 'S', 'S', 'Q'],\n                  'deck': [np.nan, 'C', np.nan, 'C', np.nan, np.nan]})\nprint(t['age'].isnull().sum(), '|', t['age'].count())",
+   "verifyExpect": "1 | 5",
+   "options": [
+    "㉠ 5  ·  ㉡ 1",
+    "㉠ 1  ·  ㉡ 6",
+    "㉠ 6  ·  ㉡ 5",
+    "㉠ 1  ·  ㉡ 5",
+    "㉠ 1  ·  ㉡ 1"
+   ]
+  },
+  {
+   "id": "4X06",
+   "type": "대조",
+   "typeKey": "contrast",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "다음은 거의 같은 두 코드이다. ㉠, ㉡에 출력되는 값으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">방법1 → ㉠<br>방법2 → ㉡</span></span><span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;데이터프레임 t&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">   survived  pclass     sex   age     fare embarked deck<br>0         0       3    male  22.0   7.2500        S  NaN<br>1         1       1  female  38.0  71.2833        C    C<br>2         1       3  female  26.0   7.9250        S  NaN<br>3         1       1  female  35.0  53.1000        S    C<br>4         0       3    male  35.0   8.0500        S  NaN<br>5         0       3    male   NaN   8.4583        Q  NaN</span></span>",
+   "code": "# 방법1\nprint(t.sort_values('fare').index[0])\n\n# 방법2\nprint(t.sort_values('fare', ascending=False).index[0])",
+   "answer": "㉠ 0  ·  ㉡ 1",
+   "why": "정렬해도 원래 인덱스 이름표는 따라다닙니다. 오름차순의 맨 앞은 가장 싼 운임 7.25 인 0번 행, 내림차순의 맨 앞은 가장 비싼 71.2833 인 1번 행입니다.",
+   "tags": [
+    "sort_values",
+    "ascending"
+   ],
+   "verifyCode": "import pandas as pd\nt = pd.DataFrame({'survived': [0, 1, 1, 1, 0, 0], 'pclass': [3, 1, 3, 1, 3, 3],\n                  'sex': ['male', 'female', 'female', 'female', 'male', 'male'],\n                  'age': [22.0, 38.0, 26.0, 35.0, 35.0, np.nan],\n                  'fare': [7.25, 71.2833, 7.925, 53.1, 8.05, 8.4583],\n                  'embarked': ['S', 'C', 'S', 'S', 'S', 'Q'],\n                  'deck': [np.nan, 'C', np.nan, 'C', np.nan, np.nan]})\nprint(t.sort_values('fare').index[0], '|', t.sort_values('fare', ascending=False).index[0])",
+   "verifyExpect": "0 | 1",
+   "options": [
+    "㉠ 1  ·  ㉡ 0",
+    "㉠ 0  ·  ㉡ 1",
+    "㉠ 0  ·  ㉡ 0",
+    "㉠ 2  ·  ㉡ 1",
+    "㉠ 0  ·  ㉡ 5"
+   ]
+  },
+  {
+   "id": "4X07",
+   "type": "대조",
+   "typeKey": "contrast",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "다음은 거의 같은 두 코드이다. ㉠, ㉡에 출력되는 값으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">방법1 → ㉠<br>방법2 → ㉡</span></span><span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;데이터프레임 t&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">   survived  pclass     sex   age     fare embarked deck<br>0         0       3    male  22.0   7.2500        S  NaN<br>1         1       1  female  38.0  71.2833        C    C<br>2         1       3  female  26.0   7.9250        S  NaN<br>3         1       1  female  35.0  53.1000        S    C<br>4         0       3    male  35.0   8.0500        S  NaN<br>5         0       3    male   NaN   8.4583        Q  NaN</span></span>",
+   "code": "# 방법1\nprint(t.isna().sum().sum())\n\n# 방법2\nprint(t.isnull().sum().sum())",
+   "answer": "㉠ 5  ·  ㉡ 5",
+   "why": "<span class=\"mono\">isna()</span> 와 <span class=\"mono\">isnull()</span> 은 이름만 다르고 완전히 같은 함수입니다. 두 방법 모두 표 전체의 결측 개수 1 + 4 = 5를 셉니다.",
+   "tags": [
+    "isna",
+    "isnull"
+   ],
+   "verifyCode": "import pandas as pd\nt = pd.DataFrame({'survived': [0, 1, 1, 1, 0, 0], 'pclass': [3, 1, 3, 1, 3, 3],\n                  'sex': ['male', 'female', 'female', 'female', 'male', 'male'],\n                  'age': [22.0, 38.0, 26.0, 35.0, 35.0, np.nan],\n                  'fare': [7.25, 71.2833, 7.925, 53.1, 8.05, 8.4583],\n                  'embarked': ['S', 'C', 'S', 'S', 'S', 'Q'],\n                  'deck': [np.nan, 'C', np.nan, 'C', np.nan, np.nan]})\nprint(t.isna().sum().sum(), '|', t.isnull().sum().sum())",
+   "verifyExpect": "5 | 5",
+   "options": [
+    "㉠ 5  ·  ㉡ 0",
+    "㉠ 5  ·  ㉡ 5",
+    "㉠ 0  ·  ㉡ 5",
+    "㉠ 2  ·  ㉡ 5",
+    "㉠ 4  ·  ㉡ 5"
+   ]
+  },
+  {
+   "id": "4X08",
+   "type": "대조",
+   "typeKey": "contrast",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "다음은 거의 같은 두 코드이다. ㉠, ㉡에 출력되는 값으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">방법1 → ㉠<br>방법2 → ㉡</span></span><span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;데이터프레임 t&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">   survived  pclass     sex   age     fare embarked deck<br>0         0       3    male  22.0   7.2500        S  NaN<br>1         1       1  female  38.0  71.2833        C    C<br>2         1       3  female  26.0   7.9250        S  NaN<br>3         1       1  female  35.0  53.1000        S    C<br>4         0       3    male  35.0   8.0500        S  NaN<br>5         0       3    male   NaN   8.4583        Q  NaN</span></span>",
+   "code": "# 방법1\nprint(t.iloc[[5]].shape)\n\n# 방법2\nprint(t.iloc[5].shape)",
+   "answer": "㉠ (1, 7)  ·  ㉡ (7,)",
+   "why": "위치를 리스트 <span class=\"mono\">[[5]]</span> 로 주면 표(DataFrame)가 유지되어 1행 7열, 정수 <span class=\"mono\">[5]</span> 로 주면 그 행이 열 이름을 인덱스로 가진 Series 가 되어 (7,)입니다.",
+   "tags": [
+    "iloc"
+   ],
+   "verifyCode": "import pandas as pd\nt = pd.DataFrame({'survived': [0, 1, 1, 1, 0, 0], 'pclass': [3, 1, 3, 1, 3, 3],\n                  'sex': ['male', 'female', 'female', 'female', 'male', 'male'],\n                  'age': [22.0, 38.0, 26.0, 35.0, 35.0, np.nan],\n                  'fare': [7.25, 71.2833, 7.925, 53.1, 8.05, 8.4583],\n                  'embarked': ['S', 'C', 'S', 'S', 'S', 'Q'],\n                  'deck': [np.nan, 'C', np.nan, 'C', np.nan, np.nan]})\nprint(t.iloc[[5]].shape, '|', t.iloc[5].shape)",
+   "verifyExpect": "(1, 7) | (7,)",
+   "options": [
+    "㉠ (7,)  ·  ㉡ (1, 7)",
+    "㉠ (1, 7)  ·  ㉡ (1, 7)",
+    "㉠ (7, 1)  ·  ㉡ (7,)",
+    "㉠ (1, 7)  ·  ㉡ (7,)",
+    "㉠ (1, 7)  ·  ㉡ (1,)"
+   ]
+  },
+  {
+   "id": "4X09",
+   "type": "대조",
+   "typeKey": "contrast",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "다음은 거의 같은 두 코드이다. ㉠, ㉡에 출력되는 값으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">방법1 → ㉠<br>방법2 → ㉡</span></span><span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;데이터프레임 t&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">   survived  pclass     sex   age     fare embarked deck<br>0         0       3    male  22.0   7.2500        S  NaN<br>1         1       1  female  38.0  71.2833        C    C<br>2         1       3  female  26.0   7.9250        S  NaN<br>3         1       1  female  35.0  53.1000        S    C<br>4         0       3    male  35.0   8.0500        S  NaN<br>5         0       3    male   NaN   8.4583        Q  NaN</span></span>",
+   "code": "# 방법1\nprint(t.sort_values(['pclass', 'age'], ascending=[True, False]).index[0])\n\n# 방법2\nprint(t.sort_values(['pclass', 'age'], ascending=True).index[0])",
+   "answer": "㉠ 1  ·  ㉡ 3",
+   "why": "두 방법 모두 1등급(1번·3번 행)이 먼저입니다. 방법1은 같은 등급에서 나이 내림차순이라 38세인 1번, 방법2는 오름차순이라 35세인 3번이 맨 앞입니다.",
+   "tags": [
+    "sort_values",
+    "ascending"
+   ],
+   "verifyCode": "import pandas as pd\nt = pd.DataFrame({'survived': [0, 1, 1, 1, 0, 0], 'pclass': [3, 1, 3, 1, 3, 3],\n                  'sex': ['male', 'female', 'female', 'female', 'male', 'male'],\n                  'age': [22.0, 38.0, 26.0, 35.0, 35.0, np.nan],\n                  'fare': [7.25, 71.2833, 7.925, 53.1, 8.05, 8.4583],\n                  'embarked': ['S', 'C', 'S', 'S', 'S', 'Q'],\n                  'deck': [np.nan, 'C', np.nan, 'C', np.nan, np.nan]})\nprint(t.sort_values(['pclass', 'age'], ascending=[True, False]).index[0], '|', t.sort_values(['pclass', 'age'], ascending=True).index[0])",
+   "verifyExpect": "1 | 3",
+   "options": [
+    "㉠ 3  ·  ㉡ 1",
+    "㉠ 1  ·  ㉡ 1",
+    "㉠ 0  ·  ㉡ 3",
+    "㉠ 1  ·  ㉡ 0",
+    "㉠ 1  ·  ㉡ 3"
+   ]
+  },
+  {
+   "id": "4X10",
+   "type": "대조",
+   "typeKey": "contrast",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "다음은 거의 같은 두 코드이다. ㉠, ㉡에 출력되는 값으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">방법1 → ㉠<br>방법2 → ㉡</span></span>",
+   "code": "s = pd.Series(['S', 'C', 'S', 'Q'])\n# 방법1\nprint(type(s.mode()).__name__)\n\n# 방법2\nprint(type(s.mode()[0]).__name__)",
+   "answer": "㉠ Series  ·  ㉡ str",
+   "why": "최빈값은 여러 개일 수 있어 <span class=\"mono\">mode()</span> 는 Series 를 돌려줍니다. 채우기 값으로 쓰려면 <span class=\"mono\">[0]</span> 으로 첫 번째 값(문자열 S)을 꺼내야 합니다.",
+   "tags": [
+    "mode"
+   ],
+   "verifyCode": "import pandas as pd\ns = pd.Series(['S', 'C', 'S', 'Q'])\nprint(type(s.mode()).__name__, '|', type(s.mode()[0]).__name__)",
+   "verifyExpect": "Series | str",
+   "options": [
+    "㉠ str  ·  ㉡ str",
+    "㉠ Series  ·  ㉡ str",
+    "㉠ Series  ·  ㉡ Series",
+    "㉠ list  ·  ㉡ str",
+    "㉠ str  ·  ㉡ Series"
+   ]
+  },
+  {
+   "id": "4S01",
+   "type": "조건 매핑",
+   "typeKey": "spec",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "다음 [조건]을 모두 만족하는 코드로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>[조건]</b><br>○ 값 22, 38 에 철수, 영희 라는 이름표를 붙인다.<br>○ Series 의 이름은 나이 이다.</span>",
+   "code": "age = ____",
+   "answer": "pd.Series([22, 38], index=['철수', '영희'], name='나이')",
+   "why": "이름표는 <span class=\"mono\">index</span>, Series 자체의 이름은 <span class=\"mono\">name</span> 으로 줍니다. 딕셔너리로 만들면 이름표는 붙지만 name 이 없고, DataFrame 은 Series 가 아닙니다.",
+   "tags": [
+    "Series",
+    "index",
+    "name"
+   ],
+   "verifyCode": "import pandas as pd\nage = pd.Series([22, 38], index=['철수', '영희'], name='나이')\nprint(type(age).__name__, age.index.tolist(), age.name, age.tolist())",
+   "verifyExpect": "Series ['철수', '영희'] 나이 [22, 38]",
+   "options": [
+    "pd.Series({'철수': 22, '영희': 38})",
+    "pd.Series([22, 38], name=['철수', '영희'], index='나이')",
+    "pd.DataFrame([22, 38], index=['철수', '영희'], columns=['나이'])",
+    "pd.Series(['철수', '영희'], index=[22, 38], name='나이')",
+    "pd.Series([22, 38], index=['철수', '영희'], name='나이')"
+   ]
+  },
+  {
+   "id": "4S02",
+   "type": "조건 매핑",
+   "typeKey": "spec",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "다음 [조건]을 모두 만족하는 코드로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>[조건]</b><br>○ DataFrame t 를 titanic.csv 로 저장한다.<br>○ 저장한 파일을 다시 읽으면 열 구성이 t 와 같다.</span>",
+   "code": "",
+   "answer": "t.to_csv('titanic.csv', index=False)",
+   "why": "<span class=\"mono\">index=False</span> 없이 저장하면 0, 1, 2 … 인덱스가 이름 없는 열로 함께 저장되어 다시 읽을 때 열이 하나 늘어납니다. <span class=\"mono\">to_excel</span> 은 엑셀 형식으로 저장하는 함수이고, <span class=\"mono\">read_csv</span> 는 읽는 함수입니다.",
+   "tags": [
+    "to_csv",
+    "index=False"
+   ],
+   "verifyCode": "import pandas as pd\nt = pd.DataFrame({'survived': [0, 1, 1, 1, 0, 0], 'pclass': [3, 1, 3, 1, 3, 3],\n                  'sex': ['male', 'female', 'female', 'female', 'male', 'male'],\n                  'age': [22.0, 38.0, 26.0, 35.0, 35.0, np.nan],\n                  'fare': [7.25, 71.2833, 7.925, 53.1, 8.05, 8.4583],\n                  'embarked': ['S', 'C', 'S', 'S', 'S', 'Q'],\n                  'deck': [np.nan, 'C', np.nan, 'C', np.nan, np.nan]})\nimport os, tempfile\nf = os.path.join(tempfile.gettempdir(), 't.csv')\nt.to_csv(f, index=False); a = pd.read_csv(f).columns.tolist()\nt.to_csv(f); b = pd.read_csv(f).columns.tolist()\nprint(a == t.columns.tolist(), b == t.columns.tolist())",
+   "verifyExpect": "True False",
+   "options": [
+    "t.to_csv('titanic.csv')",
+    "t.to_excel('titanic.csv', index=False)",
+    "t.read_csv('titanic.csv', index=False)",
+    "t.to_csv('titanic.csv', index=False)",
+    "pd.to_csv(t, 'titanic.csv', index=False)"
+   ]
+  },
+  {
+   "id": "4S03",
+   "type": "조건 매핑",
+   "typeKey": "spec",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "다음 [조건]을 모두 만족하는 코드로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>[조건]</b><br>○ 열마다 결측 비율을 백분율(%)로 나타낸다.<br>○ 소수 첫째 자리까지 반올림한다.</span>",
+   "code": "",
+   "answer": "(df.isnull().mean() * 100).round(1)",
+   "why": "<span class=\"mono\">isnull().mean()</span> 이 결측 비율(0~1)이고 100을 곱해 백분율로 바꾼 뒤 반올림해야 합니다. 먼저 반올림하면 0.199 가 0.2 가 되어 20.0% 로 틀어지고, <span class=\"mono\">sum()</span> 은 개수, <span class=\"mono\">notnull</span> 은 값이 있는 비율입니다.",
+   "tags": [
+    "isnull",
+    "mean",
+    "round"
+   ],
+   "verifyCode": "import pandas as pd\ndf = pd.DataFrame({'age': [np.nan] * 177 + [1.0] * 714})\nprint((df.isnull().mean() * 100).round(1).tolist(), (df.isnull().mean().round(1) * 100).tolist())",
+   "verifyExpect": "[19.9] [20.0]",
+   "options": [
+    "(df.isnull().mean() * 100).round(1)",
+    "(df.isnull().sum() * 100).round(1)",
+    "df.isnull().mean().round(1) * 100",
+    "(df.notnull().mean() * 100).round(1)",
+    "(df.isnull().mean() * 100).round()"
+   ]
+  },
+  {
+   "id": "4S04",
+   "type": "조건 매핑",
+   "typeKey": "spec",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "다음 [조건]을 모두 만족하는 코드로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;데이터프레임 t&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">   survived  pclass     sex   age     fare embarked deck<br>0         0       3    male  22.0   7.2500        S  NaN<br>1         1       1  female  38.0  71.2833        C    C<br>2         1       3  female  26.0   7.9250        S  NaN<br>3         1       1  female  35.0  53.1000        S    C<br>4         0       3    male  35.0   8.0500        S  NaN<br>5         0       3    male   NaN   8.4583        Q  NaN</span></span><span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>[조건]</b><br>○ 운임이 비싼 사람부터 차례로 나온다.<br>○ 상위 3명만 보여 준다.</span>",
+   "code": "",
+   "answer": "t.sort_values('fare', ascending=False).head(3)",
+   "why": "내림차순(<span class=\"mono\">ascending=False</span>)으로 정렬해야 비싼 사람이 앞에 오고, 그 앞 3행이 <span class=\"mono\">head(3)</span> 입니다. <span class=\"mono\">sort_values('fare').tail(3)</span> 은 상위 3명이긴 하지만 싼 순서로 나와 첫 조건을 어깁니다.",
+   "tags": [
+    "sort_values",
+    "head"
+   ],
+   "verifyCode": "import pandas as pd\nt = pd.DataFrame({'survived': [0, 1, 1, 1, 0, 0], 'pclass': [3, 1, 3, 1, 3, 3],\n                  'sex': ['male', 'female', 'female', 'female', 'male', 'male'],\n                  'age': [22.0, 38.0, 26.0, 35.0, 35.0, np.nan],\n                  'fare': [7.25, 71.2833, 7.925, 53.1, 8.05, 8.4583],\n                  'embarked': ['S', 'C', 'S', 'S', 'S', 'Q'],\n                  'deck': [np.nan, 'C', np.nan, 'C', np.nan, np.nan]})\nr = t.sort_values('fare', ascending=False).head(3)\nw = t.sort_values('fare').tail(3)\nprint(r['fare'].tolist(), w['fare'].tolist())",
+   "verifyExpect": "[71.2833, 53.1, 8.4583] [8.4583, 53.1, 71.2833]",
+   "options": [
+    "t.sort_values('fare').head(3)",
+    "t.sort_values('fare', ascending=False).tail(3)",
+    "t.sort_values('fare', ascending=False).head(3)",
+    "t.sort_values('fare').tail(3)",
+    "t.sort_values('fare', ascending=True).head(3)"
+   ]
+  },
+  {
+   "id": "4S05",
+   "type": "조건 매핑",
+   "typeKey": "spec",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "다음 [조건]을 모두 만족하는 코드로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;데이터프레임 t&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">   survived  pclass     sex   age     fare embarked deck<br>0         0       3    male  22.0   7.2500        S  NaN<br>1         1       1  female  38.0  71.2833        C    C<br>2         1       3  female  26.0   7.9250        S  NaN<br>3         1       1  female  35.0  53.1000        S    C<br>4         0       3    male  35.0   8.0500        S  NaN<br>5         0       3    male   NaN   8.4583        Q  NaN</span></span><span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>[조건]</b><br>○ 결측이 하나라도 있는 행의 개수를 구한다.</span>",
+   "code": "",
+   "answer": "t.isnull().any(axis=1).sum()",
+   "why": "<span class=\"mono\">any(axis=1)</span> 은 행마다 결측이 하나라도 있는지 True/False 로 만들고, 합하면 그런 행의 수 4입니다. <span class=\"mono\">sum().sum()</span> 은 결측값 전체 개수 5, <span class=\"mono\">axis=0</span> 은 결측이 있는 열의 수 2, <span class=\"mono\">len(t.dropna())</span> 는 결측이 없는 행의 수 2입니다.",
+   "tags": [
+    "any",
+    "axis"
+   ],
+   "verifyCode": "import pandas as pd\nt = pd.DataFrame({'survived': [0, 1, 1, 1, 0, 0], 'pclass': [3, 1, 3, 1, 3, 3],\n                  'sex': ['male', 'female', 'female', 'female', 'male', 'male'],\n                  'age': [22.0, 38.0, 26.0, 35.0, 35.0, np.nan],\n                  'fare': [7.25, 71.2833, 7.925, 53.1, 8.05, 8.4583],\n                  'embarked': ['S', 'C', 'S', 'S', 'S', 'Q'],\n                  'deck': [np.nan, 'C', np.nan, 'C', np.nan, np.nan]})\nprint(t.isnull().any(axis=1).sum(), t.isnull().sum().sum(), t.isnull().any(axis=0).sum(), len(t.dropna()))",
+   "verifyExpect": "4 5 2 2",
+   "options": [
+    "t.isnull().sum().sum()",
+    "t.isnull().any(axis=0).sum()",
+    "t.isnull().any(axis=1).sum()",
+    "t.isnull().sum()",
+    "len(t.dropna())"
+   ]
+  },
+  {
+   "id": "4S06",
+   "type": "조건 매핑",
+   "typeKey": "spec",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "다음 [조건]을 모두 만족하는 코드로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;데이터프레임 t&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">   survived  pclass     sex   age     fare embarked deck<br>0         0       3    male  22.0   7.2500        S  NaN<br>1         1       1  female  38.0  71.2833        C    C<br>2         1       3  female  26.0   7.9250        S  NaN<br>3         1       1  female  35.0  53.1000        S    C<br>4         0       3    male  35.0   8.0500        S  NaN<br>5         0       3    male   NaN   8.4583        Q  NaN</span></span><span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>[조건]</b><br>○ 같은 등급·같은 성별 그룹의 평균 나이로 결측을 채운다.<br>○ 결과의 길이는 t 의 행 수와 같다.</span>",
+   "code": "t['age'] = ____",
+   "answer": "t.groupby(['pclass', 'sex'])['age'].transform(lambda x: x.fillna(x.mean()))",
+   "why": "두 기준으로 묶은 뒤 <span class=\"mono\">transform</span> 으로 그룹 평균을 채워야 원래 행 수가 유지됩니다. 전체 평균(31.2)이나 등급만의 평균(27.7)은 조건과 다르고, <span class=\"mono\">mean()</span> 만 쓰면 그룹 수만큼 줄어듭니다.",
+   "tags": [
+    "groupby",
+    "transform",
+    "fillna"
+   ],
+   "verifyCode": "import pandas as pd\nt = pd.DataFrame({'survived': [0, 1, 1, 1, 0, 0], 'pclass': [3, 1, 3, 1, 3, 3],\n                  'sex': ['male', 'female', 'female', 'female', 'male', 'male'],\n                  'age': [22.0, 38.0, 26.0, 35.0, 35.0, np.nan],\n                  'fare': [7.25, 71.2833, 7.925, 53.1, 8.05, 8.4583],\n                  'embarked': ['S', 'C', 'S', 'S', 'S', 'Q'],\n                  'deck': [np.nan, 'C', np.nan, 'C', np.nan, np.nan]})\nr = t.groupby(['pclass', 'sex'])['age'].transform(lambda x: x.fillna(x.mean()))\nprint(len(r), r.tolist())",
+   "verifyExpect": "6 [22.0, 38.0, 26.0, 35.0, 35.0, 28.5]",
+   "options": [
+    "t.groupby(['pclass', 'sex'])['age'].transform(lambda x: x.fillna(x.mean()))",
+    "t['age'].fillna(t['age'].mean())",
+    "t.groupby(['pclass', 'sex'])['age'].mean()",
+    "t.groupby('pclass')['age'].transform(lambda x: x.fillna(x.mean()))",
+    "t.groupby(['pclass', 'sex'])['age'].transform(lambda x: x.dropna())"
+   ]
+  },
+  {
+   "id": "4S07",
+   "type": "조건 매핑",
+   "typeKey": "spec",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "다음 [조건]을 모두 만족하는 코드로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>[조건]</b><br>○ embarked 열의 결측을 가장 많이 나온 값으로 채운다.<br>○ 모든 결측이 채워진다.</span>",
+   "code": "s = pd.Series(['S', 'C', np.nan, 'S', np.nan])\ns = ____",
+   "answer": "s.fillna(s.mode()[0])",
+   "why": "문자열에는 평균이 없어 최빈값을 씁니다. <span class=\"mono\">mode()</span> 는 Series 라서 그대로 넣으면 같은 인덱스 자리(0번)끼리만 맞춰 채워 결측이 남고, <span class=\"mono\">[0]</span> 으로 값을 꺼내야 모두 채워집니다. <span class=\"mono\">max()</span> 는 사전순으로 가장 뒤의 값입니다.",
+   "tags": [
+    "mode",
+    "fillna"
+   ],
+   "verifyCode": "import pandas as pd\ns = pd.Series(['S', 'C', np.nan, 'S', np.nan])\nprint(s.fillna(s.mode()[0]).tolist(), s.fillna(s.mode()).isnull().sum())",
+   "verifyExpect": "['S', 'C', 'S', 'S', 'S'] 2",
+   "options": [
+    "s.fillna(s.mode()[0])",
+    "s.fillna(s.mean())",
+    "s.fillna(s.mode())",
+    "s.dropna()",
+    "s.fillna(s.max())"
+   ]
+  },
+  {
+   "id": "4S08",
+   "type": "조건 매핑",
+   "typeKey": "spec",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "다음 [조건]을 모두 만족하는 코드로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;데이터프레임 t&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">   survived  pclass     sex   age     fare embarked deck<br>0         0       3    male  22.0   7.2500        S  NaN<br>1         1       1  female  38.0  71.2833        C    C<br>2         1       3  female  26.0   7.9250        S  NaN<br>3         1       1  female  35.0  53.1000        S    C<br>4         0       3    male  35.0   8.0500        S  NaN<br>5         0       3    male   NaN   8.4583        Q  NaN</span></span><span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>[조건]</b><br>○ 결측이 너무 많은 deck 열을 없앤다.<br>○ 행의 개수는 그대로 유지한다.</span>",
+   "code": "",
+   "answer": "t.drop(columns=['deck'])",
+   "why": "결측이 많은 열은 채우기보다 열 자체를 지우는 게 낫습니다. <span class=\"mono\">dropna</span> 계열은 행을 지워 행 수가 줄고, <span class=\"mono\">drop(['deck'])</span> 는 이름이 deck 인 행을 찾다가 오류가 납니다.",
+   "tags": [
+    "drop",
+    "columns"
+   ],
+   "verifyCode": "import pandas as pd\nt = pd.DataFrame({'survived': [0, 1, 1, 1, 0, 0], 'pclass': [3, 1, 3, 1, 3, 3],\n                  'sex': ['male', 'female', 'female', 'female', 'male', 'male'],\n                  'age': [22.0, 38.0, 26.0, 35.0, 35.0, np.nan],\n                  'fare': [7.25, 71.2833, 7.925, 53.1, 8.05, 8.4583],\n                  'embarked': ['S', 'C', 'S', 'S', 'S', 'Q'],\n                  'deck': [np.nan, 'C', np.nan, 'C', np.nan, np.nan]})\nc = t.drop(columns=['deck'])\nprint(c.shape, 'deck' in c.columns)",
+   "verifyExpect": "(6, 6) False",
+   "options": [
+    "t.dropna()",
+    "t.dropna(subset=['deck'])",
+    "t.drop(columns=['deck'])",
+    "t.drop(['deck'])",
+    "t['deck'].dropna()"
+   ]
+  },
+  {
+   "id": "4S09",
+   "type": "조건 매핑",
+   "typeKey": "spec",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "다음 [조건]을 모두 만족하는 코드로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;데이터프레임 t&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">   survived  pclass     sex   age     fare embarked deck<br>0         0       3    male  22.0   7.2500        S  NaN<br>1         1       1  female  38.0  71.2833        C    C<br>2         1       3  female  26.0   7.9250        S  NaN<br>3         1       1  female  35.0  53.1000        S    C<br>4         0       3    male  35.0   8.0500        S  NaN<br>5         0       3    male   NaN   8.4583        Q  NaN</span></span><span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>[조건]</b><br>○ age 열에서 값이 들어 있는(비어 있지 않은) 개수를 구한다.</span>",
+   "code": "",
+   "answer": "t['age'].count()",
+   "why": "<span class=\"mono\">count()</span> 는 결측을 빼고 셉니다. <span class=\"mono\">len</span> 과 <span class=\"mono\">size</span> 는 결측까지 포함한 6, <span class=\"mono\">isnull().sum()</span> 은 반대로 비어 있는 개수 1, <span class=\"mono\">t.count()</span> 는 모든 열의 개수를 한꺼번에 돌려줍니다.",
+   "tags": [
+    "count"
+   ],
+   "verifyCode": "import pandas as pd\nt = pd.DataFrame({'survived': [0, 1, 1, 1, 0, 0], 'pclass': [3, 1, 3, 1, 3, 3],\n                  'sex': ['male', 'female', 'female', 'female', 'male', 'male'],\n                  'age': [22.0, 38.0, 26.0, 35.0, 35.0, np.nan],\n                  'fare': [7.25, 71.2833, 7.925, 53.1, 8.05, 8.4583],\n                  'embarked': ['S', 'C', 'S', 'S', 'S', 'Q'],\n                  'deck': [np.nan, 'C', np.nan, 'C', np.nan, np.nan]})\nprint(t['age'].count(), len(t['age']), t['age'].notnull().sum())",
+   "verifyExpect": "5 6 5",
+   "options": [
+    "len(t['age'])",
+    "t['age'].isnull().sum()",
+    "t['age'].size",
+    "t['age'].count()",
+    "t.count()"
+   ]
+  },
+  {
+   "id": "4S10",
+   "type": "조건 매핑",
+   "typeKey": "spec",
+   "mode": "mc",
+   "src": "4_판다스모듈",
+   "stem": "타이타닉 데이터의 결측 위치를 그림으로 보려고 한다. 다음 [조건]을 모두 만족하는 코드로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>[조건]</b><br>○ 결측은 검은색, 정상 값은 흰색으로 칠한다.<br>○ 색 막대(컬러바)는 없앤다.<br>○ 행이 많으므로 y 축 행 이름은 숨긴다.</span>",
+   "code": "",
+   "answer": "sns.heatmap(df.isnull(), cbar=False, yticklabels=False, cmap='gray_r')",
+   "why": "<span class=\"mono\">isnull()</span> 표의 True(결측)를 색으로 칠합니다. <span class=\"mono\">cmap='gray'</span> 는 True 가 흰색이라 뒤집은 <span class=\"mono\">'gray_r'</span> 을 써야 결측이 검은색이 되고, <span class=\"mono\">cbar=False</span> 가 컬러바를, <span class=\"mono\">yticklabels=False</span> 가 행 이름을 숨깁니다.",
+   "tags": [
+    "heatmap",
+    "cmap",
+    "결측 시각화"
+   ],
+   "ref": "셀 [34] 결측치 시각화 코드 설명",
+   "options": [
+    "sns.heatmap(df.isnull(), cbar=True, yticklabels=False, cmap='gray_r')",
+    "sns.heatmap(df.isnull(), cbar=False, yticklabels=False, cmap='gray')",
+    "sns.heatmap(df.isnull(), cbar=False, yticklabels=False, cmap='gray_r')",
+    "sns.heatmap(df.isnull().sum(), cbar=False, yticklabels=False, cmap='gray_r')",
+    "sns.heatmap(df.isnull(), cbar=False, xticklabels=False, cmap='gray_r')"
+   ]
+  },
+  {
+   "id": "4W01",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "4_판다스모듈",
+   "stem": "코드의 빈칸 ㉠ 에 들어갈 코드를 적으시오. (실제 값만 배열로)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">[22 38 26 35]</span></span>",
+   "code": "age = pd.Series([22, 38, 26, 35], index=['철수', '영희', '민수', '지연'], name='나이')\nprint(age.㉠)",
+   "answer": "values",
+   "why": "Series 의 세 요소 중 실제 데이터는 <span class=\"mono\">values</span> 입니다. 인덱스(이름표)는 <span class=\"mono\">index</span>, 이름은 <span class=\"mono\">name</span> 입니다.",
+   "tags": [
+    "Series",
+    "values"
+   ],
+   "verifyCode": "import pandas as pd\nage = pd.Series([22, 38, 26, 35], index=['철수', '영희', '민수', '지연'], name='나이')\nprint(age.values)",
+   "verifyExpect": "[22 38 26 35]",
+   "accept": [
+    "values",
+    "to_numpy()"
+   ]
+  },
+  {
+   "id": "4W02",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "4_판다스모듈",
+   "stem": "코드의 빈칸 ㉠ 에 들어갈 코드를 적으시오. (위치 번호로 영희의 나이 꺼내기)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">38</span></span>",
+   "code": "age = pd.Series([22, 38, 26, 35], index=['철수', '영희', '민수', '지연'], name='나이')\nprint(age.iloc[㉠])",
+   "answer": "1",
+   "why": "<span class=\"mono\">iloc</span> 은 위치 번호로 찾습니다. 영희는 두 번째 원소라 위치 번호 1(뒤에서 세면 -3)입니다.",
+   "tags": [
+    "iloc"
+   ],
+   "verifyCode": "import pandas as pd\nage = pd.Series([22, 38, 26, 35], index=['철수', '영희', '민수', '지연'], name='나이')\nprint(age.iloc[1])",
+   "verifyExpect": "38",
+   "accept": [
+    "1",
+    "-3"
+   ]
+  },
+  {
+   "id": "4W03",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "4_판다스모듈",
+   "stem": "코드의 빈칸 ㉠ 에 들어갈 코드를 적으시오. (나이·성별 두 열을 DataFrame 으로)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">DataFrame (4, 2)</span></span>",
+   "code": "df_mini = pd.DataFrame({'나이': [22, 38, 26, 35], '성별': ['남', '여', '남', '여'], '탑승등급': [3, 1, 3, 1]},\n                       index=['철수', '영희', '민수', '지연'])\nnew_df = df_mini[㉠]\nprint(type(new_df).__name__, new_df.shape)",
+   "answer": "['나이', '성별']",
+   "why": "여러 열을 꺼낼 때는 열 이름들을 리스트로 만들어 넣으므로 대괄호가 두 겹이 됩니다. 결과는 DataFrame 입니다.",
+   "tags": [
+    "열 선택",
+    "DataFrame"
+   ],
+   "verifyCode": "import pandas as pd\ndf_mini = pd.DataFrame({'나이': [22, 38, 26, 35], '성별': ['남', '여', '남', '여'], '탑승등급': [3, 1, 3, 1]},\n                       index=['철수', '영희', '민수', '지연'])\nnew_df = df_mini[['나이', '성별']]\nprint(type(new_df).__name__, new_df.shape)",
+   "verifyExpect": "DataFrame (4, 2)",
+   "accept": [
+    "['나이', '성별']",
+    "['나이','성별']"
+   ]
+  },
+  {
+   "id": "4W04",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "4_판다스모듈",
+   "stem": "코드의 빈칸 ㉠ 에 들어갈 코드를 적으시오. (행 수와 열 수)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;데이터프레임 t&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">   survived  pclass     sex   age     fare embarked deck<br>0         0       3    male  22.0   7.2500        S  NaN<br>1         1       1  female  38.0  71.2833        C    C<br>2         1       3  female  26.0   7.9250        S  NaN<br>3         1       1  female  35.0  53.1000        S    C<br>4         0       3    male  35.0   8.0500        S  NaN<br>5         0       3    male   NaN   8.4583        Q  NaN</span></span><span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">(6, 7)</span></span>",
+   "code": "print(t.㉠)",
+   "answer": "shape",
+   "why": "<span class=\"mono\">shape</span> 는 (행 수, 열 수) 튜플입니다. 괄호 없이 쓰는 속성이라 <span class=\"mono\">shape()</span> 처럼 호출하지 않습니다.",
+   "tags": [
+    "shape"
+   ],
+   "verifyCode": "import pandas as pd\nt = pd.DataFrame({'survived': [0, 1, 1, 1, 0, 0], 'pclass': [3, 1, 3, 1, 3, 3],\n                  'sex': ['male', 'female', 'female', 'female', 'male', 'male'],\n                  'age': [22.0, 38.0, 26.0, 35.0, 35.0, np.nan],\n                  'fare': [7.25, 71.2833, 7.925, 53.1, 8.05, 8.4583],\n                  'embarked': ['S', 'C', 'S', 'S', 'S', 'Q'],\n                  'deck': [np.nan, 'C', np.nan, 'C', np.nan, np.nan]})\nprint(t.shape)",
+   "verifyExpect": "(6, 7)",
+   "accept": [
+    "shape"
+   ]
+  },
+  {
+   "id": "4W05",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "4_판다스모듈",
+   "stem": "코드의 빈칸 ㉠ 에 들어갈 코드를 적으시오. (개수 대신 비율)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">3    0.666667<br>1    0.333333<br>Name: proportion, dtype: float64</span></span>",
+   "code": "pclass = pd.Series([3, 1, 3, 1, 3, 3])\nprint(pclass.value_counts(㉠=True))",
+   "answer": "normalize",
+   "why": "<span class=\"mono\">value_counts(normalize=True)</span> 는 각 값의 개수를 전체 개수로 나눈 비율을 보여 줍니다.",
+   "tags": [
+    "value_counts",
+    "normalize"
+   ],
+   "verifyCode": "import pandas as pd\npclass = pd.Series([3, 1, 3, 1, 3, 3])\nprint(pclass.value_counts(normalize=True))",
+   "verifyExpect": "3    0.666667\n1    0.333333\nName: proportion, dtype: float64",
+   "accept": [
+    "normalize"
+   ]
+  },
+  {
+   "id": "4W06",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "4_판다스모듈",
+   "stem": "코드의 빈칸 ㉠ 에 들어갈 코드를 적으시오. (운임이 비싼 순서)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;데이터프레임 t&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">   survived  pclass     sex   age     fare embarked deck<br>0         0       3    male  22.0   7.2500        S  NaN<br>1         1       1  female  38.0  71.2833        C    C<br>2         1       3  female  26.0   7.9250        S  NaN<br>3         1       1  female  35.0  53.1000        S    C<br>4         0       3    male  35.0   8.0500        S  NaN<br>5         0       3    male   NaN   8.4583        Q  NaN</span></span><span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">[1, 3, 5, 4, 2, 0]</span></span>",
+   "code": "print(t.sort_values('fare', ㉠=False).index.tolist())",
+   "answer": "ascending",
+   "why": "<span class=\"mono\">ascending</span> 은 오름차순 여부입니다. False 로 두면 내림차순이라 운임이 비싼 1번(71.2833)부터 나옵니다.",
+   "tags": [
+    "sort_values",
+    "ascending"
+   ],
+   "verifyCode": "import pandas as pd\nt = pd.DataFrame({'survived': [0, 1, 1, 1, 0, 0], 'pclass': [3, 1, 3, 1, 3, 3],\n                  'sex': ['male', 'female', 'female', 'female', 'male', 'male'],\n                  'age': [22.0, 38.0, 26.0, 35.0, 35.0, np.nan],\n                  'fare': [7.25, 71.2833, 7.925, 53.1, 8.05, 8.4583],\n                  'embarked': ['S', 'C', 'S', 'S', 'S', 'Q'],\n                  'deck': [np.nan, 'C', np.nan, 'C', np.nan, np.nan]})\nprint(t.sort_values('fare', ascending=False).index.tolist())",
+   "verifyExpect": "[1, 3, 5, 4, 2, 0]",
+   "accept": [
+    "ascending"
+   ]
+  },
+  {
+   "id": "4W07",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "4_판다스모듈",
+   "stem": "코드의 빈칸 ㉠ 에 들어갈 코드를 적으시오. (결측이 하나라도 있는 행의 개수)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;데이터프레임 t&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">   survived  pclass     sex   age     fare embarked deck<br>0         0       3    male  22.0   7.2500        S  NaN<br>1         1       1  female  38.0  71.2833        C    C<br>2         1       3  female  26.0   7.9250        S  NaN<br>3         1       1  female  35.0  53.1000        S    C<br>4         0       3    male  35.0   8.0500        S  NaN<br>5         0       3    male   NaN   8.4583        Q  NaN</span></span><span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">4</span></span>",
+   "code": "print(t.isnull().㉠(axis=1).sum())",
+   "answer": "any",
+   "why": "<span class=\"mono\">any(axis=1)</span> 은 행마다 True 가 하나라도 있으면 True 를 돌려줍니다. 이를 합하면 결측이 있는 행의 수입니다. <span class=\"mono\">all</span> 이면 모든 칸이 결측인 행만 셉니다.",
+   "tags": [
+    "any",
+    "axis"
+   ],
+   "verifyCode": "import pandas as pd\nt = pd.DataFrame({'survived': [0, 1, 1, 1, 0, 0], 'pclass': [3, 1, 3, 1, 3, 3],\n                  'sex': ['male', 'female', 'female', 'female', 'male', 'male'],\n                  'age': [22.0, 38.0, 26.0, 35.0, 35.0, np.nan],\n                  'fare': [7.25, 71.2833, 7.925, 53.1, 8.05, 8.4583],\n                  'embarked': ['S', 'C', 'S', 'S', 'S', 'Q'],\n                  'deck': [np.nan, 'C', np.nan, 'C', np.nan, np.nan]})\nprint(t.isnull().any(axis=1).sum())",
+   "verifyExpect": "4",
+   "accept": [
+    "any"
+   ]
+  },
+  {
+   "id": "4W08",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "4_판다스모듈",
+   "stem": "코드의 빈칸 ㉠ 에 들어갈 코드를 적으시오. (원본 df 를 보존하는 복사본)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">원본 결측: 1</span></span>",
+   "code": "df = pd.DataFrame({'age': [22.0, np.nan, 26.0]})\ndf1 = df.㉠()\ndf1['age'] = df1['age'].fillna(0)\nprint('원본 결측:', df['age'].isnull().sum())",
+   "answer": "copy",
+   "why": "<span class=\"mono\">copy()</span> 로 만든 복사본을 고치면 원본은 그대로입니다. <span class=\"mono\">df1 = df</span> 로만 쓰면 같은 표를 가리켜 원본 결측도 0이 됩니다.",
+   "tags": [
+    "copy"
+   ],
+   "verifyCode": "import pandas as pd\ndf = pd.DataFrame({'age': [22.0, np.nan, 26.0]})\ndf1 = df.copy()\ndf1['age'] = df1['age'].fillna(0)\nprint('원본 결측:', df['age'].isnull().sum())",
+   "verifyExpect": "원본 결측: 1",
+   "accept": [
+    "copy"
+   ]
+  },
+  {
+   "id": "4W09",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "4_판다스모듈",
+   "stem": "코드의 빈칸 ㉠ 에 들어갈 코드를 적으시오. (age 만 기준으로 결측 행 삭제)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;데이터프레임 t&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">   survived  pclass     sex   age     fare embarked deck<br>0         0       3    male  22.0   7.2500        S  NaN<br>1         1       1  female  38.0  71.2833        C    C<br>2         1       3  female  26.0   7.9250        S  NaN<br>3         1       1  female  35.0  53.1000        S    C<br>4         0       3    male  35.0   8.0500        S  NaN<br>5         0       3    male   NaN   8.4583        Q  NaN</span></span><span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">5</span></span>",
+   "code": "print(len(t.dropna(㉠=['age'])))",
+   "answer": "subset",
+   "why": "<span class=\"mono\">dropna(subset=['age'])</span> 는 지정한 열에 결측이 있는 행만 지웁니다. 옵션 없이 <span class=\"mono\">dropna()</span> 를 쓰면 deck 결측 때문에 2행만 남습니다.",
+   "tags": [
+    "dropna",
+    "subset"
+   ],
+   "verifyCode": "import pandas as pd\nt = pd.DataFrame({'survived': [0, 1, 1, 1, 0, 0], 'pclass': [3, 1, 3, 1, 3, 3],\n                  'sex': ['male', 'female', 'female', 'female', 'male', 'male'],\n                  'age': [22.0, 38.0, 26.0, 35.0, 35.0, np.nan],\n                  'fare': [7.25, 71.2833, 7.925, 53.1, 8.05, 8.4583],\n                  'embarked': ['S', 'C', 'S', 'S', 'S', 'Q'],\n                  'deck': [np.nan, 'C', np.nan, 'C', np.nan, np.nan]})\nprint(len(t.dropna(subset=['age'])))",
+   "verifyExpect": "5",
+   "accept": [
+    "subset"
+   ]
+  },
+  {
+   "id": "4W10",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "4_판다스모듈",
+   "stem": "코드의 빈칸 ㉠ 에 들어갈 코드를 적으시오. (가장 많이 나온 값으로 채우기)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">['S', 'C', 'S', 'S']</span></span>",
+   "code": "s = pd.Series(['S', 'C', np.nan, 'S'])\nprint(s.fillna(s.㉠()[0]).tolist())",
+   "answer": "mode",
+   "why": "최빈값은 <span class=\"mono\">mode()</span> 로 구하고, 결과가 Series 라서 <span class=\"mono\">[0]</span> 으로 값을 꺼내 <span class=\"mono\">fillna</span> 에 넣습니다.",
+   "tags": [
+    "mode",
+    "fillna"
+   ],
+   "verifyCode": "import pandas as pd\ns = pd.Series(['S', 'C', np.nan, 'S'])\nprint(s.fillna(s.mode()[0]).tolist())",
+   "verifyExpect": "['S', 'C', 'S', 'S']",
+   "accept": [
+    "mode"
+   ]
+  }
+ ]
+}

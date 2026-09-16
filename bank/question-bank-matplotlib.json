@@ -1,0 +1,1229 @@
+{
+ "version": 1,
+ "generatedAt": "2026-09-16",
+ "source": [
+  "5_맷플롯립모듈.ipynb"
+ ],
+ "verified": "verifyCode 가 있는 문항은 사이트 파이썬(Pyodide 0.27.7)과 같은 버전에서 실행해 정답을 확인함. ref 가 있는 문항은 코드로 검증할 수 없는 개념이라 노트북 본문(해당 셀)을 근거로 둠.",
+ "types": [
+  {
+   "key": "classify",
+   "label": "개념 분류",
+   "pick": [
+    1,
+    2
+   ],
+   "note": "코드를 보고 <보기>에서 옳은 설명을 모두 고르는 문항"
+  },
+  {
+   "key": "blank2",
+   "label": "빈칸",
+   "pick": [
+    1,
+    2
+   ],
+   "note": "㉠, ㉡ 두 빈칸을 짝으로 고르는 문항"
+  },
+  {
+   "key": "boundary",
+   "label": "경계값",
+   "pick": [
+    1,
+    2
+   ],
+   "note": "포함/미포함, off-by-one을 판별하는 문항"
+  },
+  {
+   "key": "trace",
+   "label": "상태 예측",
+   "pick": [
+    1,
+    2
+   ],
+   "note": "shape·size·strides·배열 구조 등 중간 상태를 예측하는 문항"
+  },
+  {
+   "key": "contrast",
+   "label": "대조",
+   "pick": [
+    1,
+    2
+   ],
+   "note": "거의 같은 두 코드의 결정적 차이를 묻는 문항"
+  },
+  {
+   "key": "spec",
+   "label": "조건 매핑",
+   "pick": [
+    1,
+    1
+   ],
+   "note": "[조건]을 만족하는 코드를 고르는 문항"
+  },
+  {
+   "key": "short",
+   "label": "서답형",
+   "pick": [
+    1,
+    1
+   ],
+   "note": "빈칸에 들어갈 코드를 직접 쓰는 문항"
+  }
+ ],
+ "questions": [
+  {
+   "id": "5C01",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "5_맷플롯립모듈",
+   "stem": "다음 코드에 대한 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) x 에는 10이 들어 있지 않다.<br>(나) test 선은 사각형 마커와 파선으로 그려진다.<br>(다) 그림의 크기는 가로 3인치, 세로 5인치이다.</span>",
+   "code": "x = np.arange(0, 10, 0.5)\nplt.figure(figsize=(5, 3))\nplt.plot(x, x**1.5, 'o-', color='tab:blue', label='train')\nplt.plot(x, x**1.3, 's--', color='tab:orange', label='test')\nplt.legend()",
+   "answer": "(가), (나)",
+   "why": "<span class=\"mono\">np.arange</span> 는 끝값을 포함하지 않아 0부터 9.5까지입니다. 스타일 문자열 <span class=\"mono\">'s--'</span> 는 사각형(s) 마커와 파선(--)이고, <span class=\"mono\">figsize</span> 는 (가로, 세로) 순서라 가로 5, 세로 3입니다.",
+   "tags": [
+    "arange",
+    "스타일 문자열",
+    "figsize"
+   ],
+   "verifyCode": "import matplotlib.pyplot as plt\nx = np.arange(0, 10, 0.5)\nfig = plt.figure(figsize=(5, 3))\nplt.plot(x, x**1.5, 'o-', color='tab:blue', label='train')\nl2, = plt.plot(x, x**1.3, 's--', color='tab:orange', label='test')\nprint(10 not in x, l2.get_marker() == 's' and l2.get_linestyle() == '--', fig.get_size_inches().tolist() == [3.0, 5.0])\nplt.close('all')",
+   "verifyExpect": "True True False",
+   "options": [
+    "(나)",
+    "(다)",
+    "(가), (나)",
+    "(가), (다)",
+    "(가), (나), (다)"
+   ]
+  },
+  {
+   "id": "5C02",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "5_맷플롯립모듈",
+   "stem": "다음 코드에 대한 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) 범례에는 항목이 1개만 나타난다.<br>(나) label 을 주지 않은 두 번째 선은 범례에 나오지 않는다.<br>(다) <span class=\"mono\">plt.legend()</span> 를 부르지 않아도 label 만 있으면 범례가 그려진다.</span>",
+   "code": "plt.plot([1, 2, 3], [1, 4, 9], label='square')\nplt.plot([1, 2, 3], [1, 2, 3])\nplt.legend()",
+   "answer": "(가), (나)",
+   "why": "범례에는 label 을 지정한 선만 들어갑니다. label 을 줬더라도 <span class=\"mono\">legend()</span> 를 호출해야 범례가 그려집니다. 노트북 주석대로 모든 선에 label 을 지정해야 모두 나타납니다.",
+   "tags": [
+    "legend",
+    "label"
+   ],
+   "verifyCode": "import matplotlib.pyplot as plt\nfig, ax = plt.subplots()\nax.plot([1, 2, 3], [1, 4, 9], label='square')\nax.plot([1, 2, 3], [1, 2, 3])\nbefore = ax.get_legend() is not None\nleg = ax.legend()\ntexts = [t.get_text() for t in leg.get_texts()]\nprint(len(texts) == 1, texts == ['square'], before)\nplt.close('all')",
+   "verifyExpect": "True True False",
+   "options": [
+    "(가)",
+    "(나)",
+    "(다)",
+    "(가), (나)",
+    "(가), (다)"
+   ]
+  },
+  {
+   "id": "5C03",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "5_맷플롯립모듈",
+   "stem": "다음 코드에 대한 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) 'sin &amp; cos' 는 그림 전체의 대제목이다.<br>(나) <span class=\"mono\">axes</span> 는 원소가 2개인 1차원 배열이다.<br>(다) <span class=\"mono\">axes[0].set_title('sin')</span> 대신 <span class=\"mono\">plt.title('sin')</span> 을 쓰면 두 칸 모두에 sin 이 붙는다.</span>",
+   "code": "fig, axes = plt.subplots(1, 2, figsize=(10, 3.5))\nfig.suptitle('sin & cos', fontsize=16)\naxes[0].set_title('sin')\naxes[1].set_title('cos')",
+   "answer": "(가), (나)",
+   "why": "<span class=\"mono\">fig</span> 는 전체 액자, <span class=\"mono\">axes</span> 는 액자 속 칸이라 <span class=\"mono\">fig.suptitle</span> 이 대제목, <span class=\"mono\">ax.set_title</span> 이 칸 제목입니다. 1행 2열이면 axes 는 원소 2개인 1차원 배열입니다. <span class=\"mono\">plt.title</span> 은 현재 선택된 칸 하나에만 제목을 붙이므로 노트북은 <span class=\"mono\">ax.set_title</span> 을 쓰라고 강조합니다.",
+   "tags": [
+    "subplots",
+    "suptitle",
+    "set_title"
+   ],
+   "verifyCode": "import matplotlib.pyplot as plt\nfig, axes = plt.subplots(1, 2, figsize=(10, 3.5))\nfig.suptitle('sin & cos', fontsize=16)\naxes[0].set_title('sin'); axes[1].set_title('cos')\nplt.title('both?')\nprint(fig._suptitle.get_text() == 'sin & cos', axes.shape == (2,), sum(a.get_title() == 'both?' for a in axes) == 2)\nplt.close('all')",
+   "verifyExpect": "True True False",
+   "options": [
+    "(가)",
+    "(가), (나)",
+    "(가), (다)",
+    "(나), (다)",
+    "(가), (나), (다)"
+   ]
+  },
+  {
+   "id": "5C04",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "5_맷플롯립모듈",
+   "stem": "다음 코드에 대한 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은? (titanic 의 age 열에는 결측치가 있다)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) 최솟값~최댓값 범위를 같은 폭의 구간 20개로 나눈다.<br>(나) 막대의 높이는 각 구간에 들어간 데이터 개수이다.<br>(다) <span class=\"mono\">dropna()</span> 때문에 titanic 원본의 age 결측치가 지워진다.</span>",
+   "code": "plt.hist(titanic['age'].dropna(), bins=20, color='skyblue', edgecolor='black')",
+   "answer": "(가), (나)",
+   "why": "히스토그램은 범위를 같은 폭의 구간(bin)으로 나누고 구간마다 개수를 세어 막대 높이로 그립니다. <span class=\"mono\">dropna()</span> 는 결측을 뺀 새 Series 를 돌려줄 뿐 원본은 그대로입니다.",
+   "tags": [
+    "hist",
+    "bins",
+    "dropna"
+   ],
+   "verifyCode": "import pandas as pd\nimport matplotlib.pyplot as plt\ntitanic = pd.DataFrame({'age': [22.0, 38.0, np.nan, 35.0, 2.0, 54.0]})\nn, bins, patches = plt.hist(titanic['age'].dropna(), bins=20, color='skyblue', edgecolor='black')\nw = np.diff(bins)\nprint(len(patches) == 20 and bool(np.allclose(w, w[0])) and bins[0] == 2.0 and bins[-1] == 54.0, int(n.sum()) == 5, titanic['age'].isnull().sum() == 0)\nplt.close('all')",
+   "verifyExpect": "True True False",
+   "options": [
+    "(가)",
+    "(다)",
+    "(가), (나)",
+    "(가), (다)",
+    "(나), (다)"
+   ]
+  },
+  {
+   "id": "5C05",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "5_맷플롯립모듈",
+   "stem": "박스플롯을 읽는 방법에 대한 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) 상자는 가운데 50% 데이터가 있는 범위를 나타낸다.<br>(나) 상자 안의 선은 평균값이다.<br>(다) 따로 떨어져 동그라미로 찍힌 점은 이상치 후보이다.</span>",
+   "code": "plt.boxplot(pl_by_species, tick_labels=iris['species'].unique())",
+   "answer": "(가), (다)",
+   "why": "상자는 1사분위수(25%)부터 3사분위수(75%)까지, 즉 가운데 50% 범위입니다. 상자 안의 선은 평균이 아니라 중앙값이고, 멀리 떨어진 동그라미는 이상치 후보입니다.",
+   "tags": [
+    "boxplot",
+    "중앙값",
+    "이상치"
+   ],
+   "verifyCode": "import matplotlib.pyplot as plt\ndata = [1, 2, 3, 4, 5, 6, 7, 8, 9, 40]\nr = plt.boxplot([data])\nbox_y = r['boxes'][0].get_ydata()\nq1, q3 = np.percentile(data, [25, 75])\nmed = r['medians'][0].get_ydata()[0]\nprint(bool(np.isclose(box_y.min(), q1) and np.isclose(box_y.max(), q3)), bool(med == np.mean(data)), 40 in r['fliers'][0].get_ydata())\nplt.close('all')",
+   "verifyExpect": "True False True",
+   "options": [
+    "(가)",
+    "(나)",
+    "(다)",
+    "(가), (나)",
+    "(가), (다)"
+   ]
+  },
+  {
+   "id": "5C06",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "5_맷플롯립모듈",
+   "stem": "다음 코드에 대한 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은? (survived 는 생존 1, 사망 0)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) <span class=\"mono\">surv</span> 의 각 값은 그 등급의 생존율(0~1)이다.<br>(나) <span class=\"mono\">surv</span> 의 인덱스는 등급 번호 1, 2, 3 이다.<br>(다) <span class=\"mono\">astype(str)</span> 을 지우면 막대가 3개보다 많이 그려진다.</span>",
+   "code": "surv = titanic.groupby('pclass')['survived'].mean()\nplt.bar(surv.index.astype(str), surv.values)",
+   "answer": "(가), (나)",
+   "why": "0과 1로 된 열의 평균은 1의 비율이므로 등급별 생존율이 됩니다. groupby 기준인 등급이 인덱스가 되고, <span class=\"mono\">astype(str)</span> 은 x 축을 1, 2, 3 이라는 글자(범주)로 보이게 할 뿐 막대 개수는 그대로 3개입니다.",
+   "tags": [
+    "groupby",
+    "bar",
+    "astype"
+   ],
+   "verifyCode": "import pandas as pd\nimport matplotlib.pyplot as plt\ntitanic = pd.DataFrame({'pclass': [1, 1, 1, 2, 2, 3, 3, 3, 3], 'survived': [1, 1, 0, 1, 0, 0, 0, 1, 0]})\nsurv = titanic.groupby('pclass')['survived'].mean()\nfig, ax = plt.subplots()\nbars = ax.bar(surv.index, surv.values)\nprint(bool(((surv >= 0) & (surv <= 1)).all()), surv.index.tolist() == [1, 2, 3], len(bars) > 3)\nplt.close('all')",
+   "verifyExpect": "True True False",
+   "options": [
+    "(가)",
+    "(가), (나)",
+    "(가), (다)",
+    "(나), (다)",
+    "(가), (나), (다)"
+   ]
+  },
+  {
+   "id": "5C07",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "5_맷플롯립모듈",
+   "stem": "그래프 저장에 대한 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은? (코랩 기준)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) <span class=\"mono\">plt.savefig</span> 는 <span class=\"mono\">plt.show()</span> 보다 먼저 불러야 그린 그래프가 저장된다.<br>(나) <span class=\"mono\">fig</span> 를 통해 저장하는 <span class=\"mono\">fig.savefig</span> 는 <span class=\"mono\">plt.show()</span> 뒤에서도 쓸 수 있다.<br>(다) <span class=\"mono\">plt.tight_layout()</span> 은 그림을 파일로 저장하는 함수이다.</span>",
+   "code": "fig, axes = plt.subplots(1, 2, figsize=(10, 3.5))\naxes[0].plot(x, np.sin(x))\naxes[1].plot(x, np.cos(x), color='red')\nplt.tight_layout()\nplt.savefig('result1.png')\nplt.show()\nfig.savefig('result2.png')",
+   "answer": "(가), (나)",
+   "why": "노트북 설명대로 <span class=\"mono\">plt.savefig</span> 는 show() 전에 호출해야 하고, 그림 객체 fig 를 가지고 있으면 show() 뒤에도 <span class=\"mono\">fig.savefig</span> 로 저장할 수 있습니다. <span class=\"mono\">tight_layout</span> 은 제목·축 이름이 겹치지 않게 여백을 정리하는 함수입니다.",
+   "tags": [
+    "savefig",
+    "tight_layout"
+   ],
+   "ref": "셀 [10] 여러 그래프 표시·저장 코드",
+   "options": [
+    "(가)",
+    "(나)",
+    "(다)",
+    "(가), (나)",
+    "(가), (나), (다)"
+   ]
+  },
+  {
+   "id": "5B01",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "5_맷플롯립모듈",
+   "stem": "㉠, ㉡에 들어갈 것으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">0.0 9.5 20 [5.0, 3.0]</span></span>",
+   "code": "x = np.arange(0, 10, ㉠)\nfig = plt.figure(figsize=㉡)\nprint(x[0], x[-1], len(x), fig.get_size_inches().tolist())",
+   "answer": "㉠ 0.5  ·  ㉡ (5, 3)",
+   "why": "0부터 10 미만까지 20개가 나오려면 간격이 0.5여야 합니다(마지막 9.5). <span class=\"mono\">arange</span> 의 세 번째 인자는 개수가 아니라 간격이고, <span class=\"mono\">figsize</span> 는 (가로, 세로) 순서입니다.",
+   "tags": [
+    "arange",
+    "figsize"
+   ],
+   "verifyCode": "import matplotlib.pyplot as plt\nx = np.arange(0, 10, 0.5)\nfig = plt.figure(figsize=(5, 3))\nprint(x[0], x[-1], len(x), fig.get_size_inches().tolist())\nplt.close('all')",
+   "verifyExpect": "0.0 9.5 20 [5.0, 3.0]",
+   "options": [
+    "㉠ 0.5  ·  ㉡ (3, 5)",
+    "㉠ 1  ·  ㉡ (5, 3)",
+    "㉠ 20  ·  ㉡ (5, 3)",
+    "㉠ 0.5  ·  ㉡ (5, 3)",
+    "㉠ 0.2  ·  ㉡ (3, 5)"
+   ]
+  },
+  {
+   "id": "5B02",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "5_맷플롯립모듈",
+   "stem": "첫 선은 원 + 실선, 둘째 선은 위쪽 삼각형 + 점선으로 그리려고 한다. ㉠, ㉡에 들어갈 것으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">o - | ^ :</span></span>",
+   "code": "x = np.arange(5)\na, = plt.plot(x, x, ㉠)\nb, = plt.plot(x, x + 2, ㉡)\nprint(a.get_marker(), a.get_linestyle(), '|', b.get_marker(), b.get_linestyle())",
+   "answer": "㉠ 'o-'  ·  ㉡ '^:'",
+   "why": "마커 기호 o 는 원, ^ 는 위쪽 삼각형, s 는 사각형입니다. 선 스타일은 - 실선, -- 파선, -. 일점쇄선, : 점선이고, <span class=\"mono\">'o-'</span> 처럼 마커와 선을 붙여 씁니다.",
+   "tags": [
+    "스타일 문자열",
+    "마커",
+    "선 스타일"
+   ],
+   "verifyCode": "import matplotlib.pyplot as plt\nx = np.arange(5)\na, = plt.plot(x, x, 'o-')\nb, = plt.plot(x, x + 2, '^:')\nprint(a.get_marker(), a.get_linestyle(), '|', b.get_marker(), b.get_linestyle())\nplt.close('all')",
+   "verifyExpect": "o - | ^ :",
+   "options": [
+    "㉠ 'o--'  ·  ㉡ '^:'",
+    "㉠ 'o-'  ·  ㉡ '^:'",
+    "㉠ 'o-'  ·  ㉡ '^-.'",
+    "㉠ 's-'  ·  ㉡ '^:'",
+    "㉠ 'o:'  ·  ㉡ '^-'"
+   ]
+  },
+  {
+   "id": "5B03",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "5_맷플롯립모듈",
+   "stem": "㉠, ㉡에 들어갈 것으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">['sin', 'cos']</span></span>",
+   "code": "fig, axes = plt.subplots(1, 2)\naxes[㉠].set_title('sin')\naxes[1].㉡('cos')\nprint([ax.get_title() for ax in axes])",
+   "answer": "㉠ 0  ·  ㉡ set_title",
+   "why": "1행 2열의 axes 는 1차원 배열이라 왼쪽 칸이 <span class=\"mono\">axes[0]</span> 입니다(2차원 인덱스 [0, 0] 은 오류). 칸마다 제목을 붙이는 메서드는 <span class=\"mono\">set_title</span> 이고, <span class=\"mono\">ax.title</span> 은 호출할 수 없는 속성입니다.",
+   "tags": [
+    "subplots",
+    "set_title"
+   ],
+   "verifyCode": "import matplotlib.pyplot as plt\nfig, axes = plt.subplots(1, 2)\naxes[0].set_title('sin')\naxes[1].set_title('cos')\nprint([ax.get_title() for ax in axes])\nplt.close('all')",
+   "verifyExpect": "['sin', 'cos']",
+   "options": [
+    "㉠ 1  ·  ㉡ set_title",
+    "㉠ 0  ·  ㉡ set_title",
+    "㉠ 0  ·  ㉡ title",
+    "㉠ 0, 0  ·  ㉡ set_title",
+    "㉠ 1  ·  ㉡ title"
+   ]
+  },
+  {
+   "id": "5B04",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "5_맷플롯립모듈",
+   "stem": "㉠, ㉡에 들어갈 것으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">patches: 4  count: 5</span></span>",
+   "code": "age = pd.Series([22.0, 38.0, np.nan, 35.0, 2.0, 54.0])\nn, bins, patches = plt.hist(age.㉠(), bins=㉡)\nprint('patches:', len(patches), ' count:', int(n.sum()))",
+   "answer": "㉠ dropna  ·  ㉡ 4",
+   "why": "결측을 뺀 5개 값을 구간 4개로 나누면 막대(patches)가 4개이고, 막대 높이의 합은 전체 데이터 개수 5입니다. bins 는 막대 개수이지 데이터 개수가 아닙니다.",
+   "tags": [
+    "hist",
+    "bins",
+    "dropna"
+   ],
+   "verifyCode": "import pandas as pd\nimport matplotlib.pyplot as plt\nage = pd.Series([22.0, 38.0, np.nan, 35.0, 2.0, 54.0])\nn, bins, patches = plt.hist(age.dropna(), bins=4)\nprint('patches:', len(patches), ' count:', int(n.sum()))\nplt.close('all')",
+   "verifyExpect": "patches: 4  count: 5",
+   "options": [
+    "㉠ dropna  ·  ㉡ 5",
+    "㉠ fillna  ·  ㉡ 4",
+    "㉠ dropna  ·  ㉡ 4",
+    "㉠ isnull  ·  ㉡ 4",
+    "㉠ dropna  ·  ㉡ 3"
+   ]
+  },
+  {
+   "id": "5B05",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "5_맷플롯립모듈",
+   "stem": "품종마다 색을 달리한 산점도를 그리려고 한다. ㉠, ㉡에 들어갈 것으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">3 [3, 2, 1]</span></span>",
+   "code": "iris = pd.DataFrame({'species': ['setosa', 'versicolor', 'setosa', 'virginica', 'setosa', 'versicolor'],\n                     'petal_length': [1.4, 4.7, 1.3, 6.0, 1.5, 4.5],\n                     'petal_width': [0.2, 1.4, 0.2, 2.5, 0.2, 1.5]})\nfig, ax = plt.subplots()\nfor species, color in ㉠(['setosa', 'versicolor', 'virginica'], ['tab:blue', 'tab:orange', 'tab:green']):\n    part = iris[iris['species'] ㉡ species]\n    ax.scatter(part['petal_length'], part['petal_width'], color=color, label=species)\nprint(len(ax.collections), [len(c.get_offsets()) for c in ax.collections])",
+   "answer": "㉠ zip  ·  ㉡ ==",
+   "why": "<span class=\"mono\">zip</span> 이 품종 이름과 색을 짝짓고, <span class=\"mono\">==</span> 비교로 만든 불리언 인덱싱이 그 품종의 행만 고릅니다. 산점도가 품종마다 1번씩 3번 그려지고 점은 3, 2, 1개입니다. <span class=\"mono\">!=</span> 면 그 품종을 뺀 나머지가 그려집니다.",
+   "tags": [
+    "scatter",
+    "zip",
+    "불리언 인덱싱"
+   ],
+   "verifyCode": "import pandas as pd\nimport matplotlib.pyplot as plt\niris = pd.DataFrame({'species': ['setosa', 'versicolor', 'setosa', 'virginica', 'setosa', 'versicolor'],\n                     'petal_length': [1.4, 4.7, 1.3, 6.0, 1.5, 4.5],\n                     'petal_width': [0.2, 1.4, 0.2, 2.5, 0.2, 1.5]})\nfig, ax = plt.subplots()\nfor species, color in zip(['setosa', 'versicolor', 'virginica'], ['tab:blue', 'tab:orange', 'tab:green']):\n    part = iris[iris['species'] == species]\n    ax.scatter(part['petal_length'], part['petal_width'], color=color, label=species)\nprint(len(ax.collections), [len(c.get_offsets()) for c in ax.collections])\nplt.close('all')",
+   "verifyExpect": "3 [3, 2, 1]",
+   "options": [
+    "㉠ enumerate  ·  ㉡ ==",
+    "㉠ zip  ·  ㉡ =",
+    "㉠ zip  ·  ㉡ ==",
+    "㉠ zip  ·  ㉡ !=",
+    "㉠ list  ·  ㉡ =="
+   ]
+  },
+  {
+   "id": "5B06",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "5_맷플롯립모듈",
+   "stem": "㉠, ㉡에 들어갈 것으로 알맞은 것은? (survived 는 생존 1, 사망 0)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">['1', '2', '3'] [0.67, 0.5, 0.25]</span></span>",
+   "code": "titanic = pd.DataFrame({'pclass': [1, 1, 1, 2, 2, 3, 3, 3, 3], 'survived': [1, 1, 0, 1, 0, 0, 0, 1, 0]})\nsurv = titanic.㉠('pclass')['survived'].mean()\nlabels = surv.index.㉡(str)\nprint(list(labels), surv.round(2).tolist())",
+   "answer": "㉠ groupby  ·  ㉡ astype",
+   "why": "등급별로 묶어(<span class=\"mono\">groupby</span>) 생존 여부의 평균을 내면 생존율입니다. <span class=\"mono\">astype(str)</span> 은 인덱스 1, 2, 3 을 글자 '1', '2', '3' 으로 바꿔 막대그래프 x 축을 범주로 보이게 합니다.",
+   "tags": [
+    "groupby",
+    "astype"
+   ],
+   "verifyCode": "import pandas as pd\nimport matplotlib.pyplot as plt\ntitanic = pd.DataFrame({'pclass': [1, 1, 1, 2, 2, 3, 3, 3, 3], 'survived': [1, 1, 0, 1, 0, 0, 0, 1, 0]})\nsurv = titanic.groupby('pclass')['survived'].mean()\nlabels = surv.index.astype(str)\nprint(list(labels), surv.round(2).tolist())\nplt.close('all')",
+   "verifyExpect": "['1', '2', '3'] [0.67, 0.5, 0.25]",
+   "options": [
+    "㉠ groupby  ·  ㉡ astype",
+    "㉠ sort_values  ·  ㉡ astype",
+    "㉠ value_counts  ·  ㉡ astype",
+    "㉠ groupby  ·  ㉡ tolist",
+    "㉠ sort_values  ·  ㉡ tolist"
+   ]
+  },
+  {
+   "id": "5B07",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "5_맷플롯립모듈",
+   "stem": "품종별 petal_length 를 모은 리스트를 만들고 크기를 확인하려고 한다. ㉠, ㉡에 들어갈 것으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">( 3 , 4 )</span></span>",
+   "code": "iris = pd.DataFrame({'species': ['a', 'b', 'c'] * 4, 'petal_length': range(12)})\npl_by_species = [iris[iris['species'] == s]['petal_length'] for s in iris['species'].㉠()]\nprint(\"(\", ㉡(pl_by_species), \",\", len(pl_by_species[0]), \")\")",
+   "answer": "㉠ unique  ·  ㉡ len",
+   "why": "<span class=\"mono\">unique()</span> 로 품종 이름을 하나씩 돌며 품종별 Series 를 모읍니다. 결과는 파이썬 리스트라 <span class=\"mono\">shape</span> 가 없어 <span class=\"mono\">len</span> 으로 크기를 봅니다. <span class=\"mono\">value_counts()</span> 로 돌면 이름이 아니라 개수(4)를 비교해 빈 Series 가 모이고, <span class=\"mono\">nunique()</span> 는 숫자 하나라 반복할 수 없습니다.",
+   "tags": [
+    "리스트 컴프리헨션",
+    "unique",
+    "len"
+   ],
+   "verifyCode": "import pandas as pd\nimport matplotlib.pyplot as plt\niris = pd.DataFrame({'species': ['a', 'b', 'c'] * 4, 'petal_length': range(12)})\npl_by_species = [iris[iris['species'] == s]['petal_length'] for s in iris['species'].unique()]\nprint(\"(\", len(pl_by_species), \",\", len(pl_by_species[0]), \")\")\nplt.close('all')",
+   "verifyExpect": "( 3 , 4 )",
+   "options": [
+    "㉠ unique  ·  ㉡ shape",
+    "㉠ value_counts  ·  ㉡ len",
+    "㉠ nunique  ·  ㉡ len",
+    "㉠ unique  ·  ㉡ size",
+    "㉠ unique  ·  ㉡ len"
+   ]
+  },
+  {
+   "id": "5D01",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "mode": "mc",
+   "src": "5_맷플롯립모듈",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "x = np.arange(0, 10, 0.5)\nprint(len(x), x[-1])",
+   "answer": "20 9.5",
+   "why": "<span class=\"mono\">arange</span> 는 끝값 10을 포함하지 않습니다. 0, 0.5, …, 9.5 로 (10 − 0) ÷ 0.5 = 20개이고 마지막 값은 9.5입니다.",
+   "tags": [
+    "arange",
+    "끝값 미포함"
+   ],
+   "verifyCode": "x = np.arange(0, 10, 0.5)\nprint(len(x), x[-1])",
+   "verifyExpect": "20 9.5",
+   "options": [
+    "20 9.5",
+    "21 10.0",
+    "20 10.0",
+    "19 9.5",
+    "10 9.5"
+   ]
+  },
+  {
+   "id": "5D02",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "mode": "mc",
+   "src": "5_맷플롯립모듈",
+   "stem": "학습 곡선의 x 축으로 쓰는 배열이다. 다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "epochs = np.arange(1, 21)\nprint(len(epochs), epochs[0], epochs[-1])",
+   "answer": "20 1 20",
+   "why": "시작값 1은 포함하고 끝값 21은 포함하지 않아 1부터 20까지 20개입니다. epoch 를 1부터 세려고 <span class=\"mono\">arange(1, 21)</span> 로 쓴 것입니다.",
+   "tags": [
+    "arange",
+    "끝값 미포함"
+   ],
+   "verifyCode": "epochs = np.arange(1, 21)\nprint(len(epochs), epochs[0], epochs[-1])",
+   "verifyExpect": "20 1 20",
+   "options": [
+    "21 1 21",
+    "20 0 19",
+    "20 1 20",
+    "21 1 20",
+    "20 1 21"
+   ]
+  },
+  {
+   "id": "5D03",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "mode": "mc",
+   "src": "5_맷플롯립모듈",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "data = np.random.RandomState(0).rand(100)\nn, bins, patches = plt.hist(data, bins=20)\nprint(len(n), len(bins))",
+   "answer": "20 21",
+   "why": "구간이 20개면 막대 높이(n)는 20개이고, 구간의 경계값(bins)은 양 끝을 포함해 하나 더 많은 21개입니다. 울타리 기둥이 칸보다 하나 많은 것과 같습니다.",
+   "tags": [
+    "hist",
+    "bins"
+   ],
+   "verifyCode": "import matplotlib.pyplot as plt\ndata = np.random.RandomState(0).rand(100)\nn, bins, patches = plt.hist(data, bins=20)\nprint(len(n), len(bins))\nplt.close('all')",
+   "verifyExpect": "20 21",
+   "options": [
+    "20 20",
+    "21 20",
+    "19 20",
+    "20 21",
+    "20 19"
+   ]
+  },
+  {
+   "id": "5D04",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "mode": "mc",
+   "src": "5_맷플롯립모듈",
+   "stem": "점 3개를 그린 뒤 <span class=\"mono\">xlim(0, 10)</span> 으로 x 축 범위를 정했다. 그래프 영역 안에 보이는 점은 몇 개인가?",
+   "code": "plt.scatter([0, 5, 12], [1, 2, 3])\nplt.xlim(0, 10)",
+   "answer": "2",
+   "why": "<span class=\"mono\">xlim(0, 10)</span> 은 x 축에 0부터 10까지만 보여 줍니다. x 가 0, 5 인 점은 범위 안이고 12 인 점은 범위 밖이라 보이지 않습니다. 데이터가 지워지는 것은 아닙니다.",
+   "tags": [
+    "xlim"
+   ],
+   "verifyCode": "import matplotlib.pyplot as plt\nfig, ax = plt.subplots()\nax.scatter([0, 5, 12], [1, 2, 3])\nax.set_xlim(0, 10)\nlo, hi = ax.get_xlim()\nprint(sum(lo <= v <= hi for v in [0, 5, 12]))\nplt.close('all')",
+   "verifyExpect": "2",
+   "options": [
+    "3",
+    "1",
+    "0",
+    "10",
+    "2"
+   ]
+  },
+  {
+   "id": "5D05",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "mode": "mc",
+   "src": "5_맷플롯립모듈",
+   "stem": "<span class=\"mono\">fig, axes = plt.subplots(1, 3)</span> 다음에 실행하면 오류가 나는 것은?",
+   "code": "",
+   "answer": "axes[3].set_title('x')",
+   "why": "1행 3열이면 axes 는 원소 3개인 1차원 배열이라 인덱스는 0, 1, 2 (뒤에서 -1, -2, -3)입니다. 3은 범위를 벗어납니다.",
+   "tags": [
+    "subplots",
+    "인덱스 범위"
+   ],
+   "verifyCode": "import matplotlib.pyplot as plt\nfig, axes = plt.subplots(1, 3)\nbad = []\nfor k in [0, 2, 3, -1, -3]:\n    try:\n        axes[k].set_title('x')\n    except IndexError:\n        bad.append(k)\nprint(bad)\nplt.close('all')",
+   "verifyExpect": "[3]",
+   "options": [
+    "axes[3].set_title('x')",
+    "axes[0].set_title('x')",
+    "axes[2].set_title('x')",
+    "axes[-1].set_title('x')",
+    "axes[-3].set_title('x')"
+   ]
+  },
+  {
+   "id": "5D06",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "mode": "mc",
+   "src": "5_맷플롯립모듈",
+   "stem": "노트북 학습 곡선 예시 데이터이다. 다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "epochs = np.arange(1, 21)\ntrain_acc = 1 - 0.9 * np.exp(-epochs / 5)\nprint(round(train_acc[0], 3), bool(train_acc.max() < 1))",
+   "answer": "0.263 True",
+   "why": "첫 epoch 는 1이라 1 − 0.9 × e^(−0.2) ≈ 1 − 0.737 = 0.263 입니다. 0.1은 epoch 를 0으로 넣은 값이고, e 의 거듭제곱은 항상 양수라 정확도는 1에 가까워질 뿐 1이 되지 않습니다.",
+   "tags": [
+    "np.exp",
+    "학습 곡선"
+   ],
+   "verifyCode": "epochs = np.arange(1, 21)\ntrain_acc = 1 - 0.9 * np.exp(-epochs / 5)\nprint(round(train_acc[0], 3), bool(train_acc.max() < 1))",
+   "verifyExpect": "0.263 True",
+   "options": [
+    "0.1 True",
+    "0.263 False",
+    "1.0 True",
+    "0.737 True",
+    "0.263 True"
+   ]
+  },
+  {
+   "id": "5D07",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "mode": "mc",
+   "src": "5_맷플롯립모듈",
+   "stem": "등급별 생존율이 [0.629630, 0.472826, 0.242363] 이다. <span class=\"mono\">plt.ylim(0, 0.6)</span> 으로 그리면 윗부분이 그래프 영역 밖으로 잘리는 막대는 몇 개인가?",
+   "code": "plt.bar(['1', '2', '3'], [0.629630, 0.472826, 0.242363])\nplt.ylim(0, 0.6)",
+   "answer": "1",
+   "why": "y 축이 0.6까지만 보이므로 0.6보다 큰 1등급(0.63) 막대만 잘립니다. 노트북이 <span class=\"mono\">ylim(0, 0.7)</span> 로 여유를 둔 이유입니다.",
+   "tags": [
+    "ylim",
+    "bar"
+   ],
+   "verifyCode": "print(sum(v > 0.6 for v in [0.629630, 0.472826, 0.242363]))",
+   "verifyExpect": "1",
+   "options": [
+    "0",
+    "2",
+    "3",
+    "0.6",
+    "1"
+   ]
+  },
+  {
+   "id": "5R01",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "5_맷플롯립모듈",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "fig1, axes1 = plt.subplots(1, 3)\nfig2, axes2 = plt.subplots(2, 2)\nprint(axes1.shape, axes2.shape)",
+   "answer": "(3,) (2, 2)",
+   "why": "행이나 열이 1개면 axes 는 1차원 배열 (3,)으로 나오고, 2행 2열이면 2차원 배열 (2, 2)라 <span class=\"mono\">axes[r, c]</span> 로 칸을 고릅니다.",
+   "tags": [
+    "subplots",
+    "axes"
+   ],
+   "verifyCode": "import matplotlib.pyplot as plt\nfig1, axes1 = plt.subplots(1, 3)\nfig2, axes2 = plt.subplots(2, 2)\nprint(axes1.shape, axes2.shape)\nplt.close('all')",
+   "verifyExpect": "(3,) (2, 2)",
+   "options": [
+    "(3,) (2, 2)",
+    "(1, 3) (2, 2)",
+    "(3,) (4,)",
+    "(1, 3) (4,)",
+    "3 4"
+   ]
+  },
+  {
+   "id": "5R02",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "5_맷플롯립모듈",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "fig, axes = plt.subplots(1, 2)\nfig.suptitle('sin & cos')\naxes[0].set_title('sin')\naxes[1].set_title('cos')\nprint(len(fig.axes), axes[1].get_title())",
+   "answer": "2 cos",
+   "why": "대제목(suptitle)은 그림 전체에 붙는 글자라 칸(Axes)을 새로 만들지 않아 칸은 2개입니다. 오른쪽 칸의 제목은 cos 입니다.",
+   "tags": [
+    "suptitle",
+    "set_title"
+   ],
+   "verifyCode": "import matplotlib.pyplot as plt\nfig, axes = plt.subplots(1, 2)\nfig.suptitle('sin & cos')\naxes[0].set_title('sin'); axes[1].set_title('cos')\nprint(len(fig.axes), axes[1].get_title())\nplt.close('all')",
+   "verifyExpect": "2 cos",
+   "options": [
+    "3 cos",
+    "2 sin & cos",
+    "2 cos",
+    "1 cos",
+    "2 sin"
+   ]
+  },
+  {
+   "id": "5R03",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "5_맷플롯립모듈",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "fig, ax = plt.subplots()\nx = np.arange(5)\nfor k, style in enumerate(['o-', 's--', '^:', 'd-.']):\n    ax.plot(x, x + k, style)\nlast = ax.get_lines()[3]\nprint(len(ax.get_lines()), last.get_marker(), last.get_linestyle())",
+   "answer": "4 d -.",
+   "why": "<span class=\"mono\">plot</span> 을 4번 불러 선이 4개이고, 인덱스 3은 네 번째 선 <span class=\"mono\">d-.</span> 입니다. d 는 다이아몬드 마커, -. 는 일점쇄선입니다.",
+   "tags": [
+    "스타일 문자열",
+    "plot"
+   ],
+   "verifyCode": "import matplotlib.pyplot as plt\nfig, ax = plt.subplots()\nx = np.arange(5)\nfor k, style in enumerate(['o-', 's--', '^:', 'd-.']):\n    ax.plot(x, x + k, style)\nlast = ax.get_lines()[3]\nprint(len(ax.get_lines()), last.get_marker(), last.get_linestyle())\nplt.close('all')",
+   "verifyExpect": "4 d -.",
+   "options": [
+    "4 d --",
+    "3 d -.",
+    "4 ^ :",
+    "4 d -.",
+    "5 d -."
+   ]
+  },
+  {
+   "id": "5R04",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "5_맷플롯립모듈",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은? (survived 는 생존 1, 사망 0)",
+   "code": "titanic = pd.DataFrame({'pclass': [1, 1, 1, 2, 2, 3, 3, 3, 3], 'survived': [1, 1, 0, 1, 0, 0, 0, 1, 0]})\nsurv = titanic.groupby('pclass')['survived'].mean()\nprint(surv.round(2).tolist())",
+   "answer": "[0.67, 0.5, 0.25]",
+   "why": "1등급 3명 중 2명(0.67), 2등급 2명 중 1명(0.5), 3등급 4명 중 1명(0.25)이 생존했습니다. [2, 1, 1] 은 합계, [3, 2, 4] 는 인원수, 0.44 는 전체 생존율입니다.",
+   "tags": [
+    "groupby",
+    "mean"
+   ],
+   "verifyCode": "import pandas as pd\nimport matplotlib.pyplot as plt\ntitanic = pd.DataFrame({'pclass': [1, 1, 1, 2, 2, 3, 3, 3, 3], 'survived': [1, 1, 0, 1, 0, 0, 0, 1, 0]})\nsurv = titanic.groupby('pclass')['survived'].mean()\nprint(surv.round(2).tolist())\nplt.close('all')",
+   "verifyExpect": "[0.67, 0.5, 0.25]",
+   "options": [
+    "[0.67, 0.5, 0.25]",
+    "[2, 1, 1]",
+    "[3, 2, 4]",
+    "[0.25, 0.5, 0.67]",
+    "[0.44, 0.44, 0.44]"
+   ]
+  },
+  {
+   "id": "5R05",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "5_맷플롯립모듈",
+   "stem": "iris 는 품종 3개가 50개씩 있는 150행 데이터이다. 다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "pl_by_species = [iris[iris['species'] == s]['petal_length'] for s in iris['species'].unique()]\nprint(len(pl_by_species), len(pl_by_species[0]))",
+   "answer": "3 50",
+   "why": "품종 이름 3개를 돌며 품종마다 petal_length Series 하나씩을 모았으므로 리스트 길이는 3, 첫 원소(한 품종)의 길이는 50입니다.",
+   "tags": [
+    "리스트 컴프리헨션",
+    "len"
+   ],
+   "verifyCode": "import pandas as pd\nimport matplotlib.pyplot as plt\niris = pd.DataFrame({'species': np.repeat(['setosa', 'versicolor', 'virginica'], 50), 'petal_length': np.arange(150) / 10})\npl_by_species = [iris[iris['species'] == s]['petal_length'] for s in iris['species'].unique()]\nprint(len(pl_by_species), len(pl_by_species[0]))\nplt.close('all')",
+   "verifyExpect": "3 50",
+   "options": [
+    "150 3",
+    "3 150",
+    "50 3",
+    "3 50",
+    "1 150"
+   ]
+  },
+  {
+   "id": "5R06",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "5_맷플롯립모듈",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "epochs = np.arange(1, 21)\ntrain_acc = 1 - 0.9 * np.exp(-epochs / 5)\nval_acc = train_acc - 0.02 - 0.03 * np.random.RandomState(0).rand(20)\nprint(bool((val_acc < train_acc).all()), len(val_acc))",
+   "answer": "True 20",
+   "why": "<span class=\"mono\">rand</span> 는 0 이상 1 미만의 값이라 0.02 + 0.03 × rand 는 항상 양수입니다. 그래서 검증 정확도는 모든 epoch 에서 훈련 정확도보다 작고, 길이는 epoch 수 20입니다.",
+   "tags": [
+    "RandomState",
+    "학습 곡선"
+   ],
+   "verifyCode": "epochs = np.arange(1, 21)\ntrain_acc = 1 - 0.9 * np.exp(-epochs / 5)\nval_acc = train_acc - 0.02 - 0.03 * np.random.RandomState(0).rand(20)\nprint(bool((val_acc < train_acc).all()), len(val_acc))",
+   "verifyExpect": "True 20",
+   "options": [
+    "False 20",
+    "True 21",
+    "True 20",
+    "False 21",
+    "True 19"
+   ]
+  },
+  {
+   "id": "5R07",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "5_맷플롯립모듈",
+   "stem": "sin·cos 그래프에 쓴 x 이다. 다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "x = np.arange(0, 6.5, 0.1)\nprint(len(x), round(x[-1], 1))",
+   "answer": "65 6.4",
+   "why": "0부터 6.5 미만까지 0.1 간격이라 6.5 ÷ 0.1 = 65개이고 마지막 값은 6.4입니다. 끝값 6.5는 들어가지 않습니다.",
+   "tags": [
+    "arange"
+   ],
+   "verifyCode": "x = np.arange(0, 6.5, 0.1)\nprint(len(x), round(x[-1], 1))",
+   "verifyExpect": "65 6.4",
+   "options": [
+    "66 6.5",
+    "65 6.5",
+    "64 6.4",
+    "6 6.4",
+    "65 6.4"
+   ]
+  },
+  {
+   "id": "5X01",
+   "type": "대조",
+   "typeKey": "contrast",
+   "mode": "mc",
+   "src": "5_맷플롯립모듈",
+   "stem": "다음은 거의 같은 두 코드이다. ㉠, ㉡에 출력되는 값으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">방법1 → ㉠<br>방법2 → ㉡</span></span>",
+   "code": "# 방법1\nfig, axes = plt.subplots(1, 2)\nplt.title('A')\nprint([ax.get_title() for ax in axes])\n\n# 방법2\nfig, axes = plt.subplots(1, 2)\naxes[0].set_title('A')\nprint([ax.get_title() for ax in axes])",
+   "answer": "㉠ ['', 'A']  ·  ㉡ ['A', '']",
+   "why": "<span class=\"mono\">plt.title</span> 은 현재 선택된 칸, 즉 마지막으로 만들어진 오른쪽 칸에만 제목을 붙입니다. 원하는 칸에 제목을 붙이려면 노트북 주의 사항대로 <span class=\"mono\">axes[0].set_title</span> 처럼 칸을 지정해야 합니다.",
+   "tags": [
+    "plt.title",
+    "set_title"
+   ],
+   "verifyCode": "import matplotlib.pyplot as plt\nfig, axes = plt.subplots(1, 2)\nplt.title('A')\na = [ax.get_title() for ax in axes]\nfig, axes = plt.subplots(1, 2)\naxes[0].set_title('A')\nb = [ax.get_title() for ax in axes]\nprint(a, '|', b)\nplt.close('all')",
+   "verifyExpect": "['', 'A'] | ['A', '']",
+   "options": [
+    "㉠ ['A', 'A']  ·  ㉡ ['A', '']",
+    "㉠ ['A', '']  ·  ㉡ ['A', '']",
+    "㉠ ['', 'A']  ·  ㉡ ['A', 'A']",
+    "㉠ ['A', '']  ·  ㉡ ['', 'A']",
+    "㉠ ['', 'A']  ·  ㉡ ['A', '']"
+   ]
+  },
+  {
+   "id": "5X02",
+   "type": "대조",
+   "typeKey": "contrast",
+   "mode": "mc",
+   "src": "5_맷플롯립모듈",
+   "stem": "다음은 거의 같은 두 코드이다. ㉠, ㉡에 출력되는 값으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">방법1 → ㉠<br>방법2 → ㉡</span></span>",
+   "code": "x = [1, 2, 3]; y = [2, 4, 6]\n# 방법1\nline, = plt.plot(x, y, 'o-')\nprint(line.get_linestyle())\n\n# 방법2\nline, = plt.plot(x, y, 'o')\nprint(line.get_linestyle())",
+   "answer": "㉠ -  ·  ㉡ None",
+   "why": "스타일 문자열에 선 기호가 없으면 선 없이 마커만 찍힙니다. <span class=\"mono\">'o-'</span> 는 원 + 실선, <span class=\"mono\">'o'</span> 는 원만 있어 선 스타일이 None 입니다.",
+   "tags": [
+    "스타일 문자열",
+    "선 스타일"
+   ],
+   "verifyCode": "import matplotlib.pyplot as plt\nx = [1, 2, 3]; y = [2, 4, 6]\na, = plt.plot(x, y, 'o-')\nb, = plt.plot(x, y, 'o')\nprint(a.get_linestyle(), '|', b.get_linestyle())\nplt.close('all')",
+   "verifyExpect": "- | None",
+   "options": [
+    "㉠ -  ·  ㉡ -",
+    "㉠ -  ·  ㉡ None",
+    "㉠ None  ·  ㉡ -",
+    "㉠ o  ·  ㉡ o",
+    "㉠ -  ·  ㉡ :"
+   ]
+  },
+  {
+   "id": "5X03",
+   "type": "대조",
+   "typeKey": "contrast",
+   "mode": "mc",
+   "src": "5_맷플롯립모듈",
+   "stem": "다음은 거의 같은 두 코드이다. ㉠, ㉡에 출력되는 값으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">방법1 → ㉠<br>방법2 → ㉡</span></span>",
+   "code": "age = np.random.RandomState(1).normal(30, 14, 700)\n# 방법1\nn, bins, patches = plt.hist(age, bins=5)\nprint(len(patches))\n\n# 방법2\nn, bins, patches = plt.hist(age, bins=20)\nprint(len(patches))",
+   "answer": "㉠ 5  ·  ㉡ 20",
+   "why": "같은 데이터라도 bins 로 정한 구간 수만큼 막대가 생깁니다. 노트북에서 bins 를 5, 20, 80 으로 바꿔 보며 구간이 적으면 뭉개지고 많으면 들쭉날쭉해지는 것을 비교했습니다.",
+   "tags": [
+    "hist",
+    "bins"
+   ],
+   "verifyCode": "import matplotlib.pyplot as plt\nage = np.random.RandomState(1).normal(30, 14, 700)\na = len(plt.hist(age, bins=5)[2])\nplt.figure()\nb = len(plt.hist(age, bins=20)[2])\nprint(a, '|', b)\nplt.close('all')",
+   "verifyExpect": "5 | 20",
+   "options": [
+    "㉠ 6  ·  ㉡ 21",
+    "㉠ 5  ·  ㉡ 5",
+    "㉠ 5  ·  ㉡ 20",
+    "㉠ 20  ·  ㉡ 5",
+    "㉠ 700  ·  ㉡ 700"
+   ]
+  },
+  {
+   "id": "5X04",
+   "type": "대조",
+   "typeKey": "contrast",
+   "mode": "mc",
+   "src": "5_맷플롯립모듈",
+   "stem": "다음은 거의 같은 두 코드이다. ㉠, ㉡에 출력되는 값으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">방법1 → ㉠<br>방법2 → ㉡</span></span>",
+   "code": "# 방법1\nbars = plt.bar(['a', 'b'], [0.6, 0.2])\nprint(round(bars[0].get_height(), 1))\n\n# 방법2\nbars = plt.barh(['a', 'b'], [0.6, 0.2])\nprint(round(bars[0].get_width(), 1))",
+   "answer": "㉠ 0.6  ·  ㉡ 0.6",
+   "why": "세로 막대(<span class=\"mono\">bar</span>)는 값이 막대의 높이, 가로 막대(<span class=\"mono\">barh</span>)는 값이 막대의 가로 길이가 됩니다. 방향만 다를 뿐 값 0.6을 나타내는 방식은 같습니다.",
+   "tags": [
+    "bar",
+    "barh"
+   ],
+   "verifyCode": "import matplotlib.pyplot as plt\nfig, ax = plt.subplots()\na = ax.bar(['a', 'b'], [0.6, 0.2])\nfig, ax = plt.subplots()\nb = ax.barh(['a', 'b'], [0.6, 0.2])\nprint(round(float(a[0].get_height()), 1), '|', round(float(b[0].get_width()), 1))\nplt.close('all')",
+   "verifyExpect": "0.6 | 0.6",
+   "options": [
+    "㉠ 0.6  ·  ㉡ 0.8",
+    "㉠ 0.6  ·  ㉡ 0.6",
+    "㉠ 0.8  ·  ㉡ 0.6",
+    "㉠ 0.6  ·  ㉡ 0.2",
+    "㉠ 0.2  ·  ㉡ 0.6"
+   ]
+  },
+  {
+   "id": "5X05",
+   "type": "대조",
+   "typeKey": "contrast",
+   "mode": "mc",
+   "src": "5_맷플롯립모듈",
+   "stem": "다음은 거의 같은 두 코드이다. ㉠, ㉡에 출력되는 값으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">방법1 → ㉠<br>방법2 → ㉡</span></span>",
+   "code": "age = pd.Series([22.0, np.nan, 35.0, np.nan])\n# 방법1\nprint(len(age.dropna()))\n\n# 방법2\nage.dropna()\nprint(len(age))",
+   "answer": "㉠ 2  ·  ㉡ 4",
+   "why": "<span class=\"mono\">dropna()</span> 는 결측을 뺀 새 Series 를 돌려줄 뿐 원본을 바꾸지 않습니다. 방법2는 결과를 어디에도 담지 않았으므로 age 는 여전히 4개입니다. 노트북 주석의 \"원본은 변동 없음\" 과 같은 뜻입니다.",
+   "tags": [
+    "dropna",
+    "원본 보존"
+   ],
+   "verifyCode": "import pandas as pd\nage = pd.Series([22.0, np.nan, 35.0, np.nan])\na = len(age.dropna())\nage.dropna()\nprint(a, '|', len(age))",
+   "verifyExpect": "2 | 4",
+   "options": [
+    "㉠ 2  ·  ㉡ 2",
+    "㉠ 4  ·  ㉡ 4",
+    "㉠ 4  ·  ㉡ 2",
+    "㉠ 2  ·  ㉡ 0",
+    "㉠ 2  ·  ㉡ 4"
+   ]
+  },
+  {
+   "id": "5X06",
+   "type": "대조",
+   "typeKey": "contrast",
+   "mode": "mc",
+   "src": "5_맷플롯립모듈",
+   "stem": "다음은 거의 같은 두 코드이다. ㉠, ㉡에 출력되는 값으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">방법1 → ㉠<br>방법2 → ㉡</span></span>",
+   "code": "iris = pd.DataFrame({'species': ['setosa', 'virginica', 'setosa'], 'petal_length': [1.4, 6.0, 1.3]})\n# 방법1\nprint((iris['species'] == 'setosa').tolist())\n\n# 방법2\nprint(iris[iris['species'] == 'setosa'].shape)",
+   "answer": "㉠ [True, False, True]  ·  ㉡ (2, 2)",
+   "why": "비교식은 행마다 True/False 를 담은 Series 입니다. 이것을 대괄호에 넣으면(불리언 인덱싱) True 인 행만 남아 2행 2열 표가 됩니다.",
+   "tags": [
+    "불리언 인덱싱"
+   ],
+   "verifyCode": "import pandas as pd\niris = pd.DataFrame({'species': ['setosa', 'virginica', 'setosa'], 'petal_length': [1.4, 6.0, 1.3]})\nprint((iris['species'] == 'setosa').tolist(), '|', iris[iris['species'] == 'setosa'].shape)",
+   "verifyExpect": "[True, False, True] | (2, 2)",
+   "options": [
+    "㉠ [True, False, True]  ·  ㉡ (2, 2)",
+    "㉠ [True, False, True]  ·  ㉡ (3, 2)",
+    "㉠ [0, 2]  ·  ㉡ (2, 2)",
+    "㉠ (2, 2)  ·  ㉡ [True, False, True]",
+    "㉠ [True, False, True]  ·  ㉡ (2,)"
+   ]
+  },
+  {
+   "id": "5X07",
+   "type": "대조",
+   "typeKey": "contrast",
+   "mode": "mc",
+   "src": "5_맷플롯립모듈",
+   "stem": "다음은 거의 같은 두 코드이다. ㉠, ㉡에 출력되는 값으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">방법1 → ㉠<br>방법2 → ㉡</span></span>",
+   "code": "# 방법1\nfig, axes = plt.subplots(1, 2)\nfig.suptitle('sin & cos')\nprint(sum(ax.get_title() == 'sin & cos' for ax in axes))\n\n# 방법2\nfig, axes = plt.subplots(1, 2)\nplt.title('sin & cos')\nprint(sum(ax.get_title() == 'sin & cos' for ax in axes))",
+   "answer": "㉠ 0  ·  ㉡ 1",
+   "why": "<span class=\"mono\">fig.suptitle</span> 은 칸의 제목이 아니라 그림 전체의 대제목이라 어느 칸의 제목도 바뀌지 않습니다. <span class=\"mono\">plt.title</span> 은 현재 칸(오른쪽) 하나의 제목만 바꿉니다.",
+   "tags": [
+    "suptitle",
+    "plt.title"
+   ],
+   "verifyCode": "import matplotlib.pyplot as plt\nfig, axes = plt.subplots(1, 2)\nfig.suptitle('sin & cos')\na = sum(ax.get_title() == 'sin & cos' for ax in axes)\nfig, axes = plt.subplots(1, 2)\nplt.title('sin & cos')\nb = sum(ax.get_title() == 'sin & cos' for ax in axes)\nprint(a, '|', b)\nplt.close('all')",
+   "verifyExpect": "0 | 1",
+   "options": [
+    "㉠ 0  ·  ㉡ 1",
+    "㉠ 2  ·  ㉡ 1",
+    "㉠ 1  ·  ㉡ 1",
+    "㉠ 0  ·  ㉡ 2",
+    "㉠ 1  ·  ㉡ 0"
+   ]
+  },
+  {
+   "id": "5S01",
+   "type": "조건 매핑",
+   "typeKey": "spec",
+   "mode": "mc",
+   "src": "5_맷플롯립모듈",
+   "stem": "다음 [조건]을 모두 만족하는 코드로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>[조건]</b><br>○ a 는 원 + 실선, b 는 사각형 + 파선으로 그린다.<br>○ 두 선 모두 범례에 이름(train, test)이 나온다.</span>",
+   "code": "",
+   "answer": "plt.plot(x, a, 'o-', label='train'); plt.plot(x, b, 's--', label='test'); plt.legend()",
+   "why": "범례에는 label 을 준 선만 나오고, <span class=\"mono\">legend()</span> 를 호출해야 그려집니다. 파선은 <span class=\"mono\">--</span>, 점선은 <span class=\"mono\">:</span> 이며 원은 o, 사각형은 s 입니다.",
+   "tags": [
+    "legend",
+    "label",
+    "스타일 문자열"
+   ],
+   "verifyCode": "import matplotlib.pyplot as plt\nx = np.arange(5); a = x; b = x + 1\nfig, ax = plt.subplots()\nl1, = ax.plot(x, a, 'o-', label='train'); l2, = ax.plot(x, b, 's--', label='test'); leg = ax.legend()\nprint(l1.get_marker(), l1.get_linestyle(), l2.get_marker(), l2.get_linestyle(), [t.get_text() for t in leg.get_texts()])\nplt.close('all')",
+   "verifyExpect": "o - s -- ['train', 'test']",
+   "options": [
+    "plt.plot(x, a, 'o-', label='train'); plt.plot(x, b, 's--', label='test'); plt.legend()",
+    "plt.plot(x, a, 'o-', label='train'); plt.plot(x, b, 's--'); plt.legend()",
+    "plt.plot(x, a, 's-', label='train'); plt.plot(x, b, 'o--', label='test'); plt.legend()",
+    "plt.plot(x, a, 'o-', label='train'); plt.plot(x, b, 's:', label='test'); plt.legend()",
+    "plt.plot(x, a, 'o-', label='train'); plt.plot(x, b, 's--', label='test')"
+   ]
+  },
+  {
+   "id": "5S02",
+   "type": "조건 매핑",
+   "typeKey": "spec",
+   "mode": "mc",
+   "src": "5_맷플롯립모듈",
+   "stem": "다음 [조건]을 모두 만족하는 코드로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>[조건]</b><br>○ 그림을 1행 2열로 나눈다.<br>○ 그림 전체에 대제목 sin &amp; cos 를 단다.<br>○ 왼쪽 칸 제목은 sin, 오른쪽 칸 제목은 cos 이다.</span>",
+   "code": "",
+   "answer": "fig, axes = plt.subplots(1, 2); fig.suptitle('sin & cos'); axes[0].set_title('sin'); axes[1].set_title('cos')",
+   "why": "<span class=\"mono\">subplots(1, 2)</span> 가 1행 2열이고, 대제목은 액자인 fig 의 <span class=\"mono\">suptitle</span>, 칸 제목은 <span class=\"mono\">set_title</span> 입니다. <span class=\"mono\">plt.title</span> 은 대제목이 아니라 오른쪽 칸 제목을 바꾸고, axes 배열에는 suptitle 이 없습니다.",
+   "tags": [
+    "subplots",
+    "suptitle",
+    "set_title"
+   ],
+   "verifyCode": "import matplotlib.pyplot as plt\nfig, axes = plt.subplots(1, 2); fig.suptitle('sin & cos'); axes[0].set_title('sin'); axes[1].set_title('cos')\nprint(axes.shape, fig._suptitle.get_text(), [ax.get_title() for ax in axes])\nplt.close('all')",
+   "verifyExpect": "(2,) sin & cos ['sin', 'cos']",
+   "options": [
+    "fig, axes = plt.subplots(2, 1); fig.suptitle('sin & cos'); axes[0].set_title('sin'); axes[1].set_title('cos')",
+    "fig, axes = plt.subplots(1, 2); fig.suptitle('sin & cos'); axes[0].set_title('sin'); axes[1].set_title('cos')",
+    "fig, axes = plt.subplots(1, 2); plt.title('sin & cos'); axes[0].set_title('sin'); axes[1].set_title('cos')",
+    "fig, axes = plt.subplots(1, 2); fig.suptitle('sin & cos'); axes[0].title('sin'); axes[1].title('cos')",
+    "fig, axes = plt.subplots(1, 2); axes.suptitle('sin & cos'); axes[0].set_title('sin'); axes[1].set_title('cos')"
+   ]
+  },
+  {
+   "id": "5S03",
+   "type": "조건 매핑",
+   "typeKey": "spec",
+   "mode": "mc",
+   "src": "5_맷플롯립모듈",
+   "stem": "다음 [조건]을 모두 만족하는 코드로 알맞은 것은? (titanic 의 age 열에는 결측치가 있다)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>[조건]</b><br>○ 결측치는 빼고 그린다.<br>○ 구간은 20개로 나눈다.<br>○ 막대의 테두리를 검은색으로 그린다.</span>",
+   "code": "",
+   "answer": "plt.hist(titanic['age'].dropna(), bins=20, edgecolor='black')",
+   "why": "<span class=\"mono\">dropna()</span> 로 결측을 빼야 합니다. <span class=\"mono\">fillna(0)</span> 은 결측을 0세로 바꿔 첫 구간에 넣습니다. 테두리 색은 <span class=\"mono\">edgecolor</span>, 막대 안쪽 색은 <span class=\"mono\">color</span> 이고, bins=21 은 구간 21개입니다.",
+   "tags": [
+    "hist",
+    "dropna",
+    "edgecolor"
+   ],
+   "verifyCode": "import pandas as pd\nimport matplotlib.pyplot as plt\ntitanic = pd.DataFrame({'age': [22.0, np.nan, 26.0, 35.0, 54.0, 2.0]})\nn, bins, patches = plt.hist(titanic['age'].dropna(), bins=20, edgecolor='black')\nprint(len(patches), int(n.sum()), [float(c) for c in patches[0].get_edgecolor()[:3]])\nplt.close('all')",
+   "verifyExpect": "20 5 [0.0, 0.0, 0.0]",
+   "options": [
+    "plt.hist(titanic['age'].fillna(0), bins=20, edgecolor='black')",
+    "plt.hist(titanic['age'].dropna(), bins=20, edgecolor='black')",
+    "plt.hist(titanic['age'].dropna(), bins=20, color='black')",
+    "plt.hist(titanic['age'].dropna(), bins=21, edgecolor='black')",
+    "plt.bar(titanic['age'].dropna(), 20, edgecolor='black')"
+   ]
+  },
+  {
+   "id": "5S04",
+   "type": "조건 매핑",
+   "typeKey": "spec",
+   "mode": "mc",
+   "src": "5_맷플롯립모듈",
+   "stem": "다음 [조건]을 모두 만족하는 코드로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>[조건]</b><br>○ 품종마다 다른 색으로 그 품종의 점만 찍는다.<br>○ 범례에 품종 이름이 나온다.<br>○ 점은 반투명(alpha 0.7)이다.</span>",
+   "code": "for species, color in zip(['setosa', 'versicolor', 'virginica'], ['tab:blue', 'tab:orange', 'tab:green']):\n    part = iris[iris['species'] == species]\n    ____\nplt.legend()",
+   "answer": "plt.scatter(part['petal_length'], part['petal_width'], color=color, label=species, alpha=0.7)",
+   "why": "반복마다 고른 <span class=\"mono\">part</span> 로 그려야 그 품종의 점만 찍히고, <span class=\"mono\">label=species</span> 가 있어야 범례에 이름이 나옵니다. 투명도 alpha 는 0~1 사이 값이며, color 와 label 을 바꿔 넣으면 품종 이름을 색으로 해석하지 못해 오류가 납니다.",
+   "tags": [
+    "scatter",
+    "label",
+    "alpha"
+   ],
+   "verifyCode": "import pandas as pd\nimport matplotlib.pyplot as plt\niris = pd.DataFrame({'species': ['setosa', 'versicolor', 'setosa', 'virginica', 'setosa', 'versicolor'],\n                     'petal_length': [1.4, 4.7, 1.3, 6.0, 1.5, 4.5],\n                     'petal_width': [0.2, 1.4, 0.2, 2.5, 0.2, 1.5]})\nfig, ax = plt.subplots()\nfor species, color in zip(['setosa', 'versicolor', 'virginica'], ['tab:blue', 'tab:orange', 'tab:green']):\n    part = iris[iris['species'] == species]\n    ax.scatter(part['petal_length'], part['petal_width'], color=color, label=species, alpha=0.7)\nleg = ax.legend()\nprint([len(c.get_offsets()) for c in ax.collections], [t.get_text() for t in leg.get_texts()], ax.collections[0].get_alpha())\nplt.close('all')",
+   "verifyExpect": "[3, 2, 1] ['setosa', 'versicolor', 'virginica'] 0.7",
+   "options": [
+    "plt.scatter(part['petal_length'], part['petal_width'], color=color, alpha=0.7)",
+    "plt.scatter(iris['petal_length'], iris['petal_width'], color=color, label=species, alpha=0.7)",
+    "plt.scatter(part['petal_length'], part['petal_width'], color=species, label=color, alpha=0.7)",
+    "plt.scatter(part['petal_length'], part['petal_width'], color=color, label=species, alpha=0.7)",
+    "plt.scatter(part['petal_length'], part['petal_width'], color=color, label=species, alpha=7)"
+   ]
+  },
+  {
+   "id": "5S05",
+   "type": "조건 매핑",
+   "typeKey": "spec",
+   "mode": "mc",
+   "src": "5_맷플롯립모듈",
+   "stem": "다음 [조건]을 모두 만족하는 코드로 알맞은 것은? (survived 는 생존 1, 사망 0)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>[조건]</b><br>○ 등급별 생존율을 막대로 그린다.<br>○ x 축에는 등급을 글자(범주)로 표시한다.<br>○ y 축 범위는 0~0.7 이다.</span>",
+   "code": "",
+   "answer": "surv = titanic.groupby('pclass')['survived'].mean(); plt.bar(surv.index.astype(str), surv.values); plt.ylim(0, 0.7)",
+   "why": "생존율은 등급으로 묶은 survived 의 평균입니다. <span class=\"mono\">sum</span> 은 생존자 수이고, 기준을 거꾸로 묶으면 생존 여부별 평균 등급이 됩니다. <span class=\"mono\">bar(x, 높이)</span> 순서를 지켜야 하며 y 축 범위는 <span class=\"mono\">ylim</span> 입니다.",
+   "tags": [
+    "groupby",
+    "bar",
+    "ylim"
+   ],
+   "verifyCode": "import pandas as pd\nimport matplotlib.pyplot as plt\ntitanic = pd.DataFrame({'pclass': [1, 1, 1, 2, 2, 3, 3, 3, 3], 'survived': [1, 1, 0, 1, 0, 0, 0, 1, 0]})\nfig, ax = plt.subplots()\nsurv = titanic.groupby('pclass')['survived'].mean(); bars = ax.bar(surv.index.astype(str), surv.values); ax.set_ylim(0, 0.7)\nprint([round(float(b.get_height()), 2) for b in bars], [float(v) for v in ax.get_ylim()])\nplt.close('all')",
+   "verifyExpect": "[0.67, 0.5, 0.25] [0.0, 0.7]",
+   "options": [
+    "surv = titanic.groupby('pclass')['survived'].sum(); plt.bar(surv.index.astype(str), surv.values); plt.ylim(0, 0.7)",
+    "surv = titanic.groupby('pclass')['survived'].mean(); plt.bar(surv.index.astype(str), surv.values); plt.ylim(0, 0.7)",
+    "surv = titanic.groupby('survived')['pclass'].mean(); plt.bar(surv.index.astype(str), surv.values); plt.ylim(0, 0.7)",
+    "surv = titanic.groupby('pclass')['survived'].mean(); plt.bar(surv.values, surv.index.astype(str)); plt.ylim(0, 0.7)",
+    "surv = titanic.groupby('pclass')['survived'].mean(); plt.bar(surv.index.astype(str), surv.values); plt.xlim(0, 0.7)"
+   ]
+  },
+  {
+   "id": "5S06",
+   "type": "조건 매핑",
+   "typeKey": "spec",
+   "mode": "mc",
+   "src": "5_맷플롯립모듈",
+   "stem": "다음 [조건]을 모두 만족하는 코드로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>[조건]</b><br>○ 품종별 petal_length 분포를 한 그래프에 상자 3개로 비교한다.</span>",
+   "code": "plt.boxplot(____)",
+   "answer": "[iris[iris['species'] == s]['petal_length'] for s in iris['species'].unique()]",
+   "why": "품종마다 그 품종의 petal_length 만 골라 리스트로 모아 넘기면 상자가 품종 수만큼 그려집니다. 전체 열을 넣으면 상자 1개, 반복 안에서 품종을 고르지 않으면 똑같은 상자 3개, 평균값 3개를 넣으면 분포가 아닌 숫자 3개로 상자 1개가 됩니다.",
+   "tags": [
+    "boxplot",
+    "리스트 컴프리헨션"
+   ],
+   "verifyCode": "import pandas as pd\nimport matplotlib.pyplot as plt\niris = pd.DataFrame({'species': np.repeat(['setosa', 'versicolor', 'virginica'], 3), 'petal_length': [1.3, 1.4, 1.5, 4.4, 4.5, 4.6, 5.9, 6.0, 6.1]})\nr = plt.boxplot([iris[iris['species'] == s]['petal_length'] for s in iris['species'].unique()])\nprint(len(r['boxes']), [round(float(m.get_ydata()[0]), 1) for m in r['medians']])\nplt.close('all')",
+   "verifyExpect": "3 [1.4, 4.5, 6.0]",
+   "options": [
+    "iris['petal_length']",
+    "[iris['petal_length'] for s in iris['species'].unique()]",
+    "iris.groupby('species')['petal_length'].mean()",
+    "[iris[iris['species'] == s]['petal_length'] for s in iris['species'].unique()]",
+    "iris['species'].unique()"
+   ]
+  },
+  {
+   "id": "5S07",
+   "type": "조건 매핑",
+   "typeKey": "spec",
+   "mode": "mc",
+   "src": "5_맷플롯립모듈",
+   "stem": "붓꽃 특성 간 상관관계를 히트맵으로 그리려고 한다. 다음 [조건]을 모두 만족하는 코드로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>[조건]</b><br>○ 숫자형 특성끼리의 상관계수를 그린다.<br>○ 칸마다 소수 둘째 자리까지 숫자를 적는다.<br>○ 색은 'coolwarm' 팔레트를 쓴다.</span>",
+   "code": "",
+   "answer": "sns.heatmap(iris.drop(columns='species').corr(), annot=True, fmt='.2f', cmap='coolwarm')",
+   "why": "상관계수는 수치형 자료에서만 계산되므로 species 열을 지운 뒤 <span class=\"mono\">corr()</span> 합니다. <span class=\"mono\">annot=True</span> 가 칸에 숫자를 적고 <span class=\"mono\">fmt='.2f'</span> 가 소수 둘째 자리 서식입니다. <span class=\"mono\">'d'</span> 는 정수 서식이라 상관계수에 쓸 수 없고, corr 를 빼면 상관계수가 아닌 원래 값이 칠해집니다.",
+   "tags": [
+    "heatmap",
+    "corr",
+    "annot"
+   ],
+   "ref": "셀 [25]·[26] 히트맵 설명과 코드",
+   "options": [
+    "sns.heatmap(iris.corr(), annot=True, fmt='.2f', cmap='coolwarm')",
+    "sns.heatmap(iris.drop(columns='species').corr(), annot=False, fmt='.2f', cmap='coolwarm')",
+    "sns.heatmap(iris.drop(columns='species').corr(), annot=True, fmt='.2f', cmap='coolwarm')",
+    "sns.heatmap(iris.drop(columns='species').corr(), annot=True, fmt='d', cmap='coolwarm')",
+    "sns.heatmap(iris.drop(columns='species'), annot=True, fmt='.2f', cmap='coolwarm')"
+   ]
+  },
+  {
+   "id": "5W01",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "5_맷플롯립모듈",
+   "stem": "코드의 빈칸 ㉠ 에 들어갈 코드를 적으시오. (label 을 모아 범례 표시)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">['train', 'test']</span></span>",
+   "code": "fig, ax = plt.subplots()\nax.plot([0, 1], [0, 1], label='train')\nax.plot([0, 1], [1, 0], label='test')\nleg = ax.㉠()\nprint([t.get_text() for t in leg.get_texts()])",
+   "answer": "legend",
+   "why": "<span class=\"mono\">legend()</span> 가 label 을 지정한 선들을 모아 범례를 그립니다. label 만 지정하고 legend 를 부르지 않으면 범례가 나타나지 않습니다.",
+   "tags": [
+    "legend"
+   ],
+   "verifyCode": "import matplotlib.pyplot as plt\nfig, ax = plt.subplots()\nax.plot([0, 1], [0, 1], label='train')\nax.plot([0, 1], [1, 0], label='test')\nleg = ax.legend()\nprint([t.get_text() for t in leg.get_texts()])\nplt.close('all')",
+   "verifyExpect": "['train', 'test']",
+   "accept": [
+    "legend"
+   ]
+  },
+  {
+   "id": "5W02",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "5_맷플롯립모듈",
+   "stem": "코드의 빈칸 ㉠ 에 들어갈 코드를 적으시오. (격자선 투명도)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">0.3</span></span>",
+   "code": "fig, ax = plt.subplots()\nax.grid(True, ㉠=0.3)\nprint(ax.xaxis.get_gridlines()[0].get_alpha())",
+   "answer": "alpha",
+   "why": "<span class=\"mono\">alpha</span> 는 투명도로 0에 가까울수록 투명합니다. 노트북은 격자선이 그래프를 가리지 않게 <span class=\"mono\">grid(True, alpha=0.3)</span> 을 썼습니다.",
+   "tags": [
+    "grid",
+    "alpha"
+   ],
+   "verifyCode": "import matplotlib.pyplot as plt\nfig, ax = plt.subplots()\nax.grid(True, alpha=0.3)\nprint(ax.xaxis.get_gridlines()[0].get_alpha())\nplt.close('all')",
+   "verifyExpect": "0.3",
+   "accept": [
+    "alpha"
+   ]
+  },
+  {
+   "id": "5W03",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "5_맷플롯립모듈",
+   "stem": "코드의 빈칸 ㉠ 에 들어갈 코드를 적으시오. (그림 전체의 대제목)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">sin &amp; cos</span></span>",
+   "code": "fig, axes = plt.subplots(1, 2)\nfig.㉠('sin & cos', fontsize=16)\nprint(fig._suptitle.get_text())",
+   "answer": "suptitle",
+   "why": "그림 전체(액자, fig)의 대제목은 <span class=\"mono\">fig.suptitle</span>, 각 칸의 제목은 <span class=\"mono\">ax.set_title</span> 입니다.",
+   "tags": [
+    "suptitle"
+   ],
+   "verifyCode": "import matplotlib.pyplot as plt\nfig, axes = plt.subplots(1, 2)\nfig.suptitle('sin & cos', fontsize=16)\nprint(fig._suptitle.get_text())\nplt.close('all')",
+   "verifyExpect": "sin & cos",
+   "accept": [
+    "suptitle"
+   ]
+  },
+  {
+   "id": "5W04",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "5_맷플롯립모듈",
+   "stem": "코드의 빈칸 ㉠ 에 들어갈 코드를 적으시오. (epoch 1부터 20까지)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">[ 1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20]</span></span>",
+   "code": "epochs = np.arange(1, ㉠)\nprint(epochs)",
+   "answer": "21",
+   "why": "<span class=\"mono\">arange</span> 는 끝값을 포함하지 않으므로 20까지 만들려면 끝값을 21로 줍니다.",
+   "tags": [
+    "arange",
+    "끝값 미포함"
+   ],
+   "verifyCode": "epochs = np.arange(1, 21)\nprint(epochs)",
+   "verifyExpect": "[ 1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20]",
+   "accept": [
+    "21"
+   ]
+  },
+  {
+   "id": "5W05",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "5_맷플롯립모듈",
+   "stem": "코드의 빈칸 ㉠ 에 들어갈 코드를 적으시오. (구간 20개)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">20</span></span>",
+   "code": "age = pd.Series([22.0, np.nan, 26.0, 35.0, 54.0, 2.0])\nn, edges, patches = plt.hist(age.dropna(), ㉠=20)\nprint(len(patches))",
+   "answer": "bins",
+   "why": "<span class=\"mono\">bins</span> 는 최솟값~최댓값 범위를 몇 개의 같은 폭 구간으로 나눌지 정합니다. 구간 수만큼 막대가 생깁니다.",
+   "tags": [
+    "hist",
+    "bins"
+   ],
+   "verifyCode": "import pandas as pd\nimport matplotlib.pyplot as plt\nage = pd.Series([22.0, np.nan, 26.0, 35.0, 54.0, 2.0])\nn, edges, patches = plt.hist(age.dropna(), bins=20)\nprint(len(patches))\nplt.close('all')",
+   "verifyExpect": "20",
+   "accept": [
+    "bins"
+   ]
+  },
+  {
+   "id": "5W06",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "5_맷플롯립모듈",
+   "stem": "코드의 빈칸 ㉠ 에 들어갈 코드를 적으시오. (항목 이름이 긴 가로 막대그래프)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">[0.44, 0.11, 0.01]</span></span>",
+   "code": "fig, ax = plt.subplots()\nbars = ax.㉠(['petal_length', 'sepal_length', 'sepal_width'], [0.44, 0.11, 0.01])\nprint([round(b.get_width(), 2) for b in bars])",
+   "answer": "barh",
+   "why": "가로 막대그래프는 <span class=\"mono\">barh</span> 로 그리며 값이 막대의 가로 길이(width)가 됩니다. 노트북은 특성 중요도처럼 이름이 긴 항목에 유용하다고 설명합니다.",
+   "tags": [
+    "barh"
+   ],
+   "verifyCode": "import matplotlib.pyplot as plt\nfig, ax = plt.subplots()\nbars = ax.barh(['petal_length', 'sepal_length', 'sepal_width'], [0.44, 0.11, 0.01])\nprint([round(float(b.get_width()), 2) for b in bars])\nplt.close('all')",
+   "verifyExpect": "[0.44, 0.11, 0.01]",
+   "accept": [
+    "barh"
+   ]
+  },
+  {
+   "id": "5W07",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "5_맷플롯립모듈",
+   "stem": "코드의 빈칸 ㉠ 에 들어갈 코드를 적으시오. (현재 그래프를 파일로 저장)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">True</span></span>",
+   "code": "import os\nplt.plot([1, 2, 3], [2, 4, 6])\nplt.㉠('result1.png')\nprint(os.path.exists('result1.png'))",
+   "answer": "savefig",
+   "why": "<span class=\"mono\">plt.savefig(파일명)</span> 은 현재 그림을 파일로 저장합니다. 노트북 설명대로 <span class=\"mono\">plt.show()</span> 전에 호출해야 합니다.",
+   "tags": [
+    "savefig"
+   ],
+   "verifyCode": "import matplotlib.pyplot as plt\nimport os, tempfile\nf = os.path.join(tempfile.gettempdir(), 'result1.png')\nplt.plot([1, 2, 3], [2, 4, 6])\nplt.savefig(f)\nprint(os.path.exists(f))\nplt.close('all')",
+   "verifyExpect": "True",
+   "accept": [
+    "savefig"
+   ]
+  }
+ ]
+}

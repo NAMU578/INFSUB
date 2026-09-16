@@ -2295,9 +2295,9 @@
    "mode": "mc",
    "src": "기출_넘파이모듈관련",
    "stem": "다음 코드를 실행했을 때 출력되는 값은?",
-   "code": "a = np.arange(1, 13).reshape(2, 2, 3)\nprint(a.strides)",
+   "code": "a = np.arange(1, 13, dtype=np.int64).reshape(2, 2, 3)\nprint(a.strides)",
    "answer": "(48, 24, 8)",
-   "why": "기본 정수형은 8바이트(int64)입니다. 마지막 축은 8, 그 앞 축은 열 3개만큼 건너뛰므로 3 × 8 = 24, 가장 바깥 축은 (2 × 3) × 8 = 48입니다.",
+   "why": "int64 는 원소 하나가 8바이트입니다. 마지막 축은 8, 그 앞 축은 열 3개만큼 건너뛰므로 3 × 8 = 24, 가장 바깥 축은 (2 × 3) × 8 = 48입니다. dtype 을 적지 않으면 코랩은 int64, 브라우저 파이썬(이 사이트)은 int32 라 값이 절반이 되므로 자료형을 밝혀 두었습니다.",
    "options": [
     "(12, 6, 2)",
     "(24, 12, 4)",
@@ -2308,7 +2308,7 @@
    "tags": [
     "strides"
    ],
-   "verifyCode": "a=np.arange(1,13).reshape(2,2,3)\nprint(a.strides)",
+   "verifyCode": "a=np.arange(1,13,dtype=np.int64).reshape(2,2,3)\nprint(a.strides)",
    "verifyExpect": "(48, 24, 8)"
   },
   {
