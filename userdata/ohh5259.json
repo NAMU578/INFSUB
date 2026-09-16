@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "ohh5259",
- "updatedAt": "2026-09-15T23:31:07.347Z",
+ "updatedAt": "2026-09-16T11:35:20.093Z",
  "edits": {
   "notebooks/1_넘파이_기초(개념).ipynb": {
    "8": "# 차이점이 뭘까?\nprint(data)\nprint(array)\nprint(array.dtype) # 넘파이 배열의 데이터 타입 확인"
@@ -99,32 +99,7 @@
    "W02"
   ]
  },
- "wrong": [
-  {
-   "key": "15a9082989921b942ce7c63eec0333bbd4b8d799c73d5d5bcb6ec07819c2e39f",
-   "path": "pdfs/06.인공지능의 역사.pdf",
-   "nb": "06.인공지능의 역사",
-   "type": "인물·업적",
-   "typeKey": "pmatch",
-   "stem": "저서 《퍼셉트론(Perceptrons)》을 통해 단층 퍼셉트론의 한계를 증명한 두 사람은?",
-   "code": "",
-   "intro": "",
-   "expect": "",
-   "options": [
-    "앨런 뉴웰과 허버트 사이먼",
-    "마빈 민스키와 시모어 페퍼트",
-    "워런 매컬러와 월터 피츠",
-    "알렉스 크리제브스키와 일리야 수츠케버",
-    "존 매카시와 앨런 튜링"
-   ],
-   "answer": "마빈 민스키와 시모어 페퍼트",
-   "accept": null,
-   "mine": "존 매카시와 앨런 튜링",
-   "why": "1969년 MIT의 마빈 민스키와 시모어 페퍼트가 저서 《퍼셉트론》을 통해 단층 퍼셉트론이 XOR 문제를 해결할 수 없음을 수학적으로 증명했습니다.",
-   "at": 1789470255167,
-   "streak": 0
-  }
- ],
+ "wrong": [],
  "essayDrafts": [
   {
    "id": "e1omlj8m_155",
