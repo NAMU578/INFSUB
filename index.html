@@ -1128,9 +1128,11 @@ const Py = {
     py.setStdout(); py.setStderr();
     try{ await py.loadPackagesFromImports(code); }catch{}
     await this.prepare(py, code);
-    // batched 콜백은 줄 단위로 불리면서 줄바꿈을 떼고 넘겨줍니다. 다시 붙여야 여러 줄로 보입니다.
-    py.setStdout({batched:s=>buf.push(s+'\n')});
-    py.setStderr({batched:s=>buf.push(s+'\n')});
+    // 출력은 바이트 그대로 받습니다. batched(줄 단위)는 줄바꿈 없이 끝난 print(..., end=' ') 를
+    // 셀 끝에서 내보내지 못해 다음 실행 출력에 섞였습니다. 한글이 쪼개져 들어와도 되게 stream 으로 풉니다.
+    const dec1 = new TextDecoder(), dec2 = new TextDecoder();
+    py.setStdout({write:b=>{ buf.push(dec1.decode(b,{stream:true})); return b.length; }});
+    py.setStderr({write:b=>{ buf.push(dec2.decode(b,{stream:true})); return b.length; }});
     const ns = fresh ? py.runPython('dict()') : undefined;   // 문제 채점용 격리 네임스페이스
     let err=null, images=[], value=null;
     try{
@@ -1146,6 +1148,8 @@ const Py = {
       try{ ret?.destroy?.(); }catch{}
     }catch(e){ err = String(e.message||e); }
     finally{ if(ns) ns.destroy?.(); }
+    // 파이썬 쪽 버퍼에 남은 출력(줄바꿈 없이 끝난 print)을 내보냅니다
+    try{ py.runPython('import sys\nsys.stdout.flush(); sys.stderr.flush()'); }catch{}
     // plt.show() 없이 끝난 셀의 그림도 주피터처럼 셀 끝에서 내보냅니다
     try{ py.runPython('import sys, infsub_runtime as _r\nif "matplotlib.pyplot" in sys.modules: _r.show()'); }catch{}
     // cv2_imshow·plt.show() 가 만들어 둔 이미지를 가져옵니다 (오류가 나도 남은 건 표시)
