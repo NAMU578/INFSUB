@@ -957,6 +957,97 @@ sys.modules['google.colab']         = _colab
 sys.modules['google.colab.drive']   = _drive
 sys.modules['google.colab.patches'] = _patches
 sys.modules['google.colab.files']   = _files
+
+import builtins
+
+def _display(*objs, **kw):
+    """IPython 의 display() — 셀 중간에서도 값을 보여 줍니다."""
+    for o in objs:
+        print(_repr_value(o))
+builtins.display = _display
+
+def _shell(cmd):
+    """코랩 셸 명령 흉내. ls 만 지원하고 나머지는 안내만 합니다."""
+    import glob, math, os, shlex, stat, time
+    args = shlex.split(cmd)
+    if args[:1] != ['ls']:
+        print('[INFSUB] 브라우저에서는 셸 명령을 실행할 수 없습니다: !' + cmd)
+        return
+    flags = ''.join(a[1:] for a in args[1:] if a.startswith('-'))
+    pats = [a for a in args[1:] if not a.startswith('-')]
+    names = sorted(n for p in pats for n in glob.glob(p)) if pats else sorted(n for n in os.listdir('.') if not n.startswith('.'))
+    if pats and not names:
+        print("ls: cannot access '%s': No such file or directory" % pats[0])
+    for n in names:
+        if 'l' not in flags:
+            print(n)
+            continue
+        st = os.stat(n)
+        size, unit = st.st_size, ''
+        if 'h' in flags:
+            for unit in ['', 'K', 'M', 'G']:   # ponytail: 1TB 이상은 단위가 틀림, 수업 자료엔 없음
+                if size < 1024:
+                    break
+                size /= 1024
+            size = math.ceil(size * 10) / 10 if unit and size < 10 else math.ceil(size)
+        print(stat.filemode(st.st_mode), 1, 'root', 'root', str(size) + unit,
+              time.strftime('%b %d %H:%M', time.localtime(st.st_mtime)), n)
+builtins._infsub_shell = _shell
+
+def _mpl_compat():
+    """boxplot 의 labels 가 matplotlib 3.9 에서 tick_labels 로 바뀌었습니다.
+    Pyodide 배포판의 matplotlib 은 3.8 이라 새 이름도 받게 합니다."""
+    import matplotlib, matplotlib.axes
+    import matplotlib.pyplot as plt
+    if tuple(int(x) for x in matplotlib.__version__.split('.')[:2]) >= (3, 9) or hasattr(plt.boxplot, '_infsub'):
+        return
+    ax_boxplot = matplotlib.axes.Axes.boxplot
+    def boxplot(self, *a, tick_labels=None, **k):
+        if tick_labels is not None:
+            k['labels'] = tick_labels
+        return ax_boxplot(self, *a, **k)
+    def plt_boxplot(*a, **k):
+        return plt.gca().boxplot(*a, **k)
+    plt_boxplot._infsub = True
+    matplotlib.axes.Axes.boxplot = boxplot
+    plt.boxplot = plt_boxplot
+_rt.mpl_compat = _mpl_compat
+
+def _mpl_show(*args, **kwargs):
+    """코랩(인라인 백엔드)처럼 열린 그림을 PNG 로 내보내고 닫습니다.
+    닫아야 다음 그래프가 앞 그림 위에 겹쳐 그려지지 않습니다."""
+    import io, base64
+    import matplotlib.pyplot as plt
+    for n in plt.get_fignums():
+        b = io.BytesIO()
+        plt.figure(n).savefig(b, format='png', dpi=110, bbox_inches='tight')
+        _rt.images.append(base64.b64encode(b.getvalue()).decode())
+    plt.close('all')
+_rt.show = _mpl_show
+
+class _MplBackend:
+    """matplotlib 이 MPLBACKEND 의 infsub_mpl 을 불러갈 때 그 자리에서 모듈을 만듭니다.
+    matplotlib 을 실제로 쓸 때만 불러오려고 import 훅으로 둡니다."""
+    @staticmethod
+    def find_spec(name, path=None, target=None):
+        if name == 'infsub_mpl':
+            import importlib.util
+            return importlib.util.spec_from_loader(name, _MplBackend)
+    @staticmethod
+    def create_module(spec):
+        return None
+    @staticmethod
+    def exec_module(module):
+        from matplotlib.backends.backend_agg import FigureCanvasAgg
+        module.FigureCanvas = FigureCanvasAgg
+        module.show = _mpl_show
+
+import os
+sys.meta_path.append(_MplBackend)
+os.environ['MPLBACKEND'] = 'module://infsub_mpl'
+# 첫 import 때 한 번 나오는 폰트 캐시 안내는 셀 출력에서 오류처럼 보여 숨깁니다 (다른 폰트 경고는 그대로)
+import logging
+logging.getLogger('matplotlib.font_manager').addFilter(lambda r: 'building the font cache' not in r.getMessage())
 `;
 
 /* ════════════════════════════════════════════════════════
@@ -972,12 +1063,15 @@ const Py = {
     this.loading = (async()=>{
       await new Promise((res,rej)=>{
         const s=document.createElement('script');
-        s.src='https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js';
+        s.src='https://cdn.jsdelivr.net/pyodide/v0.27.7/full/pyodide.js';
         s.onload=res; s.onerror=()=>rej(new Error('Python 환경을 내려받지 못했습니다'));
         document.head.appendChild(s);
       });
-      const py = await loadPyodide({indexURL:'https://cdn.jsdelivr.net/pyodide/v0.26.4/full/'});
+      const py = await loadPyodide({indexURL:'https://cdn.jsdelivr.net/pyodide/v0.27.7/full/'});
       try{ py.runPython(COLAB_SHIM); }catch(e){ console.warn('코랩 셰임 실패', e); }
+      // 브라우저 파이썬에는 소켓이 없어 urllib 가 동작하지 않습니다. sns.load_dataset 같은 내려받기를 위해 연결합니다.
+      try{ await py.loadPackage('pyodide-http'); py.runPython('import pyodide_http; pyodide_http.patch_all()'); }
+      catch(e){ console.warn('pyodide-http 적용 실패', e); }
       const n = await this.preloadData(py);
       this.inst=py; this.setState(n ? `준비됨 · 자료 ${n}개` : '준비됨');
       return py;
@@ -1004,14 +1098,41 @@ const Py = {
     try{ py.FS.chdir('/content'); }catch{}
     return ok;
   },
+  /* Pyodide 배포판에 없는 순수 파이썬 패키지는 코드에 처음 나올 때 PyPI 에서 받습니다.
+     openpyxl 은 import 없이 pandas 가 엑셀을 읽고 쓸 때 안에서 불러 씁니다. */
+  extra:new Set(),
+  async prepare(py, code){
+    const want = [['seaborn', /\bseaborn\b/], ['openpyxl', /\b(read_excel|to_excel|ExcelWriter|openpyxl)\b/]]
+      .filter(([p, re]) => re.test(code) && !this.extra.has(p)).map(([p]) => p);
+    if(want.length){
+      const prev = $('#py-state').textContent;
+      this.setState('패키지 설치 중');
+      try{
+        await py.loadPackage('micropip');
+        await py.runPythonAsync('import micropip\nawait micropip.install(' + JSON.stringify(want) + ')');
+        want.forEach(p => this.extra.add(p));
+      }catch(e){ console.warn('패키지 설치 실패', want, e); }
+      this.setState(prev);
+    }
+    if(/\btick_labels\b/.test(code)){
+      try{ py.runPython('import infsub_runtime as _r; _r.mpl_compat()'); }catch{}
+    }
+  },
   /* 코드 한 덩어리 실행 → {out, err, images} */
   async run(code, {fresh=false}={}){
     const py = await this.get();
+    // 코랩 셸 명령(!ls 등)은 파이썬 문법이 아니라 셀 전체가 SyntaxError 가 됩니다. 셰임 함수 호출로 바꿉니다.
+    code = code.replace(/^([ \t]*)!(.+)$/gm, (m, ind, cmd) => ind + '_infsub_shell(' + JSON.stringify(cmd) + ')');
     const buf=[];
-    // batched 콜백은 줄 단위로 불리면서 줄바꿈을 떼고 넘겨줍니다. 다시 붙여야 여러 줄로 보입니다.
-    py.setStdout({batched:s=>buf.push(s+'\n')});
-    py.setStderr({batched:s=>buf.push(s+'\n')});
+    // 패키지 불러오기 안내("Loading numpy" 등)는 셀 출력에 섞이지 않게 기본 출력(콘솔)으로 보냅니다.
+    py.setStdout(); py.setStderr();
     try{ await py.loadPackagesFromImports(code); }catch{}
+    await this.prepare(py, code);
+    // 출력은 바이트 그대로 받습니다. batched(줄 단위)는 줄바꿈 없이 끝난 print(..., end=' ') 를
+    // 셀 끝에서 내보내지 못해 다음 실행 출력에 섞였습니다. 한글이 쪼개져 들어와도 되게 stream 으로 풉니다.
+    const dec1 = new TextDecoder(), dec2 = new TextDecoder();
+    py.setStdout({write:b=>{ buf.push(dec1.decode(b,{stream:true})); return b.length; }});
+    py.setStderr({write:b=>{ buf.push(dec2.decode(b,{stream:true})); return b.length; }});
     const ns = fresh ? py.runPython('dict()') : undefined;   // 문제 채점용 격리 네임스페이스
     let err=null, images=[], value=null;
     try{
@@ -1025,30 +1146,13 @@ const Py = {
         try{ py.runPython("globals().pop('_infsub_ret', None)"); }catch{}
       }
       try{ ret?.destroy?.(); }catch{}
-      // matplotlib 그림이 있으면 이미지로 뽑아냅니다
-      if(/matplotlib|plt\./.test(code)){
-        try{
-          const b64 = await py.runPythonAsync(`
-import io, base64
-try:
-    import matplotlib
-    matplotlib.use("AGG")
-    import matplotlib.pyplot as _plt
-    _res=[]
-    for _n in _plt.get_fignums():
-        _b=io.BytesIO(); _plt.figure(_n).savefig(_b,format="png",dpi=110,bbox_inches="tight")
-        _res.append(base64.b64encode(_b.getvalue()).decode())
-    _plt.close("all")
-    _res
-except Exception:
-    []
-`);
-          images = b64 ? b64.toJs() : [];
-        }catch{}
-      }
     }catch(e){ err = String(e.message||e); }
     finally{ if(ns) ns.destroy?.(); }
-    // cv2_imshow 같은 셰임이 만들어 둔 이미지를 가져옵니다 (오류가 나도 남은 건 표시)
+    // 파이썬 쪽 버퍼에 남은 출력(줄바꿈 없이 끝난 print)을 내보냅니다
+    try{ py.runPython('import sys\nsys.stdout.flush(); sys.stderr.flush()'); }catch{}
+    // plt.show() 없이 끝난 셀의 그림도 주피터처럼 셀 끝에서 내보냅니다
+    try{ py.runPython('import sys, infsub_runtime as _r\nif "matplotlib.pyplot" in sys.modules: _r.show()'); }catch{}
+    // cv2_imshow·plt.show() 가 만들어 둔 이미지를 가져옵니다 (오류가 나도 남은 건 표시)
     try{
       const px = py.runPython('import infsub_runtime as _r; _r.pop_images()');
       const extra = px?.toJs?.() || [];
