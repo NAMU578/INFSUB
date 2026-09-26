@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "jae12woo15",
- "updatedAt": "2026-09-26T18:23:35.489Z",
+ "updatedAt": "2026-09-26T18:23:57.635Z",
  "edits": {
   "notebooks/1_넘파이_기초(개념).ipynb": {
    "17": "a = np.arange(10) # 시작값(생략가능, 0), 종료값(미만), 간격(생략가능, 1)\nprint(a)\nprint(a.dtype)\na.reshape(2,5)\nprint(a) # 모양을 2행 5열로 변형"
@@ -117,6 +117,23 @@
     {
      "role": "assistant",
      "content": "`np.`를 반드시 붙여야 합니다. 지금 코드에서는 `import numpy as np`로 불러왔기 때문에, numpy 안에 있는 `float32`라는 이름을 쓰려면 `np.float32`처럼 접두사를 붙여줘야 파이썬이 그것을 찾을 수 있어요. 그냥 `float32`라고만 쓰면 파이썬은 그런 이름을 모른다고 오류(`NameError`)를 낼 겁니다.\n\n만약 `from numpy import float32`처럼 따로 불러왔다면 그때는 `np.` 없이 `float32`만 써도 되지만, 지금 노트북 코드 스타일(`np.zeros`, `np.array` 등)을 보면 `import numpy as np` 방식을 쓰고 있으니 계속 `np.float32` 형태로 써주는 게 맞습니다."
+    }
+   ]
+  },
+  {
+   "id": "muipxbat",
+   "at": "2026-09-26T18:23:36.053Z",
+   "nb": "notebooks/1_넘파이_기초(개념).ipynb",
+   "label": "셀 18",
+   "context": "a = np.arange(10) # 시작값(생략가능, 0), 종료값(미만), 간격(생략가능, 1)\nprint(a)\nprint(a.dtype)\na.reshape(2,5)\nprint(a) # 모양을 2행 5열로 변형",
+   "msgs": [
+    {
+     "role": "user",
+     "content": "a = a.reshape(2,5)로 재정의 해야되냐"
+    },
+    {
+     "role": "assistant",
+     "content": "## 답변\n\n네, 맞습니다. `reshape()`는 **원본 배열을 바꾸지 않고, 모양이 바뀐 새 배열을 반환**하는 함수예요. 그래서 노트에 있는 코드처럼 `a.reshape(2,5)`만 실행하고 `a`를 그대로 출력하면, `a`는 여전히 원래의 1차원 모양(10개짜리)으로 나옵니다.\n\n원하는 대로 2행 5열 모양을 계속 사용하고 싶다면 말씀하신 대로\n\n```python\na = a.reshape(2, 5)\n```\n\n처럼 반환값을 다시 `a`에 저장(재정의)해야 합니다. 이렇게 재할당하지 않으면 `reshape()`의 결과가 그냥 버려지는 셈이죠.\n\n직접 확인해보고 싶다면, `a.reshape(2,5)`만 실행한 뒤의 `print(a)`와 `a = a.reshape(2,5)` 후의 `print(a)` 결과를 비교해보세요. 차이가 눈으로 보일 거예요."
     }
    ]
   }
