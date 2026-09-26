@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "jae12woo15",
- "updatedAt": "2026-09-26T17:07:49.736Z",
+ "updatedAt": "2026-09-26T17:11:48.195Z",
  "edits": {},
  "quiz": {
   "attempts": [],
@@ -31,6 +31,14 @@
     {
      "role": "assistant",
      "content": "## 답변\n\n배열을 자동으로 채워주는 대표적인 NumPy 함수들은 다음과 같습니다. 학생이 이미 본 `np.zeros()`와 사용법이 비슷해서, 인자로 **배열의 크기(shape)** 를 넣어주면 됩니다.\n\n- `np.zeros(shape)` : 모든 값을 0으로 채움\n- `np.ones(shape)` : 모든 값을 1로 채움\n- `np.full(shape, 값)` : 지정한 값으로 채움 (예: `np.full(5, 7)` → `[7 7 7 7 7]`)\n- `np.arange(시작, 끝, 간격)` : 연속된 숫자로 채움 (파이썬 `range`와 비슷)\n- `np.linspace(시작, 끝, 개수)` : 시작과 끝 사이를 균등한 간격으로 채움\n\n각 함수를 하나씩 직접 실행해서 `print()`로 결과와 `dtype`을 비교해 보세요. 특히 `np.full()`은 넣는 값에 따라 `dtype`이 자동으로 정수/실수로 결정되니, 앞서 배운 `dtype` 개념과 연결해서 확인해보면 좋습니다."
+    },
+    {
+     "role": "user",
+     "content": "Linspace는 정수로 안되면 유리수로 표현해? 그리고 모든 함수에서 dtype을 지정할 수 있어?"
+    },
+    {
+     "role": "assistant",
+     "content": "## 답변\n\n`np.linspace()`는 시작과 끝 사이를 **균등한 간격**으로 나누는 함수라서, 그 간격이 정수로 딱 떨어지지 않는 경우가 많아요. 그래서 기본적으로 결과값을 실수(`float64`)로 표현합니다. 예를 들어 `np.linspace(0, 1, 3)`을 하면 `[0, 0.5, 1]`처럼 소수가 나오는 걸 확인할 수 있을 거예요. 정수 구간이라도 `linspace`는 일단 실수로 계산한 뒤 결과를 보여주는 방식입니다.\n\n그리고 `np.zeros()`, `np.ones()`, `np.full()`, `np.arange()`, `np.linspace()` 등 대부분의 배열 생성 함수는 `dtype` 매개변수를 지원해서 원하는 타입을 직접 지정할 수 있습니다.\n\n```python\nnp.linspace(0, 1, 3, dtype=int)\n"
     }
    ]
   }
