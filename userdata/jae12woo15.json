@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "jae12woo15",
- "updatedAt": "2026-09-26T18:18:18.951Z",
+ "updatedAt": "2026-09-26T18:18:50.795Z",
  "edits": {},
  "quiz": {
   "attempts": [],
@@ -105,6 +105,14 @@
     {
      "role": "assistant",
      "content": "네, `np.zeros(10, dtype=np.float32)`처럼 써도 됩니다. 다만 오타로 `dytpe`이라고 쓰면 안 되고 `dtype`이 맞는 철자예요. float32는 float64보다 절반의 메모리(4바이트)만 사용하는 대신, 표현할 수 있는 소수점 정밀도와 숫자 범위가 더 좁아집니다.\n\n일반적인 계산에서는 float32도 충분히 잘 동작하지만, 매우 크거나 매우 정밀한 계산이 필요한 경우에는 float64가 더 안전합니다. 직접 `one = np.zeros(10, dtype=np.float32)` 후 `one.dtype`과 `one.nbytes`(전체 배열이 차지하는 바이트 수)를 출력해서 float64일 때와 비교해보면 차이를 확실히 이해할 수 있을 거예요."
+    },
+    {
+     "role": "user",
+     "content": "아니 np. 안붙여도 되냐고"
+    },
+    {
+     "role": "assistant",
+     "content": "`np.`를 반드시 붙여야 합니다. 지금 코드에서는 `import numpy as np`로 불러왔기 때문에, numpy 안에 있는 `float32`라는 이름을 쓰려면 `np.float32`처럼 접두사를 붙여줘야 파이썬이 그것을 찾을 수 있어요. 그냥 `float32`라고만 쓰면 파이썬은 그런 이름을 모른다고 오류(`NameError`)를 낼 겁니다.\n\n만약 `from numpy import float32`처럼 따로 불러왔다면 그때는 `np.` 없이 `float32`만 써도 되지만, 지금 노트북 코드 스타일(`np.zeros`, `np.array` 등)을 보면 `import numpy as np` 방식을 쓰고 있으니 계속 `np.float32` 형태로 써주는 게 맞습니다."
     }
    ]
   }
