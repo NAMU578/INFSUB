@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "jae12woo15",
- "updatedAt": "2026-09-26T18:34:56.986Z",
+ "updatedAt": "2026-09-26T18:40:36.300Z",
  "edits": {
   "notebooks/1_넘파이_기초(개념).ipynb": {
    "17": "a = np.arange(10) # 시작값(생략가능, 0), 종료값(미만), 간격(생략가능, 1)\nprint(a)\nprint(a.dtype)\na.reshape(2,5)\nprint(a) # 모양을 2행 5열로 변형",
@@ -226,6 +226,23 @@
     {
      "role": "assistant",
      "content": "## 원인: `astype()`은 **새 배열을 반환**하는 함수예요\n\n`array_2.astype(np.float64)`나 `np.astype(array_2, np.int32)`는 원본 배열(`array_2`)의 dtype을 바꾸는 게 아니라, **변환된 새로운 배열을 만들어서 반환**합니다. 그래서 `np.astype(array_2, np.int32)`처럼 반환값을 받지 않고 그냥 호출만 하면, 변환된 배열은 만들어졌다가 바로 사라지고 `array_2`는 그대로예요.\n\n## 확인해볼 것\n\n- `array_2.dtype`을 직접 출력해보면 여전히 원래 타입일 거예요.\n- 바뀐 걸 확인하려면 결과를 변수에 담아야 합니다.\n\n```python\narray_2_int = np.astype(array_2, np.int32)  # 새 변수에 저장\nprint(array_2_int.dtype)  # 여기서 확인\n```\n\n`array_2_float.dtype`은 이미 `array_2_float = array_2.astype(...)`로 결과를 받았으니 `float64`로 잘 나올 거예요. 만약 그것도 안 바뀌었다면, 어떤 값이 출력되는지 알려주면 같이 봐줄게요."
+    }
+   ]
+  },
+  {
+   "id": "muiqiwn9",
+   "at": "2026-09-26T18:40:23.493Z",
+   "nb": "notebooks/1_넘파이_기초(개념).ipynb",
+   "label": "셀 30",
+   "context": "array_1 * array_2",
+   "msgs": [
+    {
+     "role": "user",
+     "content": "행끼리 계산?"
+    },
+    {
+     "role": "assistant",
+     "content": "## `array_1 * array_2` 연산 방식\n\n넘파이(NumPy)에서 배열끼리 `*`를 쓰면 **행렬곱이 아니라 원소별(element-wise) 곱셈**이 이루어져요. 즉 `array_1`의 (i, j) 위치 값과 `array_2`의 (i, j) 위치 값을 그대로 곱해서 같은 위치에 넣는 방식입니다. \"행끼리 계산\"이라고 표현하신 것처럼 같은 행, 같은 열 번호끼리 짝지어 계산된다고 이해하면 맞습니다.\n\n예를 들어 두 배열이 모두 (2, 3) 모양이면, 1행은 1행끼리, 2행은 2행끼리, 그 안에서도 같은 열 위치끼리 곱해집니다. 두 배열의 모양(shape)이 다르면 **브로드캐스팅(broadcasting)** 규칙에 따라 크기가 자동으로 맞춰질 수도 있으니, 직접 두 배열의 shape을 출력해서 확인해보면 이해가 빨라질 거예요.\n\n만약 진짜 행렬곱(내적)을 원하신다면 `*` 대신 `array_1 @ array_2` 또는 `np.dot(array_1, array_2)`를 써야 합니다. 지금 코드에서 어떤 결과를 기대하시는지에 따라 둘 중 어떤 연산이 맞는지 직접 비교해보세요."
     }
    ]
   }
