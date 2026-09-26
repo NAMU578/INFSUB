@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "jae12woo15",
- "updatedAt": "2026-09-26T17:16:00.245Z",
+ "updatedAt": "2026-09-26T17:16:34.296Z",
  "edits": {},
  "quiz": {
   "attempts": [],
@@ -64,6 +64,14 @@
     {
      "role": "assistant",
      "content": "`array`가 변환을 하는 게 아니라, **`np.array(data)`**가 변환을 수행하는 넘파이 함수 호출이에요. `data`(리스트 등)를 넘파이 배열 형태로 바꿔주는 역할을 하죠.\n\n그리고 그 결과물(변환된 넘파이 배열)을 `array`라는 변수에 저장한 것뿐입니다. 즉 `array`는 그냥 이름이고, 실제 \"변환\"이라는 동작은 오른쪽의 `np.array(data)` 부분에서 일어나는 거예요.\n\n참고로 `type(array)`는 변환이 잘 됐는지 확인하려고 `array`의 자료형이 `numpy.ndarray`인지 출력해보는 코드입니다."
+    },
+    {
+     "role": "user",
+     "content": "Numpy 함수 호출엔 어떤게 잇지?"
+    },
+    {
+     "role": "assistant",
+     "content": "`np.array()`처럼 배열을 만들거나 다루는 넘파이 함수들이 여러 가지 있어요. 학생이 본 코드가 \"변환\" 관련이니 몇 가지 예를 들면:\n\n- `np.array(data)` : 리스트 등을 넘파이 배열로 변환\n- `np.zeros(shape)`, `np.ones(shape)` : 0 또는 1로 채운 배열 생성\n- `np.arange(start, stop, step)` : 연속된 값으로 배열 생성\n- `np.reshape(array, newshape)` : 배열의 모양(shape) 변경\n\n수업 내용이 정확히 어디까지 다루는지는 노트북을 더 봐야 알 수 있어서, 다음에 나올 함수가 무엇인지는 스스로 찾아보면서 확인해보면 좋을 것 같아요."
     }
    ]
   }
