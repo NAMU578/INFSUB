@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "jae12woo15",
- "updatedAt": "2026-09-26T18:31:28.155Z",
+ "updatedAt": "2026-09-26T18:32:36.596Z",
  "edits": {
   "notebooks/1_넘파이_기초(개념).ipynb": {
    "17": "a = np.arange(10) # 시작값(생략가능, 0), 종료값(미만), 간격(생략가능, 1)\nprint(a)\nprint(a.dtype)\na.reshape(2,5)\nprint(a) # 모양을 2행 5열로 변형"
@@ -191,6 +191,23 @@
     {
      "role": "assistant",
      "content": "## dtype(두 번째 인자)을 안 넣으면?\n\n`array_2.astype()`처럼 괄호를 비워두면 이것도 **에러**가 납니다. `astype()`은 \"어떤 자료형으로 바꿀지\"가 함수의 핵심 목적이기 때문에, dtype 인자가 필수예요. 즉 첫 번째 인자(배열 자신은 메서드 형태일 땐 자동으로 채워지지만)와 달리, 두 번째 인자인 dtype은 **생략할 수 없는 필수값**입니다.\n\n직접 실행해서 에러 메시지가 어떻게 나오는지 확인해보세요. 아마 \"필수 인자(dtype)가 없다\"는 취지의 `TypeError`가 뜰 거예요.\n\n```python\narray_2.astype()  # 에러 발생 확인용\n```"
+    }
+   ]
+  },
+  {
+   "id": "muiq8gl4",
+   "at": "2026-09-26T18:32:16.120Z",
+   "nb": "notebooks/1_넘파이_기초(개념).ipynb",
+   "label": "셀 24",
+   "context": "# dtype 변경 함수 astype()\narray_2_float = array_2.astype(np.float64)\narray_2_float.dtype",
+   "msgs": [
+    {
+     "role": "user",
+     "content": "Print(dtype)해야하는거 아니야?"
+    },
+    {
+     "role": "assistant",
+     "content": "## 답변\n\n`array_2_float.dtype`만 써도 되는 경우와 `print()`가 필요한 경우가 나뉩니다.\n\n- **주피터 노트북 셀**에서는 셀의 **마지막 줄**에 있는 값은 자동으로 화면에 출력됩니다. 그래서 노트에 있는 코드처럼 `.dtype`이 셀의 마지막 표현식이라면 `print()` 없이도 결과가 보입니다.\n- 하지만 **일반 파이썬 스크립트(.py)**로 실행하거나, 한 셀 안에서 **중간에** 값을 확인하고 싶다면 `print(array_2_float.dtype)`처럼 명시적으로 출력해야 화면에 나타납니다.\n\n즉, 지금 보고 있는 코드가 노트북 환경이고 저 줄이 셀의 마지막 줄이라면 `print` 없이도 정상 작동합니다. 직접 셀에 쳐보고 결과가 안 뜨면 그때 `print()`를 추가해보세요."
     }
    ]
   }
