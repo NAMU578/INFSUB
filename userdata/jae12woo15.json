@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "jae12woo15",
- "updatedAt": "2026-09-26T18:50:16.090Z",
+ "updatedAt": "2026-09-26T18:50:47.426Z",
  "edits": {
   "notebooks/1_넘파이_기초(개념).ipynb": {
    "17": "a = np.arange(10) # 시작값(생략가능, 0), 종료값(미만), 간격(생략가능, 1)\nprint(a)\nprint(a.dtype)\na.reshape(2,5)\nprint(a) # 모양을 2행 5열로 변형",
@@ -312,6 +312,14 @@
     {
      "role": "assistant",
      "content": "## 답변\n\n보이는 코드만으로는 `plist_1d` 함수가 어떻게 정의되어 있는지 알 수 없어서, 아래 설명은 **추측**임을 먼저 밝힙니다.\n\n\"List를 못 불러온다\"는 오류 메시지는 보통 `NameError: name 'List' is not defined` 형태로 나타나는데, 이는 함수 정의부에서 타입 힌트로 `List[int]` 같은 표현을 썼지만 정작 `from typing import List`를 코드 맨 위에서 import하지 않았을 때 자주 발생합니다. 즉 `plist_1d([7],[9])`를 호출하는 시점이 아니라, 그 위쪽 `def plist_1d(x: List[float], y: List[float]):` 같은 줄에서 이미 오류가 나고 있을 가능성이 큽니다.\n\n확인해볼 점:\n1. 파일 상단에 `from typing import List` 줄이 있는지 확인해 보세요.\n2. `plist_1d` 함수 정의 부분에 `List`라는 단어가 등장하는지 "
+    },
+    {
+     "role": "user",
+     "content": "Not callable 이래"
+    },
+    {
+     "role": "assistant",
+     "content": "## 답변\n\n정확한 원인은 코드 전체를 봐야 알 수 있어서, 아래는 **추측**입니다. `TypeError: 'list' object is not callable` 같은 오류는 대개 원래 함수였던 이름에 **리스트 값이 다시 할당**되어서 함수가 사라졌을 때 발생합니다. 예를 들어 코드 어딘가에 `plist_1d = [1, 2, 3]` 같은 줄이 있으면, 그 이후로 `plist_1d`는 함수가 아니라 리스트가 되어버려서 `plist_1d([7],[9])`처럼 괄호로 호출하면 \"list는 호출할 수 없다\"는 오류가 납니다.\n\n확인해볼 점:\n1. `plist_1d`라는 이름이 함수 정의(`def plist_1d(...):`) 외에 다른 곳에서 `=`로 값이 재할당된 적이 있는지 셀들을 위에서부터 순서대로 살펴보세요.\n2. 주피터 노트북이라면 셀 실행 순서가 꼬여서 나중에 실행한 셀이 함수를 덮어썼을 수도 있으니, 커널을 재시작하고 위에서부터 순서대로 다시 실행해 보세요."
     }
    ]
   }
