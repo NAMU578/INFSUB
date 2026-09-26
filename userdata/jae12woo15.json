@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "jae12woo15",
- "updatedAt": "2026-09-26T18:49:36.555Z",
+ "updatedAt": "2026-09-26T18:50:16.090Z",
  "edits": {
   "notebooks/1_넘파이_기초(개념).ipynb": {
    "17": "a = np.arange(10) # 시작값(생략가능, 0), 종료값(미만), 간격(생략가능, 1)\nprint(a)\nprint(a.dtype)\na.reshape(2,5)\nprint(a) # 모양을 2행 5열로 변형",
@@ -295,6 +295,23 @@
     {
      "role": "assistant",
      "content": "## 왜 오류가 나는지 확인하는 방법\n\n지금 보여준 부분에는 `plist_1d`라는 함수를 **호출하는 코드**만 있고, 그 함수가 어떻게 정의되어 있는지(`def plist_1d(...):`)는 보이지 않아. 함수 정의 부분을 안 보고는 정확한 원인을 말하기 어려우니, 아래는 추측을 포함한 힌트야.\n\n일반적으로 이런 호출에서 오류가 나는 경우는 다음 중 하나야:\n1. **매개변수 개수 불일치**: 함수가 인자를 1개만 받도록 정의됐는데 `[7]`, `[9]` 두 개를 넘긴 경우 (`TypeError: takes 1 positional argument but 2 were given` 같은 메시지)\n2. **자료형 문제**: 함수 내부에서 리스트가 아니라 숫자를 기대하는 연산을 하고 있어서, `[7]` 자체(리스트)를 숫자처럼 쓰다가 오류가 나는 경우\n\n## 스스로 확인해볼 것\n\n터미널/콘솔에 뜬 **오류 메시지 전체**(맨 아랫줄, 예: `TypeError: ...`)를 같이 확인해봐. 그리고 `plist_1d`를 정의한 코드 부분(`def plist_1d(...)`)을 찾아서, 그 함수가 인자를 몇 개, 어떤 형태로 받도록 만들어졌는지 다"
+    }
+   ]
+  },
+  {
+   "id": "muiqv56v",
+   "at": "2026-09-26T18:49:54.439Z",
+   "nb": "notebooks/1_넘파이_기초(개념).ipynb",
+   "label": "셀 40",
+   "context": "# 오류 발생함\nplist_1d([7],[9])",
+   "msgs": [
+    {
+     "role": "user",
+     "content": "List를 못불러온다는 오류가 왜뜨지"
+    },
+    {
+     "role": "assistant",
+     "content": "## 답변\n\n보이는 코드만으로는 `plist_1d` 함수가 어떻게 정의되어 있는지 알 수 없어서, 아래 설명은 **추측**임을 먼저 밝힙니다.\n\n\"List를 못 불러온다\"는 오류 메시지는 보통 `NameError: name 'List' is not defined` 형태로 나타나는데, 이는 함수 정의부에서 타입 힌트로 `List[int]` 같은 표현을 썼지만 정작 `from typing import List`를 코드 맨 위에서 import하지 않았을 때 자주 발생합니다. 즉 `plist_1d([7],[9])`를 호출하는 시점이 아니라, 그 위쪽 `def plist_1d(x: List[float], y: List[float]):` 같은 줄에서 이미 오류가 나고 있을 가능성이 큽니다.\n\n확인해볼 점:\n1. 파일 상단에 `from typing import List` 줄이 있는지 확인해 보세요.\n2. `plist_1d` 함수 정의 부분에 `List`라는 단어가 등장하는지 "
     }
    ]
   }
