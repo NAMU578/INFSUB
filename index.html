@@ -439,6 +439,14 @@ const CONFIG = {
   // true 로 두면 출제 직전에 은행 문항의 정답을 브라우저에서 다시 실행해 확인합니다.
   // 문항을 새로 추가한 직후에만 잠깐 켜 보세요. 켜면 시작이 몇 초 느려집니다.
   BANK_VERIFY  : false,
+
+  // 노트북별 출제 범위. 문항 자동 생성·AI 서술형이 시험범위 밖 셀에서 문제를 만들지 않게 합니다.
+  //   stopAt: 이 문구가 있는 마크다운 셀부터 끝까지 제외
+  //   skip  : 이 문구가 있는 셀만 제외
+  // 노트북 화면(보기·실행)에는 영향이 없습니다.
+  QUIZ_SCOPE   : {
+    '3_데이터이해(예제)': { stopAt: /이미지 파일 형태의 데이터셋/, skip: /시험범위가 아닌/ },
+  },
 };
 
 /* ── 유틸 ─────────────────────────────────────────────── */
@@ -1852,12 +1860,26 @@ function viewQuiz(opts={}){
   renderQuestion();
 }
 
+/* CONFIG.QUIZ_SCOPE 에 적힌 출제 범위 밖의 셀을 뺍니다. */
+function quizScope(name, path, cells){
+  const rule = Object.entries(CONFIG.QUIZ_SCOPE||{}).find(([k])=>nbMatches(k, name))?.[1];
+  if(!rule) return cells;
+  const out=[];
+  for(const c of cells){
+    const src = cellSource(path, c);
+    if(rule.stopAt && c.type==='md' && rule.stopAt.test(src)) break;
+    if(rule.skip && rule.skip.test(src)) continue;
+    out.push(c);
+  }
+  return out;
+}
+
 async function startQuiz(){
   const path=$('#qz-nb').value, n=+$('#qz-n').value, useAI=$('#qz-ai').checked;
   const meta=S.notebooks.find(x=>x.path===path);
   $('#view').innerHTML=`<div class="empty"><div class="eyebrow">Generating</div>문제를 만드는 중입니다…</div>`;
   try{
-    const cells = await fetchNotebook(path);
+    const cells = quizScope(meta.name, path, await fetchNotebook(path));
     const nb = {
       name:meta.name, path,
       units: buildUnits(path, cells),
