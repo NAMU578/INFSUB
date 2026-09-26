@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "jae12woo15",
- "updatedAt": "2026-09-26T18:27:28.671Z",
+ "updatedAt": "2026-09-26T18:28:36.220Z",
  "edits": {
   "notebooks/1_넘파이_기초(개념).ipynb": {
    "17": "a = np.arange(10) # 시작값(생략가능, 0), 종료값(미만), 간격(생략가능, 1)\nprint(a)\nprint(a.dtype)\na.reshape(2,5)\nprint(a) # 모양을 2행 5열로 변형"
@@ -159,6 +159,14 @@
     {
      "role": "assistant",
      "content": "## np.astype()로 쓸 때 괄호 안 내용\n\n`array.astype(np.float64)`처럼 메서드로 쓰는 대신, `array_2.astype(...)`을 함수 형태로 표현하면 아래와 같이 **원본 배열 자신을 첫 번째 인자로** 넣어줘야 해요.\n\n```python\narray_2_float = np.ndarray.astype(array_2, np.float64)\n```\n\n괄호 안에 들어가는 것은 순서대로:\n1. **변환할 배열** (`array_2`) — 메서드로 쓸 때는 점(`.`) 앞에 오던 것\n2. **바꾸고 싶은 dtype** (`np.float64`, `np.int32` 등)\n\n즉 메서드 형태(`array_2.astype(np.float64)`)와 함수 형태(`np.ndarray.astype(array_2, np.float64)`)는 결과가 같고, 그냥 문법 차이라고 이해하면 됩니다. 실제로는 메서드 형태가 훨씬 자주 쓰이니 그 형태에 익숙해지는 게 좋아요."
+    },
+    {
+     "role": "user",
+     "content": "ndarray는 머임"
+    },
+    {
+     "role": "assistant",
+     "content": "## ndarray란?\n\n`ndarray`는 넘파이(NumPy)에서 배열을 표현하는 **자료형(클래스) 이름**이에요. \"N-dimensional array\"의 줄임말로, **N차원 배열**을 의미합니다. 우리가 지금까지 만들었던 `array_2` 같은 넘파이 배열들이 사실은 모두 이 `ndarray` 타입의 객체예요.\n\n앞서 나온 `np.ndarray.astype(array_2, np.float64)`에서 `np.ndarray`는 \"넘파이 배열이라는 클래스\"를 가리키고, 거기 붙어있는 `astype`은 그 클래스가 가진 메서드(기능)라는 뜻이에요. 직접 확인해보고 싶으면 아래 코드를 실행해서 타입을 찍어보세요.\n\n```python\nprint(type(array_2))\n```\n\n출력 결과가 `<class 'numpy.ndarray'>`처럼 나오는지 확인해보면 이해가 더 잘 될 거예요."
     }
    ]
   }
