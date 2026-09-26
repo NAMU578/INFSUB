@@ -1,0 +1,30 @@
+{
+ "version": 1,
+ "user": "jae12woo15",
+ "updatedAt": "2026-09-26T17:06:57.865Z",
+ "edits": {},
+ "quiz": {
+  "attempts": [],
+  "stats": {}
+ },
+ "wrong": [],
+ "chats": [
+  {
+   "id": "muin69qw",
+   "at": "2026-09-26T17:06:35.096Z",
+   "nb": "notebooks/1_넘파이_기초(개념).ipynb",
+   "label": "셀 13",
+   "context": "# 0 값을 가지는 배열 만들기\none = np.zeros(10)\nprint(one)\nprint(one.ndim)\nprint(one.shape)\nprint(one.dtype)",
+   "msgs": [
+    {
+     "role": "user",
+     "content": "정수인데 왜 데이터 타입이 float이지?"
+    },
+    {
+     "role": "assistant",
+     "content": "## 답변\n\n`np.zeros()` 함수는 배열 안의 값이 모두 **0**이라는 뜻이지, 정수를 만든다는 뜻이 아니에요. 학생이 고른 코드에서 `np.zeros(10)`처럼 `dtype`을 따로 지정하지 않으면 NumPy는 **기본값으로 `float64`**를 사용하도록 설계되어 있습니다. 그래서 `print(one.dtype)`을 실행하면 `int`가 아니라 `float64`가 출력되는 거예요.\n\n만약 정수형 배열을 만들고 싶다면 아래처럼 `dtype`을 직접 지정해 주면 됩니다.\n\n```python\none = np.zeros(10, dtype=int)\n```\n\n이렇게 바꾼 뒤 `one.dtype`을 다시 출력해서 결과가 어떻게 달라지는지 직접 확인해 보세요."
+    }
+   ]
+  }
+ ]
+}
