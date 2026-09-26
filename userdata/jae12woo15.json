@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "jae12woo15",
- "updatedAt": "2026-09-26T19:22:32.017Z",
+ "updatedAt": "2026-09-26T19:23:55.158Z",
  "edits": {
   "notebooks/1_넘파이_기초(개념).ipynb": {
    "17": "a = np.arange(10) # 시작값(생략가능, 0), 종료값(미만), 간격(생략가능, 1)\nprint(a)\nprint(a.dtype)\na.reshape(2,5)\nprint(a) # 모양을 2행 5열로 변형",
@@ -40,11 +40,17 @@
     "path": "notebooks/1_넘파이_기초(개념).ipynb",
     "type": "classify",
     "ok": false
+   },
+   {
+    "t": 1790450635155,
+    "path": "notebooks/1_넘파이_기초(개념).ipynb",
+    "type": "contrast",
+    "ok": false
    }
   ],
   "stats": {
    "notebooks/1_넘파이_기초(개념).ipynb": {
-    "asked": 5,
+    "asked": 6,
     "correct": 3
    }
   },
@@ -117,6 +123,32 @@
    "mine": "(가), (나), (다)",
    "why": "첫 인자에 정수 8을 주면 0부터 7까지, 즉 8 미만의 정수에서 뽑습니다. 8은 포함되지 않으므로 (가)는 틀립니다. <span class=\"mono\">replace=False</span> 는 중복을 허용하지 않는다는 뜻이고, True로 바꾸면 같은 수가 여러 번 나올 수 있습니다.",
    "at": 1790450552017,
+   "streak": 0
+  },
+  {
+   "key": "a852f4080a4d98e9e25bd93edb2706a88dc1466d4bea11bafe3ec805bfb91bc3",
+   "path": "notebooks/1_넘파이_기초(개념).ipynb",
+   "nb": "1_넘파이_기초(개념)",
+   "type": "대조",
+   "typeKey": "contrast",
+   "stem": "다음은 거의 같은 두 코드와 실행결과다. ㉠, ㉡ 에 출력되는 값으로 맞는 것만 모두 모은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">방법1 → ㉠<br>방법2 → ㉡</span></span>",
+   "code": "array = np.array([3, -1, 5, -2, 7])\n\n# 방법1\nprint((array > 0).sum())\n\n# 방법2\nprint(array[array > 0].sum())",
+   "intro": "",
+   "expect": "",
+   "options": [
+    "㉠ 3  ·  ㉡ 15",
+    "㉠ 15  ·  ㉡ 3",
+    "㉠ 3  ·  ㉡ 3",
+    "㉠ 5  ·  ㉡ 15",
+    "㉠ 15  ·  ㉡ 15"
+   ],
+   "answer": "㉠ 3  ·  ㉡ 15",
+   "accept": null,
+   "rubric": null,
+   "eid": null,
+   "mine": "㉠ 15  ·  ㉡ 15",
+   "why": "방법1은 불리언 배열에 sum()을 적용한 것이라 True의 개수, 즉 조건을 만족하는 원소의 개수가 나옵니다. 방법2는 불리언 배열을 인덱스로 써서 True인 위치의 값만 골라낸 뒤 더하므로 합이 나옵니다.",
+   "at": 1790450635158,
    "streak": 0
   }
  ],
