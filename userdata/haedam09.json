@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "haedam09",
- "updatedAt": "2026-09-29T14:20:21.182Z",
+ "updatedAt": "2026-09-29T14:21:57.482Z",
  "edits": {},
  "quiz": {
   "attempts": [
@@ -88,11 +88,17 @@
     "path": "notebooks/2_넘파이_심화.ipynb",
     "type": "blank2",
     "ok": false
+   },
+   {
+    "t": 1790691717482,
+    "path": "notebooks/2_넘파이_심화.ipynb",
+    "type": "short",
+    "ok": false
    }
   ],
   "stats": {
    "notebooks/2_넘파이_심화.ipynb": {
-    "asked": 5,
+    "asked": 6,
     "correct": 1
    },
    "notebooks/1_넘파이_기초(개념).ipynb": {
@@ -246,6 +252,32 @@
    "mine": "㉠ int16  ·  ㉡ strides",
    "why": "<span class=\"mono\">itemsize</span> 는 원소 하나가 차지하는 바이트 수입니다. int16은 16비트, 즉 2바이트라 2가 출력됩니다. 대괄호가 3겹이므로 3차원이고 바깥부터 세면 면 1개, 행 2개, 열 2개라 <span class=\"mono\">shape</span> 는 (1, 2, 2) 입니다.",
    "at": 1790691621181,
+   "streak": 0
+  },
+  {
+   "key": "622214ccea6f7bc8760d0fb700ef13ec6abdeb1ac7a36e3a51e4a59159bbd4ae",
+   "path": "notebooks/2_넘파이_심화.ipynb",
+   "nb": "2_넘파이_심화",
+   "type": "서답형",
+   "typeKey": "short",
+   "stem": "코드의 빈칸 ㉠ 에 들어갈 코드를 적으시오.<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">(3, 2, 4)</span></span>",
+   "code": "t1 = np.arange(3*4*2).reshape(3, 4, 2)\nt2 = t1.㉠\nprint(t2.shape)",
+   "intro": "",
+   "expect": "",
+   "options": null,
+   "answer": "transpose(0, 2, 1)",
+   "accept": [
+    "transpose(0,2,1)",
+    "transpose(0, 2, 1)",
+    ".transpose(0,2,1)",
+    "swapaxes(1,2)",
+    "swapaxes(1, 2)"
+   ],
+   "rubric": null,
+   "eid": null,
+   "mine": "흠",
+   "why": "(3, 4, 2)에서 0번 축은 그대로 두고 1번과 2번 축만 맞바꾸면 (3, 2, 4)가 됩니다.",
+   "at": 1790691717482,
    "streak": 0
   }
  ],
