@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "haedam09",
- "updatedAt": "2026-09-29T12:58:40.928Z",
+ "updatedAt": "2026-09-29T13:54:14.181Z",
  "edits": {},
  "quiz": {
   "attempts": [
@@ -239,6 +239,23 @@
     {
      "role": "assistant",
      "content": "## 답변\n\n맞아요, `age.values`는 **리스트가 아니라 NumPy 배열(ndarray)**이에요. 코드에서 두 줄을 비교해 보면 힌트가 있어요.\n\n```python\nprint(\"값(values):\", age.values)              # ndarray 그대로 출력\nprint(\"인덱스(index):\", age.index.tolist())    # 굳이 .tolist()를 붙임\n```\n\n인덱스 쪽에 `.tolist()`가 붙어 있는 걸 보면, 원래 `age.index`도 리스트가 아닌 다른 자료구조(Index 객체)라는 뜻이겠죠? 마찬가지로 `age.values`도 Series 내부의 실제 데이터를 담는 NumPy 배열 형태입니다.\n\n직접 확인해보고 싶다면 아래처럼 타입을 찍어보세요:\n\n```python\nprint(type(age.values))\nprint(type(age.index))\n```\n\n두 타입이 각각 무엇으로 나오는지 보고, `list`와 어떤 차이가 있는지(예: 연산 방식, 출력 형태 등) 스스로 비교해보면 좋을 것 같아요."
+    }
+   ]
+  },
+  {
+   "id": "mumqlvef",
+   "at": "2026-09-29T13:53:46.551Z",
+   "nb": "notebooks/2_넘파이_심화.ipynb",
+   "label": "셀 166",
+   "context": "# axis=1 좀 헤깔릴 수 있음\ny = np.expand_dims(x, axis=1)\ny",
+   "msgs": [
+    {
+     "role": "user",
+     "content": "행 성분을 1 추가했다?"
+    },
+    {
+     "role": "assistant",
+     "content": "`axis=1`은 \"새로운 축을 몇 번째 위치에 끼워 넣을지\"를 뜻해요. 예를 들어 `x`가 `(n,)` 모양(1차원, 원소 n개)이라면, `expand_dims(x, axis=1)`은 그 뒤에 크기 1인 축을 하나 추가해서 `(n, 1)` 모양으로 만듭니다.\n\n여기서 `(n, 1)`은 \"행이 n개, 열이 1개\"인 2차원 배열이에요. 그러니까 정확히는 \"행 성분을 추가했다\"기보다 **열 방향(두 번째 축)에 크기 1인 차원을 새로 만든 것**이라고 이해하는 게 맞습니다. 즉 원래 가로로 나열되어 있던 값들이 세로로 한 줄씩 선 모양(열벡터 형태)으로 바뀐다고 생각하면 됩니다.\n\n직접 확인하려면 `x.shape`와 `y.shape`를 출력해서 비교해보세요. `axis=0`으로 바꿔서 넣었을 때 결과가 어떻게 달라지는지도 같이 실험해보면 감이 "
     }
    ]
   }
