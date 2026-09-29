@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "haedam09",
- "updatedAt": "2026-09-29T14:24:39.767Z",
+ "updatedAt": "2026-09-29T14:29:01.308Z",
  "edits": {},
  "quiz": {
   "attempts": [
@@ -130,6 +130,12 @@
     "path": "notebooks/2_넘파이_심화.ipynb",
     "type": "contrast",
     "ok": false
+   },
+   {
+    "t": 1790692141307,
+    "path": "notebooks/3_데이터이해(예제).ipynb",
+    "type": "short",
+    "ok": false
    }
   ],
   "stats": {
@@ -140,9 +146,23 @@
    "notebooks/1_넘파이_기초(개념).ipynb": {
     "asked": 9,
     "correct": 8
+   },
+   "notebooks/3_데이터이해(예제).ipynb": {
+    "asked": 1,
+    "correct": 0
    }
   },
   "recentBank": [
+   "3C05",
+   "3B03",
+   "3D14",
+   "3R14",
+   "3R12",
+   "3X05",
+   "3S13",
+   "3W04",
+   "3G10",
+   "3E05",
    "C01",
    "C02",
    "B15",
@@ -360,6 +380,29 @@
    "mine": "㉠ [[ 1  4] [ 9 16]]  ·  ㉡ [[ 1  4] [ 9 16]]",
    "why": "ndarray의 <span class=\"mono\">*</span> 는 같은 위치 원소끼리의 곱이고, matrix의 <span class=\"mono\">*</span> 는 행렬곱입니다. 담고 있는 값은 같지만 클래스가 다르면 같은 기호가 다른 연산을 뜻하게 됩니다.",
    "at": 1790691879767,
+   "streak": 0
+  },
+  {
+   "key": "9d1cda3fe2b9e64de0e7e4ed73613b136dc4c355d4420b0f66893deb34fedf71",
+   "path": "notebooks/3_데이터이해(예제).ipynb",
+   "nb": "3_데이터이해(예제)",
+   "type": "서답형",
+   "typeKey": "short",
+   "stem": "코드의 빈칸 ㉠ 에 들어갈 코드를 적으시오. (항목 이름이 긴 가로 막대그래프)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">가로 막대 개수: 3</span></span>",
+   "code": "imp = pd.Series({'sepal_width': 0.01, 'sepal_length': 0.11, 'petal_length': 0.44})\nax = imp.plot(kind='㉠')\nprint('가로 막대 개수:', len(ax.patches))",
+   "intro": "",
+   "expect": "",
+   "options": null,
+   "answer": "barh",
+   "accept": [
+    "barh",
+    "'barh'"
+   ],
+   "rubric": null,
+   "eid": null,
+   "mine": "3",
+   "why": "<span class=\"mono\">kind='barh'</span> 는 가로 막대그래프입니다. 특성 이름처럼 긴 이름을 세로축에 두기 좋아 특성 중요도 그래프에 씁니다. 세로 막대는 <span class=\"mono\">'bar'</span> 입니다.",
+   "at": 1790692141308,
    "streak": 0
   }
  ],
