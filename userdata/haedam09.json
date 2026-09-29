@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "haedam09",
- "updatedAt": "2026-09-29T12:14:32.420Z",
+ "updatedAt": "2026-09-29T12:26:26.427Z",
  "edits": {},
  "quiz": {
   "attempts": [
@@ -129,6 +129,23 @@
     {
      "role": "assistant",
      "content": "## `np.mean(array)` vs `array.mean()`\n\n둘은 **같은 결과**를 내는 경우가 대부분입니다. `np.mean(array)`는 numpy 모듈에 있는 함수를 호출하는 방식이고, `array.mean()`은 배열 객체가 가진 메서드(method)를 호출하는 방식이라는 점만 다릅니다.\n\n```python\nimport numpy as np\na = np.array([1, 2, 3])\n\nnp.mean(a)   # 함수 방식: numpy에게 \"a의 평균을 구해줘\"\na.mean()     # 메서드 방식: a에게 \"네 평균을 알려줘\"\n```\n\n굳이 차이를 찾자면, `np.mean()`은 numpy 배열이 아닌 일반 파이썬 리스트에도 바로 쓸 수 있지만 (내부에서 배열로 변환해줌), `array.mean()`은 반드시 numpy 배열 객체여야만 호출할 수 있습니다. 실제로 수업 노트에서는 편한 쪽을 골라 쓰면 되고, 두 방식이 존재한다는 것만 기억해두면 됩니다."
+    }
+   ]
+  },
+  {
+   "id": "mumngnvn",
+   "at": "2026-09-29T12:25:44.675Z",
+   "nb": "notebooks/2_넘파이_심화.ipynb",
+   "label": "셀 11",
+   "context": "for i, a in enumerate(m):\n  print(i, a)",
+   "msgs": [
+    {
+     "role": "user",
+     "content": "1행 1열 성분이라는 의미에서 인덱스를 11로 지정할수도 있어?"
+    },
+    {
+     "role": "assistant",
+     "content": "`enumerate(m, start=11)`처럼 시작값을 바꾸는 건 가능해. 하지만 그렇게 하면 `i`가 11, 12, 13... 처럼 **1씩 증가하는 정수**가 될 뿐이야. 학생이 원하는 \"1행1열, 1행2열, 2행1열...\" 같은 좌표식 번호(11, 12, 21, 22...)는 단순 증가가 아니라 행 번호와 열 번호를 따로 계산해서 합쳐야 나오는 값이라, `enumerate`의 `start` 옵션만으로는 만들 수 없어.\n\n만약 그런 좌표식 인덱스를 만들고 싶다면, `m`이 2차원 리스트라는 점을 이용해서 바깥 `for i, row in enumerate(m, start=1)`과 안쪽 `for j, val in enumerate(row, start=1)`을 이중으로 써서 `i*10+j` 같은 식으로 직접 계산해줘야 해. 한번 이중 반복문 구조로 바꿔서 시도해볼래?"
     }
    ]
   }
