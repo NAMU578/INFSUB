@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "haedam09",
- "updatedAt": "2026-09-29T14:19:04.137Z",
+ "updatedAt": "2026-09-29T14:20:21.182Z",
  "edits": {},
  "quiz": {
   "attempts": [
@@ -82,11 +82,17 @@
     "path": "notebooks/2_넘파이_심화.ipynb",
     "type": "spec",
     "ok": true
+   },
+   {
+    "t": 1790691621181,
+    "path": "notebooks/2_넘파이_심화.ipynb",
+    "type": "blank2",
+    "ok": false
    }
   ],
   "stats": {
    "notebooks/2_넘파이_심화.ipynb": {
-    "asked": 4,
+    "asked": 5,
     "correct": 1
    },
    "notebooks/1_넘파이_기초(개념).ipynb": {
@@ -214,6 +220,32 @@
    "mine": "b에 해당하는 행이 복사되어 (2, 3) 구조를 만들고, 각 인덱스에 해당하는 것끼리 더해진다.",
    "why": "AI 채점 결과입니다.",
    "at": 1790691414030,
+   "streak": 0
+  },
+  {
+   "key": "29023ef31acf256e96f0128ee364b4eb05c00aa679c6c08c898bd19f5674796c",
+   "path": "notebooks/2_넘파이_심화.ipynb",
+   "nb": "2_넘파이_심화",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "stem": "코드의 빈칸 ㉠, ㉡ 에 들어갈 것으로 맞는 것만 모두 모은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">2 (1, 2, 2)</span></span>",
+   "code": "a = np.array([[[1, 2], [3, 4]]], dtype=np.㉠)\nprint(a.itemsize, a.㉡)",
+   "intro": "",
+   "expect": "",
+   "options": [
+    "㉠ int16  ·  ㉡ shape",
+    "㉠ int8  ·  ㉡ shape",
+    "㉠ int16  ·  ㉡ strides",
+    "㉠ int64  ·  ㉡ shape",
+    "㉠ int16  ·  ㉡ size"
+   ],
+   "answer": "㉠ int16  ·  ㉡ shape",
+   "accept": null,
+   "rubric": null,
+   "eid": null,
+   "mine": "㉠ int16  ·  ㉡ strides",
+   "why": "<span class=\"mono\">itemsize</span> 는 원소 하나가 차지하는 바이트 수입니다. int16은 16비트, 즉 2바이트라 2가 출력됩니다. 대괄호가 3겹이므로 3차원이고 바깥부터 세면 면 1개, 행 2개, 열 2개라 <span class=\"mono\">shape</span> 는 (1, 2, 2) 입니다.",
+   "at": 1790691621181,
    "streak": 0
   }
  ],
