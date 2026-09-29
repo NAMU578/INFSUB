@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "haedam09",
- "updatedAt": "2026-09-29T14:24:25.146Z",
+ "updatedAt": "2026-09-29T14:24:39.767Z",
  "edits": {},
  "quiz": {
   "attempts": [
@@ -124,11 +124,17 @@
     "path": "notebooks/2_넘파이_심화.ipynb",
     "type": "classify",
     "ok": true
+   },
+   {
+    "t": 1790691879767,
+    "path": "notebooks/2_넘파이_심화.ipynb",
+    "type": "contrast",
+    "ok": false
    }
   ],
   "stats": {
    "notebooks/2_넘파이_심화.ipynb": {
-    "asked": 11,
+    "asked": 12,
     "correct": 5
    },
    "notebooks/1_넘파이_기초(개념).ipynb": {
@@ -328,6 +334,32 @@
    "mine": "넘파이 배열, 넘파이 배열을 처리할 줄 알아야 이미지 분석에 용이하다.",
    "why": "AI 채점 결과입니다.",
    "at": 1790691777627,
+   "streak": 0
+  },
+  {
+   "key": "061dff26708fe0f587498956657bbca5d122582249ee10a7c2599e011ed734eb",
+   "path": "notebooks/2_넘파이_심화.ipynb",
+   "nb": "2_넘파이_심화",
+   "type": "대조",
+   "typeKey": "contrast",
+   "stem": "다음은 거의 같은 두 코드와 실행결과다. ㉠, ㉡ 에 출력되는 값으로 맞는 것만 모두 모은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">방법1 → ㉠<br>방법2 → ㉡</span></span>",
+   "code": "# 방법1\nn = np.arange(1, 5).reshape(2, 2)\nprint(n * n)\n\n# 방법2\nm = np.asmatrix(np.arange(1, 5).reshape(2, 2))\nprint(m * m)",
+   "intro": "",
+   "expect": "",
+   "options": [
+    "㉠ [[ 7 10] [15 22]]  ·  ㉡ [[ 1  4] [ 9 16]]",
+    "㉠ [[ 7 10] [15 22]]  ·  ㉡ [[ 7 10] [15 22]]",
+    "㉠ [[ 1  4] [ 9 16]]  ·  ㉡ 오류 발생",
+    "㉠ [[ 1  4] [ 9 16]]  ·  ㉡ [[ 1  4] [ 9 16]]",
+    "㉠ [[ 1  4] [ 9 16]]  ·  ㉡ [[ 7 10] [15 22]]"
+   ],
+   "answer": "㉠ [[ 1  4] [ 9 16]]  ·  ㉡ [[ 7 10] [15 22]]",
+   "accept": null,
+   "rubric": null,
+   "eid": null,
+   "mine": "㉠ [[ 1  4] [ 9 16]]  ·  ㉡ [[ 1  4] [ 9 16]]",
+   "why": "ndarray의 <span class=\"mono\">*</span> 는 같은 위치 원소끼리의 곱이고, matrix의 <span class=\"mono\">*</span> 는 행렬곱입니다. 담고 있는 값은 같지만 클래스가 다르면 같은 기호가 다른 연산을 뜻하게 됩니다.",
+   "at": 1790691879767,
    "streak": 0
   }
  ],
