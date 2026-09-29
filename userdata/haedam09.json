@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "haedam09",
- "updatedAt": "2026-09-29T14:23:30.903Z",
+ "updatedAt": "2026-09-29T14:23:45.606Z",
  "edits": {},
  "quiz": {
   "attempts": [
@@ -106,12 +106,18 @@
     "path": "notebooks/2_넘파이_심화.ipynb",
     "type": "classify",
     "ok": true
+   },
+   {
+    "t": 1790691825606,
+    "path": "notebooks/2_넘파이_심화.ipynb",
+    "type": "boundary",
+    "ok": true
    }
   ],
   "stats": {
    "notebooks/2_넘파이_심화.ipynb": {
-    "asked": 8,
-    "correct": 2
+    "asked": 9,
+    "correct": 3
    },
    "notebooks/1_넘파이_기초(개념).ipynb": {
     "asked": 9,
