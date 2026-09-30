@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "jae12woo15",
- "updatedAt": "2026-09-30T02:35:31.730Z",
+ "updatedAt": "2026-09-30T02:36:01.108Z",
  "edits": {
   "notebooks/1_넘파이_기초(개념).ipynb": {
    "17": "a = np.arange(10) # 시작값(생략가능, 0), 종료값(미만), 간격(생략가능, 1)\nprint(a)\nprint(a.dtype)\na.reshape(2,5)\nprint(a) # 모양을 2행 5열로 변형",
@@ -208,6 +208,12 @@
     "path": "notebooks/3_데이터이해(예제).ipynb",
     "type": "graph",
     "ok": true
+   },
+   {
+    "t": 1790735761107,
+    "path": "notebooks/3_데이터이해(예제).ipynb",
+    "type": "trace",
+    "ok": false
    }
   ],
   "stats": {
@@ -220,7 +226,7 @@
     "correct": 9
    },
    "notebooks/3_데이터이해(예제).ipynb": {
-    "asked": 6,
+    "asked": 7,
     "correct": 2
    }
   },
@@ -749,6 +755,32 @@
    "mine": "ㅗ",
    "why": "AI 채점 결과입니다.",
    "at": 1790735633923,
+   "streak": 0
+  },
+  {
+   "key": "71cad625356d0ff598b6c845b2e1073bd094b1242c96dfefac0324b98936d40f",
+   "path": "notebooks/3_데이터이해(예제).ipynb",
+   "nb": "3_데이터이해(예제)",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "df = pd.read_csv('iris.csv')\nprint(df.shape, df.isnull().sum().sum())",
+   "intro": "",
+   "expect": "",
+   "options": [
+    "(150, 4) 0",
+    "(5, 150) 0",
+    "(150, 5) 750",
+    "(150, 5) 0",
+    "(150, 5) 5"
+   ],
+   "answer": "(150, 5) 0",
+   "accept": null,
+   "rubric": null,
+   "eid": null,
+   "mine": "(150, 5) 750",
+   "why": "<span class=\"mono\">shape</span> 는 (행, 열) 순서라 (150, 5)입니다. <span class=\"mono\">isnull().sum()</span> 은 열별 결측 개수, 여기에 <span class=\"mono\">sum()</span> 을 한 번 더 하면 전체 결측 개수 0입니다. 750은 칸 수(150×5), 5는 열 개수입니다.",
+   "at": 1790735761108,
    "streak": 0
   }
  ],
