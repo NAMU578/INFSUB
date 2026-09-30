@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "jae12woo15",
- "updatedAt": "2026-09-30T02:16:11.885Z",
+ "updatedAt": "2026-09-30T02:16:49.727Z",
  "edits": {
   "notebooks/1_넘파이_기초(개념).ipynb": {
    "17": "a = np.arange(10) # 시작값(생략가능, 0), 종료값(미만), 간격(생략가능, 1)\nprint(a)\nprint(a.dtype)\na.reshape(2,5)\nprint(a) # 모양을 2행 5열로 변형",
@@ -64,6 +64,12 @@
     "path": "notebooks/2_넘파이_심화.ipynb",
     "type": "contrast",
     "ok": true
+   },
+   {
+    "t": 1790734609726,
+    "path": "notebooks/2_넘파이_심화.ipynb",
+    "type": "blank2",
+    "ok": false
    }
   ],
   "stats": {
@@ -72,7 +78,7 @@
     "correct": 3
    },
    "notebooks/2_넘파이_심화.ipynb": {
-    "asked": 3,
+    "asked": 4,
     "correct": 3
    }
   },
@@ -181,6 +187,32 @@
    "mine": "㉠ 15  ·  ㉡ 15",
    "why": "방법1은 불리언 배열에 sum()을 적용한 것이라 True의 개수, 즉 조건을 만족하는 원소의 개수가 나옵니다. 방법2는 불리언 배열을 인덱스로 써서 True인 위치의 값만 골라낸 뒤 더하므로 합이 나옵니다.",
    "at": 1790450635158,
+   "streak": 0
+  },
+  {
+   "key": "bb4786a7c67581176fbe43089f570f9c788261c91f3e8ef09017c8b73d050799",
+   "path": "notebooks/2_넘파이_심화.ipynb",
+   "nb": "2_넘파이_심화",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "stem": "코드의 빈칸 ㉠, ㉡ 에 들어갈 것으로 맞는 것만 모두 모은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">(3, 4, 5) 59</span></span>",
+   "code": "v3 = np.arange(㉠).reshape(3, ㉡, 5)\nprint(v3.shape, v3[2, 3, 4])",
+   "intro": "",
+   "expect": "",
+   "options": [
+    "㉠ 61  ·  ㉡ 4",
+    "㉠ 45  ·  ㉡ 3",
+    "㉠ 60  ·  ㉡ 5",
+    "㉠ 59  ·  ㉡ 4",
+    "㉠ 60  ·  ㉡ 4"
+   ],
+   "answer": "㉠ 60  ·  ㉡ 4",
+   "accept": null,
+   "rubric": null,
+   "eid": null,
+   "mine": "㉠ 59  ·  ㉡ 4",
+   "why": "3 × 4 × 5 = 60이므로 원소가 60개 필요합니다. <span class=\"mono\">arange(60)</span> 은 0부터 59까지이고, 마지막 원소인 <span class=\"mono\">v3[2, 3, 4]</span> 가 59입니다.",
+   "at": 1790734609727,
    "streak": 0
   }
  ],
