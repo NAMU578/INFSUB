@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "jae12woo15",
- "updatedAt": "2026-09-30T02:21:36.652Z",
+ "updatedAt": "2026-09-30T02:22:18.001Z",
  "edits": {
   "notebooks/1_넘파이_기초(개념).ipynb": {
    "17": "a = np.arange(10) # 시작값(생략가능, 0), 종료값(미만), 간격(생략가능, 1)\nprint(a)\nprint(a.dtype)\na.reshape(2,5)\nprint(a) # 모양을 2행 5열로 변형",
@@ -100,6 +100,12 @@
     "path": "notebooks/2_넘파이_심화.ipynb",
     "type": "trace",
     "ok": true
+   },
+   {
+    "t": 1790734937999,
+    "path": "notebooks/2_넘파이_심화.ipynb",
+    "type": "short",
+    "ok": false
    }
   ],
   "stats": {
@@ -108,7 +114,7 @@
     "correct": 3
    },
    "notebooks/2_넘파이_심화.ipynb": {
-    "asked": 9,
+    "asked": 10,
     "correct": 5
    }
   },
@@ -321,6 +327,29 @@
    "mine": "np.arange(3, 30, 5)",
    "why": "arange는 (시작, 종료, 간격) 순서이고 종료값을 포함하지 않습니다. linspace의 세 번째 인자는 간격이 아니라 개수이므로 조건 2를 만족할 수 없습니다.",
    "at": 1790734850473,
+   "streak": 0
+  },
+  {
+   "key": "2fe9d37936f60165d0f184e1b841b92513f34c2ae9b573ddbf1be9c62e368bc5",
+   "path": "notebooks/2_넘파이_심화.ipynb",
+   "nb": "2_넘파이_심화",
+   "type": "서답형",
+   "typeKey": "short",
+   "stem": "코드의 빈칸 ㉠ 에 들어갈 코드를 적으시오.<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">[1.  1.9 2.8 3.7 4.6 5.5 6.4 7.3 8.2 9.1]</span></span>",
+   "code": "lin3 = np.linspace(1, 10, 10, ㉠)\nprint(lin3)",
+   "intro": "",
+   "expect": "",
+   "options": null,
+   "answer": "endpoint=False",
+   "accept": [
+    "endpoint=False",
+    "endpoint = False"
+   ],
+   "rubric": null,
+   "eid": null,
+   "mine": "0.9",
+   "why": "원소는 10개인데 종료값 10이 들어 있지 않습니다. 종료값을 제외하려면 endpoint 매개변수를 False로 둡니다.",
+   "at": 1790734938001,
    "streak": 0
   }
  ],
