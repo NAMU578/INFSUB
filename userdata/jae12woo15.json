@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "jae12woo15",
- "updatedAt": "2026-09-30T02:18:18.005Z",
+ "updatedAt": "2026-09-30T02:19:29.563Z",
  "edits": {
   "notebooks/1_넘파이_기초(개념).ipynb": {
    "17": "a = np.arange(10) # 시작값(생략가능, 0), 종료값(미만), 간격(생략가능, 1)\nprint(a)\nprint(a.dtype)\na.reshape(2,5)\nprint(a) # 모양을 2행 5열로 변형",
@@ -76,6 +76,12 @@
     "path": "notebooks/2_넘파이_심화.ipynb",
     "type": "contrast",
     "ok": false
+   },
+   {
+    "t": 1790734769562,
+    "path": "notebooks/2_넘파이_심화.ipynb",
+    "type": "blank2",
+    "ok": true
    }
   ],
   "stats": {
@@ -84,8 +90,8 @@
     "correct": 3
    },
    "notebooks/2_넘파이_심화.ipynb": {
-    "asked": 5,
-    "correct": 3
+    "asked": 6,
+    "correct": 4
    }
   },
   "recentBank": [
