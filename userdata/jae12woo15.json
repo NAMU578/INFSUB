@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "jae12woo15",
- "updatedAt": "2026-09-30T02:29:58.375Z",
+ "updatedAt": "2026-09-30T02:30:32.889Z",
  "edits": {
   "notebooks/1_넘파이_기초(개념).ipynb": {
    "17": "a = np.arange(10) # 시작값(생략가능, 0), 종료값(미만), 간격(생략가능, 1)\nprint(a)\nprint(a.dtype)\na.reshape(2,5)\nprint(a) # 모양을 2행 5열로 변형",
@@ -160,6 +160,12 @@
     "path": "notebooks/2_넘파이_심화.ipynb",
     "type": "blank2",
     "ok": false
+   },
+   {
+    "t": 1790735432886,
+    "path": "notebooks/2_넘파이_심화.ipynb",
+    "type": "boundary",
+    "ok": false
    }
   ],
   "stats": {
@@ -168,7 +174,7 @@
     "correct": 3
    },
    "notebooks/2_넘파이_심화.ipynb": {
-    "asked": 19,
+    "asked": 20,
     "correct": 9
    }
   },
@@ -544,6 +550,32 @@
    "mine": "㉠ int8  ·  ㉡ shape",
    "why": "<span class=\"mono\">itemsize</span> 는 원소 하나가 차지하는 바이트 수입니다. int16은 16비트, 즉 2바이트라 2가 출력됩니다. 대괄호가 3겹이므로 3차원이고 바깥부터 세면 면 1개, 행 2개, 열 2개라 <span class=\"mono\">shape</span> 는 (1, 2, 2) 입니다.",
    "at": 1790735398375,
+   "streak": 0
+  },
+  {
+   "key": "72d8e5d78aecfa40ed602cf290d69b0414bb39778c6e5e8e582d4e37b59e007d",
+   "path": "notebooks/2_넘파이_심화.ipynb",
+   "nb": "2_넘파이_심화",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "v3 = np.arange(60).reshape(4, 4, 5)\nprint(v3.shape)",
+   "intro": "",
+   "expect": "",
+   "options": [
+    "(3, 4, 5)",
+    "(60,)",
+    "(4, 3, 5)",
+    "(4, 4, 5)",
+    "ValueError 발생"
+   ],
+   "answer": "ValueError 발생",
+   "accept": null,
+   "rubric": null,
+   "eid": null,
+   "mine": "(4, 4, 5)",
+   "why": "4 × 4 × 5 = 80인데 배열의 원소는 60개뿐입니다. reshape는 원소 개수가 맞지 않으면 남는 자리를 채우거나 잘라내지 않고 오류를 냅니다.",
+   "at": 1790735432889,
    "streak": 0
   }
  ],
