@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "haedam09",
- "updatedAt": "2026-09-30T01:47:32.013Z",
+ "updatedAt": "2026-09-30T01:49:54.490Z",
  "edits": {},
  "quiz": {
   "attempts": [
@@ -142,6 +142,12 @@
     "path": "notebooks/3_데이터이해(예제).ipynb",
     "type": "trace",
     "ok": true
+   },
+   {
+    "t": 1790732994489,
+    "path": "notebooks/4_판다스모듈.ipynb",
+    "type": "essay",
+    "ok": false
    }
   ],
   "stats": {
@@ -156,6 +162,10 @@
    "notebooks/3_데이터이해(예제).ipynb": {
     "asked": 2,
     "correct": 1
+   },
+   "notebooks/4_판다스모듈.ipynb": {
+    "asked": 1,
+    "correct": 0
    }
   },
   "recentBank": [
@@ -419,6 +429,26 @@
    "mine": "3",
    "why": "<span class=\"mono\">kind='barh'</span> 는 가로 막대그래프입니다. 특성 이름처럼 긴 이름을 세로축에 두기 좋아 특성 중요도 그래프에 씁니다. 세로 막대는 <span class=\"mono\">'bar'</span> 입니다.",
    "at": 1790692141308,
+   "streak": 0
+  },
+  {
+   "key": "94b607bb1fd0580356b4181f82d397d2b7a8f1774ae52e77b366b858c9b8882c",
+   "path": "notebooks/4_판다스모듈.ipynb",
+   "nb": "4_판다스모듈",
+   "type": "서술형",
+   "typeKey": "essay",
+   "stem": "df_mini는 '나이'와 '성별' 열을 포함하는 데이터프레임이다. df_mini['나이']를 실행했을 때와 df_mini[['나이']]를 실행했을 때 결과로 반환되는 자료형이 각각 무엇인지 쓰고, 두 표현이 대괄호 개수만 다름에도 결과 자료형이 달라지는 이유를 설명하시오. 또한 df_mini['나이'].mean()처럼 통계 함수를 바로 사용할 수 있는 것이 반환되는 자료형과 어떤 관련이 있는지 서술하시오.",
+   "code": "col1 = df_mini['나이']\ncol2 = df_mini[['나이']]\nprint(type(col1))\nprint(type(col2))",
+   "intro": "### 시리즈와 데이터프레임의 관계\nDataFrame의 열 하나가 Series 라고 생각하면 됨<br>\ndf['열'] → Series(1차원)<br>\ndf[['열1','열2']] → DataFrame(2차원)<br>\n이 구분이 이후 모든 문법의 기초",
+   "expect": "",
+   "options": null,
+   "answer": "df_mini['나이']는 열 하나만 선택하므로 Series(1차원 자료구조)가 반환되고, df_mini[['나이']]는 리스트 형태로 열 이름을 전달하여 여러 열을 선택할 수 있는 형태이므로 DataFrame(2차원)이 반환된다. 즉 대괄호 안에 문자열 하나만 쓰면 단일 열을 꺼내 Series로, 리스트로 감싸면 DataFrame으로 유지된다. Series는 값들이 1차원으로 나열된 구조이기 때문에 mean(), sum() 같은 통계 함수를 바로 적용할 수 있지만, DataFrame은 여러 열로 이루어진 2차원 구조이므로 열을 다시 선택해야 통계 함수를 적용할 수 있다.",
+   "accept": null,
+   "rubric": "df_mini['나이']는 Series, df_mini[['나이']]는 DataFrame(열 목록을 대괄호로 감쌌기 때문)임을 설명함; 대괄호 1개는 단일 열 선택(1차원 Series), 대괄호 2개(리스트 형태)는 여러 열 선택 가능한 2차원 구조임을 설명함; Series는 1차원 데이터 구조이므로 mean() 같은 통계 함수를 바로 적용할 수 있다는 점을 언급함",
+   "eid": "ehmzphh_229",
+   "mine": "df_mini['나이']는 숫자와 문자, 시리즈를 출력하면 인덱스 이름과 함께 값이 출력, df_mini[['나이']]는 숫자와 문자, 데이터 프레임을 출력하면 표가 만들어진다........차원이 달라서 자료형이 달라지고, 통계 함수를 사용하기 위해 수치형 데이터가 필요..",
+   "why": "AI 채점 결과입니다.",
+   "at": 1790732994490,
    "streak": 0
   }
  ],
