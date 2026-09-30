@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "jae12woo15",
- "updatedAt": "2026-09-30T02:24:56.188Z",
+ "updatedAt": "2026-09-30T02:25:29.068Z",
  "edits": {
   "notebooks/1_넘파이_기초(개념).ipynb": {
    "17": "a = np.arange(10) # 시작값(생략가능, 0), 종료값(미만), 간격(생략가능, 1)\nprint(a)\nprint(a.dtype)\na.reshape(2,5)\nprint(a) # 모양을 2행 5열로 변형",
@@ -124,6 +124,12 @@
     "path": "notebooks/2_넘파이_심화.ipynb",
     "type": "classify",
     "ok": false
+   },
+   {
+    "t": 1790735129064,
+    "path": "notebooks/2_넘파이_심화.ipynb",
+    "type": "boundary",
+    "ok": false
    }
   ],
   "stats": {
@@ -132,7 +138,7 @@
     "correct": 3
    },
    "notebooks/2_넘파이_심화.ipynb": {
-    "asked": 13,
+    "asked": 14,
     "correct": 6
    }
   },
@@ -430,6 +436,32 @@
    "mine": "(가), (나)",
    "why": "<span class=\"mono\">a + a</span> 와 <span class=\"mono\">np.add(a, a)</span> 는 같은 연산이므로 출력도 같습니다. 순환문 없이 원소별 계산이 이루어지는 것을 벡터화 연산이라 하고, 이를 지원하는 함수가 유니버설 함수입니다.",
    "at": 1790735096188,
+   "streak": 0
+  },
+  {
+   "key": "6e12a991c40356217bf1257ba9cdc1d7b1e32461f6f72e8fa4f1df09008f7235",
+   "path": "notebooks/2_넘파이_심화.ipynb",
+   "nb": "2_넘파이_심화",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "stem": "다음 코드를 실행했을 때 출력되는 값은?",
+   "code": "logsp1 = np.logspace(0, 2, 4)\nprint(logsp1[-1])",
+   "intro": "",
+   "expect": "",
+   "options": [
+    "10.0",
+    "100.0",
+    "1000.0",
+    "2.0",
+    "21.5443469"
+   ],
+   "answer": "100.0",
+   "accept": null,
+   "rubric": null,
+   "eid": null,
+   "mine": "21.5443469",
+   "why": "logspace는 종료값을 포함합니다. 밑이 10이므로 지수 0부터 2까지 4개를 만들면 마지막 값은 10<sup>2</sup> = 100.0입니다. arange와 달리 끝값이 들어간다는 점이 다릅니다.",
+   "at": 1790735129068,
    "streak": 0
   }
  ],
