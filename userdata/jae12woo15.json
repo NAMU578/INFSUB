@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "jae12woo15",
- "updatedAt": "2026-09-30T02:31:10.655Z",
+ "updatedAt": "2026-09-30T02:32:00.611Z",
  "edits": {
   "notebooks/1_넘파이_기초(개념).ipynb": {
    "17": "a = np.arange(10) # 시작값(생략가능, 0), 종료값(미만), 간격(생략가능, 1)\nprint(a)\nprint(a.dtype)\na.reshape(2,5)\nprint(a) # 모양을 2행 5열로 변형",
@@ -172,6 +172,12 @@
     "path": "notebooks/2_넘파이_심화.ipynb",
     "type": "short",
     "ok": false
+   },
+   {
+    "t": 1790735520605,
+    "path": "notebooks/3_데이터이해(예제).ipynb",
+    "type": "boundary",
+    "ok": false
    }
   ],
   "stats": {
@@ -182,9 +188,23 @@
    "notebooks/2_넘파이_심화.ipynb": {
     "asked": 21,
     "correct": 9
+   },
+   "notebooks/3_데이터이해(예제).ipynb": {
+    "asked": 1,
+    "correct": 0
    }
   },
   "recentBank": [
+   "3C05",
+   "3B04",
+   "3D15",
+   "3R01",
+   "3R15",
+   "3X05",
+   "3S13",
+   "3W01",
+   "3G08",
+   "3E01",
    "C15",
    "C05",
    "B13",
@@ -214,17 +234,7 @@
    "X15",
    "X08",
    "S04",
-   "W02",
-   "C12",
-   "C13",
-   "B12",
-   "B10",
-   "B08",
-   "D11",
-   "D14",
-   "R08",
-   "R10",
-   "X05"
+   "W02"
   ]
  },
  "wrong": [
@@ -611,6 +621,32 @@
    "mine": ":",
    "why": "4개짜리 1차원 배열을 4행 1열로 만들려면 뒤쪽에 축을 하나 끼워야 합니다. <span class=\"mono\">a[:, np.newaxis]</span> 가 그 역할을 합니다.",
    "at": 1790735470655,
+   "streak": 0
+  },
+  {
+   "key": "9ff68809628d7002410c33151be17b7f03765bce34de20c40fc69009a16f0785",
+   "path": "notebooks/3_데이터이해(예제).ipynb",
+   "nb": "3_데이터이해(예제)",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은? (df 는 붓꽃 데이터 150행 5열)",
+   "code": "print(len(df.iloc[10:15]), len(df.loc[10:15]))",
+   "intro": "",
+   "expect": "",
+   "options": [
+    "5 5",
+    "6 6",
+    "6 5",
+    "4 5",
+    "5 6"
+   ],
+   "answer": "5 6",
+   "accept": null,
+   "rubric": null,
+   "eid": null,
+   "mine": "5 5",
+   "why": "<span class=\"mono\">iloc</span> 은 위치 번호 슬라이싱이라 끝(15)을 빼고 10~14 의 5행입니다. <span class=\"mono\">loc</span> 은 인덱스 이름으로 자르며 <b>끝을 포함</b>하므로 10~15 의 6행입니다.",
+   "at": 1790735520611,
    "streak": 0
   }
  ],
