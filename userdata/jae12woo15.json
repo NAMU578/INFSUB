@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "jae12woo15",
- "updatedAt": "2026-09-30T02:33:21.274Z",
+ "updatedAt": "2026-09-30T02:33:53.923Z",
  "edits": {
   "notebooks/1_넘파이_기초(개념).ipynb": {
    "17": "a = np.arange(10) # 시작값(생략가능, 0), 종료값(미만), 간격(생략가능, 1)\nprint(a)\nprint(a.dtype)\na.reshape(2,5)\nprint(a) # 모양을 2행 5열로 변형",
@@ -190,6 +190,12 @@
     "path": "notebooks/3_데이터이해(예제).ipynb",
     "type": "trace",
     "ok": false
+   },
+   {
+    "t": 1790735633922,
+    "path": "notebooks/3_데이터이해(예제).ipynb",
+    "type": "essay",
+    "ok": false
    }
   ],
   "stats": {
@@ -202,7 +208,7 @@
     "correct": 9
    },
    "notebooks/3_데이터이해(예제).ipynb": {
-    "asked": 3,
+    "asked": 4,
     "correct": 0
    }
   },
@@ -711,6 +717,26 @@
    "mine": "(5, 5)",
    "why": "<span class=\"mono\">pairplot</span> 은 숫자형 열끼리 모든 조합을 그립니다. 숫자형 열이 4개이므로 4×4 칸이고, 문자열인 species 는 칸이 아니라 <span class=\"mono\">hue</span> 로 색 구분에만 쓰입니다. 대각선 칸에는 각 변수 자신의 분포가 그려집니다.",
    "at": 1790735601274,
+   "streak": 0
+  },
+  {
+   "key": "573cd10bfb1d7fdb1eff500ace5a0d3bbdfd12269930115a62923b80d2abbd9f",
+   "path": "notebooks/3_데이터이해(예제).ipynb",
+   "nb": "3_데이터이해(예제)",
+   "type": "서술형",
+   "typeKey": "essay",
+   "stem": "붓꽃 데이터 df(열: sepal_length, sepal_width, petal_length, petal_width, species)로 <b>품종별 꽃잎 길이(petal_length)의 분포</b>를 비교하는 상자그림을 그리는 코드를 쓰고, 그래프에서 알 수 있는 사실을 한 문장 이상 서술하시오.<br>[조건] ① seaborn 을 쓰고 가로축에 품종이 오게 한다. ② 그래프 제목을 'Petal length by species' 로 단다.",
+   "code": "",
+   "intro": "",
+   "expect": "",
+   "options": null,
+   "answer": "import seaborn as sns\nimport matplotlib.pyplot as plt\nsns.boxplot(data=df, x='species', y='petal_length')\nplt.title('Petal length by species')\nplt.show()\n\n해석: setosa 의 꽃잎 길이는 1~2 사이로 가장 짧고 virginica 가 가장 길다. setosa 는 다른 두 품종과 범위가 전혀 겹치지 않아 꽃잎 길이만으로 구분할 수 있다.",
+   "accept": null,
+   "rubric": "필수 요소(모두 있어야 정답): (1) sns.boxplot(data=df, x='species', y='petal_length') 또는 같은 뜻의 코드(x 에 species, y 에 petal_length). x 와 y 가 바뀌면 조건 ① 위반. (2) plt.title('Petal length by species') 또는 ax.set_title 로 제목 지정. (3) 해석 문장: 품종 간 꽃잎 길이 차이를 옳게 서술(예: setosa 가 가장 짧다/virginica 가 가장 길다/setosa 는 다른 품종과 겹치지 않는다). 사실과 반대되는 해석(예: setosa 가 가장 길다)은 오답. import 문, plt.show() 유무, 따옴표 종류는 채점하지 않는다.",
+   "eid": null,
+   "mine": "ㅗ",
+   "why": "AI 채점 결과입니다.",
+   "at": 1790735633923,
    "streak": 0
   }
  ],
