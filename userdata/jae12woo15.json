@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "jae12woo15",
- "updatedAt": "2026-09-30T02:32:38.959Z",
+ "updatedAt": "2026-09-30T02:33:21.274Z",
  "edits": {
   "notebooks/1_넘파이_기초(개념).ipynb": {
    "17": "a = np.arange(10) # 시작값(생략가능, 0), 종료값(미만), 간격(생략가능, 1)\nprint(a)\nprint(a.dtype)\na.reshape(2,5)\nprint(a) # 모양을 2행 5열로 변형",
@@ -184,6 +184,12 @@
     "path": "notebooks/3_데이터이해(예제).ipynb",
     "type": "classify",
     "ok": false
+   },
+   {
+    "t": 1790735601273,
+    "path": "notebooks/3_데이터이해(예제).ipynb",
+    "type": "trace",
+    "ok": false
    }
   ],
   "stats": {
@@ -196,7 +202,7 @@
     "correct": 9
    },
    "notebooks/3_데이터이해(예제).ipynb": {
-    "asked": 2,
+    "asked": 3,
     "correct": 0
    }
   },
@@ -679,6 +685,32 @@
    "mine": "(가), (다)",
    "why": "<span class=\"mono\">test_size=0.2</span> 라 150개 중 30개가 테스트용입니다. <span class=\"mono\">stratify=y</span> 로 품종 비율(1:1:1)을 유지하므로 훈련 120개는 40개씩 나뉩니다. <span class=\"mono\">random_state</span> 는 어떤 샘플을 고를지 정하는 난수 시드일 뿐, 비율은 <span class=\"mono\">test_size</span> 가 정합니다.",
    "at": 1790735558959,
+   "streak": 0
+  },
+  {
+   "key": "d22f38195deda90afe0f405b89e7476d63181d04cee961c344d394bbdc5e9357",
+   "path": "notebooks/3_데이터이해(예제).ipynb",
+   "nb": "3_데이터이해(예제)",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "stem": "다음 코드로 그린 산점도 행렬(pairplot)의 칸 배치는? (df 는 붓꽃 데이터 150행 5열)",
+   "code": "g = sns.pairplot(df, hue='species')\nprint(g.axes.shape)",
+   "intro": "",
+   "expect": "",
+   "options": [
+    "(5, 5)",
+    "(3, 3)",
+    "(4, 3)",
+    "(1, 4)",
+    "(4, 4)"
+   ],
+   "answer": "(4, 4)",
+   "accept": null,
+   "rubric": null,
+   "eid": null,
+   "mine": "(5, 5)",
+   "why": "<span class=\"mono\">pairplot</span> 은 숫자형 열끼리 모든 조합을 그립니다. 숫자형 열이 4개이므로 4×4 칸이고, 문자열인 species 는 칸이 아니라 <span class=\"mono\">hue</span> 로 색 구분에만 쓰입니다. 대각선 칸에는 각 변수 자신의 분포가 그려집니다.",
+   "at": 1790735601274,
    "streak": 0
   }
  ],
