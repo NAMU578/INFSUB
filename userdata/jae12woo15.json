@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "jae12woo15",
- "updatedAt": "2026-09-30T02:35:00.101Z",
+ "updatedAt": "2026-09-30T02:35:31.730Z",
  "edits": {
   "notebooks/1_넘파이_기초(개념).ipynb": {
    "17": "a = np.arange(10) # 시작값(생략가능, 0), 종료값(미만), 간격(생략가능, 1)\nprint(a)\nprint(a.dtype)\na.reshape(2,5)\nprint(a) # 모양을 2행 5열로 변형",
@@ -202,6 +202,12 @@
     "path": "notebooks/3_데이터이해(예제).ipynb",
     "type": "spec",
     "ok": true
+   },
+   {
+    "t": 1790735731727,
+    "path": "notebooks/3_데이터이해(예제).ipynb",
+    "type": "graph",
+    "ok": true
    }
   ],
   "stats": {
@@ -214,8 +220,8 @@
     "correct": 9
    },
    "notebooks/3_데이터이해(예제).ipynb": {
-    "asked": 5,
-    "correct": 1
+    "asked": 6,
+    "correct": 2
    }
   },
   "recentBank": [
