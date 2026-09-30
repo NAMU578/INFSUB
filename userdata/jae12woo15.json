@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "jae12woo15",
- "updatedAt": "2026-09-30T02:28:30.367Z",
+ "updatedAt": "2026-09-30T02:29:00.163Z",
  "edits": {
   "notebooks/1_넘파이_기초(개념).ipynb": {
    "17": "a = np.arange(10) # 시작값(생략가능, 0), 종료값(미만), 간격(생략가능, 1)\nprint(a)\nprint(a.dtype)\na.reshape(2,5)\nprint(a) # 모양을 2행 5열로 변형",
@@ -142,6 +142,12 @@
     "path": "notebooks/2_넘파이_심화.ipynb",
     "type": "short",
     "ok": true
+   },
+   {
+    "t": 1790735340162,
+    "path": "notebooks/2_넘파이_심화.ipynb",
+    "type": "trace",
+    "ok": false
    }
   ],
   "stats": {
@@ -150,7 +156,7 @@
     "correct": 3
    },
    "notebooks/2_넘파이_심화.ipynb": {
-    "asked": 16,
+    "asked": 17,
     "correct": 8
    }
   },
@@ -474,6 +480,32 @@
    "mine": "21.5443469",
    "why": "logspace는 종료값을 포함합니다. 밑이 10이므로 지수 0부터 2까지 4개를 만들면 마지막 값은 10<sup>2</sup> = 100.0입니다. arange와 달리 끝값이 들어간다는 점이 다릅니다.",
    "at": 1790735129068,
+   "streak": 0
+  },
+  {
+   "key": "c9fe795e8f8b18face5610dcc5a3af6488664f681d8e4a6caaa3e955889b28fa",
+   "path": "notebooks/2_넘파이_심화.ipynb",
+   "nb": "2_넘파이_심화",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "a = np.array([3, 1, 4, 1, 5])\nprint(np.add.accumulate(a))",
+   "intro": "",
+   "expect": "",
+   "options": [
+    "[14]",
+    "[ 3  1  4  1  5]",
+    "[ 3  3 12 12 60]",
+    "[ 3  4  8  9 14]",
+    "[ 5  9 10 14 14]"
+   ],
+   "answer": "[ 3  4  8  9 14]",
+   "accept": null,
+   "rubric": null,
+   "eid": null,
+   "mine": "[ 3  3 12 12 60]",
+   "why": "<span class=\"mono\">np.add.accumulate()</span> 는 덧셈을 누적해 나가는 함수로 <span class=\"mono\">cumsum()</span> 과 결과가 같습니다. 3, 3+1=4, 4+4=8, 8+1=9, 9+5=14 가 됩니다.",
+   "at": 1790735340163,
    "streak": 0
   }
  ],
