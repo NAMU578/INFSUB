@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "jae12woo15",
- "updatedAt": "2026-09-30T02:40:14.550Z",
+ "updatedAt": "2026-09-30T02:40:35.656Z",
  "edits": {
   "notebooks/1_넘파이_기초(개념).ipynb": {
    "17": "a = np.arange(10) # 시작값(생략가능, 0), 종료값(미만), 간격(생략가능, 1)\nprint(a)\nprint(a.dtype)\na.reshape(2,5)\nprint(a) # 모양을 2행 5열로 변형",
@@ -268,11 +268,17 @@
     "path": "notebooks/1_넘파이_기초(개념).ipynb",
     "type": "classify",
     "ok": true
+   },
+   {
+    "t": 1790736035652,
+    "path": "notebooks/1_넘파이_기초(개념).ipynb",
+    "type": "boundary",
+    "ok": false
    }
   ],
   "stats": {
    "notebooks/1_넘파이_기초(개념).ipynb": {
-    "asked": 12,
+    "asked": 13,
     "correct": 7
    },
    "notebooks/2_넘파이_심화.ipynb": {
@@ -934,6 +940,32 @@
    "mine": "㉠ 1  ·  ㉡ :",
    "why": "모든 행을 쓰므로 앞은 <span class=\"mono\">:</span> 입니다. 1열만 뽑되 결과가 2차원 그대로 남으려면 정수 1이 아니라 슬라이스 <span class=\"mono\">1:2</span> 를 써야 합니다. 정수를 쓰면 그 축이 사라져 1차원 [4 6 8] 이 됩니다.",
    "at": 1790735930692,
+   "streak": 0
+  },
+  {
+   "key": "86a6d59ee8ea2056c7699d4d2adf4586ee7b308f1ebd1cd925b5c19e42a4ffc7",
+   "path": "notebooks/1_넘파이_기초(개념).ipynb",
+   "nb": "1_넘파이_기초(개념)",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "stem": "다음 코드를 실행한 결과로 알맞은 것은?",
+   "code": "np.random.choice(6, 9, replace=False)",
+   "intro": "",
+   "expect": "",
+   "options": [
+    "오류가 발생한다",
+    "0 이상 6 미만의 정수 9개가 만들어진다",
+    "0 이상 6 미만의 정수 6개가 만들어진다",
+    "0 이상 9 미만의 정수 9개가 만들어진다",
+    "빈 배열이 만들어진다"
+   ],
+   "answer": "오류가 발생한다",
+   "accept": null,
+   "rubric": null,
+   "eid": null,
+   "mine": "0 이상 6 미만의 정수 6개가 만들어진다",
+   "why": "<span class=\"mono\">replace=False</span> 는 한 번 뽑은 값을 다시 뽑지 않는다는 뜻입니다. 뽑을 수 있는 값은 0부터 5까지 6개뿐인데 9개를 요구했으므로 중복 없이는 채울 수 없어 오류가 납니다. <span class=\"mono\">replace=True</span> 였다면 9개가 정상적으로 만들어집니다.",
+   "at": 1790736035656,
    "streak": 0
   }
  ],
