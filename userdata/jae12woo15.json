@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "jae12woo15",
- "updatedAt": "2026-09-30T02:37:20.287Z",
+ "updatedAt": "2026-09-30T02:37:47.622Z",
  "edits": {
   "notebooks/1_넘파이_기초(개념).ipynb": {
    "17": "a = np.arange(10) # 시작값(생략가능, 0), 종료값(미만), 간격(생략가능, 1)\nprint(a)\nprint(a.dtype)\na.reshape(2,5)\nprint(a) # 모양을 2행 5열로 변형",
@@ -226,6 +226,12 @@
     "path": "notebooks/3_데이터이해(예제).ipynb",
     "type": "short",
     "ok": false
+   },
+   {
+    "t": 1790735867618,
+    "path": "notebooks/3_데이터이해(예제).ipynb",
+    "type": "blank2",
+    "ok": false
    }
   ],
   "stats": {
@@ -238,7 +244,7 @@
     "correct": 9
    },
    "notebooks/3_데이터이해(예제).ipynb": {
-    "asked": 9,
+    "asked": 10,
     "correct": 3
    }
   },
@@ -816,6 +822,32 @@
    "mine": "5",
    "why": "<span class=\"mono\">isnull()</span> 의 True 를 1로 세어 열마다 더하면 결측치 개수가 됩니다. 붓꽃 데이터는 결측치가 없어 모두 0입니다.",
    "at": 1790735840287,
+   "streak": 0
+  },
+  {
+   "key": "397ff5abf468746badb6dcce39fe96bee6d0a43301fde82a65254035a9c98e0e",
+   "path": "notebooks/3_데이터이해(예제).ipynb",
+   "nb": "3_데이터이해(예제)",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "stem": "㉠, ㉡에 들어갈 서식 지정자로 알맞은 것은? (acc 는 0.9)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">테스트 정확도: 0.9000<br>확률: 93.0%</span></span>",
+   "code": "print(f\"테스트 정확도: {acc:㉠}\")\nprint(f\"확률: {0.93:㉡}\")",
+   "intro": "",
+   "expect": "",
+   "options": [
+    "㉠ .4f  ·  ㉡ .1%",
+    "㉠ 4f  ·  ㉡ .1%",
+    "㉠ .4f  ·  ㉡ .0%",
+    "㉠ .2f  ·  ㉡ .1%",
+    "㉠ .4f  ·  ㉡ %"
+   ],
+   "answer": "㉠ .4f  ·  ㉡ .1%",
+   "accept": null,
+   "rubric": null,
+   "eid": null,
+   "mine": "㉠ 4f  ·  ㉡ .1%",
+   "why": "<span class=\"mono\">.4f</span> 는 소수점 넷째 자리까지, <span class=\"mono\">.1%</span> 는 100을 곱해 % 를 붙이고 소수점 첫째 자리까지 표시합니다. <span class=\"mono\">4f</span> 는 자릿수가 아니라 전체 너비 4를 뜻해 0.900000 이 되고, <span class=\"mono\">.0%</span> 는 93%, <span class=\"mono\">%</span> 만 쓰면 93.000000% 가 됩니다.",
+   "at": 1790735867622,
    "streak": 0
   }
  ],
