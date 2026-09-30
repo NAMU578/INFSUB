@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "haedam09",
- "updatedAt": "2026-09-30T01:56:04.526Z",
+ "updatedAt": "2026-09-30T01:57:07.135Z",
  "edits": {},
  "quiz": {
   "attempts": [
@@ -178,6 +178,12 @@
     "path": "notebooks/4_판다스모듈.ipynb",
     "type": "boundary",
     "ok": true
+   },
+   {
+    "t": 1790733427135,
+    "path": "notebooks/4_판다스모듈.ipynb",
+    "type": "short",
+    "ok": false
    }
   ],
   "stats": {
@@ -194,7 +200,7 @@
     "correct": 1
    },
    "notebooks/4_판다스모듈.ipynb": {
-    "asked": 6,
+    "asked": 7,
     "correct": 4
    }
   },
@@ -499,6 +505,28 @@
    "mine": "age.value는 시리즈 속 데이터를 의미, [22, 38, 36, 35]이고 인덱스는 시리즈의 각 데이터의 인덱스 이름을 지정한 것이고, name은 시리즈의 이름을 의미한다.",
    "why": "AI 채점 결과입니다.",
    "at": 1790733216342,
+   "streak": 0
+  },
+  {
+   "key": "b633af890db420aaefde9cfc2d31c4cd182d7ef41d57108ece4318afa66fc7bd",
+   "path": "notebooks/4_판다스모듈.ipynb",
+   "nb": "4_판다스모듈",
+   "type": "서답형",
+   "typeKey": "short",
+   "stem": "코드의 빈칸 ㉠ 에 들어갈 코드를 적으시오. (원본 df 를 보존하는 복사본)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">원본 결측: 1</span></span>",
+   "code": "df = pd.DataFrame({'age': [22.0, np.nan, 26.0]})\ndf1 = df.㉠()\ndf1['age'] = df1['age'].fillna(0)\nprint('원본 결측:', df['age'].isnull().sum())",
+   "intro": "",
+   "expect": "",
+   "options": null,
+   "answer": "copy",
+   "accept": [
+    "copy"
+   ],
+   "rubric": null,
+   "eid": null,
+   "mine": "['age']",
+   "why": "<span class=\"mono\">copy()</span> 로 만든 복사본을 고치면 원본은 그대로입니다. <span class=\"mono\">df1 = df</span> 로만 쓰면 같은 표를 가리켜 원본 결측도 0이 됩니다.",
+   "at": 1790733427135,
    "streak": 0
   }
  ],
