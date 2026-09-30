@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "haedam09",
- "updatedAt": "2026-09-30T02:03:05.787Z",
+ "updatedAt": "2026-09-30T02:08:32.054Z",
  "edits": {},
  "quiz": {
   "attempts": [
@@ -232,6 +232,12 @@
     "path": "notebooks/5_맷플롯립모듈.ipynb",
     "type": "boundary",
     "ok": false
+   },
+   {
+    "t": 1790734112053,
+    "path": "notebooks/5_맷플롯립모듈.ipynb",
+    "type": "blank2",
+    "ok": true
    }
   ],
   "stats": {
@@ -252,8 +258,8 @@
     "correct": 6
    },
    "notebooks/5_맷플롯립모듈.ipynb": {
-    "asked": 5,
-    "correct": 1
+    "asked": 6,
+    "correct": 2
    }
   },
   "recentBank": [
