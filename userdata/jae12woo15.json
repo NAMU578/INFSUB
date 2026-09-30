@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "jae12woo15",
- "updatedAt": "2026-09-30T02:39:17.508Z",
+ "updatedAt": "2026-09-30T02:39:38.837Z",
  "edits": {
   "notebooks/1_넘파이_기초(개념).ipynb": {
    "17": "a = np.arange(10) # 시작값(생략가능, 0), 종료값(미만), 간격(생략가능, 1)\nprint(a)\nprint(a.dtype)\na.reshape(2,5)\nprint(a) # 모양을 2행 5열로 변형",
@@ -250,12 +250,18 @@
     "path": "notebooks/1_넘파이_기초(개념).ipynb",
     "type": "blank2",
     "ok": true
+   },
+   {
+    "t": 1790735978837,
+    "path": "notebooks/1_넘파이_기초(개념).ipynb",
+    "type": "classify",
+    "ok": true
    }
   ],
   "stats": {
    "notebooks/1_넘파이_기초(개념).ipynb": {
-    "asked": 9,
-    "correct": 4
+    "asked": 10,
+    "correct": 5
    },
    "notebooks/2_넘파이_심화.ipynb": {
     "asked": 21,
@@ -360,7 +366,7 @@
    "mine": "(가), (나), (다)",
    "why": "첫 인자에 정수 8을 주면 0부터 7까지, 즉 8 미만의 정수에서 뽑습니다. 8은 포함되지 않으므로 (가)는 틀립니다. <span class=\"mono\">replace=False</span> 는 중복을 허용하지 않는다는 뜻이고, True로 바꾸면 같은 수가 여러 번 나올 수 있습니다.",
    "at": 1790450552017,
-   "streak": 0
+   "streak": 1
   },
   {
    "key": "a852f4080a4d98e9e25bd93edb2706a88dc1466d4bea11bafe3ec805bfb91bc3",
