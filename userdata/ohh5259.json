@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "ohh5259",
- "updatedAt": "2026-09-30T02:04:42.229Z",
+ "updatedAt": "2026-09-30T02:32:27.713Z",
  "edits": {
   "notebooks/1_넘파이_기초(개념).ipynb": {
    "8": "# 차이점이 뭘까?\nprint(data)\nprint(array)\nprint(array.dtype) # 넘파이 배열의 데이터 타입 확인",
@@ -87,12 +87,18 @@
     "path": "notebooks/1_넘파이_기초(개념).ipynb",
     "type": "contrast",
     "ok": false
+   },
+   {
+    "t": 1790735547713,
+    "path": "notebooks/1_넘파이_기초(개념).ipynb",
+    "type": "trace",
+    "ok": true
    }
   ],
   "stats": {
    "notebooks/1_넘파이_기초(개념).ipynb": {
-    "asked": 6,
-    "correct": 2
+    "asked": 7,
+    "correct": 3
    },
    "notebooks/2_넘파이_심화.ipynb": {
     "asked": 5,
@@ -104,6 +110,14 @@
    }
   },
   "recentBank": [
+   "C14",
+   "B08",
+   "D13",
+   "R11",
+   "X14",
+   "X13",
+   "S08",
+   "W12",
    "C08",
    "B12",
    "B11",
@@ -132,6 +146,9 @@
    "C05",
    "B04",
    "W02"
+  ],
+  "recentEssay": [
+   "e10ol03z_207"
   ]
  },
  "wrong": [
