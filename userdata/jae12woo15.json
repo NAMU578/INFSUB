@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "jae12woo15",
- "updatedAt": "2026-09-30T02:24:20.890Z",
+ "updatedAt": "2026-09-30T02:24:56.188Z",
  "edits": {
   "notebooks/1_넘파이_기초(개념).ipynb": {
    "17": "a = np.arange(10) # 시작값(생략가능, 0), 종료값(미만), 간격(생략가능, 1)\nprint(a)\nprint(a.dtype)\na.reshape(2,5)\nprint(a) # 모양을 2행 5열로 변형",
@@ -118,6 +118,12 @@
     "path": "notebooks/2_넘파이_심화.ipynb",
     "type": "contrast",
     "ok": true
+   },
+   {
+    "t": 1790735096184,
+    "path": "notebooks/2_넘파이_심화.ipynb",
+    "type": "classify",
+    "ok": false
    }
   ],
   "stats": {
@@ -126,7 +132,7 @@
     "correct": 3
    },
    "notebooks/2_넘파이_심화.ipynb": {
-    "asked": 12,
+    "asked": 13,
     "correct": 6
    }
   },
@@ -398,6 +404,32 @@
    "mine": "m4.T",
    "why": "역행렬은 정방행렬에서만 정의되며 linalg 모듈의 <span class=\"mono\">inv()</span> 로 구합니다. <span class=\"mono\">solve()</span> 는 연립방정식의 해, <span class=\"mono\">.T</span> 는 전치행렬입니다.",
    "at": 1790734984646,
+   "streak": 0
+  },
+  {
+   "key": "44f506105c437865a0a4aacf3838d07879c136d14a03db76d705b486bfe6d0de",
+   "path": "notebooks/2_넘파이_심화.ipynb",
+   "nb": "2_넘파이_심화",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "stem": "다음 코드에 대한 설명으로 옳은 것만 <보기>에서 모두 고른 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) 두 print의 출력 결과는 서로 다르다.<br>(나) 반복문을 쓰지 않고도 모든 원소에 대한 계산이 처리된다.<br>(다) 이런 연산을 지원하는 함수를 유니버설 함수라고 한다.</span>",
+   "code": "a = np.array([1, 2, 3, 4])\nprint(a + a)\nprint(np.add(a, a))",
+   "intro": "",
+   "expect": "",
+   "options": [
+    "(가)",
+    "(다)",
+    "(가), (나)",
+    "(나), (다)",
+    "(가), (나), (다)"
+   ],
+   "answer": "(나), (다)",
+   "accept": null,
+   "rubric": null,
+   "eid": null,
+   "mine": "(가), (나)",
+   "why": "<span class=\"mono\">a + a</span> 와 <span class=\"mono\">np.add(a, a)</span> 는 같은 연산이므로 출력도 같습니다. 순환문 없이 원소별 계산이 이루어지는 것을 벡터화 연산이라 하고, 이를 지원하는 함수가 유니버설 함수입니다.",
+   "at": 1790735096188,
    "streak": 0
   }
  ],
