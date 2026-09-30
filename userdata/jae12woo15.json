@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "jae12woo15",
- "updatedAt": "2026-09-30T02:29:27.976Z",
+ "updatedAt": "2026-09-30T02:29:58.375Z",
  "edits": {
   "notebooks/1_넘파이_기초(개념).ipynb": {
    "17": "a = np.arange(10) # 시작값(생략가능, 0), 종료값(미만), 간격(생략가능, 1)\nprint(a)\nprint(a.dtype)\na.reshape(2,5)\nprint(a) # 모양을 2행 5열로 변형",
@@ -154,6 +154,12 @@
     "path": "notebooks/2_넘파이_심화.ipynb",
     "type": "classify",
     "ok": true
+   },
+   {
+    "t": 1790735398374,
+    "path": "notebooks/2_넘파이_심화.ipynb",
+    "type": "blank2",
+    "ok": false
    }
   ],
   "stats": {
@@ -162,7 +168,7 @@
     "correct": 3
    },
    "notebooks/2_넘파이_심화.ipynb": {
-    "asked": 18,
+    "asked": 19,
     "correct": 9
    }
   },
@@ -512,6 +518,32 @@
    "mine": "[ 3  3 12 12 60]",
    "why": "<span class=\"mono\">np.add.accumulate()</span> 는 덧셈을 누적해 나가는 함수로 <span class=\"mono\">cumsum()</span> 과 결과가 같습니다. 3, 3+1=4, 4+4=8, 8+1=9, 9+5=14 가 됩니다.",
    "at": 1790735340163,
+   "streak": 0
+  },
+  {
+   "key": "29023ef31acf256e96f0128ee364b4eb05c00aa679c6c08c898bd19f5674796c",
+   "path": "notebooks/2_넘파이_심화.ipynb",
+   "nb": "2_넘파이_심화",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "stem": "코드의 빈칸 ㉠, ㉡ 에 들어갈 것으로 맞는 것만 모두 모은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">2 (1, 2, 2)</span></span>",
+   "code": "a = np.array([[[1, 2], [3, 4]]], dtype=np.㉠)\nprint(a.itemsize, a.㉡)",
+   "intro": "",
+   "expect": "",
+   "options": [
+    "㉠ int16  ·  ㉡ shape",
+    "㉠ int8  ·  ㉡ shape",
+    "㉠ int16  ·  ㉡ strides",
+    "㉠ int64  ·  ㉡ shape",
+    "㉠ int16  ·  ㉡ size"
+   ],
+   "answer": "㉠ int16  ·  ㉡ shape",
+   "accept": null,
+   "rubric": null,
+   "eid": null,
+   "mine": "㉠ int8  ·  ㉡ shape",
+   "why": "<span class=\"mono\">itemsize</span> 는 원소 하나가 차지하는 바이트 수입니다. int16은 16비트, 즉 2바이트라 2가 출력됩니다. 대괄호가 3겹이므로 3차원이고 바깥부터 세면 면 1개, 행 2개, 열 2개라 <span class=\"mono\">shape</span> 는 (1, 2, 2) 입니다.",
+   "at": 1790735398375,
    "streak": 0
   }
  ],
