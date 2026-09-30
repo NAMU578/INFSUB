@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "jae12woo15",
- "updatedAt": "2026-09-30T02:37:47.622Z",
+ "updatedAt": "2026-09-30T02:38:20.611Z",
  "edits": {
   "notebooks/1_넘파이_기초(개념).ipynb": {
    "17": "a = np.arange(10) # 시작값(생략가능, 0), 종료값(미만), 간격(생략가능, 1)\nprint(a)\nprint(a.dtype)\na.reshape(2,5)\nprint(a) # 모양을 2행 5열로 변형",
@@ -232,11 +232,17 @@
     "path": "notebooks/3_데이터이해(예제).ipynb",
     "type": "blank2",
     "ok": false
+   },
+   {
+    "t": 1790735900611,
+    "path": "notebooks/1_넘파이_기초(개념).ipynb",
+    "type": "short",
+    "ok": false
    }
   ],
   "stats": {
    "notebooks/1_넘파이_기초(개념).ipynb": {
-    "asked": 6,
+    "asked": 7,
     "correct": 3
    },
    "notebooks/2_넘파이_심화.ipynb": {
@@ -249,6 +255,16 @@
    }
   },
   "recentBank": [
+   "C16",
+   "C13",
+   "B14",
+   "B10",
+   "D12",
+   "D07",
+   "R10",
+   "X05",
+   "S12",
+   "W07",
    "3C05",
    "3B04",
    "3D15",
@@ -278,17 +294,7 @@
    "R14",
    "X01",
    "S05",
-   "W06",
-   "C07",
-   "C10",
-   "B09",
-   "B03",
-   "D05",
-   "R01",
-   "X15",
-   "X08",
-   "S04",
-   "W02"
+   "W06"
   ]
  },
  "wrong": [
@@ -848,6 +854,30 @@
    "mine": "㉠ 4f  ·  ㉡ .1%",
    "why": "<span class=\"mono\">.4f</span> 는 소수점 넷째 자리까지, <span class=\"mono\">.1%</span> 는 100을 곱해 % 를 붙이고 소수점 첫째 자리까지 표시합니다. <span class=\"mono\">4f</span> 는 자릿수가 아니라 전체 너비 4를 뜻해 0.900000 이 되고, <span class=\"mono\">.0%</span> 는 93%, <span class=\"mono\">%</span> 만 쓰면 93.000000% 가 됩니다.",
    "at": 1790735867622,
+   "streak": 0
+  },
+  {
+   "key": "bc37194034cbeaf60507f0f32a5fa64ec6b659c4a408c0651d7c81240229f105",
+   "path": "notebooks/1_넘파이_기초(개념).ipynb",
+   "nb": "1_넘파이_기초(개념)",
+   "type": "서답형",
+   "typeKey": "short",
+   "stem": "코드의 빈칸 ㉠ 에 들어갈 코드를 적으시오.<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">[1 2 5 7 8]</span></span>",
+   "code": "numbers = np.array([5, 7, 1, 2, 1, 7, 8, 5])\nprint(㉠)",
+   "intro": "",
+   "expect": "",
+   "options": null,
+   "answer": "np.unique(numbers)",
+   "accept": [
+    "np.unique(numbers)",
+    "numpy.unique(numbers)",
+    "np.unique( numbers )"
+   ],
+   "rubric": null,
+   "eid": null,
+   "mine": "np.sort(numbers)",
+   "why": "중복이 사라지고 오름차순으로 정렬되었습니다. unique 함수의 결과입니다.",
+   "at": 1790735900611,
    "streak": 0
   }
  ],
