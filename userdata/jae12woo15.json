@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "jae12woo15",
- "updatedAt": "2026-09-30T02:16:49.727Z",
+ "updatedAt": "2026-09-30T02:18:18.005Z",
  "edits": {
   "notebooks/1_넘파이_기초(개념).ipynb": {
    "17": "a = np.arange(10) # 시작값(생략가능, 0), 종료값(미만), 간격(생략가능, 1)\nprint(a)\nprint(a.dtype)\na.reshape(2,5)\nprint(a) # 모양을 2행 5열로 변형",
@@ -70,6 +70,12 @@
     "path": "notebooks/2_넘파이_심화.ipynb",
     "type": "blank2",
     "ok": false
+   },
+   {
+    "t": 1790734698002,
+    "path": "notebooks/2_넘파이_심화.ipynb",
+    "type": "contrast",
+    "ok": false
    }
   ],
   "stats": {
@@ -78,7 +84,7 @@
     "correct": 3
    },
    "notebooks/2_넘파이_심화.ipynb": {
-    "asked": 4,
+    "asked": 5,
     "correct": 3
    }
   },
@@ -213,6 +219,32 @@
    "mine": "㉠ 59  ·  ㉡ 4",
    "why": "3 × 4 × 5 = 60이므로 원소가 60개 필요합니다. <span class=\"mono\">arange(60)</span> 은 0부터 59까지이고, 마지막 원소인 <span class=\"mono\">v3[2, 3, 4]</span> 가 59입니다.",
    "at": 1790734609727,
+   "streak": 0
+  },
+  {
+   "key": "8f2b78f8af9178c32f933ecce18d5815aff5829a6d46c6d3f1e91beca158542f",
+   "path": "notebooks/2_넘파이_심화.ipynb",
+   "nb": "2_넘파이_심화",
+   "type": "대조",
+   "typeKey": "contrast",
+   "stem": "다음은 거의 같은 두 코드와 실행결과다. ㉠, ㉡ 에 출력되는 값으로 맞는 것만 모두 모은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">방법1 → ㉠<br>방법2 → ㉡</span></span>",
+   "code": "# 방법1\na = np.arange(1, 7, dtype=np.int16).reshape(2, 3)\nprint(a.itemsize, a.strides)\n\n# 방법2\nb = np.arange(1, 7, dtype=np.int64).reshape(2, 3)\nprint(b.itemsize, b.strides)",
+   "intro": "",
+   "expect": "",
+   "options": [
+    "㉠ 2 (2, 6)  ·  ㉡ 8 (8, 24)",
+    "㉠ 2 (6, 2)  ·  ㉡ 4 (12, 4)",
+    "㉠ 2 (6, 2)  ·  ㉡ 8 (24, 8)",
+    "㉠ 8 (24, 8)  ·  ㉡ 2 (6, 2)",
+    "㉠ 2 (6, 2)  ·  ㉡ 8 (6, 2)"
+   ],
+   "answer": "㉠ 2 (6, 2)  ·  ㉡ 8 (24, 8)",
+   "accept": null,
+   "rubric": null,
+   "eid": null,
+   "mine": "㉠ 2 (6, 2)  ·  ㉡ 8 (6, 2)",
+   "why": "모양은 둘 다 (2, 3) 으로 같지만 원소 하나의 크기가 다릅니다. int16은 2바이트라 한 행이 2×3=6바이트, int64는 8바이트라 한 행이 8×3=24바이트입니다. <span class=\"mono\">strides</span> 는 모양뿐 아니라 자료형에 따라서도 달라집니다.",
+   "at": 1790734698005,
    "streak": 0
   }
  ],
