@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "_shared",
- "updatedAt": "2026-09-30T01:54:06.813Z",
+ "updatedAt": "2026-09-30T01:54:11.271Z",
  "edits": {},
  "quiz": {
   "attempts": [],
@@ -38,6 +38,16 @@
    "code": "col1 = df_mini['나이']\ncol2 = df_mini[['나이']]\nprint(type(col1))\nprint(type(col2))",
    "rubric": "df_mini['나이']는 Series, df_mini[['나이']]는 DataFrame(열 목록을 대괄호로 감쌌기 때문)임을 설명함; 대괄호 1개는 단일 열 선택(1차원 Series), 대괄호 2개(리스트 형태)는 여러 열 선택 가능한 2차원 구조임을 설명함; Series는 1차원 데이터 구조이므로 mean() 같은 통계 함수를 바로 적용할 수 있다는 점을 언급함",
    "answer": "df_mini['나이']는 열 하나만 선택하므로 Series(1차원 자료구조)가 반환되고, df_mini[['나이']]는 리스트 형태로 열 이름을 전달하여 여러 열을 선택할 수 있는 형태이므로 DataFrame(2차원)이 반환된다. 즉 대괄호 안에 문자열 하나만 쓰면 단일 열을 꺼내 Series로, 리스트로 감싸면 DataFrame으로 유지된다. Series는 값들이 1차원으로 나열된 구조이기 때문에 mean(), sum() 같은 통계 함수를 바로 적용할 수 있지만, DataFrame은 여러 열로 이루어진 2차원 구조이므로 열을 다시 선택해야 통계 함수를 적용할 수 있다."
+  },
+  {
+   "id": "e1x640dj_105",
+   "nb": "4_판다스모듈",
+   "intro": "## 시리즈(Series)와 데이터프레임(DataFrame) 개념\n* Series:  이름표가 붙은 1차원 데이터\n* DataFrame: Series를 묶은 2차원 표\n\n### 시리즈(Series)",
+   "at": 1790733251271,
+   "question": "다음과 같이 Series를 생성하는 코드가 있다. 이 코드를 실행했을 때 age.values, age.index, age.name 각각이 무엇을 의미하며 어떤 값을 갖게 되는지 설명하시오.",
+   "code": "import pandas as pd\nage = pd.Series([22, 38, 26, 35], index=['철수', '영희', '민수', '지연'], name='나이')",
+   "rubric": "values는 실제 데이터 값들의 배열(22, 38, 26, 35)임을 설명; index는 각 데이터에 붙은 이름표(철수, 영희, 민수, 지연)임을 설명; name은 Series 전체에 붙은 이름('나이')임을 설명; 세 요소가 Series를 구성하는 값, 인덱스, 이름이라는 점을 명확히 서술",
+   "answer": "age.values는 Series에 저장된 실제 데이터 값들로 [22, 38, 26, 35]라는 배열을 반환한다. age.index는 각 값에 붙은 이름표(라벨)로 ['철수','영희','민수','지연']을 나타내며, 데이터에 접근할 때 사용하는 인덱스 역할을 한다. age.name은 이 Series 전체에 붙여진 이름으로 '나이'라는 문자열을 갖는다. 즉 Series는 값(values)과 그에 대응하는 인덱스(index), 그리고 전체를 설명하는 이름(name) 이 세 가지 요소로 구성된다."
   }
  ],
  "essayRejected": [
