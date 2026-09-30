@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "jae12woo15",
- "updatedAt": "2026-09-30T02:22:18.001Z",
+ "updatedAt": "2026-09-30T02:23:04.646Z",
  "edits": {
   "notebooks/1_넘파이_기초(개념).ipynb": {
    "17": "a = np.arange(10) # 시작값(생략가능, 0), 종료값(미만), 간격(생략가능, 1)\nprint(a)\nprint(a.dtype)\na.reshape(2,5)\nprint(a) # 모양을 2행 5열로 변형",
@@ -106,6 +106,12 @@
     "path": "notebooks/2_넘파이_심화.ipynb",
     "type": "short",
     "ok": false
+   },
+   {
+    "t": 1790734984644,
+    "path": "notebooks/2_넘파이_심화.ipynb",
+    "type": "spec",
+    "ok": false
    }
   ],
   "stats": {
@@ -114,11 +120,21 @@
     "correct": 3
    },
    "notebooks/2_넘파이_심화.ipynb": {
-    "asked": 10,
+    "asked": 11,
     "correct": 5
    }
   },
   "recentBank": [
+   "C04",
+   "C01",
+   "B15",
+   "D09",
+   "D06",
+   "R02",
+   "R14",
+   "X01",
+   "S05",
+   "W06",
    "C07",
    "C10",
    "B09",
@@ -350,6 +366,32 @@
    "mine": "0.9",
    "why": "원소는 10개인데 종료값 10이 들어 있지 않습니다. 종료값을 제외하려면 endpoint 매개변수를 False로 둡니다.",
    "at": 1790734938001,
+   "streak": 0
+  },
+  {
+   "key": "c3ab7fb454c853d9709512d93b322c653a3a69ec15e3e116d93e7a2d49be448f",
+   "path": "notebooks/2_넘파이_심화.ipynb",
+   "nb": "2_넘파이_심화",
+   "type": "조건 매핑",
+   "typeKey": "spec",
+   "stem": "다음 [조건]을 모두 만족하는 코드로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>[조건]</b><br>○ 2행 2열 행렬 m4의 역행렬을 구한다.<br>○ linalg 모듈의 함수를 사용한다.<br>○ 정방행렬일 때만 동작한다.</span>",
+   "code": "from numpy import linalg\nm4 = np.asmatrix('1 2; 3 4')\n____",
+   "intro": "",
+   "expect": "",
+   "options": [
+    "linalg.inv(m4)",
+    "linalg.solve(m4)",
+    "np.linspace(m4)",
+    "m4.T",
+    "linalg.inv(m4.reshape(1, 4))"
+   ],
+   "answer": "linalg.inv(m4)",
+   "accept": null,
+   "rubric": null,
+   "eid": null,
+   "mine": "m4.T",
+   "why": "역행렬은 정방행렬에서만 정의되며 linalg 모듈의 <span class=\"mono\">inv()</span> 로 구합니다. <span class=\"mono\">solve()</span> 는 연립방정식의 해, <span class=\"mono\">.T</span> 는 전치행렬입니다.",
+   "at": 1790734984646,
    "streak": 0
   }
  ],
