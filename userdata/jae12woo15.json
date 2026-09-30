@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "jae12woo15",
- "updatedAt": "2026-09-30T02:38:20.611Z",
+ "updatedAt": "2026-09-30T02:38:50.692Z",
  "edits": {
   "notebooks/1_넘파이_기초(개념).ipynb": {
    "17": "a = np.arange(10) # 시작값(생략가능, 0), 종료값(미만), 간격(생략가능, 1)\nprint(a)\nprint(a.dtype)\na.reshape(2,5)\nprint(a) # 모양을 2행 5열로 변형",
@@ -238,11 +238,17 @@
     "path": "notebooks/1_넘파이_기초(개념).ipynb",
     "type": "short",
     "ok": false
+   },
+   {
+    "t": 1790735930692,
+    "path": "notebooks/1_넘파이_기초(개념).ipynb",
+    "type": "blank2",
+    "ok": false
    }
   ],
   "stats": {
    "notebooks/1_넘파이_기초(개념).ipynb": {
-    "asked": 7,
+    "asked": 8,
     "correct": 3
    },
    "notebooks/2_넘파이_심화.ipynb": {
@@ -878,6 +884,32 @@
    "mine": "np.sort(numbers)",
    "why": "중복이 사라지고 오름차순으로 정렬되었습니다. unique 함수의 결과입니다.",
    "at": 1790735900611,
+   "streak": 0
+  },
+  {
+   "key": "a175fa4ed805c070f533eeed06749df615a4686c1264f4f666d3eece481efd54",
+   "path": "notebooks/1_넘파이_기초(개념).ipynb",
+   "nb": "1_넘파이_기초(개념)",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "stem": "코드의 빈칸 ㉠, ㉡ 에 들어갈 것으로 맞는 것만 모두 모은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">[[4]<br> [6]<br> [8]]</span></span>",
+   "code": "a = np.array([[2, 4, 6], [3, 6, 9], [4, 8, 12]])\nprint(a[㉠, ㉡])",
+   "intro": "",
+   "expect": "",
+   "options": [
+    "㉠ :  ·  ㉡ 1",
+    "㉠ 1:2  ·  ㉡ :",
+    "㉠ :  ·  ㉡ 1:2",
+    "㉠ :  ·  ㉡ :1",
+    "㉠ 1  ·  ㉡ :"
+   ],
+   "answer": "㉠ :  ·  ㉡ 1:2",
+   "accept": null,
+   "rubric": null,
+   "eid": null,
+   "mine": "㉠ 1  ·  ㉡ :",
+   "why": "모든 행을 쓰므로 앞은 <span class=\"mono\">:</span> 입니다. 1열만 뽑되 결과가 2차원 그대로 남으려면 정수 1이 아니라 슬라이스 <span class=\"mono\">1:2</span> 를 써야 합니다. 정수를 쓰면 그 축이 사라져 1차원 [4 6 8] 이 됩니다.",
+   "at": 1790735930692,
    "streak": 0
   }
  ],
