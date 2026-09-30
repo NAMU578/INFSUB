@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "jae12woo15",
- "updatedAt": "2026-09-30T02:32:00.611Z",
+ "updatedAt": "2026-09-30T02:32:38.959Z",
  "edits": {
   "notebooks/1_넘파이_기초(개념).ipynb": {
    "17": "a = np.arange(10) # 시작값(생략가능, 0), 종료값(미만), 간격(생략가능, 1)\nprint(a)\nprint(a.dtype)\na.reshape(2,5)\nprint(a) # 모양을 2행 5열로 변형",
@@ -178,6 +178,12 @@
     "path": "notebooks/3_데이터이해(예제).ipynb",
     "type": "boundary",
     "ok": false
+   },
+   {
+    "t": 1790735558959,
+    "path": "notebooks/3_데이터이해(예제).ipynb",
+    "type": "classify",
+    "ok": false
    }
   ],
   "stats": {
@@ -190,7 +196,7 @@
     "correct": 9
    },
    "notebooks/3_데이터이해(예제).ipynb": {
-    "asked": 1,
+    "asked": 2,
     "correct": 0
    }
   },
@@ -647,6 +653,32 @@
    "mine": "5 5",
    "why": "<span class=\"mono\">iloc</span> 은 위치 번호 슬라이싱이라 끝(15)을 빼고 10~14 의 5행입니다. <span class=\"mono\">loc</span> 은 인덱스 이름으로 자르며 <b>끝을 포함</b>하므로 10~15 의 6행입니다.",
    "at": 1790735520611,
+   "streak": 0
+  },
+  {
+   "key": "b7e6a6581174fc15b707fc6ff891dd756ccd27a3216efbb346d4a72cf1143356",
+   "path": "notebooks/3_데이터이해(예제).ipynb",
+   "nb": "3_데이터이해(예제)",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "stem": "다음 코드에 대한 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은? (df 는 붓꽃 데이터 150행 5열)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) <span class=\"mono\">X_test</span> 에는 30개의 샘플이 들어간다.<br>(나) <span class=\"mono\">y_train</span> 에는 세 품종이 40개씩 들어간다.<br>(다) <span class=\"mono\">random_state</span> 값을 바꾸면 훈련과 테스트의 개수 비율이 달라진다.</span>",
+   "code": "X_train, X_test, y_train, y_test = train_test_split(\n    X, y, test_size=0.2, random_state=42, stratify=y)",
+   "intro": "",
+   "expect": "",
+   "options": [
+    "(가)",
+    "(나)",
+    "(다)",
+    "(가), (나)",
+    "(가), (다)"
+   ],
+   "answer": "(가), (나)",
+   "accept": null,
+   "rubric": null,
+   "eid": null,
+   "mine": "(가), (다)",
+   "why": "<span class=\"mono\">test_size=0.2</span> 라 150개 중 30개가 테스트용입니다. <span class=\"mono\">stratify=y</span> 로 품종 비율(1:1:1)을 유지하므로 훈련 120개는 40개씩 나뉩니다. <span class=\"mono\">random_state</span> 는 어떤 샘플을 고를지 정하는 난수 시드일 뿐, 비율은 <span class=\"mono\">test_size</span> 가 정합니다.",
+   "at": 1790735558959,
    "streak": 0
   }
  ],
