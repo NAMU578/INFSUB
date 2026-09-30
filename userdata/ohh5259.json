@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "ohh5259",
- "updatedAt": "2026-09-30T02:36:31.225Z",
+ "updatedAt": "2026-09-30T02:37:12.412Z",
  "edits": {
   "notebooks/1_넘파이_기초(개념).ipynb": {
    "8": "# 차이점이 뭘까?\nprint(data)\nprint(array)\nprint(array.dtype) # 넘파이 배열의 데이터 타입 확인",
@@ -117,11 +117,17 @@
     "path": "notebooks/1_넘파이_기초(개념).ipynb",
     "type": "classify",
     "ok": true
+   },
+   {
+    "t": 1790735832412,
+    "path": "notebooks/1_넘파이_기초(개념).ipynb",
+    "type": "essay",
+    "ok": false
    }
   ],
   "stats": {
    "notebooks/1_넘파이_기초(개념).ipynb": {
-    "asked": 11,
+    "asked": 12,
     "correct": 5
    },
    "notebooks/2_넘파이_심화.ipynb": {
@@ -277,6 +283,26 @@
    "mine": "np.unique(numbers).sort()",
    "why": "<span class=\"mono\">unique()</span> 는 중복을 없애고 정렬된 새 배열을 돌려주므로 원본이 그대로입니다. <span class=\"mono\">sort()</span> 는 원본을 직접 정렬하며 중복도 남습니다.",
    "at": 1790735696431,
+   "streak": 0
+  },
+  {
+   "key": "488befb58d4a07fd4285b051b8c0f4d4da89c0ba0397fb0a88e4645e85a87222",
+   "path": "notebooks/1_넘파이_기초(개념).ipynb",
+   "nb": "1_넘파이_기초(개념)",
+   "type": "서술형",
+   "typeKey": "essay",
+   "stem": "넘파이 배열 array = np.array([-3, 5, -1, 2, 0])가 있다고 하자. 아래 두 코드는 겉보기에 비슷해 보이지만 계산 결과와 의미가 다르다.\n\n(1) (array &gt; 0).sum()\n(2) array[array &gt; 0].sum()\n\n각 코드가 실행되는 과정을 설명하고, 두 코드의 결과값이 각각 무엇인지, 그리고 왜 서로 다른 값이 나오는지 서술하시오.",
+   "code": "array = np.array([-3, 5, -1, 2, 0])\nprint((array > 0).sum())\nprint(array[array > 0].sum())",
+   "intro": "첫 번째 줄 (array > 0).sum()은 array 배열에서 0보다 큰 값들의 '개수'를 세는 코드. array > 0 연산을 수행하면 array의 각 요소가 0보다 큰지 여부를 나타내는 True 또는 False 값으로 구성된 불리언(boolean) 배열이 생성. NumPy에서는 True를 1로, False를 0으로 간주하므로, 이 불리언 배열에 .sum()을 적용하면 True의 개수, 즉 0보다 큰 값의 개수를 얻음.\n\n두 번째 줄 array[array > 0].sum()은 array 배열에서 0보다 큰 값들의 '합계'를 구하는 코드. 여기서도 array > 0는 불리언 배열을 생성하지만, array[...]와 같이 인덱스로 사용될 때는 불리언 인덱싱(Boolean Indexing)이 일어남. 이는 원본 array에서 해당 불리언 배열의 값이 True인 위치의 요소들만 선택하여 새로운 배열을 만듦. 그 결과로 얻어진 새로운 배열(0보다 큰 값들만 포함된)에 .sum()을 적용하면, 0보다 큰 모든 값들의 합계를 계산.",
+   "expect": "",
+   "options": null,
+   "answer": "(array > 0)은 array의 각 원소가 0보다 큰지를 판단해 [False, True, False, True, False] 같은 불리언 배열을 만든다. (1) (array > 0).sum()은 이 불리언 배열에서 True를 1, False를 0으로 취급해 합산하므로 True의 개수, 즉 0보다 큰 값의 개수(2)를 반환한다. (2) array[array > 0]은 불리언 배열을 인덱스로 사용하여 원본 array에서 True인 위치의 실제 값들만 골라낸 새로운 배열([5, 2])을 만들고, 여기에 .sum()을 적용하면 그 값들의 합계(7)가 나온다. 즉 (1)은 조건을 만족하는 원소의 '개수'를, (2)는 조건을 만족하는 원소들의 실제 값의 '합'을 구하는 것이므로 결과가 다르다.",
+   "accept": null,
+   "rubric": "array > 0 연산이 각 요소를 True/False로 판정한 불리언 배열을 만든다는 점을 설명함; (1)은 True를 1, False를 0으로 취급해 True의 개수(0보다 큰 값의 개수)를 센다는 점을 설명하고 결과값 2를 제시함; (2)는 array[...] 형태로 불리언 배열이 인덱스로 사용되어 불리언 인덱싱이 일어나 True인 위치의 원소만 선택한 새 배열을 만든다는 점을 설명하고 그 합 7을 제시함; 두 결과가 다른 이유는 하나는 개수(count)를 세는 것이고 다른 하나는 실제 값들의 합(sum)을 구하는 것이기 때문이라는 차이를 명시함.",
+   "eid": "e10ol03z_207",
+   "mine": ".",
+   "why": "AI 채점 결과입니다.",
+   "at": 1790735832412,
    "streak": 0
   }
  ],
