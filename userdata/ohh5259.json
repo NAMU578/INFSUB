@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "ohh5259",
- "updatedAt": "2026-10-12T23:24:03.475Z",
+ "updatedAt": "2026-10-12T23:30:17.191Z",
  "edits": {
   "notebooks/1_넘파이_기초(개념).ipynb": {
    "8": "# 차이점이 뭘까?\nprint(data)\nprint(array)\nprint(array.dtype) # 넘파이 배열의 데이터 타입 확인",
@@ -153,6 +153,12 @@
     "path": "notebooks/4_판다스모듈.ipynb",
     "type": "blank2",
     "ok": true
+   },
+   {
+    "t": 1791847817190,
+    "path": "notebooks/4_판다스모듈.ipynb",
+    "type": "trace",
+    "ok": false
    }
   ],
   "stats": {
@@ -169,7 +175,7 @@
     "correct": 1
    },
    "notebooks/4_판다스모듈.ipynb": {
-    "asked": 4,
+    "asked": 5,
     "correct": 3
    }
   },
@@ -363,6 +369,32 @@
    "mine": "나이 값, 인덱스, 나이",
    "why": "AI 채점 결과입니다.",
    "at": 1791847220942,
+   "streak": 0
+  },
+  {
+   "key": "f4ac2074d76e2deba6394d2a1041357d91518b11033a85fa3fb6ad77a27460c2",
+   "path": "notebooks/4_판다스모듈.ipynb",
+   "nb": "4_판다스모듈",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "df_mini = pd.DataFrame({'나이': [22, 38, 26, 35], '성별': ['남', '여', '남', '여'], '탑승등급': [3, 1, 3, 1]},\n                       index=['철수', '영희', '민수', '지연'])\nprint(type(df_mini['나이']).__name__, type(df_mini[['나이']]).__name__)",
+   "intro": "",
+   "expect": "",
+   "options": [
+    "DataFrame DataFrame",
+    "Series Series",
+    "DataFrame Series",
+    "Series DataFrame",
+    "list DataFrame"
+   ],
+   "answer": "Series DataFrame",
+   "accept": null,
+   "rubric": null,
+   "eid": null,
+   "mine": "Series Series",
+   "why": "대괄호 하나로 열 하나를 꺼내면 Series, 대괄호 두 개(열 이름 목록)로 꺼내면 열이 하나뿐이어도 DataFrame 입니다.",
+   "at": 1791847817191,
    "streak": 0
   }
  ],
