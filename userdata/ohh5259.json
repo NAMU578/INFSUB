@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "ohh5259",
- "updatedAt": "2026-10-12T23:18:54.945Z",
+ "updatedAt": "2026-10-12T23:20:20.942Z",
  "edits": {
   "notebooks/1_넘파이_기초(개념).ipynb": {
    "8": "# 차이점이 뭘까?\nprint(data)\nprint(array)\nprint(array.dtype) # 넘파이 배열의 데이터 타입 확인",
@@ -135,6 +135,12 @@
     "path": "notebooks/4_판다스모듈.ipynb",
     "type": "contrast",
     "ok": true
+   },
+   {
+    "t": 1791847220942,
+    "path": "notebooks/4_판다스모듈.ipynb",
+    "type": "essay",
+    "ok": false
    }
   ],
   "stats": {
@@ -151,7 +157,7 @@
     "correct": 1
    },
    "notebooks/4_판다스모듈.ipynb": {
-    "asked": 1,
+    "asked": 2,
     "correct": 1
    }
   },
@@ -325,6 +331,26 @@
    "mine": ".",
    "why": "AI 채점 결과입니다.",
    "at": 1790735832412,
+   "streak": 0
+  },
+  {
+   "key": "37044427b156e421cbfc2f9034a8d103196675375621f477e356fc87f72bf2ca",
+   "path": "notebooks/4_판다스모듈.ipynb",
+   "nb": "4_판다스모듈",
+   "type": "서술형",
+   "typeKey": "essay",
+   "stem": "다음과 같이 Series를 생성하는 코드가 있다. 이 코드를 실행했을 때 age.values, age.index, age.name 각각이 무엇을 의미하며 어떤 값을 갖게 되는지 설명하시오.",
+   "code": "import pandas as pd\nage = pd.Series([22, 38, 26, 35], index=['철수', '영희', '민수', '지연'], name='나이')",
+   "intro": "## 시리즈(Series)와 데이터프레임(DataFrame) 개념\n* Series:  이름표가 붙은 1차원 데이터\n* DataFrame: Series를 묶은 2차원 표\n\n### 시리즈(Series)",
+   "expect": "",
+   "options": null,
+   "answer": "age.values는 Series에 저장된 실제 데이터 값들로 [22, 38, 26, 35]라는 배열을 반환한다. age.index는 각 값에 붙은 이름표(라벨)로 ['철수','영희','민수','지연']을 나타내며, 데이터에 접근할 때 사용하는 인덱스 역할을 한다. age.name은 이 Series 전체에 붙여진 이름으로 '나이'라는 문자열을 갖는다. 즉 Series는 값(values)과 그에 대응하는 인덱스(index), 그리고 전체를 설명하는 이름(name) 이 세 가지 요소로 구성된다.",
+   "accept": null,
+   "rubric": "values는 실제 데이터 값들의 배열(22, 38, 26, 35)임을 설명; index는 각 데이터에 붙은 이름표(철수, 영희, 민수, 지연)임을 설명; name은 Series 전체에 붙은 이름('나이')임을 설명; 세 요소가 Series를 구성하는 값, 인덱스, 이름이라는 점을 명확히 서술",
+   "eid": "e1x640dj_105",
+   "mine": "나이 값, 인덱스, 나이",
+   "why": "AI 채점 결과입니다.",
+   "at": 1791847220942,
    "streak": 0
   }
  ],
