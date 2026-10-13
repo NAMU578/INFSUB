@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "haedam09",
- "updatedAt": "2026-10-13T23:17:38.264Z",
+ "updatedAt": "2026-10-13T23:18:06.402Z",
  "edits": {},
  "quiz": {
   "attempts": [
@@ -322,6 +322,12 @@
     "path": "notebooks/1_넘파이_기초(개념).ipynb",
     "type": "contrast",
     "ok": true
+   },
+   {
+    "t": 1791933486402,
+    "path": "notebooks/1_넘파이_기초(개념).ipynb",
+    "type": "trace",
+    "ok": false
    }
   ],
   "stats": {
@@ -330,7 +336,7 @@
     "correct": 5
    },
    "notebooks/1_넘파이_기초(개념).ipynb": {
-    "asked": 19,
+    "asked": 20,
     "correct": 14
    },
    "notebooks/3_데이터이해(예제).ipynb": {
@@ -953,6 +959,32 @@
    "mine": "2",
    "why": "AI 채점 결과입니다.",
    "at": 1791933258676,
+   "streak": 0
+  },
+  {
+   "key": "6d977d7cb696f0de3bc2136e5f548fe749d8e151e69a0fa0919ab3a0581e4d5c",
+   "path": "notebooks/1_넘파이_기초(개념).ipynb",
+   "nb": "1_넘파이_기초(개념)",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "array = np.array([3, -1, 4, -5, 2, -6])\nprint((array > 0).sum(), array[array > 0].sum())",
+   "intro": "",
+   "expect": "",
+   "options": [
+    "9 3",
+    "3 3",
+    "3 9",
+    "6 9",
+    "9 9"
+   ],
+   "answer": "3 9",
+   "accept": null,
+   "rubric": null,
+   "eid": null,
+   "mine": "9 9",
+   "why": "<span class=\"mono\">array > 0</span> 은 불리언 배열을 만듭니다. 여기에 바로 <span class=\"mono\">sum()</span> 을 쓰면 True를 1로 세므로 0보다 큰 값의 개수인 3이 나옵니다. 반면 불리언 배열을 인덱스로 넣으면 해당 값만 골라내므로 3+4+2=9 가 됩니다.",
+   "at": 1791933486402,
    "streak": 0
   }
  ],
