@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "haedam09",
- "updatedAt": "2026-10-13T23:27:45.656Z",
+ "updatedAt": "2026-10-13T23:29:38.343Z",
  "edits": {},
  "quiz": {
   "attempts": [
@@ -346,6 +346,12 @@
     "path": "notebooks/1_넘파이_기초(개념).ipynb",
     "type": "boundary",
     "ok": false
+   },
+   {
+    "t": 1791934178342,
+    "path": "notebooks/4_판다스모듈.ipynb",
+    "type": "contrast",
+    "ok": false
    }
   ],
   "stats": {
@@ -362,7 +368,7 @@
     "correct": 1
    },
    "notebooks/4_판다스모듈.ipynb": {
-    "asked": 10,
+    "asked": 11,
     "correct": 6
    },
    "notebooks/5_맷플롯립모듈.ipynb": {
@@ -413,9 +419,10 @@
    "3C05"
   ],
   "recentEssay": [
+   "efavd84_196",
+   "e1x640dj_105",
    "e1q7nl3z_125",
    "eq8d8zd_167",
-   "e1x640dj_105",
    "ehmzphh_229",
    "e1hw50qn_234",
    "eia19u9_257",
@@ -1055,6 +1062,32 @@
    "mine": "5",
    "why": "a는 10부터 150까지 10씩 늘어나는 15개짜리 배열입니다. <span class=\"mono\">-4</span> 는 끝에서 네 번째 자리를 가리키고 그 자리는 포함되지 않으므로 0번부터 10번까지가 대상입니다. 여기서 두 칸씩 건너뛰면 0, 2, 4, 6, 8, 10번의 6개가 남습니다.",
    "at": 1791934008145,
+   "streak": 0
+  },
+  {
+   "key": "b5c041a3d0da27944eafe0eaf31aee11f0fe31c9df7babb3308b93a6e4773844",
+   "path": "notebooks/4_판다스모듈.ipynb",
+   "nb": "4_판다스모듈",
+   "type": "대조",
+   "typeKey": "contrast",
+   "stem": "다음은 거의 같은 두 코드이다. ㉠, ㉡에 출력되는 값으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">방법1 → ㉠<br>방법2 → ㉡</span></span><span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;데이터프레임 t&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">   survived  pclass     sex   age     fare embarked deck<br>0         0       3    male  22.0   7.2500        S  NaN<br>1         1       1  female  38.0  71.2833        C    C<br>2         1       3  female  26.0   7.9250        S  NaN<br>3         1       1  female  35.0  53.1000        S    C<br>4         0       3    male  35.0   8.0500        S  NaN<br>5         0       3    male   NaN   8.4583        Q  NaN</span></span>",
+   "code": "# 방법1\nprint(t.iloc[[5]].shape)\n\n# 방법2\nprint(t.iloc[5].shape)",
+   "intro": "",
+   "expect": "",
+   "options": [
+    "㉠ (7,)  ·  ㉡ (1, 7)",
+    "㉠ (1, 7)  ·  ㉡ (1, 7)",
+    "㉠ (7, 1)  ·  ㉡ (7,)",
+    "㉠ (1, 7)  ·  ㉡ (7,)",
+    "㉠ (1, 7)  ·  ㉡ (1,)"
+   ],
+   "answer": "㉠ (1, 7)  ·  ㉡ (7,)",
+   "accept": null,
+   "rubric": null,
+   "eid": null,
+   "mine": "㉠ (7,)  ·  ㉡ (1, 7)",
+   "why": "위치를 리스트 <span class=\"mono\">[[5]]</span> 로 주면 표(DataFrame)가 유지되어 1행 7열, 정수 <span class=\"mono\">[5]</span> 로 주면 그 행이 열 이름을 인덱스로 가진 Series 가 되어 (7,)입니다.",
+   "at": 1791934178343,
    "streak": 0
   }
  ],
