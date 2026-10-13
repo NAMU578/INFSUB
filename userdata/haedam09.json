@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "haedam09",
- "updatedAt": "2026-10-13T23:11:39.602Z",
+ "updatedAt": "2026-10-13T23:12:33.143Z",
  "edits": {},
  "quiz": {
   "attempts": [
@@ -298,6 +298,12 @@
     "path": "notebooks/1_넘파이_기초(개념).ipynb",
     "type": "short",
     "ok": false
+   },
+   {
+    "t": 1791933153142,
+    "path": "notebooks/1_넘파이_기초(개념).ipynb",
+    "type": "classify",
+    "ok": true
    }
   ],
   "stats": {
@@ -306,8 +312,8 @@
     "correct": 5
    },
    "notebooks/1_넘파이_기초(개념).ipynb": {
-    "asked": 15,
-    "correct": 11
+    "asked": 16,
+    "correct": 12
    },
    "notebooks/3_데이터이해(예제).ipynb": {
     "asked": 2,
