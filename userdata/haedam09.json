@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "haedam09",
- "updatedAt": "2026-10-13T23:30:10.643Z",
+ "updatedAt": "2026-10-13T23:30:45.065Z",
  "edits": {},
  "quiz": {
   "attempts": [
@@ -358,6 +358,12 @@
     "path": "notebooks/4_판다스모듈.ipynb",
     "type": "blank2",
     "ok": true
+   },
+   {
+    "t": 1791934245065,
+    "path": "notebooks/4_판다스모듈.ipynb",
+    "type": "short",
+    "ok": false
    }
   ],
   "stats": {
@@ -374,7 +380,7 @@
     "correct": 1
    },
    "notebooks/4_판다스모듈.ipynb": {
-    "asked": 12,
+    "asked": 13,
     "correct": 7
    },
    "notebooks/5_맷플롯립모듈.ipynb": {
@@ -1094,6 +1100,29 @@
    "mine": "㉠ (7,)  ·  ㉡ (1, 7)",
    "why": "위치를 리스트 <span class=\"mono\">[[5]]</span> 로 주면 표(DataFrame)가 유지되어 1행 7열, 정수 <span class=\"mono\">[5]</span> 로 주면 그 행이 열 이름을 인덱스로 가진 Series 가 되어 (7,)입니다.",
    "at": 1791934178343,
+   "streak": 0
+  },
+  {
+   "key": "67e013564d88073f49a3e69f09aa260a90f4c34b9e13f03ee170ab800fb18962",
+   "path": "notebooks/4_판다스모듈.ipynb",
+   "nb": "4_판다스모듈",
+   "type": "서답형",
+   "typeKey": "short",
+   "stem": "코드의 빈칸 ㉠ 에 들어갈 코드를 적으시오. (실제 값만 배열로)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">[22 38 26 35]</span></span>",
+   "code": "age = pd.Series([22, 38, 26, 35], index=['철수', '영희', '민수', '지연'], name='나이')\nprint(age.㉠)",
+   "intro": "",
+   "expect": "",
+   "options": null,
+   "answer": "values",
+   "accept": [
+    "values",
+    "to_numpy()"
+   ],
+   "rubric": null,
+   "eid": null,
+   "mine": "tolist()",
+   "why": "Series 의 세 요소 중 실제 데이터는 <span class=\"mono\">values</span> 입니다. 인덱스(이름표)는 <span class=\"mono\">index</span>, 이름은 <span class=\"mono\">name</span> 입니다.",
+   "at": 1791934245065,
    "streak": 0
   }
  ],
