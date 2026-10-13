@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "haedam09",
- "updatedAt": "2026-10-13T23:30:45.065Z",
+ "updatedAt": "2026-10-13T23:37:57.412Z",
  "edits": {},
  "quiz": {
   "attempts": [
@@ -364,6 +364,12 @@
     "path": "notebooks/4_판다스모듈.ipynb",
     "type": "short",
     "ok": false
+   },
+   {
+    "t": 1791934677412,
+    "path": "notebooks/4_판다스모듈.ipynb",
+    "type": "essay",
+    "ok": false
    }
   ],
   "stats": {
@@ -380,7 +386,7 @@
     "correct": 1
    },
    "notebooks/4_판다스모듈.ipynb": {
-    "asked": 13,
+    "asked": 14,
     "correct": 7
    },
    "notebooks/5_맷플롯립모듈.ipynb": {
@@ -1123,6 +1129,26 @@
    "mine": "tolist()",
    "why": "Series 의 세 요소 중 실제 데이터는 <span class=\"mono\">values</span> 입니다. 인덱스(이름표)는 <span class=\"mono\">index</span>, 이름은 <span class=\"mono\">name</span> 입니다.",
    "at": 1791934245065,
+   "streak": 0
+  },
+  {
+   "key": "41b8777f6f5dccca2b0245ee37b09e20f6deb2c639dfaa66c4cf31486dc92d12",
+   "path": "notebooks/4_판다스모듈.ipynb",
+   "nb": "4_판다스모듈",
+   "type": "서술형",
+   "typeKey": "essay",
+   "stem": "아래 코드는 seaborn의 타이타닉 데이터를 CSV와 엑셀 파일로 저장하는 코드이다. to_csv와 to_excel 함수 호출 시 공통으로 사용된 index=False 매개변수가 하는 역할을 설명하고, 만약 이 매개변수를 생략하고 titanic.to_csv('titanic.csv')처럼 호출하면 저장되는 파일의 내용이 어떻게 달라지는지 서술하시오.",
+   "code": "import seaborn as sns\n\ntitanic = sns.load_dataset('titanic')\ntitanic.to_csv('titanic.csv', index=False)\ntitanic.to_excel('titanic.xlsx', index=False, sheet_name='passengers')",
+   "intro": "## 판다스를 이용하여 데이터 파일 읽기\n실습을 위해 seaborn에 있는 타이타닉 데이터 저장<br>\ncsv 파일과 엑셀 파일 두 가지 형태로 저장",
+   "expect": "",
+   "options": null,
+   "answer": "index=False는 데이터프레임을 csv나 엑셀 파일로 저장할 때 행 번호(인덱스)를 파일에 포함시키지 않도록 지정하는 옵션이다. 이 매개변수를 생략하면 판다스는 기본적으로 인덱스를 함께 저장하므로, 저장된 파일에는 원래 데이터프레임의 열들 앞에 0,1,2,...와 같은 인덱스 값이 추가 열로 들어가게 된다. 즉 index=False를 쓰면 원본 데이터의 열만 깔끔하게 저장되고, 생략하면 불필요한 인덱스 열이 하나 더 생겨 파일의 구조와 열 개수가 달라진다.",
+   "accept": null,
+   "rubric": "index=False는 데이터프레임의 행 인덱스(0,1,2,...)를 파일에 함께 저장하지 않도록 지정하는 매개변수임을 설명함; 생략할 경우 각 행마다 인덱스 번호가 추가 열로 저장되어 원본 데이터에 없던 열이 하나 더 생긴다는 점을 설명함; 그 결과 파일의 열 개수가 늘어나고 원래 데이터와 다른 구조가 됨을 언급함",
+   "eid": "efavd84_196",
+   "mine": ".",
+   "why": "AI 채점 결과입니다.",
+   "at": 1791934677412,
    "streak": 0
   }
  ],
