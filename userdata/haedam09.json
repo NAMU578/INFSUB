@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "haedam09",
- "updatedAt": "2026-10-13T23:05:02.797Z",
+ "updatedAt": "2026-10-13T23:05:13.458Z",
  "edits": {},
  "quiz": {
   "attempts": [
@@ -329,6 +329,8 @@
    "3G10"
   ],
   "recentEssay": [
+   "e1q7nl3z_125",
+   "eq8d8zd_167",
    "e1x640dj_105",
    "ehmzphh_229",
    "e1hw50qn_234",
@@ -1037,6 +1039,16 @@
    "answer": "bools.sum()의 결과는 2이다. 넘파이에서는 불리언 값인 True를 1로, False를 0으로 간주하여 계산한다. bools 배열은 [1, 1, 0, 0]으로 이루어져 있으며, 이는 사실상 [True, True, False, False]와 같은 의미로 해석될 수 있다. sum() 함수는 배열의 모든 원소를 더하는 연산이므로, 1(또는 True)의 값을 가진 원소들만 합산되어 결과적으로 True(혹은 1)의 개수를 세는 효과를 낸다. 따라서 1+1+0+0 = 2가 출력된다.",
    "intro": "첫 번째 줄 (array > 0).sum()은 array 배열에서 0보다 큰 값들의 '개수'를 세는 코드. array > 0 연산을 수행하면 array의 각 요소가 0보다 큰지 여부를 나타내는 True 또는 False 값으로 구성된 불리언(boolean) 배열이 생성. NumPy에서는 True를 1로, False를 0으로 간주하므로, 이 불리언 배열에 .sum()을 적용하면 True의 개수, 즉 0보다 큰 값의 개수를 얻음.\n\n두 번째 줄 array[array > 0].sum()은 array 배열에서 0보다 큰 값들의 '합계'를 구하는 코드. 여기서도 array > 0는 불리언 배열을 생성하지만, array[...]와 같이 인덱스로 사용될 때는 불리언 인덱싱(Boolean Indexing)이 일어남. 이는 원본 array에서 해당 불리언 배열의 값이 True인 위치의 요소들만 선택하여 새로운 배열을 만듦. 그 결과로 얻어진 새로운 배열(0보다 큰 값들만 포함된)에 .sum()을 적용하면, 0보다 큰 모든 값들의 합계를 계산.",
    "at": 1791932702796
+  },
+  {
+   "id": "eq8d8zd_167",
+   "nb": "1_넘파이_기초(개념)",
+   "question": "다음 코드는 넘파이 모듈을 불러오는 코드이다.\n\nimport numpy as np\n\n이 코드에서 'as np'가 하는 역할이 무엇인지 설명하고, 만약 'as np' 없이 'import numpy'라고만 작성했다면 이후 코드에서 넘파이의 배열을 만들 때 함수를 어떻게 호출해야 하는지 비교하여 서술하시오.",
+   "code": "import numpy as np\narr = np.array([1, 2, 3])\nprint(arr)",
+   "rubric": "1) as np는 numpy 모듈에 np라는 별칭(alias)을 붙여서 이후 코드에서 numpy 대신 np로 짧게 부를 수 있게 한다는 설명 2) import numpy as np를 사용하면 np.array()처럼 np를 통해 함수를 호출한다는 설명 3) as np 없이 import numpy만 했다면 numpy.array()처럼 모듈 전체 이름을 써야 한다는 설명 4) 별칭을 쓰는 이유가 코드 작성을 간결하게 하기 위함이라는 설명",
+   "answer": "import numpy as np에서 'as np'는 numpy라는 모듈에 np라는 짧은 별칭을 부여하는 역할을 한다. 이렇게 별칭을 지정하면 이후 코드에서 numpy.array() 대신 np.array()처럼 짧게 써서 함수를 호출할 수 있다. 반면 'as np' 없이 단순히 import numpy라고만 작성했다면 별칭이 없으므로 배열을 만들 때 numpy.array([1,2,3])처럼 모듈 이름 전체인 numpy를 그대로 써서 호출해야 한다. 즉, as np는 코드를 더 간결하게 작성하기 위한 관례적인 별칭 지정 방법이다.",
+   "intro": "<a href=\"https://colab.research.google.com/github/NAMU578/INFSUB/blob/main/1_%EB%84%98%ED%8C%8C%EC%9D%B4_%EA%B8%B0%EC%B4%88(%EA%B0%9C%EB%85%90).ipynb\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>\n\n# numpy 기초\n\n## 넘파이 모듈 불러오기",
+   "at": 1791932713458
   }
  ]
 }
