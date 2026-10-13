@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "haedam09",
- "updatedAt": "2026-10-13T23:26:18.412Z",
+ "updatedAt": "2026-10-13T23:26:48.145Z",
  "edits": {},
  "quiz": {
   "attempts": [
@@ -340,6 +340,12 @@
     "path": "notebooks/1_넘파이_기초(개념).ipynb",
     "type": "classify",
     "ok": true
+   },
+   {
+    "t": 1791934008145,
+    "path": "notebooks/1_넘파이_기초(개념).ipynb",
+    "type": "boundary",
+    "ok": false
    }
   ],
   "stats": {
@@ -348,7 +354,7 @@
     "correct": 5
    },
    "notebooks/1_넘파이_기초(개념).ipynb": {
-    "asked": 22,
+    "asked": 23,
     "correct": 15
    },
    "notebooks/3_데이터이해(예제).ipynb": {
@@ -1023,6 +1029,32 @@
    "mine": "㉠ :  ·  ㉡ 1",
    "why": "모든 행을 쓰므로 앞은 <span class=\"mono\">:</span> 입니다. 1열만 뽑되 결과가 2차원 그대로 남으려면 정수 1이 아니라 슬라이스 <span class=\"mono\">1:2</span> 를 써야 합니다. 정수를 쓰면 그 축이 사라져 1차원 [4 6 8] 이 됩니다.",
    "at": 1791933797798,
+   "streak": 0
+  },
+  {
+   "key": "601bd24f850a98ae8a1db579d7fb7d2ec332fcb2fa80a13946a998819f6489f4",
+   "path": "notebooks/1_넘파이_기초(개념).ipynb",
+   "nb": "1_넘파이_기초(개념)",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "a = np.arange(10, 151, 10)\nprint(a[:-4:2].size)",
+   "intro": "",
+   "expect": "",
+   "options": [
+    "6",
+    "5",
+    "7",
+    "11",
+    "15"
+   ],
+   "answer": "6",
+   "accept": null,
+   "rubric": null,
+   "eid": null,
+   "mine": "5",
+   "why": "a는 10부터 150까지 10씩 늘어나는 15개짜리 배열입니다. <span class=\"mono\">-4</span> 는 끝에서 네 번째 자리를 가리키고 그 자리는 포함되지 않으므로 0번부터 10번까지가 대상입니다. 여기서 두 칸씩 건너뛰면 0, 2, 4, 6, 8, 10번의 6개가 남습니다.",
+   "at": 1791934008145,
    "streak": 0
   }
  ],
