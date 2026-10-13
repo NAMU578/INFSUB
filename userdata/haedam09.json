@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "haedam09",
- "updatedAt": "2026-10-13T23:26:48.145Z",
+ "updatedAt": "2026-10-13T23:27:45.656Z",
  "edits": {},
  "quiz": {
   "attempts": [
@@ -371,6 +371,14 @@
    }
   },
   "recentBank": [
+   "4C03",
+   "4B01",
+   "4B10",
+   "4D05",
+   "4R05",
+   "4X08",
+   "4S02",
+   "4W01",
    "C13",
    "C12",
    "C16",
@@ -402,15 +410,7 @@
    "4X10",
    "4S09",
    "4W08",
-   "3C05",
-   "3B03",
-   "3D14",
-   "3R14",
-   "3R12",
-   "3X05",
-   "3S13",
-   "3W04",
-   "3G10"
+   "3C05"
   ],
   "recentEssay": [
    "e1q7nl3z_125",
@@ -1308,6 +1308,16 @@
    "answer": "import numpy as np에서 'as np'는 numpy라는 모듈에 np라는 짧은 별칭을 부여하는 역할을 한다. 이렇게 별칭을 지정하면 이후 코드에서 numpy.array() 대신 np.array()처럼 짧게 써서 함수를 호출할 수 있다. 반면 'as np' 없이 단순히 import numpy라고만 작성했다면 별칭이 없으므로 배열을 만들 때 numpy.array([1,2,3])처럼 모듈 이름 전체인 numpy를 그대로 써서 호출해야 한다. 즉, as np는 코드를 더 간결하게 작성하기 위한 관례적인 별칭 지정 방법이다.",
    "intro": "<a href=\"https://colab.research.google.com/github/NAMU578/INFSUB/blob/main/1_%EB%84%98%ED%8C%8C%EC%9D%B4_%EA%B8%B0%EC%B4%88(%EA%B0%9C%EB%85%90).ipynb\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>\n\n# numpy 기초\n\n## 넘파이 모듈 불러오기",
    "at": 1791932713458
+  },
+  {
+   "id": "efavd84_196",
+   "nb": "4_판다스모듈",
+   "question": "아래 코드는 seaborn의 타이타닉 데이터를 CSV와 엑셀 파일로 저장하는 코드이다. to_csv와 to_excel 함수 호출 시 공통으로 사용된 index=False 매개변수가 하는 역할을 설명하고, 만약 이 매개변수를 생략하고 titanic.to_csv('titanic.csv')처럼 호출하면 저장되는 파일의 내용이 어떻게 달라지는지 서술하시오.",
+   "code": "import seaborn as sns\n\ntitanic = sns.load_dataset('titanic')\ntitanic.to_csv('titanic.csv', index=False)\ntitanic.to_excel('titanic.xlsx', index=False, sheet_name='passengers')",
+   "rubric": "index=False는 데이터프레임의 행 인덱스(0,1,2,...)를 파일에 함께 저장하지 않도록 지정하는 매개변수임을 설명함; 생략할 경우 각 행마다 인덱스 번호가 추가 열로 저장되어 원본 데이터에 없던 열이 하나 더 생긴다는 점을 설명함; 그 결과 파일의 열 개수가 늘어나고 원래 데이터와 다른 구조가 됨을 언급함",
+   "answer": "index=False는 데이터프레임을 csv나 엑셀 파일로 저장할 때 행 번호(인덱스)를 파일에 포함시키지 않도록 지정하는 옵션이다. 이 매개변수를 생략하면 판다스는 기본적으로 인덱스를 함께 저장하므로, 저장된 파일에는 원래 데이터프레임의 열들 앞에 0,1,2,...와 같은 인덱스 값이 추가 열로 들어가게 된다. 즉 index=False를 쓰면 원본 데이터의 열만 깔끔하게 저장되고, 생략하면 불필요한 인덱스 열이 하나 더 생겨 파일의 구조와 열 개수가 달라진다.",
+   "intro": "## 판다스를 이용하여 데이터 파일 읽기\n실습을 위해 seaborn에 있는 타이타닉 데이터 저장<br>\ncsv 파일과 엑셀 파일 두 가지 형태로 저장",
+   "at": 1791934065656
   }
  ]
 }
