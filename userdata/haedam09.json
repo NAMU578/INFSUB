@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "haedam09",
- "updatedAt": "2026-10-13T23:39:22.902Z",
+ "updatedAt": "2026-10-13T23:40:08.690Z",
  "edits": {},
  "quiz": {
   "attempts": [
@@ -382,6 +382,12 @@
     "path": "notebooks/4_판다스모듈.ipynb",
     "type": "classify",
     "ok": true
+   },
+   {
+    "t": 1791934808689,
+    "path": "notebooks/4_판다스모듈.ipynb",
+    "type": "trace",
+    "ok": false
    }
   ],
   "stats": {
@@ -398,7 +404,7 @@
     "correct": 1
    },
    "notebooks/4_판다스모듈.ipynb": {
-    "asked": 16,
+    "asked": 17,
     "correct": 8
    },
    "notebooks/5_맷플롯립모듈.ipynb": {
@@ -1161,6 +1167,32 @@
    "mine": ".",
    "why": "AI 채점 결과입니다.",
    "at": 1791934677412,
+   "streak": 0
+  },
+  {
+   "key": "f2eea294c6c539f2bc3dfae97c3c5d2f6f37eb242d3b0cff9da26a49a964c365",
+   "path": "notebooks/4_판다스모듈.ipynb",
+   "nb": "4_판다스모듈",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "stem": "t 는 타이타닉 데이터의 앞 6행이다. 다음 코드를 실행했을 때 출력되는 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;데이터프레임 t&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">   survived  pclass     sex   age     fare embarked deck<br>0         0       3    male  22.0   7.2500        S  NaN<br>1         1       1  female  38.0  71.2833        C    C<br>2         1       3  female  26.0   7.9250        S  NaN<br>3         1       1  female  35.0  53.1000        S    C<br>4         0       3    male  35.0   8.0500        S  NaN<br>5         0       3    male   NaN   8.4583        Q  NaN</span></span>",
+   "code": "vc = t['pclass'].value_counts()\nprint(vc.index.tolist(), vc.tolist())",
+   "intro": "",
+   "expect": "",
+   "options": [
+    "[3, 1] [4, 2]",
+    "[1, 3] [2, 4]",
+    "[3, 1] [2, 4]",
+    "[1, 3] [4, 2]",
+    "[3, 1] [0.67, 0.33]"
+   ],
+   "answer": "[3, 1] [4, 2]",
+   "accept": null,
+   "rubric": null,
+   "eid": null,
+   "mine": "[3, 1] [0.67, 0.33]",
+   "why": "<span class=\"mono\">value_counts()</span> 는 값(등급)을 인덱스로, 개수를 값으로 담고 개수가 많은 순으로 정렬합니다. 3등급이 4명, 1등급이 2명입니다.",
+   "at": 1791934808690,
    "streak": 0
   }
  ],
