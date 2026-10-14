@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "haedam09",
- "updatedAt": "2026-10-14T01:31:27.770Z",
+ "updatedAt": "2026-10-14T02:14:42.937Z",
  "edits": {},
  "quiz": {
   "attempts": [
@@ -472,6 +472,12 @@
     "path": "notebooks/4_판다스모듈.ipynb",
     "type": "spec",
     "ok": false
+   },
+   {
+    "t": 1791944082936,
+    "path": "notebooks/4_판다스모듈.ipynb",
+    "type": "boundary",
+    "ok": false
    }
   ],
   "stats": {
@@ -488,7 +494,7 @@
     "correct": 1
    },
    "notebooks/4_판다스모듈.ipynb": {
-    "asked": 31,
+    "asked": 32,
     "correct": 16
    },
    "notebooks/5_맷플롯립모듈.ipynb": {
@@ -1429,6 +1435,32 @@
    "mine": "s.fillna(s.mode())",
    "why": "문자열에는 평균이 없어 최빈값을 씁니다. <span class=\"mono\">mode()</span> 는 Series 라서 그대로 넣으면 같은 인덱스 자리(0번)끼리만 맞춰 채워 결측이 남고, <span class=\"mono\">[0]</span> 으로 값을 꺼내야 모두 채워집니다. <span class=\"mono\">max()</span> 는 사전순으로 가장 뒤의 값입니다.",
    "at": 1791941487770,
+   "streak": 0
+  },
+  {
+   "key": "e68bc80a5329cddf818c1d05c5599b28ddf8c1ac1ad763659244da3c22ea2ba8",
+   "path": "notebooks/4_판다스모듈.ipynb",
+   "nb": "4_판다스모듈",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "m2 = pd.DataFrame({'a': [1, 2, 3], 'b': [np.nan, np.nan, np.nan]})\nprint((m2.isnull().mean() * 100).tolist())",
+   "intro": "",
+   "expect": "",
+   "options": [
+    "[0.0, 3.0]",
+    "[0, 1]",
+    "[100.0, 0.0]",
+    "[0.0, 300.0]",
+    "[0.0, 100.0]"
+   ],
+   "answer": "[0.0, 100.0]",
+   "accept": null,
+   "rubric": null,
+   "eid": null,
+   "mine": "[100.0, 0.0]",
+   "why": "<span class=\"mono\">isnull().mean()</span> 은 True 를 1로 보고 평균을 내므로 결측 비율(0~1)이 됩니다. 결측이 없으면 0, 모두 결측이면 1이고 100을 곱하면 백분율입니다. 300은 개수(<span class=\"mono\">sum</span>)에 100을 곱한 착각입니다.",
+   "at": 1791944082937,
    "streak": 0
   }
  ],
