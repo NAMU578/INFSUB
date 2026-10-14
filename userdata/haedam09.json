@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "haedam09",
- "updatedAt": "2026-10-14T01:25:08.858Z",
+ "updatedAt": "2026-10-14T01:25:44.194Z",
  "edits": {},
  "quiz": {
   "attempts": [
@@ -430,6 +430,12 @@
     "path": "notebooks/4_판다스모듈.ipynb",
     "type": "boundary",
     "ok": false
+   },
+   {
+    "t": 1791941144193,
+    "path": "notebooks/4_판다스모듈.ipynb",
+    "type": "short",
+    "ok": false
    }
   ],
   "stats": {
@@ -446,7 +452,7 @@
     "correct": 1
    },
    "notebooks/4_판다스모듈.ipynb": {
-    "asked": 24,
+    "asked": 25,
     "correct": 12
    },
    "notebooks/5_맷플롯립모듈.ipynb": {
@@ -1313,6 +1319,28 @@
    "mine": "11",
    "why": "<span class=\"mono\">nrows=10</span> 은 데이터 10행만 읽고, 인덱스는 0부터 붙으므로 마지막 인덱스는 9입니다. 제목 줄은 행으로 세지 않습니다.",
    "at": 1791941108858,
+   "streak": 0
+  },
+  {
+   "key": "efa00e148989fbd4ca8c8a528b6e79f1b1dd6573bdd06a1184c10265f2c45b6a",
+   "path": "notebooks/4_판다스모듈.ipynb",
+   "nb": "4_판다스모듈",
+   "type": "서답형",
+   "typeKey": "short",
+   "stem": "코드의 빈칸 ㉠ 에 들어갈 코드를 적으시오. (age 만 기준으로 결측 행 삭제)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;데이터프레임 t&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">   survived  pclass     sex   age     fare embarked deck<br>0         0       3    male  22.0   7.2500        S  NaN<br>1         1       1  female  38.0  71.2833        C    C<br>2         1       3  female  26.0   7.9250        S  NaN<br>3         1       1  female  35.0  53.1000        S    C<br>4         0       3    male  35.0   8.0500        S  NaN<br>5         0       3    male   NaN   8.4583        Q  NaN</span></span><span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">5</span></span>",
+   "code": "print(len(t.dropna(㉠=['age'])))",
+   "intro": "",
+   "expect": "",
+   "options": null,
+   "answer": "subset",
+   "accept": [
+    "subset"
+   ],
+   "rubric": null,
+   "eid": null,
+   "mine": "columns",
+   "why": "<span class=\"mono\">dropna(subset=['age'])</span> 는 지정한 열에 결측이 있는 행만 지웁니다. 옵션 없이 <span class=\"mono\">dropna()</span> 를 쓰면 deck 결측 때문에 2행만 남습니다.",
+   "at": 1791941144194,
    "streak": 0
   }
  ],
