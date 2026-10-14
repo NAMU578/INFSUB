@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "haedam09",
- "updatedAt": "2026-10-14T01:24:21.373Z",
+ "updatedAt": "2026-10-14T01:25:08.858Z",
  "edits": {},
  "quiz": {
   "attempts": [
@@ -424,6 +424,12 @@
     "path": "notebooks/4_판다스모듈.ipynb",
     "type": "classify",
     "ok": true
+   },
+   {
+    "t": 1791941108858,
+    "path": "notebooks/4_판다스모듈.ipynb",
+    "type": "boundary",
+    "ok": false
    }
   ],
   "stats": {
@@ -440,7 +446,7 @@
     "correct": 1
    },
    "notebooks/4_판다스모듈.ipynb": {
-    "asked": 23,
+    "asked": 24,
     "correct": 12
    },
    "notebooks/5_맷플롯립모듈.ipynb": {
@@ -1281,6 +1287,32 @@
    "mine": "t.read_csv('titanic.csv', index=False)",
    "why": "<span class=\"mono\">index=False</span> 없이 저장하면 0, 1, 2 … 인덱스가 이름 없는 열로 함께 저장되어 다시 읽을 때 열이 하나 늘어납니다. <span class=\"mono\">to_excel</span> 은 엑셀 형식으로 저장하는 함수이고, <span class=\"mono\">read_csv</span> 는 읽는 함수입니다.",
    "at": 1791939817277,
+   "streak": 0
+  },
+  {
+   "key": "b791e3bcb86fd9570873948bdebdda7a5ca1fa9fa9989ef1cc9d214b254113f8",
+   "path": "notebooks/4_판다스모듈.ipynb",
+   "nb": "4_판다스모듈",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은? (titanic.csv 는 20행짜리 파일)",
+   "code": "df_part = pd.read_csv('titanic.csv', nrows=10)\nprint(df_part.index[-1])",
+   "intro": "",
+   "expect": "",
+   "options": [
+    "10",
+    "11",
+    "19",
+    "9",
+    "8"
+   ],
+   "answer": "9",
+   "accept": null,
+   "rubric": null,
+   "eid": null,
+   "mine": "11",
+   "why": "<span class=\"mono\">nrows=10</span> 은 데이터 10행만 읽고, 인덱스는 0부터 붙으므로 마지막 인덱스는 9입니다. 제목 줄은 행으로 세지 않습니다.",
+   "at": 1791941108858,
    "streak": 0
   }
  ],
