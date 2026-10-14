@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "haedam09",
- "updatedAt": "2026-10-14T02:14:42.937Z",
+ "updatedAt": "2026-10-14T09:00:30.672Z",
  "edits": {},
  "quiz": {
   "attempts": [
@@ -478,11 +478,17 @@
     "path": "notebooks/4_판다스모듈.ipynb",
     "type": "boundary",
     "ok": false
+   },
+   {
+    "t": 1791968430671,
+    "path": "notebooks/2_넘파이_심화.ipynb",
+    "type": "boundary",
+    "ok": false
    }
   ],
   "stats": {
    "notebooks/2_넘파이_심화.ipynb": {
-    "asked": 12,
+    "asked": 13,
     "correct": 5
    },
    "notebooks/1_넘파이_기초(개념).ipynb": {
@@ -503,6 +509,16 @@
    }
   },
   "recentBank": [
+   "C05",
+   "B09",
+   "D06",
+   "D05",
+   "R14",
+   "R12",
+   "X01",
+   "X04",
+   "S10",
+   "W06",
    "4C01",
    "4C09",
    "4B02",
@@ -532,17 +548,7 @@
    "4S02",
    "4W01",
    "C13",
-   "C12",
-   "C16",
-   "B14",
-   "B12",
-   "D14",
-   "D15",
-   "R11",
-   "R16",
-   "X14",
-   "X06",
-   "S08"
+   "C12"
   ],
   "recentEssay": [
    "efavd84_196",
@@ -1461,6 +1467,32 @@
    "mine": "[100.0, 0.0]",
    "why": "<span class=\"mono\">isnull().mean()</span> 은 True 를 1로 보고 평균을 내므로 결측 비율(0~1)이 됩니다. 결측이 없으면 0, 모두 결측이면 1이고 100을 곱하면 백분율입니다. 300은 개수(<span class=\"mono\">sum</span>)에 100을 곱한 착각입니다.",
    "at": 1791944082937,
+   "streak": 0
+  },
+  {
+   "key": "3e19d993a00fd342ad93aeb1d1331d50a76a95e3b475de65dbfcd1a98a328c2c",
+   "path": "notebooks/2_넘파이_심화.ipynb",
+   "nb": "2_넘파이_심화",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "stem": "다음 코드를 실행했을 때 출력되는 값은?",
+   "code": "v = np.arange(5, 30, 3)\nprint(v[-1])",
+   "intro": "",
+   "expect": "",
+   "options": [
+    "29",
+    "32",
+    "27",
+    "30",
+    "26"
+   ],
+   "answer": "29",
+   "accept": null,
+   "rubric": null,
+   "eid": null,
+   "mine": "27",
+   "why": "5부터 3씩 늘어나면 5, 8, 11, 14, 17, 20, 23, 26, 29가 됩니다. 다음 값인 32는 종료값 30을 넘으므로 만들어지지 않고, 종료값 30 자체도 포함되지 않습니다.",
+   "at": 1791968430672,
    "streak": 0
   }
  ],
