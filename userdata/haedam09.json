@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "haedam09",
- "updatedAt": "2026-10-14T01:29:14.829Z",
+ "updatedAt": "2026-10-14T01:29:53.197Z",
  "edits": {},
  "quiz": {
   "attempts": [
@@ -454,6 +454,12 @@
     "path": "notebooks/4_판다스모듈.ipynb",
     "type": "contrast",
     "ok": true
+   },
+   {
+    "t": 1791941393197,
+    "path": "notebooks/4_판다스모듈.ipynb",
+    "type": "trace",
+    "ok": true
    }
   ],
   "stats": {
@@ -470,8 +476,8 @@
     "correct": 1
    },
    "notebooks/4_판다스모듈.ipynb": {
-    "asked": 28,
-    "correct": 14
+    "asked": 29,
+    "correct": 15
    },
    "notebooks/5_맷플롯립모듈.ipynb": {
     "asked": 10,
