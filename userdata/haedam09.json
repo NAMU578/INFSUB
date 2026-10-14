@@ -1,7 +1,7 @@
 {
  "version": 1,
  "user": "haedam09",
- "updatedAt": "2026-10-14T01:03:37.277Z",
+ "updatedAt": "2026-10-14T01:17:07.712Z",
  "edits": {},
  "quiz": {
   "attempts": [
@@ -406,6 +406,12 @@
     "path": "notebooks/4_판다스모듈.ipynb",
     "type": "spec",
     "ok": false
+   },
+   {
+    "t": 1791940627711,
+    "path": "notebooks/4_판다스모듈.ipynb",
+    "type": "contrast",
+    "ok": true
    }
   ],
   "stats": {
@@ -422,8 +428,8 @@
     "correct": 1
    },
    "notebooks/4_판다스모듈.ipynb": {
-    "asked": 20,
-    "correct": 9
+    "asked": 21,
+    "correct": 10
    },
    "notebooks/5_맷플롯립모듈.ipynb": {
     "asked": 10,
@@ -431,6 +437,16 @@
    }
   },
   "recentBank": [
+   "4C04",
+   "4C06",
+   "4B05",
+   "4D01",
+   "4R02",
+   "4R10",
+   "4X09",
+   "4X06",
+   "4S08",
+   "4W09",
    "4C03",
    "4B01",
    "4B10",
@@ -460,17 +476,7 @@
    "5R04",
    "5R01",
    "5X05",
-   "5S02",
-   "5W04",
-   "4C10",
-   "4B04",
-   "4D06",
-   "4R09",
-   "4X05",
-   "4X10",
-   "4S09",
-   "4W08",
-   "3C05"
+   "5S02"
   ],
   "recentEssay": [
    "efavd84_196",
