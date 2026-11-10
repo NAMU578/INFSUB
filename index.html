@@ -134,6 +134,11 @@ aside{border-right:1px solid var(--rule);padding:18px 0 40px;overflow-y:auto;max
 .nav-item.active .nav-n{color:var(--ink-soft)}
 .nav-n{font-family:var(--f-mono);font-size:10.5px;color:var(--ink-faint);flex:none}
 .nav-item .dot{width:5px;height:5px;border-radius:50%;background:var(--accent);flex:none;align-self:center}
+.term-seg{display:flex;border:1px solid var(--rule);border-radius:var(--r);overflow:hidden}
+.term-seg button{flex:1;padding:6px 0;border:0;background:none;font-size:13px;color:var(--ink-soft)}
+.term-seg button+button{border-left:1px solid var(--rule)}
+.term-seg button:hover{background:var(--tint);color:var(--ink)}
+.term-seg button.on{background:var(--tint);color:var(--ink);font-weight:500}
 main{min-width:0;padding:26px 0 90px}
 .wrap{max-width:1000px;padding:0 20px}
 
@@ -361,6 +366,10 @@ main{min-width:0;padding:26px 0 90px}
   <div class="layout">
     <aside id="side" class="closed">
       <div class="nav-sec">
+        <h3>시험</h3>
+        <div class="term-seg" id="term-seg"></div>
+      </div>
+      <div class="nav-sec">
         <h3>노트북</h3>
         <div id="nb-list"><div class="tiny" style="padding:6px 9px">불러오는 중…</div></div>
       </div>
@@ -416,9 +425,15 @@ const CONFIG = {
   GITHUB_OWNER : 'NAMU578',          // 깃허브 계정명
   GITHUB_REPO  : 'INFSUB',   // 저장소 이름
   GITHUB_BRANCH: 'main',
-  NOTEBOOK_DIR : 'notebooks',        // .ipynb 파일이 들어있는 폴더
-  PDF_DIR      : 'pdfs',             // PDF 자료가 들어있는 폴더
-  DATA_DIR     : 'data',             // 노트북에서 불러 쓰는 csv/이미지 파일 폴더
+  // 시험별 폴더. 각 폴더 안에 NOTEBOOK_DIR, PDF_DIR 하위 폴더를 둡니다.
+  //   예) final/notebooks/*.ipynb, final/pdfs/*.pdf
+  // 사이드바의 시험 선택에서 고른 폴더의 자료만 보이고 출제됩니다. 맨 앞이 기본값입니다.
+  TERMS        : [{id:'final', label:'기말고사'}, {id:'midterm', label:'중간고사'}],
+  // 시험 폴더를 나누기 전 기록(notebooks/…, pdfs/…)은 이 시험 폴더의 자료로 연결합니다.
+  LEGACY_TERM  : 'midterm',
+  NOTEBOOK_DIR : 'notebooks',        // 시험 폴더 안의 .ipynb 폴더 이름
+  PDF_DIR      : 'pdfs',             // 시험 폴더 안의 PDF 폴더 이름
+  DATA_DIR     : 'data',             // 노트북에서 불러 쓰는 csv/이미지 파일 폴더 (모든 시험 공용)
 
   // Cloudflare Worker 주소. 비워두면 이 브라우저에만 저장되는 로컬 모드로 동작합니다.
   WORKER_URL   : 'https://info-notebook.infsub.workers.dev',                 // 예: 'https://info-nb.your-name.workers.dev'
@@ -537,8 +552,43 @@ const S = {
   pdfs:[],            // [{name, path}]
   pdf:null,           // 현재 PDF {path, name}
   view:'quiz',
+  term:null,          // 현재 시험 폴더 id (CONFIG.TERMS)
 };
 const readOnly = () => !!S.viewingAs;
+
+/* ── 시험 폴더 ─────────────────────────────────────────── */
+const TERM_KEY = 'cnb:term';
+const termInfo = id => CONFIG.TERMS.find(t=>t.id===id);
+function initTerm(){
+  let t=null; try{ t=localStorage.getItem(TERM_KEY); }catch{}
+  S.term = termInfo(t) ? t : CONFIG.TERMS[0].id;
+}
+const termLabel = () => termInfo(S.term)?.label || S.term;
+const nbDir  = () => `${S.term}/${CONFIG.NOTEBOOK_DIR}`;
+const pdfDir = () => `${S.term}/${CONFIG.PDF_DIR}`;
+const inTerm = p => typeof p==='string' && p.startsWith(S.term+'/');
+
+// 폴더를 나누기 전 경로(notebooks/x.ipynb)를 새 경로(midterm/notebooks/x.ipynb)로 바꿉니다.
+const LEGACY_RE = new RegExp(`^(${CONFIG.NOTEBOOK_DIR}|${CONFIG.PDF_DIR})/`);
+const fixPath = p => (typeof p==='string' && LEGACY_RE.test(p)) ? `${CONFIG.LEGACY_TERM}/${p}` : p;
+const fixKeys = o => {
+  if(!o || typeof o!=='object' || Array.isArray(o)) return o;
+  const out={};
+  Object.entries(o).forEach(([k,v])=>{ const nk=fixPath(k); out[nk] = (out[nk] && typeof v==='object') ? {...out[nk],...v} : v; });
+  return out;
+};
+// 불러온 학습 기록 안의 옛 경로를 고칩니다. 저장소 파일은 다음 저장 때 새 경로로 바뀝니다.
+function migratePaths(d){
+  if(!d || typeof d!=='object') return d;
+  if(d.edits && !Array.isArray(d.edits)) d.edits = fixKeys(d.edits);
+  if(d.quiz){
+    (d.quiz.attempts||[]).forEach(a=>{ if(a) a.path=fixPath(a.path); });
+    if(d.quiz.stats) d.quiz.stats = fixKeys(d.quiz.stats);
+  }
+  (d.wrong||[]).forEach(w=>{ if(w) w.path=fixPath(w.path); });
+  (d.chats||[]).forEach(c=>{ if(c) c.nb=fixPath(c.nb); });
+  return d;
+}
 const blankData = id => ({version:1,user:id,updatedAt:null,edits:{},quiz:{attempts:[],stats:{}},wrong:[],chats:[]});
 
 /* ════════════════════════════════════════════════════════
@@ -568,10 +618,10 @@ async function api(path, body, method='POST'){
 const Store = {
   async load(id){
     if(hasWorker()){
-      try{ const j = await api('/data/get',{user:id}); return j.data || blankData(id); }
+      try{ const j = await api('/data/get',{user:id}); return migratePaths(j.data) || blankData(id); }
       catch(e){ toast('서버에서 불러오지 못했습니다 — 로컬 사본을 씁니다'); }
     }
-    try{ return JSON.parse(localStorage.getItem(LKEY(id))) || blankData(id); }
+    try{ return migratePaths(JSON.parse(localStorage.getItem(LKEY(id)))) || blankData(id); }
     catch{ return blankData(id); }
   },
   async save(id,data){
@@ -723,21 +773,22 @@ function openChangePw(){
 const RAW = p => `https://raw.githubusercontent.com/${CONFIG.GITHUB_OWNER}/${CONFIG.GITHUB_REPO}/${CONFIG.GITHUB_BRANCH}/${p}`;
 
 async function fetchNotebookList(){
-  const cacheKey='cnb:nblist';
+  const cacheKey='cnb:nblist:'+S.term;
   try{
     const c=JSON.parse(sessionStorage.getItem(cacheKey));
     if(c && Date.now()-c.t < 6e5) return c.v;
   }catch{}
   const ghList = async () => {
-    const url=`https://api.github.com/repos/${CONFIG.GITHUB_OWNER}/${CONFIG.GITHUB_REPO}/contents/${CONFIG.NOTEBOOK_DIR}?ref=${CONFIG.GITHUB_BRANCH}`;
+    const url=`https://api.github.com/repos/${CONFIG.GITHUB_OWNER}/${CONFIG.GITHUB_REPO}/contents/${nbDir()}?ref=${CONFIG.GITHUB_BRANCH}`;
     const r=await fetch(url);
-    if(!r.ok) throw new Error(r.status===404?'노트북 폴더를 찾을 수 없습니다':'깃허브 목록을 불러오지 못했습니다 ('+r.status+')');
+    if(r.status===404) return [];              // 아직 자료가 없는 시험 폴더
+    if(!r.ok) throw new Error('깃허브 목록을 불러오지 못했습니다 ('+r.status+')');
     return r.json();
   };
   let items;
   if(hasWorker()){
     // 서버가 죽었거나 CORS가 막혀도 목록은 보이게 — 깃허브에서 직접 읽습니다
-    try{ items = (await api('/repo/list',{dir:CONFIG.NOTEBOOK_DIR})).items; }
+    try{ items = (await api('/repo/list',{dir:nbDir()})).items; }
     catch(e){ toast('서버 목록 실패 — 깃허브에서 직접 읽습니다'); }
   }
   if(!items) items = await ghList();
@@ -752,21 +803,22 @@ async function fetchNotebookList(){
    깃허브에서 PDF 자료 가져오기
    ════════════════════════════════════════════════════════ */
 async function fetchPdfList(){
-  const cacheKey='cnb:pdflist';
+  const cacheKey='cnb:pdflist:'+S.term;
   try{
     const c=JSON.parse(sessionStorage.getItem(cacheKey));
     if(c && Date.now()-c.t < 6e5) return c.v;
   }catch{}
   const ghList = async () => {
-    const url=`https://api.github.com/repos/${CONFIG.GITHUB_OWNER}/${CONFIG.GITHUB_REPO}/contents/${CONFIG.PDF_DIR}?ref=${CONFIG.GITHUB_BRANCH}`;
+    const url=`https://api.github.com/repos/${CONFIG.GITHUB_OWNER}/${CONFIG.GITHUB_REPO}/contents/${pdfDir()}?ref=${CONFIG.GITHUB_BRANCH}`;
     const r=await fetch(url);
-    if(!r.ok) throw new Error(r.status===404?'PDF 폴더를 찾을 수 없습니다':'깃허브 목록을 불러오지 못했습니다 ('+r.status+')');
+    if(r.status===404) return [];              // 아직 자료가 없는 시험 폴더
+    if(!r.ok) throw new Error('깃허브 목록을 불러오지 못했습니다 ('+r.status+')');
     return r.json();
   };
   let items;
   if(hasWorker()){
     // 서버가 죽었거나 CORS가 막혀도 목록은 보이게 — 깃허브에서 직접 읽습니다
-    try{ items = (await api('/repo/list',{dir:CONFIG.PDF_DIR})).items; }
+    try{ items = (await api('/repo/list',{dir:pdfDir()})).items; }
     catch(e){ toast('서버 목록 실패 — 깃허브에서 직접 읽습니다'); }
   }
   if(!items) items = await ghList();
@@ -1833,7 +1885,7 @@ function viewQuiz(opts={}){
   if(!QZ && !S.notebooks.length){
     el.innerHTML=`<div class="page-head"><div class="eyebrow">Practice</div><h2>문제 풀기</h2></div>
       <div class="empty"><div class="eyebrow">No notebooks</div>
-      먼저 저장소의 <span class="mono">${esc(CONFIG.NOTEBOOK_DIR)}/</span> 폴더에 <span class="mono">.ipynb</span> 파일을 올려 주세요.</div>`;
+      먼저 저장소의 <span class="mono">${esc(nbDir())}/</span> 폴더에 <span class="mono">.ipynb</span> 파일을 올려 주세요.</div>`;
     return;
   }
   if(!QZ){
@@ -2089,7 +2141,7 @@ async function viewPdfQuiz(opts={}){
       <div class="empty"><div class="eyebrow">No questions</div>
         아직 문제가 준비된 PDF 자료가 없습니다.
         <span class="mono">bank/question-bank-pdf.json</span> 의 <span class="mono">src</span> 값이
-        <span class="mono">${esc(CONFIG.PDF_DIR)}/</span> 의 파일 이름과 같아야 합니다.</div>`;
+        <span class="mono">${esc(pdfDir())}/</span> 의 파일 이름과 같아야 합니다.</div>`;
     return;
   }
 
@@ -2183,13 +2235,15 @@ async function startPdfQuiz(){
 /* ════════════════════════════════════════════════════════
    화면: 오답 노트
    ════════════════════════════════════════════════════════ */
-function updateWrongDot(){ $('#wrong-dot').classList.toggle('hidden', !(S.data?.wrong?.length)); }
+// 경로가 없는 옛 오답은 어느 시험에서든 보이게 둡니다.
+const termWrong = () => (S.data?.wrong||[]).filter(w=>!w.path || inTerm(w.path));
+function updateWrongDot(){ $('#wrong-dot').classList.toggle('hidden', !termWrong().length); }
 
 function viewWrong(){
-  const list=[...(S.data.wrong||[])].sort((a,b)=>b.at-a.at);
+  const list=[...termWrong()].sort((a,b)=>b.at-a.at);
   $('#view').innerHTML=`
     <div class="page-head">
-      <div class="eyebrow">Error Log</div>
+      <div class="eyebrow">Error Log · ${esc(termLabel())}</div>
       <h2>오답 노트</h2>
       <div class="sub">틀린 문제는 여기에 남습니다. 두 번 연속 맞히면 목록에서 사라집니다.</div>
       ${list.length?`<div class="toolbar"><button class="btn btn-primary" id="w-retry">오답만 다시 풀기 (${list.length})</button>
@@ -2251,7 +2305,7 @@ function viewWrong(){
     const f=document.createElement('input');f.type='file';f.accept='.json';
     f.onchange=async()=>{
       try{
-        const j=JSON.parse(await f.files[0].text());
+        const j=migratePaths(JSON.parse(await f.files[0].text()));
         if(!j.wrong||!j.quiz) throw new Error('형식이 맞지 않습니다');
         S.data.wrong=j.wrong; S.data.quiz=j.quiz; S.data.edits={...j.edits,...S.data.edits};
         await persist(); toast('불러왔습니다'); viewWrong(); updateWrongDot();
@@ -2669,7 +2723,7 @@ function viewPdfList(){
     S.pdfs = list;
     $('#view').innerHTML = `
       <div class="page-head">
-        <div class="eyebrow">Library</div>
+        <div class="eyebrow">Library · ${esc(termLabel())}</div>
         <h2>PDF 자료실</h2>
         <div class="sub">자료를 고른 뒤, 궁금한 부분을 선택하면 AI에게 물어볼 수 있습니다.</div>
       </div>
@@ -2680,7 +2734,7 @@ function viewPdfList(){
                <div class="d">PDF 열기</div>
              </button>`).join('')}</div>`
         : `<div class="empty"><div class="eyebrow">No PDFs</div>
-            <span class="mono">${esc(CONFIG.PDF_DIR)}/</span> 폴더에 <span class="mono">.pdf</span> 파일을 올려 주세요.</div>`}
+            <span class="mono">${esc(pdfDir())}/</span> 폴더에 <span class="mono">.pdf</span> 파일을 올려 주세요.</div>`}
     `;
     $('#view').onclick = e=>{
       const b=e.target.closest('[data-open-pdf]'); if(b) openPdf(b.dataset.openPdf);
@@ -2759,7 +2813,7 @@ function viewHome(){
   const nbs = S.notebooks || [];
   $('#view').innerHTML=`
     <div class="page-head">
-      <div class="eyebrow">Workbench</div>
+      <div class="eyebrow">Workbench · ${esc(termLabel())}</div>
       <h2>${esc(S.me?.id||'')} 님, 안녕하세요</h2>
       <div class="sub">왼쪽에서 노트북을 고르거나, 아래에서 바로 시작하세요.</div>
     </div>
@@ -2772,7 +2826,7 @@ function viewHome(){
                <div class="d">읽고 실행해 보기</div>
              </button>`).join('')}</div>`
         : `<div class="empty"><div class="eyebrow">No notebooks</div>
-            <span class="mono">${esc(CONFIG.NOTEBOOK_DIR)}/</span> 폴더에 <span class="mono">.ipynb</span> 파일을 올려 주세요.</div>`}
+            <span class="mono">${esc(nbDir())}/</span> 폴더에 <span class="mono">.ipynb</span> 파일을 올려 주세요.</div>`}
     </div>
     <div class="home-sec">
       <h3>학습</h3>
@@ -2824,19 +2878,41 @@ async function start(me){
   S.data = S.myData;
   S.shared = await Store.load('_shared');
   S.adminGlobal=false;
+  initTerm();
+  renderTermSeg();
   updateWrongDot();
+  await loadNotebookNav();
 
+  $('#nb-list').onclick=e=>{ const b=e.target.closest('[data-path]'); if(b) openNotebook(b.dataset.path); };
+  $$('.nav-item[data-view]').forEach(b=>b.onclick=()=>setView(b.dataset.view));
+  $('#term-seg').onclick=e=>{ const b=e.target.closest('[data-term]'); if(b) switchTerm(b.dataset.term); };
+  setView('home');
+}
+
+async function loadNotebookNav(){
+  $('#nb-list').innerHTML=`<div class="tiny" style="padding:6px 9px">불러오는 중…</div>`;
   try{
     S.notebooks = await fetchNotebookList();
     $('#nb-list').innerHTML = S.notebooks.length
       ? S.notebooks.map((n,i)=>`<button class="nav-item" data-path="${escAttr(n.path)}"><span class="nav-n">${String(i+1).padStart(2,'0')}</span>${esc(n.name)}</button>`).join('')
-      : `<div class="tiny" style="padding:6px 9px">노트북이 없습니다. <span class="mono">${esc(CONFIG.NOTEBOOK_DIR)}/</span> 폴더에 .ipynb 파일을 올려 주세요.</div>`;
+      : `<div class="tiny" style="padding:6px 9px">노트북이 없습니다. <span class="mono">${esc(nbDir())}/</span> 폴더에 .ipynb 파일을 올려 주세요.</div>`;
   }catch(e){
+    S.notebooks=[];
     $('#nb-list').innerHTML=`<div class="tiny" style="padding:6px 9px;color:var(--bad)">${esc(e.message)}</div>`;
   }
-
-  $('#nb-list').onclick=e=>{ const b=e.target.closest('[data-path]'); if(b) openNotebook(b.dataset.path); };
-  $$('.nav-item[data-view]').forEach(b=>b.onclick=()=>setView(b.dataset.view));
+}
+function renderTermSeg(){
+  $('#term-seg').innerHTML = CONFIG.TERMS.map(t=>
+    `<button data-term="${escAttr(t.id)}" class="${t.id===S.term?'on':''}">${esc(t.label)}</button>`).join('');
+}
+// 시험을 바꾸면 노트북·PDF·문제·오답 노트가 모두 그 시험 폴더 기준으로 바뀝니다.
+async function switchTerm(id){
+  if(id===S.term || !termInfo(id)) return;
+  S.term=id;
+  try{ localStorage.setItem(TERM_KEY,id); }catch{}
+  S.nb=null; S.pdf=null; S.pdfs=[]; S.notebooks=[]; QZ=null;
+  renderTermSeg(); updateWrongDot();
+  await loadNotebookNav();
   setView('home');
 }
 

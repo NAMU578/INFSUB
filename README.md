@@ -20,16 +20,27 @@ INFSUB/
 ├─ index.html          ← 사이트 전체 (프론트엔드)
 ├─ worker.js           ← Cloudflare Worker (인증·저장·깃허브 쓰기)
 ├─ wrangler.toml       ← Worker 설정
-├─ notebooks/          ← 수업 코랩 파일(.ipynb)을 여기에 올립니다
-│   ├─ 1_넘파이_기초(개념).ipynb
-│   └─ 2_넘파이_심화.ipynb
+├─ final/              ← 기말고사 자료 (지금부터 올리는 자료는 여기에)
+│   ├─ notebooks/       ← 수업 코랩 파일(.ipynb)
+│   └─ pdfs/            ← 수업 PDF
+├─ midterm/            ← 중간고사 자료
+│   ├─ notebooks/
+│   │   ├─ 1_넘파이_기초(개념).ipynb
+│   │   └─ 2_넘파이_심화.ipynb
+│   └─ pdfs/
+├─ data/               ← 노트북이 불러 쓰는 csv·이미지 (모든 시험 공용)
 ├─ bank/               ← 미리 만들어 둔 문항 은행(JSON)
 └─ userdata/           ← 학습 기록이 자동으로 쌓이는 곳 (2단계 이후)
 ```
 
 AI(서술형 생성·채점, AI 질문)만 별도 저장소 `NAMU578/infsub-ai` 의 Vercel 함수가 처리합니다. 자세한 이유는 4-5단계에 있습니다.
 
-`notebooks/` 폴더에 파일을 새로 올리면 사이트에 자동으로 나타납니다. 코드를 고칠 필요 없습니다.
+`final/notebooks/`, `final/pdfs/` 폴더에 파일을 새로 올리면 사이트에 자동으로 나타납니다. 코드를 고칠 필요 없습니다.
+
+사이드바 맨 위의 **시험** 선택(기말고사 / 중간고사)으로 고른 시험 폴더의 자료만 노트북 목록, PDF 자료실, 문제 풀기, PDF 퀴즈, 오답 노트에 나옵니다. 선택은 브라우저에 기억되고, 처음 접속하면 `CONFIG.TERMS` 의 맨 앞(기말고사)이 선택됩니다.
+시험 폴더를 새로 만들려면 `시험id/notebooks/`, `시험id/pdfs/` 를 만들고 `CONFIG.TERMS` 에 `{id, label}` 을 추가합니다.
+
+폴더를 나누기 전에 저장된 학습 기록(`notebooks/…`, `pdfs/…` 경로)은 불러올 때 자동으로 `midterm/…` 경로로 연결되고, 다음 저장 때 새 경로로 바뀝니다 (`CONFIG.LEGACY_TERM`).
 
 ## 2단계 — GitHub Pages 켜기
 
@@ -45,7 +56,10 @@ const CONFIG = {
   GITHUB_OWNER : 'NAMU578',
   GITHUB_REPO  : 'INFSUB',
   GITHUB_BRANCH: 'main',
-  NOTEBOOK_DIR : 'notebooks',
+  TERMS        : [{id:'final', label:'기말고사'}, {id:'midterm', label:'중간고사'}],
+  LEGACY_TERM  : 'midterm',
+  NOTEBOOK_DIR : 'notebooks',   // 시험 폴더 안의 하위 폴더 이름
+  PDF_DIR      : 'pdfs',
   WORKER_URL   : '',          // 4단계에서 채웁니다
   AI_URL       : '',          // 4-5단계에서 채웁니다 (AI 전용 서버)
   ADMIN_ID     : 'ohh5259',
@@ -196,7 +210,7 @@ AI_URL : 'https://infsub-ai.vercel.app/api/ai',
 
 | 증상 | 확인할 것 |
 |---|---|
-| 노트북 목록이 비어 있음 | `NOTEBOOK_DIR` 이름, 파일 확장자가 `.ipynb` 인지, Pages가 최신 커밋을 반영했는지 |
+| 노트북 목록이 비어 있음 | 사이드바에서 고른 시험이 맞는지, `시험id/notebooks/` 폴더 이름, 파일 확장자가 `.ipynb` 인지, Pages가 최신 커밋을 반영했는지 |
 | 목록 불러오기 실패 (403) | 로컬 모드는 시간당 60회 제한입니다. 학교처럼 같은 네트워크를 여러 명이 쓰면 금방 걸립니다 → Worker를 붙이면 해결됩니다 |
 | Python 준비가 안 끝남 | 첫 실행 때 약 10MB를 내려받습니다. 두 번째부터는 캐시됩니다 |
 | 서술형 버튼이 꺼져 있음 | `WORKER_URL` 이 비어 있는 경우입니다 |
