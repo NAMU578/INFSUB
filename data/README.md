@@ -30,4 +30,4 @@ pd.read_csv('/content/scores.csv')   # 됩니다
 
 | 파일 이름 | 쓰는 곳 |
 | --- | --- |
-| `bad_dog.png` | `notebooks/2_넘파이_심화.ipynb` (셀 17, `cv2.imread('/content/bad_dog.png')`) |
+| `bad_dog.png` | `midterm/notebooks/2_넘파이_심화.ipynb` (셀 17, `cv2.imread('/content/bad_dog.png')`) |
