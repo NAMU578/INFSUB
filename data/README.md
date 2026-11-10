@@ -31,3 +31,9 @@ pd.read_csv('/content/scores.csv')   # 됩니다
 | 파일 이름 | 쓰는 곳 |
 | --- | --- |
 | `bad_dog.png` | `midterm/notebooks/2_넘파이_심화.ipynb` (셀 17, `cv2.imread('/content/bad_dog.png')`) |
+| `insurance.csv` | `final/notebooks/기말.4.선형회귀.ipynb` (셀 10, `pd.read_csv("insurance.csv")`) |
+| `perch_full.csv` | `final/notebooks/기말.7.특성공학과규제(과대적합,과소적합).ipynb` (셀 24) |
+| `fish.csv` | `final/notebooks/기말.8.로지스틱회귀.ipynb` (셀 3) |
+
+기말 4번 노트북의 kagglehub 다운로드 셀은 사이트에서 동작하지 않습니다. 대신 위 `insurance.csv` 가 미리 들어 있어서 그다음 셀부터 그대로 실행됩니다.
+기말 9·10번 노트북은 TensorFlow를 써서 사이트에서 실행되지 않고, 코랩에 저장된 출력만 보입니다.
