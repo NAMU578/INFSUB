@@ -20,7 +20,12 @@ TYPES = [
     {"key": "short", "label": "서답형", "pick": [1, 1], "note": "빈칸에 들어갈 코드나 계산 결과를 직접 쓰는 문항"},
     {"key": "essay", "label": "서술형", "pick": [1, 1], "note": "이유 설명·계산 과정을 서술하는 문항 (AI 채점)"},
 ]
-LABEL = {t['key']: t['label'] for t in TYPES}
+# PDF(이론 자료)용 문항 유형. 코드 없이 개념·사례를 묻는다.
+PTYPES = [
+    {"key": "pconcept", "label": "개념 이해", "pick": [1, 3], "note": "용어의 뜻과 개념을 묻는 문항"},
+    {"key": "pcase", "label": "사례 판단", "pick": [1, 2], "note": "사례가 어떤 개념에 해당하는지 고르는 문항"},
+]
+LABEL = {t['key']: t['label'] for t in TYPES + PTYPES}
 
 
 def esc(s):
@@ -156,6 +161,10 @@ class Bank:
 
     def D(self, code, opts, why, tags, stem='다음 코드를 실행했을 때 출력되는 것은?', **kw):
         return self._mc('D', 'boundary', stem, code, opts, why, tags, **kw)
+
+    # ── 개념 이해 / 사례 판단 (PDF 자료용, 코드 없는 5지선다) ──
+    def P(self, stem, ans, opts, why, tags, key='pconcept', code='', **kw):
+        return self._mc({'pconcept': 'K', 'pcase': 'A'}[key], key, stem, code, opts, why, tags, ans=ans, **kw)
 
     # ── 빈칸: ㉠, ㉡ 짝 고르기 ─────────────────────────────
     def B(self, code, fill, opts, why, tags, stem=None, pre=None, result=True, exec_=True):
