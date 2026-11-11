@@ -450,7 +450,9 @@ const CONFIG = {
 
   // 미리 만들어 둔 문항 은행. 여러 개를 적으면 합쳐서 씁니다.
   BANK_FILES   : ['bank/question-bank-numpy.json', 'bank/question-bank-pdf.json',
-                  'bank/question-bank-data-example.json', 'bank/question-bank-pandas.json', 'bank/question-bank-matplotlib.json'],
+                  'bank/question-bank-data-example.json', 'bank/question-bank-pandas.json', 'bank/question-bank-matplotlib.json',
+                  // 기말고사 (노트북별 1개 + PDF용 1개)
+                  ...['01','02','03','04','05','06','07','08','09','10','pdf'].map(n=>`bank/question-bank-final-${n}.json`)],
   // true 로 두면 출제 직전에 은행 문항의 정답을 브라우저에서 다시 실행해 확인합니다.
   // 문항을 새로 추가한 직후에만 잠깐 켜 보세요. 켜면 시작이 몇 초 느려집니다.
   BANK_VERIFY  : false,

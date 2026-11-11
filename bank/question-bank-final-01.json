@@ -1,0 +1,911 @@
+{
+ "version": 1,
+ "generatedAt": "2026-11-11",
+ "source": [
+  "기말.1.K-최근접 이웃 알고리즘.ipynb"
+ ],
+ "verified": "verifyCode 가 있는 문항은 파이썬(numpy 2.5, pandas 3.0, scikit-learn 1.9)에서 실제로 실행해 정답을 확인함. ref 가 있는 문항은 코드로 검증할 수 없는 개념이나 텐서플로 실행 결과라서 노트북 본문(해당 셀)과 저장된 출력을 근거로 둠. 서술형(essay)은 AI 가 rubric 으로 채점하며, 계산이 들어간 모범 답안은 verifyCode 로 실행 확인함.",
+ "types": [
+  {
+   "key": "classify",
+   "label": "개념 분류",
+   "pick": [
+    1,
+    2
+   ],
+   "note": "코드를 보고 <보기>에서 옳은 설명을 모두 고르는 문항"
+  },
+  {
+   "key": "blank2",
+   "label": "빈칸",
+   "pick": [
+    1,
+    2
+   ],
+   "note": "㉠, ㉡ 두 빈칸을 짝으로 고르는 문항"
+  },
+  {
+   "key": "boundary",
+   "label": "경계값",
+   "pick": [
+    1,
+    2
+   ],
+   "note": "포함/미포함, 개수·크기의 경계를 판별하는 문항"
+  },
+  {
+   "key": "trace",
+   "label": "상태 예측",
+   "pick": [
+    1,
+    2
+   ],
+   "note": "출력값·shape 등 실행 결과를 예측하는 문항"
+  },
+  {
+   "key": "contrast",
+   "label": "대조",
+   "pick": [
+    1,
+    2
+   ],
+   "note": "거의 같은 두 코드의 결정적 차이를 묻는 문항"
+  },
+  {
+   "key": "spec",
+   "label": "조건 매핑",
+   "pick": [
+    1,
+    1
+   ],
+   "note": "[조건]을 만족하는 코드를 고르는 문항"
+  },
+  {
+   "key": "short",
+   "label": "서답형",
+   "pick": [
+    1,
+    1
+   ],
+   "note": "빈칸에 들어갈 코드나 계산 결과를 직접 쓰는 문항"
+  },
+  {
+   "key": "essay",
+   "label": "서술형",
+   "pick": [
+    1,
+    1
+   ],
+   "note": "이유 설명·계산 과정을 서술하는 문항 (AI 채점)"
+  }
+ ],
+ "questions": [
+  {
+   "id": "F01C01",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "기말.1.K-최근접 이웃 알고리즘",
+   "stem": "<span class=\"mono\">length</span>, <span class=\"mono\">weight</span> 는 도미 35마리와 빙어 14마리의 값을 차례로 담은 리스트이다. 다음 코드에 대한 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) <span class=\"mono\">len(fish_data)</span> 는 49이다.<br>(나) <span class=\"mono\">fish_data[0]</span> 은 원소가 2개인 리스트이다.<br>(다) <span class=\"mono\">fish_target[35]</span> 는 1이다.</span>",
+   "code": "fish_data = [[l, w] for l, w in zip(length, weight)]\nfish_target = [1]*35 + [0]*14",
+   "answer": "(가), (나)",
+   "why": "<span class=\"mono\">zip</span> 은 두 리스트에서 원소를 하나씩 꺼내 짝을 지어 주므로 <span class=\"mono\">fish_data</span> 는 [길이, 무게] 49쌍이 됩니다. <span class=\"mono\">fish_target</span> 은 인덱스 0~34가 1, 35~48이 0이라 <span class=\"mono\">fish_target[35]</span> 는 0입니다.",
+   "tags": [
+    "zip",
+    "리스트 내포",
+    "타깃"
+   ],
+   "verifyCode": "bream_length = [25.4, 26.3, 26.5, 29.0, 29.0, 29.7, 29.7, 30.0, 30.0, 30.7, 31.0, 31.0, 31.5, 32.0, 32.0, 32.0, 33.0, 33.0, 33.5, 33.5, 34.0, 34.0, 34.5, 35.0, 35.0, 35.0, 35.0, 36.0, 36.0, 37.0, 38.5, 38.5, 39.5, 41.0, 41.0]\nbream_weight = [242.0, 290.0, 340.0, 363.0, 430.0, 450.0, 500.0, 390.0, 450.0, 500.0, 475.0, 500.0, 500.0, 340.0, 600.0, 600.0, 700.0, 700.0, 610.0, 650.0, 575.0, 685.0, 620.0, 680.0, 700.0, 725.0, 720.0, 714.0, 850.0, 1000.0, 920.0, 955.0, 925.0, 975.0, 950.0]\nsmelt_length = [9.8, 10.5, 10.6, 11.0, 11.2, 11.3, 11.8, 11.8, 12.0, 12.2, 12.4, 13.0, 14.3, 15.0]\nsmelt_weight = [6.7, 7.5, 7.0, 9.7, 9.8, 8.7, 10.0, 9.9, 9.8, 12.2, 13.4, 12.2, 19.7, 19.9]\nlength = bream_length + smelt_length\nweight = bream_weight + smelt_weight\n\nfrom sklearn.neighbors import KNeighborsClassifier\nfish_data = [[l, w] for l, w in zip(length, weight)]\nfish_target = [1]*35 + [0]*14\nkn = KNeighborsClassifier()\nkn.fit(fish_data, fish_target)\nkn49 = KNeighborsClassifier(n_neighbors=49)\nkn49.fit(fish_data, fish_target)\nfish_data = [[l, w] for l, w in zip(length, weight)]\nfish_target = [1]*35 + [0]*14\nprint(len(fish_data) == 49, len(fish_data[0]) == 2, fish_target[35] == 1)",
+   "verifyExpect": "True True False",
+   "options": [
+    "(다)",
+    "(가), (나)",
+    "(가), (다)",
+    "(나), (다)",
+    "(가), (나), (다)"
+   ]
+  },
+  {
+   "id": "F01C02",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "기말.1.K-최근접 이웃 알고리즘",
+   "stem": "K-최근접 이웃 알고리즘에 대한 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) 새 데이터를 예측할 때 가장 가까운 이웃들의 다수결로 정한다.<br>(나) <span class=\"mono\">KNeighborsClassifier</span> 의 이웃 수 기본값은 5이다.<br>(다) 이웃 수를 전체 데이터 수와 같게 하면 정확도가 가장 높아진다.</span>",
+   "code": "",
+   "answer": "(가), (나)",
+   "why": "K-최근접 이웃은 가까운 이웃 k개(기본 5개)를 보고 다수인 쪽으로 분류합니다. 이웃을 전체 데이터로 하면 어떤 샘플이든 다수 클래스로만 예측해서 오히려 정확도가 떨어집니다(노트북에서는 0.714).",
+   "tags": [
+    "KNN",
+    "n_neighbors"
+   ],
+   "ref": "셀 [22]~[30] 인공지능 모델 학습, 이웃을 49개로 바꾼 실험",
+   "options": [
+    "(다)",
+    "(가), (나)",
+    "(가), (다)",
+    "(나), (다)",
+    "(가), (나), (다)"
+   ]
+  },
+  {
+   "id": "F01C03",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "기말.1.K-최근접 이웃 알고리즘",
+   "stem": "다음 코드에 대한 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은? (도미 35마리, 빙어 14마리의 [길이, 무게] 데이터. 정답은 도미 1, 빙어 0)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) <span class=\"mono\">acc</span> 는 1.0이다.<br>(나) <span class=\"mono\">pred[0]</span> 은 1이다. 즉 도미로 예측한다.<br>(다) <span class=\"mono\">acc</span> 는 훈련에 쓰지 않은 새 데이터로 평가한 값이다.</span>",
+   "code": "kn = KNeighborsClassifier()\nkn.fit(fish_data, fish_target)\nacc = kn.score(fish_data, fish_target)\npred = kn.predict([[30, 600]])",
+   "answer": "(가), (나)",
+   "why": "훈련한 데이터 49개를 그대로 다시 넣어 평가했기 때문에 정확도 1.0이 나옵니다. 길이 30, 무게 600인 생선은 도미 쪽 이웃이 많아 1(도미)로 예측합니다.",
+   "tags": [
+    "fit",
+    "score",
+    "predict"
+   ],
+   "verifyCode": "bream_length = [25.4, 26.3, 26.5, 29.0, 29.0, 29.7, 29.7, 30.0, 30.0, 30.7, 31.0, 31.0, 31.5, 32.0, 32.0, 32.0, 33.0, 33.0, 33.5, 33.5, 34.0, 34.0, 34.5, 35.0, 35.0, 35.0, 35.0, 36.0, 36.0, 37.0, 38.5, 38.5, 39.5, 41.0, 41.0]\nbream_weight = [242.0, 290.0, 340.0, 363.0, 430.0, 450.0, 500.0, 390.0, 450.0, 500.0, 475.0, 500.0, 500.0, 340.0, 600.0, 600.0, 700.0, 700.0, 610.0, 650.0, 575.0, 685.0, 620.0, 680.0, 700.0, 725.0, 720.0, 714.0, 850.0, 1000.0, 920.0, 955.0, 925.0, 975.0, 950.0]\nsmelt_length = [9.8, 10.5, 10.6, 11.0, 11.2, 11.3, 11.8, 11.8, 12.0, 12.2, 12.4, 13.0, 14.3, 15.0]\nsmelt_weight = [6.7, 7.5, 7.0, 9.7, 9.8, 8.7, 10.0, 9.9, 9.8, 12.2, 13.4, 12.2, 19.7, 19.9]\nlength = bream_length + smelt_length\nweight = bream_weight + smelt_weight\n\nfrom sklearn.neighbors import KNeighborsClassifier\nfish_data = [[l, w] for l, w in zip(length, weight)]\nfish_target = [1]*35 + [0]*14\nkn = KNeighborsClassifier()\nkn.fit(fish_data, fish_target)\nkn49 = KNeighborsClassifier(n_neighbors=49)\nkn49.fit(fish_data, fish_target)\nkn = KNeighborsClassifier()\nkn.fit(fish_data, fish_target)\nacc = kn.score(fish_data, fish_target)\npred = kn.predict([[30, 600]])\nprint(acc == 1.0, pred[0] == 1)",
+   "verifyExpect": "True True",
+   "options": [
+    "(가)",
+    "(가), (나)",
+    "(가), (다)",
+    "(나), (다)",
+    "(가), (나), (다)"
+   ]
+  },
+  {
+   "id": "F01C04",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "기말.1.K-최근접 이웃 알고리즘",
+   "stem": "다음 코드에 대한 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은? (도미 35마리, 빙어 14마리의 [길이, 무게] 데이터. 정답은 도미 1, 빙어 0)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) <span class=\"mono\">kn49.score(fish_data, fish_target)</span> 는 35/49 와 같다.<br>(나) <span class=\"mono\">kn49.predict([[10, 7]])[0]</span> 은 0이다.<br>(다) <span class=\"mono\">kn49</span> 는 49개 샘플을 모두 도미(1)로 예측한다.</span>",
+   "code": "kn49 = KNeighborsClassifier(n_neighbors=49)\nkn49.fit(fish_data, fish_target)",
+   "answer": "(가), (다)",
+   "why": "이웃이 49개면 전체 데이터가 이웃이라 항상 다수인 도미(35개)로 예측합니다. 빙어처럼 작은 [10, 7] 도 1로 예측하고, 도미 35개만 맞히므로 정확도는 35/49 입니다.",
+   "tags": [
+    "n_neighbors",
+    "정확도"
+   ],
+   "verifyCode": "bream_length = [25.4, 26.3, 26.5, 29.0, 29.0, 29.7, 29.7, 30.0, 30.0, 30.7, 31.0, 31.0, 31.5, 32.0, 32.0, 32.0, 33.0, 33.0, 33.5, 33.5, 34.0, 34.0, 34.5, 35.0, 35.0, 35.0, 35.0, 36.0, 36.0, 37.0, 38.5, 38.5, 39.5, 41.0, 41.0]\nbream_weight = [242.0, 290.0, 340.0, 363.0, 430.0, 450.0, 500.0, 390.0, 450.0, 500.0, 475.0, 500.0, 500.0, 340.0, 600.0, 600.0, 700.0, 700.0, 610.0, 650.0, 575.0, 685.0, 620.0, 680.0, 700.0, 725.0, 720.0, 714.0, 850.0, 1000.0, 920.0, 955.0, 925.0, 975.0, 950.0]\nsmelt_length = [9.8, 10.5, 10.6, 11.0, 11.2, 11.3, 11.8, 11.8, 12.0, 12.2, 12.4, 13.0, 14.3, 15.0]\nsmelt_weight = [6.7, 7.5, 7.0, 9.7, 9.8, 8.7, 10.0, 9.9, 9.8, 12.2, 13.4, 12.2, 19.7, 19.9]\nlength = bream_length + smelt_length\nweight = bream_weight + smelt_weight\n\nfrom sklearn.neighbors import KNeighborsClassifier\nfish_data = [[l, w] for l, w in zip(length, weight)]\nfish_target = [1]*35 + [0]*14\nkn = KNeighborsClassifier()\nkn.fit(fish_data, fish_target)\nkn49 = KNeighborsClassifier(n_neighbors=49)\nkn49.fit(fish_data, fish_target)\nkn49 = KNeighborsClassifier(n_neighbors=49)\nkn49.fit(fish_data, fish_target)\nprint(kn49.score(fish_data, fish_target) == 35/49, kn49.predict([[10, 7]])[0] == 0, all(kn49.predict(fish_data) == 1))",
+   "verifyExpect": "True False True",
+   "options": [
+    "(가)",
+    "(나)",
+    "(가), (나)",
+    "(가), (다)",
+    "(나), (다)"
+   ]
+  },
+  {
+   "id": "F01C05",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "기말.1.K-최근접 이웃 알고리즘",
+   "stem": "다음 코드에 대한 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) <span class=\"mono\">a</span> 는 <span class=\"mono\">[1, 1, 1, 0, 0]</span> 이다.<br>(나) <span class=\"mono\">b</span> 는 <span class=\"mono\">[4, 5]</span> 이다.<br>(다) <span class=\"mono\">c</span> 는 <span class=\"mono\">[[1, 5], [2, 6]]</span> 이다.</span>",
+   "code": "a = [1]*3 + [0]*2\nb = [1, 2] + [3]\nc = [[x, y] for x, y in zip([1, 2], [5, 6])]",
+   "answer": "(가), (다)",
+   "why": "파이썬 리스트에서 <span class=\"mono\">*</span> 는 반복, <span class=\"mono\">+</span> 는 이어 붙이기입니다. <span class=\"mono\">[1, 2] + [3]</span> 은 <span class=\"mono\">[1, 2, 3]</span> 입니다. 원소끼리 더해지는 것은 넘파이 배열일 때입니다.",
+   "tags": [
+    "리스트 연산",
+    "zip"
+   ],
+   "verifyCode": "a = [1]*3 + [0]*2\nb = [1, 2] + [3]\nc = [[x, y] for x, y in zip([1, 2], [5, 6])]\nprint(a == [1, 1, 1, 0, 0], b == [4, 5], c == [[1, 5], [2, 6]])",
+   "verifyExpect": "True False True",
+   "options": [
+    "(나)",
+    "(가), (나)",
+    "(가), (다)",
+    "(나), (다)",
+    "(가), (나), (다)"
+   ]
+  },
+  {
+   "id": "F01B01",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "기말.1.K-최근접 이웃 알고리즘",
+   "stem": "㉠, ㉡에 들어갈 것으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">49</span></span>",
+   "code": "fish_data = [[l, w] for l, w in ㉠(length, weight)]\nprint(㉡(fish_data))",
+   "answer": "㉠ zip  ·  ㉡ len",
+   "why": "두 리스트에서 원소를 하나씩 짝지어 꺼내는 함수는 <span class=\"mono\">zip</span> 이고, 리스트의 원소 개수는 <span class=\"mono\">len</span> 으로 셉니다. 도미 35 + 빙어 14 = 49쌍입니다.",
+   "tags": [
+    "zip",
+    "len"
+   ],
+   "verifyCode": "bream_length = [25.4, 26.3, 26.5, 29.0, 29.0, 29.7, 29.7, 30.0, 30.0, 30.7, 31.0, 31.0, 31.5, 32.0, 32.0, 32.0, 33.0, 33.0, 33.5, 33.5, 34.0, 34.0, 34.5, 35.0, 35.0, 35.0, 35.0, 36.0, 36.0, 37.0, 38.5, 38.5, 39.5, 41.0, 41.0]\nbream_weight = [242.0, 290.0, 340.0, 363.0, 430.0, 450.0, 500.0, 390.0, 450.0, 500.0, 475.0, 500.0, 500.0, 340.0, 600.0, 600.0, 700.0, 700.0, 610.0, 650.0, 575.0, 685.0, 620.0, 680.0, 700.0, 725.0, 720.0, 714.0, 850.0, 1000.0, 920.0, 955.0, 925.0, 975.0, 950.0]\nsmelt_length = [9.8, 10.5, 10.6, 11.0, 11.2, 11.3, 11.8, 11.8, 12.0, 12.2, 12.4, 13.0, 14.3, 15.0]\nsmelt_weight = [6.7, 7.5, 7.0, 9.7, 9.8, 8.7, 10.0, 9.9, 9.8, 12.2, 13.4, 12.2, 19.7, 19.9]\nlength = bream_length + smelt_length\nweight = bream_weight + smelt_weight\n\nfrom sklearn.neighbors import KNeighborsClassifier\nfish_data = [[l, w] for l, w in zip(length, weight)]\nfish_target = [1]*35 + [0]*14\nkn = KNeighborsClassifier()\nkn.fit(fish_data, fish_target)\nkn49 = KNeighborsClassifier(n_neighbors=49)\nkn49.fit(fish_data, fish_target)\nfish_data = [[l, w] for l, w in zip(length, weight)]\nprint(len(fish_data))",
+   "verifyExpect": "49",
+   "options": [
+    "㉠ len  ·  ㉡ zip",
+    "㉠ zip  ·  ㉡ len",
+    "㉠ list  ·  ㉡ len",
+    "㉠ zip  ·  ㉡ sum",
+    "㉠ range  ·  ㉡ len"
+   ]
+  },
+  {
+   "id": "F01B02",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "기말.1.K-최근접 이웃 알고리즘",
+   "stem": "㉠, ㉡에 들어갈 것으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">1.0</span></span>",
+   "code": "from sklearn.㉠ import KNeighborsClassifier\nkn = KNeighborsClassifier()\nkn.㉡(fish_data, fish_target)\nprint(kn.score(fish_data, fish_target))",
+   "answer": "㉠ neighbors  ·  ㉡ fit",
+   "why": "<span class=\"mono\">KNeighborsClassifier</span> 는 <span class=\"mono\">sklearn.neighbors</span> 에 있고, 훈련은 <span class=\"mono\">fit(입력, 정답)</span> 으로 합니다.",
+   "tags": [
+    "import",
+    "fit"
+   ],
+   "verifyCode": "bream_length = [25.4, 26.3, 26.5, 29.0, 29.0, 29.7, 29.7, 30.0, 30.0, 30.7, 31.0, 31.0, 31.5, 32.0, 32.0, 32.0, 33.0, 33.0, 33.5, 33.5, 34.0, 34.0, 34.5, 35.0, 35.0, 35.0, 35.0, 36.0, 36.0, 37.0, 38.5, 38.5, 39.5, 41.0, 41.0]\nbream_weight = [242.0, 290.0, 340.0, 363.0, 430.0, 450.0, 500.0, 390.0, 450.0, 500.0, 475.0, 500.0, 500.0, 340.0, 600.0, 600.0, 700.0, 700.0, 610.0, 650.0, 575.0, 685.0, 620.0, 680.0, 700.0, 725.0, 720.0, 714.0, 850.0, 1000.0, 920.0, 955.0, 925.0, 975.0, 950.0]\nsmelt_length = [9.8, 10.5, 10.6, 11.0, 11.2, 11.3, 11.8, 11.8, 12.0, 12.2, 12.4, 13.0, 14.3, 15.0]\nsmelt_weight = [6.7, 7.5, 7.0, 9.7, 9.8, 8.7, 10.0, 9.9, 9.8, 12.2, 13.4, 12.2, 19.7, 19.9]\nlength = bream_length + smelt_length\nweight = bream_weight + smelt_weight\n\nfrom sklearn.neighbors import KNeighborsClassifier\nfish_data = [[l, w] for l, w in zip(length, weight)]\nfish_target = [1]*35 + [0]*14\nkn = KNeighborsClassifier()\nkn.fit(fish_data, fish_target)\nkn49 = KNeighborsClassifier(n_neighbors=49)\nkn49.fit(fish_data, fish_target)\nfrom sklearn.neighbors import KNeighborsClassifier\nkn = KNeighborsClassifier()\nkn.fit(fish_data, fish_target)\nprint(kn.score(fish_data, fish_target))",
+   "verifyExpect": "1.0",
+   "options": [
+    "㉠ neighbors  ·  ㉡ predict",
+    "㉠ model_selection  ·  ㉡ fit",
+    "㉠ neighbors  ·  ㉡ train",
+    "㉠ linear_model  ·  ㉡ fit",
+    "㉠ neighbors  ·  ㉡ fit"
+   ]
+  },
+  {
+   "id": "F01B03",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "기말.1.K-최근접 이웃 알고리즘",
+   "stem": "㉠, ㉡에 들어갈 것으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">0.7142857142857143</span></span>",
+   "code": "kn49 = KNeighborsClassifier(㉠=49)\nkn49.fit(fish_data, fish_target)\nprint(kn49.㉡(fish_data, fish_target))",
+   "answer": "㉠ n_neighbors  ·  ㉡ score",
+   "why": "이웃 수는 <span class=\"mono\">n_neighbors</span> 로 정하고, 정확도는 <span class=\"mono\">score(입력, 정답)</span> 이 돌려줍니다. 0.714… 는 35/49 입니다.",
+   "tags": [
+    "n_neighbors",
+    "score"
+   ],
+   "verifyCode": "bream_length = [25.4, 26.3, 26.5, 29.0, 29.0, 29.7, 29.7, 30.0, 30.0, 30.7, 31.0, 31.0, 31.5, 32.0, 32.0, 32.0, 33.0, 33.0, 33.5, 33.5, 34.0, 34.0, 34.5, 35.0, 35.0, 35.0, 35.0, 36.0, 36.0, 37.0, 38.5, 38.5, 39.5, 41.0, 41.0]\nbream_weight = [242.0, 290.0, 340.0, 363.0, 430.0, 450.0, 500.0, 390.0, 450.0, 500.0, 475.0, 500.0, 500.0, 340.0, 600.0, 600.0, 700.0, 700.0, 610.0, 650.0, 575.0, 685.0, 620.0, 680.0, 700.0, 725.0, 720.0, 714.0, 850.0, 1000.0, 920.0, 955.0, 925.0, 975.0, 950.0]\nsmelt_length = [9.8, 10.5, 10.6, 11.0, 11.2, 11.3, 11.8, 11.8, 12.0, 12.2, 12.4, 13.0, 14.3, 15.0]\nsmelt_weight = [6.7, 7.5, 7.0, 9.7, 9.8, 8.7, 10.0, 9.9, 9.8, 12.2, 13.4, 12.2, 19.7, 19.9]\nlength = bream_length + smelt_length\nweight = bream_weight + smelt_weight\n\nfrom sklearn.neighbors import KNeighborsClassifier\nfish_data = [[l, w] for l, w in zip(length, weight)]\nfish_target = [1]*35 + [0]*14\nkn = KNeighborsClassifier()\nkn.fit(fish_data, fish_target)\nkn49 = KNeighborsClassifier(n_neighbors=49)\nkn49.fit(fish_data, fish_target)\nkn49 = KNeighborsClassifier(n_neighbors=49)\nkn49.fit(fish_data, fish_target)\nprint(kn49.score(fish_data, fish_target))",
+   "verifyExpect": "0.7142857142857143",
+   "options": [
+    "㉠ n_neighbors  ·  ㉡ score",
+    "㉠ n_neighbors  ·  ㉡ fit",
+    "㉠ neighbors  ·  ㉡ score",
+    "㉠ k  ·  ㉡ score",
+    "㉠ n_neighbors  ·  ㉡ predict"
+   ]
+  },
+  {
+   "id": "F01B04",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "기말.1.K-최근접 이웃 알고리즘",
+   "stem": "㉠, ㉡에 들어갈 것으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">49 35</span></span>",
+   "code": "fish_target = [1]*㉠ + [0]*㉡\nprint(len(fish_target), sum(fish_target))",
+   "answer": "㉠ 35  ·  ㉡ 14",
+   "why": "전체 길이가 49이고 합(1의 개수)이 35이므로 1이 35개, 0이 14개입니다.",
+   "tags": [
+    "타깃",
+    "리스트 반복"
+   ],
+   "verifyCode": "fish_target = [1]*35 + [0]*14\nprint(len(fish_target), sum(fish_target))",
+   "verifyExpect": "49 35",
+   "options": [
+    "㉠ 49  ·  ㉡ 35",
+    "㉠ 35  ·  ㉡ 49",
+    "㉠ 35  ·  ㉡ 14",
+    "㉠ 1  ·  ㉡ 0",
+    "㉠ 14  ·  ㉡ 35"
+   ]
+  },
+  {
+   "id": "F01B05",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "기말.1.K-최근접 이웃 알고리즘",
+   "stem": "가로축 이름을 length, 세로축 이름을 weight 로 붙이려고 한다. ㉠, ㉡에 들어갈 것으로 알맞은 것은?",
+   "code": "import matplotlib.pyplot as plt\nplt.scatter(bream_length, bream_weight)\nplt.scatter(smelt_length, smelt_weight)\nplt.㉠('length')\nplt.㉡('weight')\nplt.show()",
+   "answer": "㉠ xlabel  ·  ㉡ ylabel",
+   "why": "축 이름은 <span class=\"mono\">plt.xlabel()</span>, <span class=\"mono\">plt.ylabel()</span> 로 붙입니다. <span class=\"mono\">xlim</span>/<span class=\"mono\">ylim</span> 은 축의 범위, <span class=\"mono\">xticks</span>/<span class=\"mono\">yticks</span> 는 눈금입니다.",
+   "tags": [
+    "산점도",
+    "축 이름"
+   ],
+   "verifyCode": "bream_length = [25.4, 26.3, 26.5, 29.0, 29.0, 29.7, 29.7, 30.0, 30.0, 30.7, 31.0, 31.0, 31.5, 32.0, 32.0, 32.0, 33.0, 33.0, 33.5, 33.5, 34.0, 34.0, 34.5, 35.0, 35.0, 35.0, 35.0, 36.0, 36.0, 37.0, 38.5, 38.5, 39.5, 41.0, 41.0]\nbream_weight = [242.0, 290.0, 340.0, 363.0, 430.0, 450.0, 500.0, 390.0, 450.0, 500.0, 475.0, 500.0, 500.0, 340.0, 600.0, 600.0, 700.0, 700.0, 610.0, 650.0, 575.0, 685.0, 620.0, 680.0, 700.0, 725.0, 720.0, 714.0, 850.0, 1000.0, 920.0, 955.0, 925.0, 975.0, 950.0]\nsmelt_length = [9.8, 10.5, 10.6, 11.0, 11.2, 11.3, 11.8, 11.8, 12.0, 12.2, 12.4, 13.0, 14.3, 15.0]\nsmelt_weight = [6.7, 7.5, 7.0, 9.7, 9.8, 8.7, 10.0, 9.9, 9.8, 12.2, 13.4, 12.2, 19.7, 19.9]\nlength = bream_length + smelt_length\nweight = bream_weight + smelt_weight\n\nfrom sklearn.neighbors import KNeighborsClassifier\nfish_data = [[l, w] for l, w in zip(length, weight)]\nfish_target = [1]*35 + [0]*14\nkn = KNeighborsClassifier()\nkn.fit(fish_data, fish_target)\nkn49 = KNeighborsClassifier(n_neighbors=49)\nkn49.fit(fish_data, fish_target)\nimport matplotlib.pyplot as plt\nplt.scatter(bream_length, bream_weight)\nplt.scatter(smelt_length, smelt_weight)\nplt.xlabel('length')\nplt.ylabel('weight')\nplt.show()",
+   "verifyExpect": "",
+   "options": [
+    "㉠ xticks  ·  ㉡ yticks",
+    "㉠ title  ·  ㉡ legend",
+    "㉠ ylabel  ·  ㉡ xlabel",
+    "㉠ xlabel  ·  ㉡ ylabel",
+    "㉠ xlim  ·  ㉡ ylim"
+   ]
+  },
+  {
+   "id": "F01D01",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "mode": "mc",
+   "src": "기말.1.K-최근접 이웃 알고리즘",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은? (도미 35마리, 빙어 14마리의 [길이, 무게] 데이터. 정답은 도미 1, 빙어 0)",
+   "code": "kn = KNeighborsClassifier()\nkn.fit(fish_data, fish_target)\nfor n in range(5, 50):\n    kn.n_neighbors = n\n    score = kn.score(fish_data, fish_target)\n    if score < 1:\n        print(n, score)\n        break",
+   "answer": "18 0.9795918367346939",
+   "why": "이웃 수를 5부터 늘리다가 정확도가 처음 1보다 작아지는 순간 한 번만 출력하고 <span class=\"mono\">break</span> 로 끝납니다. 이웃이 18개일 때 처음으로 한 마리를 틀려 48/49 = 0.9795… 가 됩니다.",
+   "tags": [
+    "n_neighbors",
+    "break",
+    "확인 문제"
+   ],
+   "verifyCode": "bream_length = [25.4, 26.3, 26.5, 29.0, 29.0, 29.7, 29.7, 30.0, 30.0, 30.7, 31.0, 31.0, 31.5, 32.0, 32.0, 32.0, 33.0, 33.0, 33.5, 33.5, 34.0, 34.0, 34.5, 35.0, 35.0, 35.0, 35.0, 36.0, 36.0, 37.0, 38.5, 38.5, 39.5, 41.0, 41.0]\nbream_weight = [242.0, 290.0, 340.0, 363.0, 430.0, 450.0, 500.0, 390.0, 450.0, 500.0, 475.0, 500.0, 500.0, 340.0, 600.0, 600.0, 700.0, 700.0, 610.0, 650.0, 575.0, 685.0, 620.0, 680.0, 700.0, 725.0, 720.0, 714.0, 850.0, 1000.0, 920.0, 955.0, 925.0, 975.0, 950.0]\nsmelt_length = [9.8, 10.5, 10.6, 11.0, 11.2, 11.3, 11.8, 11.8, 12.0, 12.2, 12.4, 13.0, 14.3, 15.0]\nsmelt_weight = [6.7, 7.5, 7.0, 9.7, 9.8, 8.7, 10.0, 9.9, 9.8, 12.2, 13.4, 12.2, 19.7, 19.9]\nlength = bream_length + smelt_length\nweight = bream_weight + smelt_weight\n\nfrom sklearn.neighbors import KNeighborsClassifier\nfish_data = [[l, w] for l, w in zip(length, weight)]\nfish_target = [1]*35 + [0]*14\nkn = KNeighborsClassifier()\nkn.fit(fish_data, fish_target)\nkn49 = KNeighborsClassifier(n_neighbors=49)\nkn49.fit(fish_data, fish_target)\nkn = KNeighborsClassifier()\nkn.fit(fish_data, fish_target)\nfor n in range(5, 50):\n    kn.n_neighbors = n\n    score = kn.score(fish_data, fish_target)\n    if score < 1:\n        print(n, score)\n        break",
+   "verifyExpect": "18 0.9795918367346939",
+   "options": [
+    "17 0.9795918367346939",
+    "18 0.7142857142857143",
+    "18 0.9795918367346939",
+    "49 0.7142857142857143",
+    "5 0.9795918367346939"
+   ]
+  },
+  {
+   "id": "F01D02",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "mode": "mc",
+   "src": "기말.1.K-최근접 이웃 알고리즘",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "fish_target = [1]*35 + [0]*14\nprint(fish_target[34], fish_target[35], fish_target[-1])",
+   "answer": "1 0 0",
+   "why": "1이 35개이므로 인덱스 0~34가 1이고, 인덱스 35부터 0입니다. 마지막 원소도 0입니다.",
+   "tags": [
+    "인덱스",
+    "타깃"
+   ],
+   "verifyCode": "fish_target = [1]*35 + [0]*14\nprint(fish_target[34], fish_target[35], fish_target[-1])",
+   "verifyExpect": "1 0 0",
+   "options": [
+    "0 0 0",
+    "1 0 1",
+    "0 1 0",
+    "1 1 0",
+    "1 0 0"
+   ]
+  },
+  {
+   "id": "F01D03",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "mode": "mc",
+   "src": "기말.1.K-최근접 이웃 알고리즘",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "X = [[i] for i in range(50)]\ny = [1]*30 + [0]*20\nkn = KNeighborsClassifier(n_neighbors=50)\nkn.fit(X, y)\nprint(kn.score(X, y))",
+   "answer": "0.6",
+   "why": "샘플 50개가 전부 이웃이므로 항상 다수 클래스인 1로 예측합니다. 정답이 1인 30개만 맞히므로 30/50 = 0.6 입니다.",
+   "tags": [
+    "n_neighbors",
+    "정확도"
+   ],
+   "verifyCode": "bream_length = [25.4, 26.3, 26.5, 29.0, 29.0, 29.7, 29.7, 30.0, 30.0, 30.7, 31.0, 31.0, 31.5, 32.0, 32.0, 32.0, 33.0, 33.0, 33.5, 33.5, 34.0, 34.0, 34.5, 35.0, 35.0, 35.0, 35.0, 36.0, 36.0, 37.0, 38.5, 38.5, 39.5, 41.0, 41.0]\nbream_weight = [242.0, 290.0, 340.0, 363.0, 430.0, 450.0, 500.0, 390.0, 450.0, 500.0, 475.0, 500.0, 500.0, 340.0, 600.0, 600.0, 700.0, 700.0, 610.0, 650.0, 575.0, 685.0, 620.0, 680.0, 700.0, 725.0, 720.0, 714.0, 850.0, 1000.0, 920.0, 955.0, 925.0, 975.0, 950.0]\nsmelt_length = [9.8, 10.5, 10.6, 11.0, 11.2, 11.3, 11.8, 11.8, 12.0, 12.2, 12.4, 13.0, 14.3, 15.0]\nsmelt_weight = [6.7, 7.5, 7.0, 9.7, 9.8, 8.7, 10.0, 9.9, 9.8, 12.2, 13.4, 12.2, 19.7, 19.9]\nlength = bream_length + smelt_length\nweight = bream_weight + smelt_weight\n\nfrom sklearn.neighbors import KNeighborsClassifier\nfish_data = [[l, w] for l, w in zip(length, weight)]\nfish_target = [1]*35 + [0]*14\nkn = KNeighborsClassifier()\nkn.fit(fish_data, fish_target)\nkn49 = KNeighborsClassifier(n_neighbors=49)\nkn49.fit(fish_data, fish_target)\nX = [[i] for i in range(50)]\ny = [1]*30 + [0]*20\nkn = KNeighborsClassifier(n_neighbors=50)\nkn.fit(X, y)\nprint(kn.score(X, y))",
+   "verifyExpect": "0.6",
+   "options": [
+    "0.4",
+    "1.0",
+    "0.714",
+    "0.6",
+    "0.5"
+   ]
+  },
+  {
+   "id": "F01D04",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "mode": "mc",
+   "src": "기말.1.K-최근접 이웃 알고리즘",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "X = [[1], [2], [3], [6], [7], [8], [9]]\ny = [0, 0, 0, 1, 1, 1, 1]\nkn = KNeighborsClassifier()\nkn.fit(X, y)\nprint(kn.predict([[4]])[0], kn.predict([[5]])[0])",
+   "answer": "0 1",
+   "why": "기본 이웃 수는 5입니다. 4에서 가까운 다섯 개는 3, 2, 6, 1, 7 이라 0이 3개로 다수이고, 5에서 가까운 다섯 개는 6, 3, 7, 2, 8 이라 1이 3개로 다수입니다.",
+   "tags": [
+    "이웃 5개",
+    "다수결"
+   ],
+   "verifyCode": "bream_length = [25.4, 26.3, 26.5, 29.0, 29.0, 29.7, 29.7, 30.0, 30.0, 30.7, 31.0, 31.0, 31.5, 32.0, 32.0, 32.0, 33.0, 33.0, 33.5, 33.5, 34.0, 34.0, 34.5, 35.0, 35.0, 35.0, 35.0, 36.0, 36.0, 37.0, 38.5, 38.5, 39.5, 41.0, 41.0]\nbream_weight = [242.0, 290.0, 340.0, 363.0, 430.0, 450.0, 500.0, 390.0, 450.0, 500.0, 475.0, 500.0, 500.0, 340.0, 600.0, 600.0, 700.0, 700.0, 610.0, 650.0, 575.0, 685.0, 620.0, 680.0, 700.0, 725.0, 720.0, 714.0, 850.0, 1000.0, 920.0, 955.0, 925.0, 975.0, 950.0]\nsmelt_length = [9.8, 10.5, 10.6, 11.0, 11.2, 11.3, 11.8, 11.8, 12.0, 12.2, 12.4, 13.0, 14.3, 15.0]\nsmelt_weight = [6.7, 7.5, 7.0, 9.7, 9.8, 8.7, 10.0, 9.9, 9.8, 12.2, 13.4, 12.2, 19.7, 19.9]\nlength = bream_length + smelt_length\nweight = bream_weight + smelt_weight\n\nfrom sklearn.neighbors import KNeighborsClassifier\nfish_data = [[l, w] for l, w in zip(length, weight)]\nfish_target = [1]*35 + [0]*14\nkn = KNeighborsClassifier()\nkn.fit(fish_data, fish_target)\nkn49 = KNeighborsClassifier(n_neighbors=49)\nkn49.fit(fish_data, fish_target)\nX = [[1], [2], [3], [6], [7], [8], [9]]\ny = [0, 0, 0, 1, 1, 1, 1]\nkn = KNeighborsClassifier()\nkn.fit(X, y)\nprint(kn.predict([[4]])[0], kn.predict([[5]])[0])",
+   "verifyExpect": "0 1",
+   "options": [
+    "1 0.5",
+    "0 1",
+    "1 0",
+    "0 0",
+    "1 1"
+   ]
+  },
+  {
+   "id": "F01D05",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "mode": "mc",
+   "src": "기말.1.K-최근접 이웃 알고리즘",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은? (도미 35마리, 빙어 14마리의 [길이, 무게] 데이터. 정답은 도미 1, 빙어 0)",
+   "code": "print(len(fish_data), len(fish_data[0]), len(fish_target))",
+   "answer": "49 2 49",
+   "why": "<span class=\"mono\">fish_data</span> 는 샘플 49개의 리스트이고 각 샘플은 [길이, 무게] 2개 값입니다. 정답도 샘플 수와 같은 49개입니다.",
+   "tags": [
+    "데이터 구조"
+   ],
+   "verifyCode": "bream_length = [25.4, 26.3, 26.5, 29.0, 29.0, 29.7, 29.7, 30.0, 30.0, 30.7, 31.0, 31.0, 31.5, 32.0, 32.0, 32.0, 33.0, 33.0, 33.5, 33.5, 34.0, 34.0, 34.5, 35.0, 35.0, 35.0, 35.0, 36.0, 36.0, 37.0, 38.5, 38.5, 39.5, 41.0, 41.0]\nbream_weight = [242.0, 290.0, 340.0, 363.0, 430.0, 450.0, 500.0, 390.0, 450.0, 500.0, 475.0, 500.0, 500.0, 340.0, 600.0, 600.0, 700.0, 700.0, 610.0, 650.0, 575.0, 685.0, 620.0, 680.0, 700.0, 725.0, 720.0, 714.0, 850.0, 1000.0, 920.0, 955.0, 925.0, 975.0, 950.0]\nsmelt_length = [9.8, 10.5, 10.6, 11.0, 11.2, 11.3, 11.8, 11.8, 12.0, 12.2, 12.4, 13.0, 14.3, 15.0]\nsmelt_weight = [6.7, 7.5, 7.0, 9.7, 9.8, 8.7, 10.0, 9.9, 9.8, 12.2, 13.4, 12.2, 19.7, 19.9]\nlength = bream_length + smelt_length\nweight = bream_weight + smelt_weight\n\nfrom sklearn.neighbors import KNeighborsClassifier\nfish_data = [[l, w] for l, w in zip(length, weight)]\nfish_target = [1]*35 + [0]*14\nkn = KNeighborsClassifier()\nkn.fit(fish_data, fish_target)\nkn49 = KNeighborsClassifier(n_neighbors=49)\nkn49.fit(fish_data, fish_target)\nprint(len(fish_data), len(fish_data[0]), len(fish_target))",
+   "verifyExpect": "49 2 49",
+   "options": [
+    "49 2 49",
+    "49 2 2",
+    "49 49 2",
+    "98 2 49",
+    "2 49 49"
+   ]
+  },
+  {
+   "id": "F01R01",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "기말.1.K-최근접 이웃 알고리즘",
+   "stem": "<span class=\"mono\">length</span> 의 첫 값은 25.4, <span class=\"mono\">weight</span> 의 첫 값은 242.0 이고 둘 다 도미의 값이다. 다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "print(fish_data[0], fish_target[0])",
+   "answer": "[25.4, 242.0] 1",
+   "why": "<span class=\"mono\">fish_data</span> 의 각 원소는 [길이, 무게] 순서의 리스트이고, 앞쪽 35개는 도미라서 정답이 1입니다.",
+   "tags": [
+    "데이터 구조"
+   ],
+   "verifyCode": "bream_length = [25.4, 26.3, 26.5, 29.0, 29.0, 29.7, 29.7, 30.0, 30.0, 30.7, 31.0, 31.0, 31.5, 32.0, 32.0, 32.0, 33.0, 33.0, 33.5, 33.5, 34.0, 34.0, 34.5, 35.0, 35.0, 35.0, 35.0, 36.0, 36.0, 37.0, 38.5, 38.5, 39.5, 41.0, 41.0]\nbream_weight = [242.0, 290.0, 340.0, 363.0, 430.0, 450.0, 500.0, 390.0, 450.0, 500.0, 475.0, 500.0, 500.0, 340.0, 600.0, 600.0, 700.0, 700.0, 610.0, 650.0, 575.0, 685.0, 620.0, 680.0, 700.0, 725.0, 720.0, 714.0, 850.0, 1000.0, 920.0, 955.0, 925.0, 975.0, 950.0]\nsmelt_length = [9.8, 10.5, 10.6, 11.0, 11.2, 11.3, 11.8, 11.8, 12.0, 12.2, 12.4, 13.0, 14.3, 15.0]\nsmelt_weight = [6.7, 7.5, 7.0, 9.7, 9.8, 8.7, 10.0, 9.9, 9.8, 12.2, 13.4, 12.2, 19.7, 19.9]\nlength = bream_length + smelt_length\nweight = bream_weight + smelt_weight\n\nfrom sklearn.neighbors import KNeighborsClassifier\nfish_data = [[l, w] for l, w in zip(length, weight)]\nfish_target = [1]*35 + [0]*14\nkn = KNeighborsClassifier()\nkn.fit(fish_data, fish_target)\nkn49 = KNeighborsClassifier(n_neighbors=49)\nkn49.fit(fish_data, fish_target)\nprint(fish_data[0], fish_target[0])",
+   "verifyExpect": "[25.4, 242.0] 1",
+   "options": [
+    "25.4 1",
+    "[25.4, 242.0] 1",
+    "[242.0, 25.4] 1",
+    "[25.4, 242.0] 0",
+    "[25.4, 26.3] 1"
+   ]
+  },
+  {
+   "id": "F01R02",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "기말.1.K-최근접 이웃 알고리즘",
+   "stem": "훈련된 모델 <span class=\"mono\">kn</span> 으로 다음 코드를 실행했을 때 출력되는 것은? (도미 35마리, 빙어 14마리의 [길이, 무게] 데이터. 정답은 도미 1, 빙어 0)",
+   "code": "print(kn.predict([[30, 600]]))",
+   "answer": "[1]",
+   "why": "<span class=\"mono\">predict</span> 는 샘플마다 예측값 하나씩을 담은 <b>배열</b>을 돌려줍니다. 샘플이 하나여도 <span class=\"mono\">[1]</span> 처럼 배열로 나옵니다.",
+   "tags": [
+    "predict",
+    "반환값"
+   ],
+   "verifyCode": "bream_length = [25.4, 26.3, 26.5, 29.0, 29.0, 29.7, 29.7, 30.0, 30.0, 30.7, 31.0, 31.0, 31.5, 32.0, 32.0, 32.0, 33.0, 33.0, 33.5, 33.5, 34.0, 34.0, 34.5, 35.0, 35.0, 35.0, 35.0, 36.0, 36.0, 37.0, 38.5, 38.5, 39.5, 41.0, 41.0]\nbream_weight = [242.0, 290.0, 340.0, 363.0, 430.0, 450.0, 500.0, 390.0, 450.0, 500.0, 475.0, 500.0, 500.0, 340.0, 600.0, 600.0, 700.0, 700.0, 610.0, 650.0, 575.0, 685.0, 620.0, 680.0, 700.0, 725.0, 720.0, 714.0, 850.0, 1000.0, 920.0, 955.0, 925.0, 975.0, 950.0]\nsmelt_length = [9.8, 10.5, 10.6, 11.0, 11.2, 11.3, 11.8, 11.8, 12.0, 12.2, 12.4, 13.0, 14.3, 15.0]\nsmelt_weight = [6.7, 7.5, 7.0, 9.7, 9.8, 8.7, 10.0, 9.9, 9.8, 12.2, 13.4, 12.2, 19.7, 19.9]\nlength = bream_length + smelt_length\nweight = bream_weight + smelt_weight\n\nfrom sklearn.neighbors import KNeighborsClassifier\nfish_data = [[l, w] for l, w in zip(length, weight)]\nfish_target = [1]*35 + [0]*14\nkn = KNeighborsClassifier()\nkn.fit(fish_data, fish_target)\nkn49 = KNeighborsClassifier(n_neighbors=49)\nkn49.fit(fish_data, fish_target)\nprint(kn.predict([[30, 600]]))",
+   "verifyExpect": "[1]",
+   "options": [
+    "[[1]]",
+    "1",
+    "[30, 600]",
+    "[1]",
+    "[0]"
+   ]
+  },
+  {
+   "id": "F01R03",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "기말.1.K-최근접 이웃 알고리즘",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은? (도미 35마리, 빙어 14마리의 [길이, 무게] 데이터. 정답은 도미 1, 빙어 0)",
+   "code": "kn49 = KNeighborsClassifier(n_neighbors=49)\nkn49.fit(fish_data, fish_target)\nprint(kn49.score(fish_data, fish_target))",
+   "answer": "0.7142857142857143",
+   "why": "49개 전부가 이웃이라 항상 도미로 예측하고, 도미 35개만 맞히므로 35/49 = 0.714… 입니다.",
+   "tags": [
+    "n_neighbors",
+    "정확도"
+   ],
+   "verifyCode": "bream_length = [25.4, 26.3, 26.5, 29.0, 29.0, 29.7, 29.7, 30.0, 30.0, 30.7, 31.0, 31.0, 31.5, 32.0, 32.0, 32.0, 33.0, 33.0, 33.5, 33.5, 34.0, 34.0, 34.5, 35.0, 35.0, 35.0, 35.0, 36.0, 36.0, 37.0, 38.5, 38.5, 39.5, 41.0, 41.0]\nbream_weight = [242.0, 290.0, 340.0, 363.0, 430.0, 450.0, 500.0, 390.0, 450.0, 500.0, 475.0, 500.0, 500.0, 340.0, 600.0, 600.0, 700.0, 700.0, 610.0, 650.0, 575.0, 685.0, 620.0, 680.0, 700.0, 725.0, 720.0, 714.0, 850.0, 1000.0, 920.0, 955.0, 925.0, 975.0, 950.0]\nsmelt_length = [9.8, 10.5, 10.6, 11.0, 11.2, 11.3, 11.8, 11.8, 12.0, 12.2, 12.4, 13.0, 14.3, 15.0]\nsmelt_weight = [6.7, 7.5, 7.0, 9.7, 9.8, 8.7, 10.0, 9.9, 9.8, 12.2, 13.4, 12.2, 19.7, 19.9]\nlength = bream_length + smelt_length\nweight = bream_weight + smelt_weight\n\nfrom sklearn.neighbors import KNeighborsClassifier\nfish_data = [[l, w] for l, w in zip(length, weight)]\nfish_target = [1]*35 + [0]*14\nkn = KNeighborsClassifier()\nkn.fit(fish_data, fish_target)\nkn49 = KNeighborsClassifier(n_neighbors=49)\nkn49.fit(fish_data, fish_target)\nkn49 = KNeighborsClassifier(n_neighbors=49)\nkn49.fit(fish_data, fish_target)\nprint(kn49.score(fish_data, fish_target))",
+   "verifyExpect": "0.7142857142857143",
+   "options": [
+    "0.2857142857142857",
+    "0.49",
+    "0.7142857142857143",
+    "1.0",
+    "0.35"
+   ]
+  },
+  {
+   "id": "F01R04",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "기말.1.K-최근접 이웃 알고리즘",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "print([1]*3 + [0]*2, [1, 2] + [3])",
+   "answer": "[1, 1, 1, 0, 0] [1, 2, 3]",
+   "why": "리스트의 <span class=\"mono\">*</span> 는 반복, <span class=\"mono\">+</span> 는 이어 붙이기입니다.",
+   "tags": [
+    "리스트 연산"
+   ],
+   "verifyCode": "print([1]*3 + [0]*2, [1, 2] + [3])",
+   "verifyExpect": "[1, 1, 1, 0, 0] [1, 2, 3]",
+   "options": [
+    "[3, 0] [4, 5]",
+    "[1, 1, 1, 0, 0] [4, 5]",
+    "[3, 0] [1, 2, 3]",
+    "[1, 1, 1] [0, 0] [1, 2, 3]",
+    "[1, 1, 1, 0, 0] [1, 2, 3]"
+   ]
+  },
+  {
+   "id": "F01R05",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "기말.1.K-최근접 이웃 알고리즘",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "pairs = [[l, w] for l, w in zip([1, 2, 3], [10, 20, 30])]\nprint(pairs[1], len(pairs))",
+   "answer": "[2, 20] 3",
+   "why": "<span class=\"mono\">zip</span> 은 같은 위치의 원소끼리 짝을 짓습니다. 두 번째 쌍은 [2, 20] 이고 쌍은 모두 3개입니다.",
+   "tags": [
+    "zip"
+   ],
+   "verifyCode": "pairs = [[l, w] for l, w in zip([1, 2, 3], [10, 20, 30])]\nprint(pairs[1], len(pairs))",
+   "verifyExpect": "[2, 20] 3",
+   "options": [
+    "[2, 20] 3",
+    "[1, 10] 3",
+    "[2, 20] 2",
+    "[1, 2] 3",
+    "[10, 20] 6"
+   ]
+  },
+  {
+   "id": "F01R06",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "기말.1.K-최근접 이웃 알고리즘",
+   "stem": "훈련된 모델 <span class=\"mono\">kn</span> 으로 다음 코드를 실행했을 때 출력되는 것은? (도미 35마리, 빙어 14마리의 [길이, 무게] 데이터. 정답은 도미 1, 빙어 0)",
+   "code": "new = [30, 600]\nif kn.predict([new]) == 1:\n    print('도미')\nelse:\n    print('빙어')",
+   "answer": "도미",
+   "why": "<span class=\"mono\">[new]</span> 는 <span class=\"mono\">[[30, 600]]</span> 이라 2차원 입력이 됩니다. 예측 결과가 1(도미)이므로 조건이 참입니다.",
+   "tags": [
+    "predict",
+    "2차원 입력"
+   ],
+   "verifyCode": "bream_length = [25.4, 26.3, 26.5, 29.0, 29.0, 29.7, 29.7, 30.0, 30.0, 30.7, 31.0, 31.0, 31.5, 32.0, 32.0, 32.0, 33.0, 33.0, 33.5, 33.5, 34.0, 34.0, 34.5, 35.0, 35.0, 35.0, 35.0, 36.0, 36.0, 37.0, 38.5, 38.5, 39.5, 41.0, 41.0]\nbream_weight = [242.0, 290.0, 340.0, 363.0, 430.0, 450.0, 500.0, 390.0, 450.0, 500.0, 475.0, 500.0, 500.0, 340.0, 600.0, 600.0, 700.0, 700.0, 610.0, 650.0, 575.0, 685.0, 620.0, 680.0, 700.0, 725.0, 720.0, 714.0, 850.0, 1000.0, 920.0, 955.0, 925.0, 975.0, 950.0]\nsmelt_length = [9.8, 10.5, 10.6, 11.0, 11.2, 11.3, 11.8, 11.8, 12.0, 12.2, 12.4, 13.0, 14.3, 15.0]\nsmelt_weight = [6.7, 7.5, 7.0, 9.7, 9.8, 8.7, 10.0, 9.9, 9.8, 12.2, 13.4, 12.2, 19.7, 19.9]\nlength = bream_length + smelt_length\nweight = bream_weight + smelt_weight\n\nfrom sklearn.neighbors import KNeighborsClassifier\nfish_data = [[l, w] for l, w in zip(length, weight)]\nfish_target = [1]*35 + [0]*14\nkn = KNeighborsClassifier()\nkn.fit(fish_data, fish_target)\nkn49 = KNeighborsClassifier(n_neighbors=49)\nkn49.fit(fish_data, fish_target)\nnew = [30, 600]\nif kn.predict([new]) == 1:\n    print('도미')\nelse:\n    print('빙어')",
+   "verifyExpect": "도미",
+   "options": [
+    "[1]",
+    "도미",
+    "빙어",
+    "True",
+    "도미 빙어"
+   ]
+  },
+  {
+   "id": "F01X01",
+   "type": "대조",
+   "typeKey": "contrast",
+   "mode": "mc",
+   "src": "기말.1.K-최근접 이웃 알고리즘",
+   "stem": "다음은 거의 같은 두 코드이다. ㉠, ㉡에 출력되는 값으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">방법1 → ㉠<br>방법2 → ㉡</span></span>",
+   "code": "import numpy as np\n# 방법1\nprint([1, 2] + [3, 4])\n\n# 방법2\nprint(np.array([1, 2]) + np.array([3, 4]))",
+   "answer": "㉠ [1, 2, 3, 4]  ·  ㉡ [4 6]",
+   "why": "리스트의 <span class=\"mono\">+</span> 는 이어 붙이기, 넘파이 배열의 <span class=\"mono\">+</span> 는 같은 위치 원소끼리 덧셈입니다. 넘파이 배열은 출력할 때 쉼표가 없습니다.",
+   "tags": [
+    "리스트",
+    "넘파이"
+   ],
+   "verifyCode": "import numpy as np\n# 방법1\nprint([1, 2] + [3, 4])\n\n# 방법2\nprint(np.array([1, 2]) + np.array([3, 4]))",
+   "verifyExpect": "[1, 2, 3, 4]\n[4 6]",
+   "options": [
+    "㉠ [4, 6]  ·  ㉡ [1 2 3 4]",
+    "㉠ [4, 6]  ·  ㉡ [4 6]",
+    "㉠ [1, 2, 3, 4]  ·  ㉡ [4 6]",
+    "㉠ [1, 2, 3, 4]  ·  ㉡ [1 2 3 4]",
+    "㉠ [1, 2, 3, 4]  ·  ㉡ [4, 6]"
+   ]
+  },
+  {
+   "id": "F01X02",
+   "type": "대조",
+   "typeKey": "contrast",
+   "mode": "mc",
+   "src": "기말.1.K-최근접 이웃 알고리즘",
+   "stem": "<span class=\"mono\">kn</span> 은 이웃 5개, <span class=\"mono\">kn49</span> 는 이웃 49개로 같은 데이터를 훈련한 모델이다. ㉠, ㉡에 출력되는 값으로 알맞은 것은? (도미 35마리, 빙어 14마리의 [길이, 무게] 데이터. 정답은 도미 1, 빙어 0)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">방법1 → ㉠<br>방법2 → ㉡</span></span>",
+   "code": "# 방법1: 이웃 5개\nprint(kn.score(fish_data, fish_target))\n\n# 방법2: 이웃 49개\nprint(kn49.score(fish_data, fish_target))",
+   "answer": "㉠ 1.0  ·  ㉡ 0.7142857142857143",
+   "why": "이웃 5개면 49개를 모두 맞혀 1.0, 이웃 49개면 전부 도미로 예측해 35/49 입니다.",
+   "tags": [
+    "n_neighbors",
+    "정확도"
+   ],
+   "verifyCode": "bream_length = [25.4, 26.3, 26.5, 29.0, 29.0, 29.7, 29.7, 30.0, 30.0, 30.7, 31.0, 31.0, 31.5, 32.0, 32.0, 32.0, 33.0, 33.0, 33.5, 33.5, 34.0, 34.0, 34.5, 35.0, 35.0, 35.0, 35.0, 36.0, 36.0, 37.0, 38.5, 38.5, 39.5, 41.0, 41.0]\nbream_weight = [242.0, 290.0, 340.0, 363.0, 430.0, 450.0, 500.0, 390.0, 450.0, 500.0, 475.0, 500.0, 500.0, 340.0, 600.0, 600.0, 700.0, 700.0, 610.0, 650.0, 575.0, 685.0, 620.0, 680.0, 700.0, 725.0, 720.0, 714.0, 850.0, 1000.0, 920.0, 955.0, 925.0, 975.0, 950.0]\nsmelt_length = [9.8, 10.5, 10.6, 11.0, 11.2, 11.3, 11.8, 11.8, 12.0, 12.2, 12.4, 13.0, 14.3, 15.0]\nsmelt_weight = [6.7, 7.5, 7.0, 9.7, 9.8, 8.7, 10.0, 9.9, 9.8, 12.2, 13.4, 12.2, 19.7, 19.9]\nlength = bream_length + smelt_length\nweight = bream_weight + smelt_weight\n\nfrom sklearn.neighbors import KNeighborsClassifier\nfish_data = [[l, w] for l, w in zip(length, weight)]\nfish_target = [1]*35 + [0]*14\nkn = KNeighborsClassifier()\nkn.fit(fish_data, fish_target)\nkn49 = KNeighborsClassifier(n_neighbors=49)\nkn49.fit(fish_data, fish_target)\n# 방법1: 이웃 5개\nprint(kn.score(fish_data, fish_target))\n\n# 방법2: 이웃 49개\nprint(kn49.score(fish_data, fish_target))",
+   "verifyExpect": "1.0\n0.7142857142857143",
+   "options": [
+    "㉠ 0.9795918367346939  ·  ㉡ 0.7142857142857143",
+    "㉠ 0.7142857142857143  ·  ㉡ 1.0",
+    "㉠ 1.0  ·  ㉡ 1.0",
+    "㉠ 1.0  ·  ㉡ 0.2857142857142857",
+    "㉠ 1.0  ·  ㉡ 0.7142857142857143"
+   ]
+  },
+  {
+   "id": "F01X03",
+   "type": "대조",
+   "typeKey": "contrast",
+   "mode": "mc",
+   "src": "기말.1.K-최근접 이웃 알고리즘",
+   "stem": "길이 10, 무게 7인 생선(빙어와 비슷한 크기)을 두 모델로 예측한다. ㉠, ㉡에 출력되는 값으로 알맞은 것은? (도미 35마리, 빙어 14마리의 [길이, 무게] 데이터. 정답은 도미 1, 빙어 0)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">방법1 → ㉠<br>방법2 → ㉡</span></span>",
+   "code": "# 방법1: 이웃 5개\nprint(kn.predict([[10, 7]])[0])\n\n# 방법2: 이웃 49개\nprint(kn49.predict([[10, 7]])[0])",
+   "answer": "㉠ 0  ·  ㉡ 1",
+   "why": "이웃 5개 모델은 가까운 빙어 다섯 마리를 보고 0(빙어)으로 예측합니다. 이웃 49개 모델은 전체 데이터의 다수인 도미(1)로 예측합니다.",
+   "tags": [
+    "n_neighbors",
+    "predict"
+   ],
+   "verifyCode": "bream_length = [25.4, 26.3, 26.5, 29.0, 29.0, 29.7, 29.7, 30.0, 30.0, 30.7, 31.0, 31.0, 31.5, 32.0, 32.0, 32.0, 33.0, 33.0, 33.5, 33.5, 34.0, 34.0, 34.5, 35.0, 35.0, 35.0, 35.0, 36.0, 36.0, 37.0, 38.5, 38.5, 39.5, 41.0, 41.0]\nbream_weight = [242.0, 290.0, 340.0, 363.0, 430.0, 450.0, 500.0, 390.0, 450.0, 500.0, 475.0, 500.0, 500.0, 340.0, 600.0, 600.0, 700.0, 700.0, 610.0, 650.0, 575.0, 685.0, 620.0, 680.0, 700.0, 725.0, 720.0, 714.0, 850.0, 1000.0, 920.0, 955.0, 925.0, 975.0, 950.0]\nsmelt_length = [9.8, 10.5, 10.6, 11.0, 11.2, 11.3, 11.8, 11.8, 12.0, 12.2, 12.4, 13.0, 14.3, 15.0]\nsmelt_weight = [6.7, 7.5, 7.0, 9.7, 9.8, 8.7, 10.0, 9.9, 9.8, 12.2, 13.4, 12.2, 19.7, 19.9]\nlength = bream_length + smelt_length\nweight = bream_weight + smelt_weight\n\nfrom sklearn.neighbors import KNeighborsClassifier\nfish_data = [[l, w] for l, w in zip(length, weight)]\nfish_target = [1]*35 + [0]*14\nkn = KNeighborsClassifier()\nkn.fit(fish_data, fish_target)\nkn49 = KNeighborsClassifier(n_neighbors=49)\nkn49.fit(fish_data, fish_target)\n# 방법1: 이웃 5개\nprint(kn.predict([[10, 7]])[0])\n\n# 방법2: 이웃 49개\nprint(kn49.predict([[10, 7]])[0])",
+   "verifyExpect": "0\n1",
+   "options": [
+    "㉠ 0  ·  ㉡ 0.714",
+    "㉠ 0  ·  ㉡ 1",
+    "㉠ 1  ·  ㉡ 1",
+    "㉠ 1  ·  ㉡ 0",
+    "㉠ 0  ·  ㉡ 0"
+   ]
+  },
+  {
+   "id": "F01X04",
+   "type": "대조",
+   "typeKey": "contrast",
+   "mode": "mc",
+   "src": "기말.1.K-최근접 이웃 알고리즘",
+   "stem": "다음은 거의 같은 두 코드이다. ㉠, ㉡에 출력되는 값으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">방법1 → ㉠<br>방법2 → ㉡</span></span>",
+   "code": "# 방법1\nprint([1]*3)\n\n# 방법2\nprint([1*3])",
+   "answer": "㉠ [1, 1, 1]  ·  ㉡ [3]",
+   "why": "<span class=\"mono\">[1]*3</span> 은 리스트를 세 번 반복한 <span class=\"mono\">[1, 1, 1]</span> 이고, <span class=\"mono\">[1*3]</span> 은 숫자 3 하나가 든 리스트입니다.",
+   "tags": [
+    "리스트 반복"
+   ],
+   "verifyCode": "# 방법1\nprint([1]*3)\n\n# 방법2\nprint([1*3])",
+   "verifyExpect": "[1, 1, 1]\n[3]",
+   "options": [
+    "㉠ [3]  ·  ㉡ [1, 1, 1]",
+    "㉠ [1, 1, 1]  ·  ㉡ [1, 1, 1]",
+    "㉠ [3]  ·  ㉡ [3]",
+    "㉠ [1, 1, 1]  ·  ㉡ [3]",
+    "㉠ [1, 1, 1]  ·  ㉡ 3"
+   ]
+  },
+  {
+   "id": "F01S01",
+   "type": "조건 매핑",
+   "typeKey": "spec",
+   "mode": "mc",
+   "src": "기말.1.K-최근접 이웃 알고리즘",
+   "stem": "다음 [조건]을 모두 만족하는 코드로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>[조건]</b><br>○ K-최근접 이웃 분류 모델 객체를 만든다.<br>○ 예측할 때 참고하는 이웃의 수를 7개로 한다.</span>",
+   "code": "kn = ____",
+   "answer": "KNeighborsClassifier(n_neighbors=7)",
+   "why": "이웃 수를 정하는 매개변수의 이름은 <span class=\"mono\">n_neighbors</span> 입니다.",
+   "tags": [
+    "n_neighbors"
+   ],
+   "verifyCode": "bream_length = [25.4, 26.3, 26.5, 29.0, 29.0, 29.7, 29.7, 30.0, 30.0, 30.7, 31.0, 31.0, 31.5, 32.0, 32.0, 32.0, 33.0, 33.0, 33.5, 33.5, 34.0, 34.0, 34.5, 35.0, 35.0, 35.0, 35.0, 36.0, 36.0, 37.0, 38.5, 38.5, 39.5, 41.0, 41.0]\nbream_weight = [242.0, 290.0, 340.0, 363.0, 430.0, 450.0, 500.0, 390.0, 450.0, 500.0, 475.0, 500.0, 500.0, 340.0, 600.0, 600.0, 700.0, 700.0, 610.0, 650.0, 575.0, 685.0, 620.0, 680.0, 700.0, 725.0, 720.0, 714.0, 850.0, 1000.0, 920.0, 955.0, 925.0, 975.0, 950.0]\nsmelt_length = [9.8, 10.5, 10.6, 11.0, 11.2, 11.3, 11.8, 11.8, 12.0, 12.2, 12.4, 13.0, 14.3, 15.0]\nsmelt_weight = [6.7, 7.5, 7.0, 9.7, 9.8, 8.7, 10.0, 9.9, 9.8, 12.2, 13.4, 12.2, 19.7, 19.9]\nlength = bream_length + smelt_length\nweight = bream_weight + smelt_weight\n\nfrom sklearn.neighbors import KNeighborsClassifier\nfish_data = [[l, w] for l, w in zip(length, weight)]\nfish_target = [1]*35 + [0]*14\nkn = KNeighborsClassifier()\nkn.fit(fish_data, fish_target)\nkn49 = KNeighborsClassifier(n_neighbors=49)\nkn49.fit(fish_data, fish_target)\nkn = KNeighborsClassifier(n_neighbors=7)\nprint(kn.n_neighbors)",
+   "verifyExpect": "7",
+   "options": [
+    "KNeighborsClassifier(n=7)",
+    "KNeighborsClassifier(neighbors=7)",
+    "KNeighborsClassifier(n_neighbors=7)",
+    "KNeighborsClassifier().fit(7)",
+    "KNeighborsClassifier(k=7)"
+   ]
+  },
+  {
+   "id": "F01S02",
+   "type": "조건 매핑",
+   "typeKey": "spec",
+   "mode": "mc",
+   "src": "기말.1.K-최근접 이웃 알고리즘",
+   "stem": "다음 [조건]을 모두 만족하는 코드로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>[조건]</b><br>○ 도미 3마리, 빙어 2마리의 정답 리스트를 만든다.<br>○ 도미는 1, 빙어는 0으로 표시하고 도미가 앞에 온다.</span>",
+   "code": "target = ____",
+   "answer": "[1]*3 + [0]*2",
+   "why": "<span class=\"mono\">[1]*3</span> 은 <span class=\"mono\">[1, 1, 1]</span>, <span class=\"mono\">[0]*2</span> 는 <span class=\"mono\">[0, 0]</span> 이고 <span class=\"mono\">+</span> 로 이어 붙입니다.",
+   "tags": [
+    "타깃"
+   ],
+   "verifyCode": "target = [1]*3 + [0]*2\nprint(target)",
+   "verifyExpect": "[1, 1, 1, 0, 0]",
+   "options": [
+    "[1, 0]*3",
+    "[1]*3 + [0]*2",
+    "[1*3] + [0*2]",
+    "[3]*1 + [2]*0",
+    "[0]*3 + [1]*2"
+   ]
+  },
+  {
+   "id": "F01S03",
+   "type": "조건 매핑",
+   "typeKey": "spec",
+   "mode": "mc",
+   "src": "기말.1.K-최근접 이웃 알고리즘",
+   "stem": "다음 [조건]을 모두 만족하는 코드로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>[조건]</b><br>○ 훈련된 모델 <span class=\"mono\">kn</span> 으로 예측한다.<br>○ 길이 20, 무게 100인 생선 <b>한 마리</b>가 대상이다.</span>",
+   "code": "result = ____",
+   "answer": "kn.predict([[20, 100]])",
+   "why": "입력은 샘플들의 리스트(2차원)여야 하므로 한 마리여도 <span class=\"mono\">[[20, 100]]</span> 처럼 대괄호를 두 겹으로 씁니다.",
+   "tags": [
+    "predict",
+    "2차원 입력"
+   ],
+   "verifyCode": "bream_length = [25.4, 26.3, 26.5, 29.0, 29.0, 29.7, 29.7, 30.0, 30.0, 30.7, 31.0, 31.0, 31.5, 32.0, 32.0, 32.0, 33.0, 33.0, 33.5, 33.5, 34.0, 34.0, 34.5, 35.0, 35.0, 35.0, 35.0, 36.0, 36.0, 37.0, 38.5, 38.5, 39.5, 41.0, 41.0]\nbream_weight = [242.0, 290.0, 340.0, 363.0, 430.0, 450.0, 500.0, 390.0, 450.0, 500.0, 475.0, 500.0, 500.0, 340.0, 600.0, 600.0, 700.0, 700.0, 610.0, 650.0, 575.0, 685.0, 620.0, 680.0, 700.0, 725.0, 720.0, 714.0, 850.0, 1000.0, 920.0, 955.0, 925.0, 975.0, 950.0]\nsmelt_length = [9.8, 10.5, 10.6, 11.0, 11.2, 11.3, 11.8, 11.8, 12.0, 12.2, 12.4, 13.0, 14.3, 15.0]\nsmelt_weight = [6.7, 7.5, 7.0, 9.7, 9.8, 8.7, 10.0, 9.9, 9.8, 12.2, 13.4, 12.2, 19.7, 19.9]\nlength = bream_length + smelt_length\nweight = bream_weight + smelt_weight\n\nfrom sklearn.neighbors import KNeighborsClassifier\nfish_data = [[l, w] for l, w in zip(length, weight)]\nfish_target = [1]*35 + [0]*14\nkn = KNeighborsClassifier()\nkn.fit(fish_data, fish_target)\nkn49 = KNeighborsClassifier(n_neighbors=49)\nkn49.fit(fish_data, fish_target)\nresult = kn.predict([[20, 100]])\nprint(len(result))",
+   "verifyExpect": "1",
+   "options": [
+    "kn.predict([[20, 100]])",
+    "kn.predict([20, 100])",
+    "kn.fit([[20, 100]])",
+    "kn.score([[20, 100]])",
+    "kn.predict(20, 100)"
+   ]
+  },
+  {
+   "id": "F01S04",
+   "type": "조건 매핑",
+   "typeKey": "spec",
+   "mode": "mc",
+   "src": "기말.1.K-최근접 이웃 알고리즘",
+   "stem": "다음 [조건]을 모두 만족하는 코드로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>[조건]</b><br>○ 훈련된 모델 <span class=\"mono\">kn</span> 의 정확도를 구한다.<br>○ 입력은 <span class=\"mono\">fish_data</span>, 정답은 <span class=\"mono\">fish_target</span> 이다.</span>",
+   "code": "acc = ____",
+   "answer": "kn.score(fish_data, fish_target)",
+   "why": "<span class=\"mono\">score(입력, 정답)</span> 순서입니다. 분류 모델의 <span class=\"mono\">score</span> 는 정확도(맞힌 개수 ÷ 전체 개수)를 돌려줍니다.",
+   "tags": [
+    "score"
+   ],
+   "verifyCode": "bream_length = [25.4, 26.3, 26.5, 29.0, 29.0, 29.7, 29.7, 30.0, 30.0, 30.7, 31.0, 31.0, 31.5, 32.0, 32.0, 32.0, 33.0, 33.0, 33.5, 33.5, 34.0, 34.0, 34.5, 35.0, 35.0, 35.0, 35.0, 36.0, 36.0, 37.0, 38.5, 38.5, 39.5, 41.0, 41.0]\nbream_weight = [242.0, 290.0, 340.0, 363.0, 430.0, 450.0, 500.0, 390.0, 450.0, 500.0, 475.0, 500.0, 500.0, 340.0, 600.0, 600.0, 700.0, 700.0, 610.0, 650.0, 575.0, 685.0, 620.0, 680.0, 700.0, 725.0, 720.0, 714.0, 850.0, 1000.0, 920.0, 955.0, 925.0, 975.0, 950.0]\nsmelt_length = [9.8, 10.5, 10.6, 11.0, 11.2, 11.3, 11.8, 11.8, 12.0, 12.2, 12.4, 13.0, 14.3, 15.0]\nsmelt_weight = [6.7, 7.5, 7.0, 9.7, 9.8, 8.7, 10.0, 9.9, 9.8, 12.2, 13.4, 12.2, 19.7, 19.9]\nlength = bream_length + smelt_length\nweight = bream_weight + smelt_weight\n\nfrom sklearn.neighbors import KNeighborsClassifier\nfish_data = [[l, w] for l, w in zip(length, weight)]\nfish_target = [1]*35 + [0]*14\nkn = KNeighborsClassifier()\nkn.fit(fish_data, fish_target)\nkn49 = KNeighborsClassifier(n_neighbors=49)\nkn49.fit(fish_data, fish_target)\nacc = kn.score(fish_data, fish_target)\nprint(acc)",
+   "verifyExpect": "1.0",
+   "options": [
+    "kn.score(fish_target, fish_data)",
+    "kn.predict(fish_data, fish_target)",
+    "kn.fit(fish_data, fish_target)",
+    "kn.accuracy(fish_data)",
+    "kn.score(fish_data, fish_target)"
+   ]
+  },
+  {
+   "id": "F01W01",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "기말.1.K-최근접 이웃 알고리즘",
+   "stem": "빈칸 ㉠ 에 들어갈 메서드 이름을 쓰시오. (모델을 훈련하는 메서드)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">1.0</span></span>",
+   "code": "kn = KNeighborsClassifier()\nkn.㉠(fish_data, fish_target)\nprint(kn.score(fish_data, fish_target))",
+   "answer": "fit",
+   "why": "사이킷런 모델은 <span class=\"mono\">fit(입력, 정답)</span> 으로 훈련합니다.",
+   "tags": [
+    "fit"
+   ],
+   "verifyCode": "bream_length = [25.4, 26.3, 26.5, 29.0, 29.0, 29.7, 29.7, 30.0, 30.0, 30.7, 31.0, 31.0, 31.5, 32.0, 32.0, 32.0, 33.0, 33.0, 33.5, 33.5, 34.0, 34.0, 34.5, 35.0, 35.0, 35.0, 35.0, 36.0, 36.0, 37.0, 38.5, 38.5, 39.5, 41.0, 41.0]\nbream_weight = [242.0, 290.0, 340.0, 363.0, 430.0, 450.0, 500.0, 390.0, 450.0, 500.0, 475.0, 500.0, 500.0, 340.0, 600.0, 600.0, 700.0, 700.0, 610.0, 650.0, 575.0, 685.0, 620.0, 680.0, 700.0, 725.0, 720.0, 714.0, 850.0, 1000.0, 920.0, 955.0, 925.0, 975.0, 950.0]\nsmelt_length = [9.8, 10.5, 10.6, 11.0, 11.2, 11.3, 11.8, 11.8, 12.0, 12.2, 12.4, 13.0, 14.3, 15.0]\nsmelt_weight = [6.7, 7.5, 7.0, 9.7, 9.8, 8.7, 10.0, 9.9, 9.8, 12.2, 13.4, 12.2, 19.7, 19.9]\nlength = bream_length + smelt_length\nweight = bream_weight + smelt_weight\n\nfrom sklearn.neighbors import KNeighborsClassifier\nfish_data = [[l, w] for l, w in zip(length, weight)]\nfish_target = [1]*35 + [0]*14\nkn = KNeighborsClassifier()\nkn.fit(fish_data, fish_target)\nkn49 = KNeighborsClassifier(n_neighbors=49)\nkn49.fit(fish_data, fish_target)\nkn = KNeighborsClassifier()\nkn.fit(fish_data, fish_target)\nprint(kn.score(fish_data, fish_target))",
+   "verifyExpect": "1.0",
+   "accept": [
+    "fit"
+   ]
+  },
+  {
+   "id": "F01W02",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "기말.1.K-최근접 이웃 알고리즘",
+   "stem": "빈칸 ㉠ 에 들어갈 매개변수 이름을 쓰시오.<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">0.7142857142857143</span></span>",
+   "code": "kn49 = KNeighborsClassifier(㉠=49)\nkn49.fit(fish_data, fish_target)\nprint(kn49.score(fish_data, fish_target))",
+   "answer": "n_neighbors",
+   "why": "참고할 이웃의 수는 <span class=\"mono\">n_neighbors</span> 로 지정합니다.",
+   "tags": [
+    "n_neighbors"
+   ],
+   "verifyCode": "bream_length = [25.4, 26.3, 26.5, 29.0, 29.0, 29.7, 29.7, 30.0, 30.0, 30.7, 31.0, 31.0, 31.5, 32.0, 32.0, 32.0, 33.0, 33.0, 33.5, 33.5, 34.0, 34.0, 34.5, 35.0, 35.0, 35.0, 35.0, 36.0, 36.0, 37.0, 38.5, 38.5, 39.5, 41.0, 41.0]\nbream_weight = [242.0, 290.0, 340.0, 363.0, 430.0, 450.0, 500.0, 390.0, 450.0, 500.0, 475.0, 500.0, 500.0, 340.0, 600.0, 600.0, 700.0, 700.0, 610.0, 650.0, 575.0, 685.0, 620.0, 680.0, 700.0, 725.0, 720.0, 714.0, 850.0, 1000.0, 920.0, 955.0, 925.0, 975.0, 950.0]\nsmelt_length = [9.8, 10.5, 10.6, 11.0, 11.2, 11.3, 11.8, 11.8, 12.0, 12.2, 12.4, 13.0, 14.3, 15.0]\nsmelt_weight = [6.7, 7.5, 7.0, 9.7, 9.8, 8.7, 10.0, 9.9, 9.8, 12.2, 13.4, 12.2, 19.7, 19.9]\nlength = bream_length + smelt_length\nweight = bream_weight + smelt_weight\n\nfrom sklearn.neighbors import KNeighborsClassifier\nfish_data = [[l, w] for l, w in zip(length, weight)]\nfish_target = [1]*35 + [0]*14\nkn = KNeighborsClassifier()\nkn.fit(fish_data, fish_target)\nkn49 = KNeighborsClassifier(n_neighbors=49)\nkn49.fit(fish_data, fish_target)\nkn49 = KNeighborsClassifier(n_neighbors=49)\nkn49.fit(fish_data, fish_target)\nprint(kn49.score(fish_data, fish_target))",
+   "verifyExpect": "0.7142857142857143",
+   "accept": [
+    "n_neighbors"
+   ]
+  },
+  {
+   "id": "F01W03",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "기말.1.K-최근접 이웃 알고리즘",
+   "stem": "도미 40마리와 빙어 10마리로 <span class=\"mono\">KNeighborsClassifier(n_neighbors=50)</span> 모델을 훈련한 뒤, 같은 50마리로 <span class=\"mono\">score()</span> 를 구하면 얼마인지 소수로 쓰시오.",
+   "code": "",
+   "answer": "0.8",
+   "why": "50개 전부가 이웃이므로 항상 다수인 도미로 예측합니다. 도미 40마리만 맞히므로 40/50 = 0.8 입니다.",
+   "tags": [
+    "n_neighbors",
+    "정확도"
+   ],
+   "verifyCode": "bream_length = [25.4, 26.3, 26.5, 29.0, 29.0, 29.7, 29.7, 30.0, 30.0, 30.7, 31.0, 31.0, 31.5, 32.0, 32.0, 32.0, 33.0, 33.0, 33.5, 33.5, 34.0, 34.0, 34.5, 35.0, 35.0, 35.0, 35.0, 36.0, 36.0, 37.0, 38.5, 38.5, 39.5, 41.0, 41.0]\nbream_weight = [242.0, 290.0, 340.0, 363.0, 430.0, 450.0, 500.0, 390.0, 450.0, 500.0, 475.0, 500.0, 500.0, 340.0, 600.0, 600.0, 700.0, 700.0, 610.0, 650.0, 575.0, 685.0, 620.0, 680.0, 700.0, 725.0, 720.0, 714.0, 850.0, 1000.0, 920.0, 955.0, 925.0, 975.0, 950.0]\nsmelt_length = [9.8, 10.5, 10.6, 11.0, 11.2, 11.3, 11.8, 11.8, 12.0, 12.2, 12.4, 13.0, 14.3, 15.0]\nsmelt_weight = [6.7, 7.5, 7.0, 9.7, 9.8, 8.7, 10.0, 9.9, 9.8, 12.2, 13.4, 12.2, 19.7, 19.9]\nlength = bream_length + smelt_length\nweight = bream_weight + smelt_weight\n\nfrom sklearn.neighbors import KNeighborsClassifier\nfish_data = [[l, w] for l, w in zip(length, weight)]\nfish_target = [1]*35 + [0]*14\nkn = KNeighborsClassifier()\nkn.fit(fish_data, fish_target)\nkn49 = KNeighborsClassifier(n_neighbors=49)\nkn49.fit(fish_data, fish_target)\nprint(40/50)",
+   "verifyExpect": "0.8",
+   "accept": [
+    "0.8",
+    "0.80",
+    "4/5",
+    "40/50",
+    "80%",
+    ".8"
+   ]
+  },
+  {
+   "id": "F01W04",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "기말.1.K-최근접 이웃 알고리즘",
+   "stem": "빈칸 ㉠ 에 들어갈 함수 이름을 쓰시오.<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">[[25.4, 242.0], [26.3, 290.0]]</span></span>",
+   "code": "length = [25.4, 26.3]\nweight = [242.0, 290.0]\nfish_data = [[l, w] for l, w in ㉠(length, weight)]\nprint(fish_data)",
+   "answer": "zip",
+   "why": "<span class=\"mono\">zip</span> 은 두 리스트의 같은 위치 원소를 짝지어 하나씩 꺼내 줍니다.",
+   "tags": [
+    "zip"
+   ],
+   "verifyCode": "length = [25.4, 26.3]\nweight = [242.0, 290.0]\nfish_data = [[l, w] for l, w in zip(length, weight)]\nprint(fish_data)",
+   "verifyExpect": "[[25.4, 242.0], [26.3, 290.0]]",
+   "accept": [
+    "zip"
+   ]
+  },
+  {
+   "id": "F01E01",
+   "type": "서술형",
+   "typeKey": "essay",
+   "mode": "essay",
+   "src": "기말.1.K-최근접 이웃 알고리즘",
+   "stem": "도미 35마리와 빙어 14마리로 <span class=\"mono\">KNeighborsClassifier(n_neighbors=49)</span> 모델을 훈련한 뒤 같은 데이터로 <span class=\"mono\">score()</span> 를 구했더니 약 0.714가 나왔다. 이 값이 나온 이유를 설명하시오.",
+   "code": "",
+   "answer": "이웃을 49개로 하면 전체 데이터 49개가 모두 이웃이 된다. 그러면 어떤 샘플이든 다수인 도미로 예측하므로 도미 35마리만 맞히고 빙어 14마리는 모두 틀린다. 따라서 정확도는 35/49 ≈ 0.714 이다.",
+   "why": "AI 채점 결과입니다.",
+   "tags": [
+    "n_neighbors",
+    "정확도",
+    "서술형"
+   ],
+   "verifyCode": "bream_length = [25.4, 26.3, 26.5, 29.0, 29.0, 29.7, 29.7, 30.0, 30.0, 30.7, 31.0, 31.0, 31.5, 32.0, 32.0, 32.0, 33.0, 33.0, 33.5, 33.5, 34.0, 34.0, 34.5, 35.0, 35.0, 35.0, 35.0, 36.0, 36.0, 37.0, 38.5, 38.5, 39.5, 41.0, 41.0]\nbream_weight = [242.0, 290.0, 340.0, 363.0, 430.0, 450.0, 500.0, 390.0, 450.0, 500.0, 475.0, 500.0, 500.0, 340.0, 600.0, 600.0, 700.0, 700.0, 610.0, 650.0, 575.0, 685.0, 620.0, 680.0, 700.0, 725.0, 720.0, 714.0, 850.0, 1000.0, 920.0, 955.0, 925.0, 975.0, 950.0]\nsmelt_length = [9.8, 10.5, 10.6, 11.0, 11.2, 11.3, 11.8, 11.8, 12.0, 12.2, 12.4, 13.0, 14.3, 15.0]\nsmelt_weight = [6.7, 7.5, 7.0, 9.7, 9.8, 8.7, 10.0, 9.9, 9.8, 12.2, 13.4, 12.2, 19.7, 19.9]\nlength = bream_length + smelt_length\nweight = bream_weight + smelt_weight\n\nfrom sklearn.neighbors import KNeighborsClassifier\nfish_data = [[l, w] for l, w in zip(length, weight)]\nfish_target = [1]*35 + [0]*14\nkn = KNeighborsClassifier()\nkn.fit(fish_data, fish_target)\nkn49 = KNeighborsClassifier(n_neighbors=49)\nkn49.fit(fish_data, fish_target)\nprint(round(35/49, 3))",
+   "verifyExpect": "0.714",
+   "rubric": "필수 요소(모두 있어야 정답): (1) 이웃 수가 전체 데이터 수(49)와 같아서 모든 데이터가 이웃이 된다는 점. (2) 그래서 항상 다수 클래스인 도미로 예측한다는 점. (3) 도미 35마리만 맞혀 35/49 가 된다는 계산 또는 그와 같은 뜻의 설명. '이웃이 많아서 부정확하다' 수준으로만 쓰고 다수 클래스나 35/49 를 언급하지 않으면 오답."
+  },
+  {
+   "id": "F01E02",
+   "type": "서술형",
+   "typeKey": "essay",
+   "mode": "essay",
+   "src": "기말.1.K-최근접 이웃 알고리즘",
+   "stem": "K-최근접 이웃 알고리즘이 새로운 생선 한 마리를 도미 또는 빙어로 분류하는 과정을 설명하시오. (이웃 수는 기본값을 쓴다고 가정)",
+   "code": "",
+   "answer": "새 데이터와 훈련 데이터 사이의 거리를 계산해서 가장 가까운 이웃 5개를 찾는다. 그 5개 중 더 많은 쪽(다수결)의 클래스로 새 데이터를 분류한다.",
+   "why": "AI 채점 결과입니다.",
+   "tags": [
+    "KNN",
+    "다수결",
+    "서술형"
+   ],
+   "rubric": "필수 요소(모두 있어야 정답): (1) 가장 가까운(거리가 가까운) 이웃을 찾는다는 점. (2) 이웃들의 다수결(더 많은 클래스)로 정한다는 점. 이웃 수 5는 언급하지 않아도 감점하지 않는다. '규칙이나 식을 학습한다'처럼 다른 알고리즘의 설명이면 오답."
+  },
+  {
+   "id": "F01E03",
+   "type": "서술형",
+   "typeKey": "essay",
+   "mode": "essay",
+   "src": "기말.1.K-최근접 이웃 알고리즘",
+   "stem": "훈련된 모델 <span class=\"mono\">kn</span> 에 <span class=\"mono\">kn.predict([30, 600])</span> 을 실행하면 오류가 난다. 오류가 나는 이유를 쓰고, 길이 30, 무게 600인 생선 한 마리를 예측하도록 코드를 고쳐 쓰시오.",
+   "code": "",
+   "answer": "predict 의 입력은 샘플들이 모인 2차원 리스트(배열)여야 하는데 [30, 600] 은 1차원이기 때문이다.\n고친 코드: kn.predict([[30, 600]])",
+   "why": "AI 채점 결과입니다.",
+   "tags": [
+    "predict",
+    "2차원 입력",
+    "서술형"
+   ],
+   "verifyCode": "bream_length = [25.4, 26.3, 26.5, 29.0, 29.0, 29.7, 29.7, 30.0, 30.0, 30.7, 31.0, 31.0, 31.5, 32.0, 32.0, 32.0, 33.0, 33.0, 33.5, 33.5, 34.0, 34.0, 34.5, 35.0, 35.0, 35.0, 35.0, 36.0, 36.0, 37.0, 38.5, 38.5, 39.5, 41.0, 41.0]\nbream_weight = [242.0, 290.0, 340.0, 363.0, 430.0, 450.0, 500.0, 390.0, 450.0, 500.0, 475.0, 500.0, 500.0, 340.0, 600.0, 600.0, 700.0, 700.0, 610.0, 650.0, 575.0, 685.0, 620.0, 680.0, 700.0, 725.0, 720.0, 714.0, 850.0, 1000.0, 920.0, 955.0, 925.0, 975.0, 950.0]\nsmelt_length = [9.8, 10.5, 10.6, 11.0, 11.2, 11.3, 11.8, 11.8, 12.0, 12.2, 12.4, 13.0, 14.3, 15.0]\nsmelt_weight = [6.7, 7.5, 7.0, 9.7, 9.8, 8.7, 10.0, 9.9, 9.8, 12.2, 13.4, 12.2, 19.7, 19.9]\nlength = bream_length + smelt_length\nweight = bream_weight + smelt_weight\n\nfrom sklearn.neighbors import KNeighborsClassifier\nfish_data = [[l, w] for l, w in zip(length, weight)]\nfish_target = [1]*35 + [0]*14\nkn = KNeighborsClassifier()\nkn.fit(fish_data, fish_target)\nkn49 = KNeighborsClassifier(n_neighbors=49)\nkn49.fit(fish_data, fish_target)\nprint(kn.predict([[30, 600]]))",
+   "verifyExpect": "[1]",
+   "rubric": "필수 요소(모두 있어야 정답): (1) 입력이 2차원이어야 한다(샘플의 리스트여야 한다)는 이유. (2) kn.predict([[30, 600]]) 처럼 대괄호를 두 겹으로 쓴 코드. new = [30, 600]; kn.predict([new]) 도 정답으로 인정한다."
+  }
+ ]
+}

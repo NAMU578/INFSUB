@@ -1,0 +1,1243 @@
+{
+ "version": 1,
+ "generatedAt": "2026-11-11",
+ "source": [
+  "기말.8.로지스틱회귀.ipynb"
+ ],
+ "verified": "verifyCode 가 있는 문항은 파이썬(numpy 2.5, pandas 3.0, scikit-learn 1.9)에서 실제로 실행해 정답을 확인함. ref 가 있는 문항은 코드로 검증할 수 없는 개념이나 텐서플로 실행 결과라서 노트북 본문(해당 셀)과 저장된 출력을 근거로 둠. 서술형(essay)은 AI 가 rubric 으로 채점하며, 계산이 들어간 모범 답안은 verifyCode 로 실행 확인함.",
+ "types": [
+  {
+   "key": "classify",
+   "label": "개념 분류",
+   "pick": [
+    1,
+    2
+   ],
+   "note": "코드를 보고 <보기>에서 옳은 설명을 모두 고르는 문항"
+  },
+  {
+   "key": "blank2",
+   "label": "빈칸",
+   "pick": [
+    1,
+    2
+   ],
+   "note": "㉠, ㉡ 두 빈칸을 짝으로 고르는 문항"
+  },
+  {
+   "key": "boundary",
+   "label": "경계값",
+   "pick": [
+    1,
+    2
+   ],
+   "note": "포함/미포함, 개수·크기의 경계를 판별하는 문항"
+  },
+  {
+   "key": "trace",
+   "label": "상태 예측",
+   "pick": [
+    1,
+    2
+   ],
+   "note": "출력값·shape 등 실행 결과를 예측하는 문항"
+  },
+  {
+   "key": "contrast",
+   "label": "대조",
+   "pick": [
+    1,
+    2
+   ],
+   "note": "거의 같은 두 코드의 결정적 차이를 묻는 문항"
+  },
+  {
+   "key": "spec",
+   "label": "조건 매핑",
+   "pick": [
+    1,
+    1
+   ],
+   "note": "[조건]을 만족하는 코드를 고르는 문항"
+  },
+  {
+   "key": "short",
+   "label": "서답형",
+   "pick": [
+    1,
+    1
+   ],
+   "note": "빈칸에 들어갈 코드나 계산 결과를 직접 쓰는 문항"
+  },
+  {
+   "key": "essay",
+   "label": "서술형",
+   "pick": [
+    1,
+    1
+   ],
+   "note": "이유 설명·계산 과정을 서술하는 문항 (AI 채점)"
+  }
+ ],
+ "questions": [
+  {
+   "id": "F08C01",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "로지스틱 회귀에 대한 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) 이름은 회귀이지만 분류 모델이다.<br>(나) 시그모이드 함수의 출력은 0 과 1 사이의 값이다.<br>(다) 소프트맥스 함수의 출력을 모두 더하면 클래스의 수와 같다.</span>",
+   "code": "",
+   "answer": "(가), (나)",
+   "why": "로지스틱 회귀는 선형식으로 z 를 계산한 뒤 함수를 거쳐 확률로 바꾸는 분류 모델입니다. 소프트맥스의 출력은 각각 0~1 사이이고 모두 더하면 <b>1</b> 입니다.",
+   "tags": [
+    "로지스틱 회귀",
+    "시그모이드",
+    "소프트맥스"
+   ],
+   "ref": "셀 [16], [24] 로지스틱 회귀, 다중분류",
+   "options": [
+    "(다)",
+    "(가), (나)",
+    "(가), (다)",
+    "(나), (다)",
+    "(가), (나), (다)"
+   ]
+  },
+  {
+   "id": "F08C02",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "다음 코드에 대한 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은? (<span class=\"mono\">train_scaled</span>, <span class=\"mono\">test_scaled</span> 는 물고기 7종의 특성 5개(Weight, Length, Diagonal, Height, Width)를 표준화한 훈련 119개, 테스트 40개이고 <span class=\"mono\">train_target</span>, <span class=\"mono\">test_target</span> 은 종 이름 문자열 배열이다)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) <span class=\"mono\">kn.classes_</span> 는 알파벳 순서로 정렬되어 있다.<br>(나) <span class=\"mono\">proba</span> 에는 0.5 인 값이 있다.<br>(다) <span class=\"mono\">proba</span> 의 각 행을 더하면 1 이다.</span>",
+   "code": "kn = KNeighborsClassifier(n_neighbors=3)\nkn.fit(train_scaled, train_target)\nproba = kn.predict_proba(test_scaled[:5])",
+   "answer": "(가), (다)",
+   "why": "<span class=\"mono\">predict_proba</span> 의 열 순서는 알파벳순인 <span class=\"mono\">classes_</span> 의 순서입니다. 이웃이 3개라 확률은 0, 1/3, 2/3, 1 만 나올 수 있어 0.5 는 나오지 않습니다. 한 행은 한 샘플의 클래스별 확률이라 합이 1 입니다.",
+   "tags": [
+    "predict_proba",
+    "classes_",
+    "KNN"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom scipy.special import expit, softmax\n\nfish = pd.read_csv('fish.csv')\nfish_input = fish[['Weight', 'Length', 'Diagonal', 'Height', 'Width']].to_numpy()\nfish_target = fish['Species'].to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(fish_input, fish_target, random_state=42)\nss = StandardScaler()\nss.fit(train_input)\ntrain_scaled = ss.transform(train_input)\ntest_scaled = ss.transform(test_input)\nkn = KNeighborsClassifier(n_neighbors=3)\nkn.fit(train_scaled, train_target)\nproba = kn.predict_proba(test_scaled[:5])\nprint(list(kn.classes_) == sorted(kn.classes_), bool(np.isclose(proba, 0.5).any()), bool(np.allclose(proba.sum(axis=1), 1)))",
+   "verifyExpect": "True False True",
+   "options": [
+    "(다)",
+    "(가), (나)",
+    "(가), (다)",
+    "(나), (다)",
+    "(가), (나), (다)"
+   ]
+  },
+  {
+   "id": "F08C03",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "다음 코드에 대한 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은? (<span class=\"mono\">train_scaled</span>, <span class=\"mono\">test_scaled</span> 는 물고기 7종의 특성 5개(Weight, Length, Diagonal, Height, Width)를 표준화한 훈련 119개, 테스트 40개이고 <span class=\"mono\">train_target</span>, <span class=\"mono\">test_target</span> 은 종 이름 문자열 배열이다)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) <span class=\"mono\">bream_smelt_indexes</span> 는 True/False 로 이루어진 배열이다.<br>(나) <span class=\"mono\">target_bream_smelt</span> 에는 'Perch' 도 들어 있다.<br>(다) <span class=\"mono\">train_bream_smelt</span> 의 샘플 수는 <span class=\"mono\">bream_smelt_indexes</span> 의 True 개수와 같다.</span>",
+   "code": "bream_smelt_indexes = (train_target == 'Bream') | (train_target == 'Smelt')\ntrain_bream_smelt = train_scaled[bream_smelt_indexes]\ntarget_bream_smelt = train_target[bream_smelt_indexes]",
+   "answer": "(가), (다)",
+   "why": "비교식은 원소마다 True/False 를 만들고, 그 배열을 인덱스로 넣으면 True 인 행만 뽑힙니다(불리언 인덱싱). Bream 또는 Smelt 인 행만 남으므로 다른 종은 없습니다.",
+   "tags": [
+    "불리언 인덱싱"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom scipy.special import expit, softmax\n\nfish = pd.read_csv('fish.csv')\nfish_input = fish[['Weight', 'Length', 'Diagonal', 'Height', 'Width']].to_numpy()\nfish_target = fish['Species'].to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(fish_input, fish_target, random_state=42)\nss = StandardScaler()\nss.fit(train_input)\ntrain_scaled = ss.transform(train_input)\ntest_scaled = ss.transform(test_input)\nbream_smelt_indexes = (train_target == 'Bream') | (train_target == 'Smelt')\ntrain_bream_smelt = train_scaled[bream_smelt_indexes]\ntarget_bream_smelt = train_target[bream_smelt_indexes]\nprint(bream_smelt_indexes.dtype == bool, 'Perch' in set(target_bream_smelt), len(train_bream_smelt) == int(bream_smelt_indexes.sum()))",
+   "verifyExpect": "True False True",
+   "options": [
+    "(가)",
+    "(다)",
+    "(가), (나)",
+    "(가), (다)",
+    "(나), (다)"
+   ]
+  },
+  {
+   "id": "F08C04",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "다음 코드에 대한 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은? (<span class=\"mono\">train_bream_smelt</span>, <span class=\"mono\">target_bream_smelt</span> 는 훈련 세트에서 Bream 과 Smelt 만 골라낸 33개 샘플과 정답이다)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) <span class=\"mono\">lr.classes_</span> 는 <span class=\"mono\">['Bream' 'Smelt']</span> 이다.<br>(나) <span class=\"mono\">lr.coef_.shape</span> 은 <span class=\"mono\">(5, 1)</span> 이다.<br>(다) <span class=\"mono\">lr.predict_proba()</span> 의 두 번째 열은 Smelt 일 확률이다.</span>",
+   "code": "lr = LogisticRegression()\nlr.fit(train_bream_smelt, target_bream_smelt)",
+   "answer": "(가), (다)",
+   "why": "이진 분류에서는 <span class=\"mono\">classes_</span> 의 두 번째 클래스(Smelt)가 양성 클래스이고, <span class=\"mono\">predict_proba</span> 의 열은 [Bream 확률, Smelt 확률] 순서입니다. 식(z)이 하나이고 특성이 5개라 <span class=\"mono\">coef_</span> 의 shape 은 <span class=\"mono\">(1, 5)</span> 입니다.",
+   "tags": [
+    "이진 분류",
+    "classes_",
+    "coef_"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom scipy.special import expit, softmax\n\nfish = pd.read_csv('fish.csv')\nfish_input = fish[['Weight', 'Length', 'Diagonal', 'Height', 'Width']].to_numpy()\nfish_target = fish['Species'].to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(fish_input, fish_target, random_state=42)\nss = StandardScaler()\nss.fit(train_input)\ntrain_scaled = ss.transform(train_input)\ntest_scaled = ss.transform(test_input)\n\nbream_smelt_indexes = (train_target == 'Bream') | (train_target == 'Smelt')\ntrain_bream_smelt = train_scaled[bream_smelt_indexes]\ntarget_bream_smelt = train_target[bream_smelt_indexes]\nlr = LogisticRegression()\nlr.fit(train_bream_smelt, target_bream_smelt)\nprint(list(lr.classes_) == ['Bream', 'Smelt'], lr.coef_.shape == (5, 1), bool(np.allclose(lr.predict_proba(train_bream_smelt[:5])[:, 1], expit(lr.decision_function(train_bream_smelt[:5])))))",
+   "verifyExpect": "True False True",
+   "options": [
+    "(가)",
+    "(나)",
+    "(가), (나)",
+    "(가), (다)",
+    "(나), (다)"
+   ]
+  },
+  {
+   "id": "F08C05",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "다음 코드에 대한 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은? <span class=\"mono\">lr</span> 은 Bream 과 Smelt 두 종만으로 훈련한 <span class=\"mono\">LogisticRegression()</span> 모델이고 <span class=\"mono\">lr.classes_</span> 는 <span class=\"mono\">['Bream' 'Smelt']</span> 이다. (<span class=\"mono\">train_bream_smelt</span>, <span class=\"mono\">target_bream_smelt</span> 는 훈련 세트에서 Bream 과 Smelt 만 골라낸 33개 샘플과 정답이다)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) z 값(<span class=\"mono\">decisions</span>)이 양수인 샘플은 Smelt 로 예측된다.<br>(나) <span class=\"mono\">expit(decisions)</span> 는 각 샘플이 Bream 일 확률이다.<br>(다) <span class=\"mono\">expit(0)</span> 은 0.5 이다.</span>",
+   "code": "decisions = lr.decision_function(train_bream_smelt[:5])\npred = lr.predict(train_bream_smelt[:5])",
+   "answer": "(가), (다)",
+   "why": "<span class=\"mono\">decision_function</span> 은 z 값을 돌려주고, 이를 시그모이드(<span class=\"mono\">expit</span>)에 넣으면 <b>양성 클래스(Smelt)</b> 일 확률이 됩니다. z = 0 이면 0.5, z 가 양수면 0.5 보다 커서 Smelt 로 예측합니다.",
+   "tags": [
+    "decision_function",
+    "시그모이드"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom scipy.special import expit, softmax\n\nfish = pd.read_csv('fish.csv')\nfish_input = fish[['Weight', 'Length', 'Diagonal', 'Height', 'Width']].to_numpy()\nfish_target = fish['Species'].to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(fish_input, fish_target, random_state=42)\nss = StandardScaler()\nss.fit(train_input)\ntrain_scaled = ss.transform(train_input)\ntest_scaled = ss.transform(test_input)\n\nbream_smelt_indexes = (train_target == 'Bream') | (train_target == 'Smelt')\ntrain_bream_smelt = train_scaled[bream_smelt_indexes]\ntarget_bream_smelt = train_target[bream_smelt_indexes]\n\nlr = LogisticRegression()\nlr.fit(train_bream_smelt, target_bream_smelt)\ndecisions = lr.decision_function(train_bream_smelt[:5])\npred = lr.predict(train_bream_smelt[:5])\nprint(all((d > 0) == (p == 'Smelt') for d, p in zip(decisions, pred)), expit(0) == 0.5)",
+   "verifyExpect": "True True",
+   "options": [
+    "(다)",
+    "(가), (나)",
+    "(가), (다)",
+    "(나), (다)",
+    "(가), (나), (다)"
+   ]
+  },
+  {
+   "id": "F08C06",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "다음 코드에 대한 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은? (<span class=\"mono\">train_scaled</span>, <span class=\"mono\">test_scaled</span> 는 물고기 7종의 특성 5개(Weight, Length, Diagonal, Height, Width)를 표준화한 훈련 119개, 테스트 40개이고 <span class=\"mono\">train_target</span>, <span class=\"mono\">test_target</span> 은 종 이름 문자열 배열이다)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) <span class=\"mono\">C</span> 를 20 보다 작게 하면 규제가 약해진다.<br>(나) <span class=\"mono\">lr.coef_.shape</span> 은 <span class=\"mono\">(7, 5)</span> 이다.<br>(다) <span class=\"mono\">lr.decision_function(test_scaled[:5]).shape</span> 은 <span class=\"mono\">(5, 7)</span> 이다.</span>",
+   "code": "lr = LogisticRegression(C=20, max_iter=1000)\nlr.fit(train_scaled, train_target)",
+   "answer": "(나), (다)",
+   "why": "다중 분류에서는 클래스마다 z 를 하나씩 계산하므로 <span class=\"mono\">coef_</span> 가 7행(클래스) 5열(특성)이고, 샘플 5개의 z 는 5행 7열입니다. <span class=\"mono\">C</span> 는 <b>작을수록 규제가 강해집니다</b>.",
+   "tags": [
+    "다중 분류",
+    "C",
+    "coef_"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom scipy.special import expit, softmax\n\nfish = pd.read_csv('fish.csv')\nfish_input = fish[['Weight', 'Length', 'Diagonal', 'Height', 'Width']].to_numpy()\nfish_target = fish['Species'].to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(fish_input, fish_target, random_state=42)\nss = StandardScaler()\nss.fit(train_input)\ntrain_scaled = ss.transform(train_input)\ntest_scaled = ss.transform(test_input)\nlr = LogisticRegression(C=20, max_iter=1000)\nlr.fit(train_scaled, train_target)\nprint(lr.coef_.shape == (7, 5), lr.decision_function(test_scaled[:5]).shape == (5, 7))",
+   "verifyExpect": "True True",
+   "options": [
+    "(가)",
+    "(나)",
+    "(가), (나)",
+    "(가), (다)",
+    "(나), (다)"
+   ]
+  },
+  {
+   "id": "F08C07",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "다음 코드에 대한 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은? <span class=\"mono\">lr</span> 은 7종 전체로 훈련한 <span class=\"mono\">LogisticRegression(C=20, max_iter=1000)</span> 모델이다. 클래스는 알파벳순으로 ['Bream' 'Parkki' 'Perch' 'Pike' 'Roach' 'Smelt' 'Whitefish'] 이다.<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) <span class=\"mono\">proba</span> 는 <span class=\"mono\">lr.predict_proba(test_scaled[:5])</span> 와 같은 값이다.<br>(나) <span class=\"mono\">proba</span> 의 각 행을 더하면 1 이다.<br>(다) <span class=\"mono\">axis=1</span> 을 <span class=\"mono\">axis=0</span> 으로 바꿔도 결과는 같다.</span>",
+   "code": "decision = lr.decision_function(test_scaled[:5])\nproba = softmax(decision, axis=1)",
+   "answer": "(가), (나)",
+   "why": "샘플마다(행마다) 7개의 z 를 소프트맥스에 넣어야 하므로 <span class=\"mono\">axis=1</span> 입니다. 이렇게 계산한 값이 <span class=\"mono\">predict_proba</span> 의 결과와 같고, 행의 합은 1 입니다.",
+   "tags": [
+    "소프트맥스",
+    "axis"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom scipy.special import expit, softmax\n\nfish = pd.read_csv('fish.csv')\nfish_input = fish[['Weight', 'Length', 'Diagonal', 'Height', 'Width']].to_numpy()\nfish_target = fish['Species'].to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(fish_input, fish_target, random_state=42)\nss = StandardScaler()\nss.fit(train_input)\ntrain_scaled = ss.transform(train_input)\ntest_scaled = ss.transform(test_input)\n\nlr = LogisticRegression(C=20, max_iter=1000)\nlr.fit(train_scaled, train_target)\ndecision = lr.decision_function(test_scaled[:5])\nproba = softmax(decision, axis=1)\nprint(bool(np.allclose(proba, lr.predict_proba(test_scaled[:5]))), bool(np.allclose(proba.sum(axis=1), 1)), bool(np.allclose(softmax(decision, axis=0), proba)))",
+   "verifyExpect": "True True False",
+   "options": [
+    "(가)",
+    "(다)",
+    "(가), (나)",
+    "(가), (다)",
+    "(나), (다)"
+   ]
+  },
+  {
+   "id": "F08C08",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "<span class=\"mono\">LogisticRegression</span> 의 매개변수에 대한 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) 기본적으로 릿지 회귀처럼 계수의 제곱을 규제한다(L2 규제).<br>(나) <span class=\"mono\">max_iter</span> 는 참고할 이웃의 수이다.<br>(다) <span class=\"mono\">C</span> 의 값이 작을수록 규제가 강해진다.</span>",
+   "code": "",
+   "answer": "(가), (다)",
+   "why": "<span class=\"mono\">C</span> 는 <span class=\"mono\">alpha</span> 와 반대로 작을수록 규제가 커지고 기본값은 1 입니다. <span class=\"mono\">max_iter</span> 는 반복 횟수이며, 부족하면 경고가 떠서 노트북은 1000 으로 늘렸습니다.",
+   "tags": [
+    "C",
+    "max_iter",
+    "규제"
+   ],
+   "ref": "셀 [24] 다중분류 설명",
+   "options": [
+    "(가)",
+    "(나)",
+    "(가), (나)",
+    "(가), (다)",
+    "(나), (다)"
+   ]
+  },
+  {
+   "id": "F08B01",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "㉠, ㉡에 들어갈 것으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">(159, 5) (159,) Bream</span></span>",
+   "code": "fish = pd.read_csv('fish.csv')\nfish_input = fish[['Weight', 'Length', 'Diagonal', 'Height', 'Width']].㉠()\nfish_target = fish['㉡'].to_numpy()\nprint(fish_input.shape, fish_target.shape, fish_target[0])",
+   "answer": "㉠ to_numpy  ·  ㉡ Species",
+   "why": "데이터프레임을 넘파이 배열로 바꾸는 메서드는 <span class=\"mono\">to_numpy()</span> 이고, 정답은 종 이름이 든 <span class=\"mono\">Species</span> 열입니다.",
+   "tags": [
+    "to_numpy",
+    "타깃"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom scipy.special import expit, softmax\nfish = pd.read_csv('fish.csv')\nfish_input = fish[['Weight', 'Length', 'Diagonal', 'Height', 'Width']].to_numpy()\nfish_target = fish['Species'].to_numpy()\nprint(fish_input.shape, fish_target.shape, fish_target[0])",
+   "verifyExpect": "(159, 5) (159,) Bream",
+   "options": [
+    "㉠ to_numpy  ·  ㉡ Species",
+    "㉠ numpy  ·  ㉡ Species",
+    "㉠ values  ·  ㉡ Species",
+    "㉠ to_numpy  ·  ㉡ Weight",
+    "㉠ to_array  ·  ㉡ Species"
+   ]
+  },
+  {
+   "id": "F08B02",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "㉠, ㉡에 들어갈 것으로 알맞은 것은? (<span class=\"mono\">train_scaled</span>, <span class=\"mono\">test_scaled</span> 는 물고기 7종의 특성 5개(Weight, Length, Diagonal, Height, Width)를 표준화한 훈련 119개, 테스트 40개이고 <span class=\"mono\">train_target</span>, <span class=\"mono\">test_target</span> 은 종 이름 문자열 배열이다)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">[[0.     0.     0.6667 0.     0.3333 0.     0.    ]] Perch</span></span>",
+   "code": "kn = KNeighborsClassifier(n_neighbors=3)\nkn.fit(train_scaled, train_target)\nproba = kn.㉠(test_scaled[3:4])\nprint(np.round(proba, 4), kn.㉡[2])",
+   "answer": "㉠ predict_proba  ·  ㉡ classes_",
+   "why": "클래스별 확률은 <span class=\"mono\">predict_proba()</span>, 클래스 목록은 <span class=\"mono\">classes_</span> 입니다. 세 번째 클래스(인덱스 2)인 Perch 의 확률이 0.6667 입니다.",
+   "tags": [
+    "predict_proba",
+    "classes_"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom scipy.special import expit, softmax\n\nfish = pd.read_csv('fish.csv')\nfish_input = fish[['Weight', 'Length', 'Diagonal', 'Height', 'Width']].to_numpy()\nfish_target = fish['Species'].to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(fish_input, fish_target, random_state=42)\nss = StandardScaler()\nss.fit(train_input)\ntrain_scaled = ss.transform(train_input)\ntest_scaled = ss.transform(test_input)\nkn = KNeighborsClassifier(n_neighbors=3)\nkn.fit(train_scaled, train_target)\nproba = kn.predict_proba(test_scaled[3:4])\nprint(np.round(proba, 4), kn.classes_[2])",
+   "verifyExpect": "[[0.     0.     0.6667 0.     0.3333 0.     0.    ]] Perch",
+   "options": [
+    "㉠ predict_proba  ·  ㉡ classes",
+    "㉠ predict_proba  ·  ㉡ classes_",
+    "㉠ predict  ·  ㉡ classes_",
+    "㉠ predict_proba  ·  ㉡ labels_",
+    "㉠ proba  ·  ㉡ classes_"
+   ]
+  },
+  {
+   "id": "F08B03",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "㉠, ㉡에 들어갈 것으로 알맞은 것은? (<span class=\"mono\">train_scaled</span>, <span class=\"mono\">test_scaled</span> 는 물고기 7종의 특성 5개(Weight, Length, Diagonal, Height, Width)를 표준화한 훈련 119개, 테스트 40개이고 <span class=\"mono\">train_target</span>, <span class=\"mono\">test_target</span> 은 종 이름 문자열 배열이다)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">(33, 5)</span></span>",
+   "code": "bream_smelt_indexes = (train_target == 'Bream') ㉠ (train_target == 'Smelt')\ntrain_bream_smelt = train_scaled[㉡]\nprint(train_bream_smelt.shape)",
+   "answer": "㉠ |  ·  ㉡ bream_smelt_indexes",
+   "why": "배열끼리의 '또는'은 <span class=\"mono\">or</span> 가 아니라 <span class=\"mono\">|</span> 입니다. True/False 배열을 인덱스로 넣어 해당 행만 뽑습니다. <span class=\"mono\">&amp;</span> 를 쓰면 두 종에 동시에 속하는 샘플은 없으므로 0개가 됩니다.",
+   "tags": [
+    "불리언 인덱싱"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom scipy.special import expit, softmax\n\nfish = pd.read_csv('fish.csv')\nfish_input = fish[['Weight', 'Length', 'Diagonal', 'Height', 'Width']].to_numpy()\nfish_target = fish['Species'].to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(fish_input, fish_target, random_state=42)\nss = StandardScaler()\nss.fit(train_input)\ntrain_scaled = ss.transform(train_input)\ntest_scaled = ss.transform(test_input)\nbream_smelt_indexes = (train_target == 'Bream') | (train_target == 'Smelt')\ntrain_bream_smelt = train_scaled[bream_smelt_indexes]\nprint(train_bream_smelt.shape)",
+   "verifyExpect": "(33, 5)",
+   "options": [
+    "㉠ and  ·  ㉡ bream_smelt_indexes",
+    "㉠ |  ·  ㉡ train_target",
+    "㉠ &  ·  ㉡ bream_smelt_indexes",
+    "㉠ or  ·  ㉡ bream_smelt_indexes",
+    "㉠ |  ·  ㉡ bream_smelt_indexes"
+   ]
+  },
+  {
+   "id": "F08B04",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "㉠, ㉡에 들어갈 것으로 알맞은 것은? <span class=\"mono\">lr</span> 은 Bream 과 Smelt 두 종만으로 훈련한 <span class=\"mono\">LogisticRegression()</span> 모델이고 <span class=\"mono\">lr.classes_</span> 는 <span class=\"mono\">['Bream' 'Smelt']</span> 이다. (<span class=\"mono\">train_bream_smelt</span>, <span class=\"mono\">target_bream_smelt</span> 는 훈련 세트에서 Bream 과 Smelt 만 골라낸 33개 샘플과 정답이다)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">[0.002 0.973 0.005 0.014 0.002]</span></span>",
+   "code": "decisions = lr.㉠(train_bream_smelt[:5])\nprint(np.round(㉡(decisions), 3))",
+   "answer": "㉠ decision_function  ·  ㉡ expit",
+   "why": "<span class=\"mono\">decision_function</span> 이 z 값을 돌려주고, 시그모이드 함수 <span class=\"mono\">expit</span> 가 이를 Smelt 일 확률로 바꿉니다. 두 번째 샘플만 0.973 으로 Smelt 입니다.",
+   "tags": [
+    "decision_function",
+    "expit"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom scipy.special import expit, softmax\n\nfish = pd.read_csv('fish.csv')\nfish_input = fish[['Weight', 'Length', 'Diagonal', 'Height', 'Width']].to_numpy()\nfish_target = fish['Species'].to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(fish_input, fish_target, random_state=42)\nss = StandardScaler()\nss.fit(train_input)\ntrain_scaled = ss.transform(train_input)\ntest_scaled = ss.transform(test_input)\n\nbream_smelt_indexes = (train_target == 'Bream') | (train_target == 'Smelt')\ntrain_bream_smelt = train_scaled[bream_smelt_indexes]\ntarget_bream_smelt = train_target[bream_smelt_indexes]\n\nlr = LogisticRegression()\nlr.fit(train_bream_smelt, target_bream_smelt)\ndecisions = lr.decision_function(train_bream_smelt[:5])\nprint(np.round(expit(decisions), 3))",
+   "verifyExpect": "[0.002 0.973 0.005 0.014 0.002]",
+   "options": [
+    "㉠ predict_proba  ·  ㉡ expit",
+    "㉠ predict  ·  ㉡ expit",
+    "㉠ decision_function  ·  ㉡ np.exp",
+    "㉠ decision_function  ·  ㉡ expit",
+    "㉠ decision_function  ·  ㉡ softmax"
+   ]
+  },
+  {
+   "id": "F08B05",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "규제를 약하게 풀고 반복 횟수를 1000 으로 늘리려고 한다. ㉠, ㉡에 들어갈 것으로 알맞은 것은? (<span class=\"mono\">train_scaled</span>, <span class=\"mono\">test_scaled</span> 는 물고기 7종의 특성 5개(Weight, Length, Diagonal, Height, Width)를 표준화한 훈련 119개, 테스트 40개이고 <span class=\"mono\">train_target</span>, <span class=\"mono\">test_target</span> 은 종 이름 문자열 배열이다)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">0.925</span></span>",
+   "code": "lr = LogisticRegression(㉠=20, ㉡=1000)\nlr.fit(train_scaled, train_target)\nprint(round(lr.score(test_scaled, test_target), 3))",
+   "answer": "㉠ C  ·  ㉡ max_iter",
+   "why": "로지스틱 회귀의 규제는 <span class=\"mono\">C</span> 로 조절하고(클수록 약함), 반복 횟수는 <span class=\"mono\">max_iter</span> 로 정합니다.",
+   "tags": [
+    "C",
+    "max_iter"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom scipy.special import expit, softmax\n\nfish = pd.read_csv('fish.csv')\nfish_input = fish[['Weight', 'Length', 'Diagonal', 'Height', 'Width']].to_numpy()\nfish_target = fish['Species'].to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(fish_input, fish_target, random_state=42)\nss = StandardScaler()\nss.fit(train_input)\ntrain_scaled = ss.transform(train_input)\ntest_scaled = ss.transform(test_input)\nlr = LogisticRegression(C=20, max_iter=1000)\nlr.fit(train_scaled, train_target)\nprint(round(lr.score(test_scaled, test_target), 3))",
+   "verifyExpect": "0.925",
+   "options": [
+    "㉠ alpha  ·  ㉡ max_iter",
+    "㉠ C  ·  ㉡ iter",
+    "㉠ C  ·  ㉡ max_iter",
+    "㉠ n_neighbors  ·  ㉡ max_iter",
+    "㉠ C  ·  ㉡ epochs"
+   ]
+  },
+  {
+   "id": "F08B06",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "㉠, ㉡에 들어갈 것으로 알맞은 것은? <span class=\"mono\">lr</span> 은 7종 전체로 훈련한 <span class=\"mono\">LogisticRegression(C=20, max_iter=1000)</span> 모델이다. 클래스는 알파벳순으로 ['Bream' 'Parkki' 'Perch' 'Pike' 'Roach' 'Smelt' 'Whitefish'] 이다.<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">[1. 1. 1. 1. 1.]</span></span>",
+   "code": "decision = lr.decision_function(test_scaled[:5])\nproba = ㉠(decision, axis=㉡)\nprint(np.round(proba.sum(axis=1), 2))",
+   "answer": "㉠ softmax  ·  ㉡ 1",
+   "why": "다중 분류의 z 값들을 확률로 바꾸는 함수는 <span class=\"mono\">softmax</span> 이고, 샘플(행)마다 계산해야 하므로 <span class=\"mono\">axis=1</span> 입니다. 그래야 행의 합이 모두 1 이 됩니다.",
+   "tags": [
+    "softmax",
+    "axis"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom scipy.special import expit, softmax\n\nfish = pd.read_csv('fish.csv')\nfish_input = fish[['Weight', 'Length', 'Diagonal', 'Height', 'Width']].to_numpy()\nfish_target = fish['Species'].to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(fish_input, fish_target, random_state=42)\nss = StandardScaler()\nss.fit(train_input)\ntrain_scaled = ss.transform(train_input)\ntest_scaled = ss.transform(test_input)\n\nlr = LogisticRegression(C=20, max_iter=1000)\nlr.fit(train_scaled, train_target)\ndecision = lr.decision_function(test_scaled[:5])\nproba = softmax(decision, axis=1)\nprint(np.round(proba.sum(axis=1), 2))",
+   "verifyExpect": "[1. 1. 1. 1. 1.]",
+   "options": [
+    "㉠ softmax  ·  ㉡ 1",
+    "㉠ softmax  ·  ㉡ 0",
+    "㉠ sigmoid  ·  ㉡ 1",
+    "㉠ np.exp  ·  ㉡ 1",
+    "㉠ expit  ·  ㉡ 1"
+   ]
+  },
+  {
+   "id": "F08D01",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "mode": "mc",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "확률에 나타난 값을 중복 없이 크기순으로 출력한다. 다음 코드를 실행했을 때 출력되는 것은? <span class=\"mono\">kn</span> 은 <span class=\"mono\">KNeighborsClassifier(n_neighbors=3)</span> 을 훈련한 모델이다. 클래스는 알파벳순으로 ['Bream' 'Parkki' 'Perch' 'Pike' 'Roach' 'Smelt' 'Whitefish'] 이다.",
+   "code": "proba = kn.predict_proba(test_scaled[:5])\nprint(sorted(set(np.round(proba, 4).ravel().tolist())))",
+   "answer": "[0.0, 0.3333, 0.6667, 1.0]",
+   "why": "이웃이 3개이므로 확률은 이웃 중 그 클래스의 비율인 0/3, 1/3, 2/3, 3/3 만 가능합니다.",
+   "tags": [
+    "KNN",
+    "확률"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom scipy.special import expit, softmax\n\nfish = pd.read_csv('fish.csv')\nfish_input = fish[['Weight', 'Length', 'Diagonal', 'Height', 'Width']].to_numpy()\nfish_target = fish['Species'].to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(fish_input, fish_target, random_state=42)\nss = StandardScaler()\nss.fit(train_input)\ntrain_scaled = ss.transform(train_input)\ntest_scaled = ss.transform(test_input)\n\nkn = KNeighborsClassifier(n_neighbors=3)\nkn.fit(train_scaled, train_target)\nproba = kn.predict_proba(test_scaled[:5])\nprint(sorted(set(np.round(proba, 4).ravel().tolist())))",
+   "verifyExpect": "[0.0, 0.3333, 0.6667, 1.0]",
+   "options": [
+    "[0.0, 0.25, 0.5, 0.75, 1.0]",
+    "[0.0, 1.0]",
+    "[0.0, 0.2, 0.4, 0.6, 0.8, 1.0]",
+    "[0.0, 0.5, 1.0]",
+    "[0.0, 0.3333, 0.6667, 1.0]"
+   ]
+  },
+  {
+   "id": "F08D02",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "mode": "mc",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "fish.csv 는 159행이고 입력으로 특성 5개를 골랐다. <span class=\"mono\">train_test_split</span> 의 기본 비율로 나눈 뒤 다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "print(fish_input.shape, train_input.shape, test_input.shape)",
+   "answer": "(159, 5) (119, 5) (40, 5)",
+   "why": "159 × 0.25 = 39.75 를 올림해 테스트 세트가 40개, 훈련 세트가 119개입니다. 특성은 5개입니다.",
+   "tags": [
+    "train_test_split",
+    "shape"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom scipy.special import expit, softmax\n\nfish = pd.read_csv('fish.csv')\nfish_input = fish[['Weight', 'Length', 'Diagonal', 'Height', 'Width']].to_numpy()\nfish_target = fish['Species'].to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(fish_input, fish_target, random_state=42)\nss = StandardScaler()\nss.fit(train_input)\ntrain_scaled = ss.transform(train_input)\ntest_scaled = ss.transform(test_input)\nprint(fish_input.shape, train_input.shape, test_input.shape)",
+   "verifyExpect": "(159, 5) (119, 5) (40, 5)",
+   "options": [
+    "(159, 5) (120, 5) (39, 5)",
+    "(159, 5) (111, 5) (48, 5)",
+    "(5, 159) (5, 119) (5, 40)",
+    "(159, 5) (119, 5) (40, 5)",
+    "(159, 6) (119, 6) (40, 6)"
+   ]
+  },
+  {
+   "id": "F08D03",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "mode": "mc",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "<span class=\"mono\">expit</span> 는 시그모이드 함수이다. 다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "print(expit(0), bool(expit(100) > 0.99), bool(expit(-100) < 0.01))",
+   "answer": "0.5 True True",
+   "why": "시그모이드는 z = 0 에서 0.5 이고, z 가 아주 크면 1 에, 아주 작으면(큰 음수) 0 에 가까워집니다.",
+   "tags": [
+    "시그모이드"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom scipy.special import expit, softmax\nprint(expit(0), bool(expit(100) > 0.99), bool(expit(-100) < 0.01))",
+   "verifyExpect": "0.5 True True",
+   "options": [
+    "0.5 True True",
+    "1.0 True False",
+    "0.5 True False",
+    "0 True True",
+    "0.5 False True"
+   ]
+  },
+  {
+   "id": "F08D04",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "mode": "mc",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "z = np.array([-2.0, 0.5, 3.0])\np = 1 / (1 + np.exp(-z))\nprint((p > 0.5).tolist())",
+   "answer": "[False, True, True]",
+   "why": "시그모이드 값이 0.5 보다 큰 것은 z 가 양수일 때입니다. −2.0 은 0.5 보다 작고, 0.5 와 3.0 은 0.5 보다 큽니다.",
+   "tags": [
+    "시그모이드",
+    "0.5 기준"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom scipy.special import expit, softmax\nz = np.array([-2.0, 0.5, 3.0])\np = 1 / (1 + np.exp(-z))\nprint((p > 0.5).tolist())",
+   "verifyExpect": "[False, True, True]",
+   "options": [
+    "[True, False, False]",
+    "[False, True, True]",
+    "[False, True, False]",
+    "[False, False, True]",
+    "[True, True, True]"
+   ]
+  },
+  {
+   "id": "F08D05",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "mode": "mc",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "이웃 수를 5로 바꿨다. 다음 코드를 실행했을 때 출력되는 것은? (<span class=\"mono\">train_scaled</span>, <span class=\"mono\">test_scaled</span> 는 물고기 7종의 특성 5개(Weight, Length, Diagonal, Height, Width)를 표준화한 훈련 119개, 테스트 40개이고 <span class=\"mono\">train_target</span>, <span class=\"mono\">test_target</span> 은 종 이름 문자열 배열이다)",
+   "code": "kn5 = KNeighborsClassifier(n_neighbors=5)\nkn5.fit(train_scaled, train_target)\nproba = kn5.predict_proba(test_scaled)\nprint(len(set(np.round(proba, 4).ravel().tolist())) <= 6, proba.shape)",
+   "answer": "True (40, 7)",
+   "why": "이웃이 5개면 확률은 0, 0.2, 0.4, 0.6, 0.8, 1 의 여섯 가지뿐입니다. 테스트 샘플 40개, 클래스 7개라 shape 은 <span class=\"mono\">(40, 7)</span> 입니다.",
+   "tags": [
+    "KNN",
+    "확률"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom scipy.special import expit, softmax\n\nfish = pd.read_csv('fish.csv')\nfish_input = fish[['Weight', 'Length', 'Diagonal', 'Height', 'Width']].to_numpy()\nfish_target = fish['Species'].to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(fish_input, fish_target, random_state=42)\nss = StandardScaler()\nss.fit(train_input)\ntrain_scaled = ss.transform(train_input)\ntest_scaled = ss.transform(test_input)\nkn5 = KNeighborsClassifier(n_neighbors=5)\nkn5.fit(train_scaled, train_target)\nproba = kn5.predict_proba(test_scaled)\nprint(len(set(np.round(proba, 4).ravel().tolist())) <= 6, proba.shape)",
+   "verifyExpect": "True (40, 7)",
+   "options": [
+    "True (40, 5)",
+    "False (40, 7)",
+    "True (40, 7)",
+    "True (119, 7)",
+    "True (5, 7)"
+   ]
+  },
+  {
+   "id": "F08R01",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "fish.csv 에는 종이 Bream, Roach, Whitefish, Parkki, Perch, Pike, Smelt 순서로 처음 나온다. 7종 전체로 <span class=\"mono\">kn</span> 을 훈련한 뒤 다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "print(kn.classes_)",
+   "answer": "['Bream' 'Parkki' 'Perch' 'Pike' 'Roach' 'Smelt' 'Whitefish']",
+   "why": "<span class=\"mono\">classes_</span> 는 데이터에 나온 순서가 아니라 <b>알파벳 순서</b>로 정렬됩니다. <span class=\"mono\">predict_proba</span> 의 열 순서가 이 순서입니다.",
+   "tags": [
+    "classes_"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom scipy.special import expit, softmax\n\nfish = pd.read_csv('fish.csv')\nfish_input = fish[['Weight', 'Length', 'Diagonal', 'Height', 'Width']].to_numpy()\nfish_target = fish['Species'].to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(fish_input, fish_target, random_state=42)\nss = StandardScaler()\nss.fit(train_input)\ntrain_scaled = ss.transform(train_input)\ntest_scaled = ss.transform(test_input)\n\nkn = KNeighborsClassifier(n_neighbors=3)\nkn.fit(train_scaled, train_target)\nprint(kn.classes_)",
+   "verifyExpect": "['Bream' 'Parkki' 'Perch' 'Pike' 'Roach' 'Smelt' 'Whitefish']",
+   "options": [
+    "[0 1 2 3 4 5 6]",
+    "['Bream' 'Parkki' 'Perch' 'Pike' 'Roach' 'Smelt' 'Whitefish']",
+    "['Bream' 'Smelt']",
+    "['Whitefish' 'Smelt' 'Roach' 'Pike' 'Perch' 'Parkki' 'Bream']",
+    "['Bream' 'Roach' 'Whitefish' 'Parkki' 'Perch' 'Pike' 'Smelt']"
+   ]
+  },
+  {
+   "id": "F08R02",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "테스트 세트의 네 번째 샘플에 대한 <span class=\"mono\">kn.predict_proba()</span> 결과가 <span class=\"mono\">[0, 0, 0.6667, 0, 0.3333, 0, 0]</span> 이다. 다음 코드를 실행했을 때 출력되는 것은? <span class=\"mono\">kn</span> 은 <span class=\"mono\">KNeighborsClassifier(n_neighbors=3)</span> 을 훈련한 모델이다. 클래스는 알파벳순으로 ['Bream' 'Parkki' 'Perch' 'Pike' 'Roach' 'Smelt' 'Whitefish'] 이다.",
+   "code": "print(kn.predict(test_scaled[3:4]))",
+   "answer": "['Perch']",
+   "why": "확률의 열 순서는 <span class=\"mono\">classes_</span> 순서입니다. 0.6667 은 세 번째 클래스 Perch, 0.3333 은 다섯 번째 클래스 Roach 의 확률이므로 확률이 가장 큰 Perch 로 예측합니다.",
+   "tags": [
+    "predict_proba",
+    "classes_"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom scipy.special import expit, softmax\n\nfish = pd.read_csv('fish.csv')\nfish_input = fish[['Weight', 'Length', 'Diagonal', 'Height', 'Width']].to_numpy()\nfish_target = fish['Species'].to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(fish_input, fish_target, random_state=42)\nss = StandardScaler()\nss.fit(train_input)\ntrain_scaled = ss.transform(train_input)\ntest_scaled = ss.transform(test_input)\n\nkn = KNeighborsClassifier(n_neighbors=3)\nkn.fit(train_scaled, train_target)\nprint(kn.predict(test_scaled[3:4]))",
+   "verifyExpect": "['Perch']",
+   "options": [
+    "[0.6667]",
+    "['Pike']",
+    "['Perch']",
+    "['Roach']",
+    "['Parkki']"
+   ]
+  },
+  {
+   "id": "F08R03",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "처음 5개 샘플의 <span class=\"mono\">lr.predict_proba()</span> 결과에서 첫 번째 열(Bream 확률)이 차례로 0.998, 0.027, 0.995, 0.986, 0.998 이다. 다음 코드를 실행했을 때 출력되는 것은? <span class=\"mono\">lr</span> 은 Bream 과 Smelt 두 종만으로 훈련한 <span class=\"mono\">LogisticRegression()</span> 모델이고 <span class=\"mono\">lr.classes_</span> 는 <span class=\"mono\">['Bream' 'Smelt']</span> 이다. (<span class=\"mono\">train_bream_smelt</span>, <span class=\"mono\">target_bream_smelt</span> 는 훈련 세트에서 Bream 과 Smelt 만 골라낸 33개 샘플과 정답이다)",
+   "code": "print(lr.predict(train_bream_smelt[:5]))",
+   "answer": "['Bream' 'Smelt' 'Bream' 'Bream' 'Bream']",
+   "why": "Bream 확률이 0.5 보다 큰 샘플은 Bream, 작은 샘플(두 번째)은 Smelt 입니다. <span class=\"mono\">predict</span> 는 정답과 같은 형태인 종 이름을 돌려줍니다.",
+   "tags": [
+    "predict",
+    "이진 분류"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom scipy.special import expit, softmax\n\nfish = pd.read_csv('fish.csv')\nfish_input = fish[['Weight', 'Length', 'Diagonal', 'Height', 'Width']].to_numpy()\nfish_target = fish['Species'].to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(fish_input, fish_target, random_state=42)\nss = StandardScaler()\nss.fit(train_input)\ntrain_scaled = ss.transform(train_input)\ntest_scaled = ss.transform(test_input)\n\nbream_smelt_indexes = (train_target == 'Bream') | (train_target == 'Smelt')\ntrain_bream_smelt = train_scaled[bream_smelt_indexes]\ntarget_bream_smelt = train_target[bream_smelt_indexes]\n\nlr = LogisticRegression()\nlr.fit(train_bream_smelt, target_bream_smelt)\nprint(lr.predict(train_bream_smelt[:5]))",
+   "verifyExpect": "['Bream' 'Smelt' 'Bream' 'Bream' 'Bream']",
+   "options": [
+    "['Bream' 'Smelt' 'Bream' 'Bream' 'Bream']",
+    "[0 1 0 0 0]",
+    "[0.998 0.027 0.995 0.986 0.998]",
+    "['Bream' 'Bream' 'Bream' 'Bream' 'Bream']",
+    "['Smelt' 'Bream' 'Smelt' 'Smelt' 'Smelt']"
+   ]
+  },
+  {
+   "id": "F08R04",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "처음 두 샘플의 z 값은 −6.03, 3.57 이고 시그모이드 값은 0.002, 0.973 이다. 다음 코드를 실행했을 때 출력되는 것은? <span class=\"mono\">lr</span> 은 Bream 과 Smelt 두 종만으로 훈련한 <span class=\"mono\">LogisticRegression()</span> 모델이고 <span class=\"mono\">lr.classes_</span> 는 <span class=\"mono\">['Bream' 'Smelt']</span> 이다. (<span class=\"mono\">train_bream_smelt</span>, <span class=\"mono\">target_bream_smelt</span> 는 훈련 세트에서 Bream 과 Smelt 만 골라낸 33개 샘플과 정답이다)",
+   "code": "print(np.round(lr.predict_proba(train_bream_smelt[:2]), 3).tolist())",
+   "answer": "[[0.998, 0.002], [0.027, 0.973]]",
+   "why": "시그모이드 값은 양성 클래스(Smelt)일 확률이고 <b>두 번째 열</b>에 들어갑니다. 첫 번째 열(Bream 확률)은 1 에서 뺀 값입니다.",
+   "tags": [
+    "predict_proba",
+    "시그모이드"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom scipy.special import expit, softmax\n\nfish = pd.read_csv('fish.csv')\nfish_input = fish[['Weight', 'Length', 'Diagonal', 'Height', 'Width']].to_numpy()\nfish_target = fish['Species'].to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(fish_input, fish_target, random_state=42)\nss = StandardScaler()\nss.fit(train_input)\ntrain_scaled = ss.transform(train_input)\ntest_scaled = ss.transform(test_input)\n\nbream_smelt_indexes = (train_target == 'Bream') | (train_target == 'Smelt')\ntrain_bream_smelt = train_scaled[bream_smelt_indexes]\ntarget_bream_smelt = train_target[bream_smelt_indexes]\n\nlr = LogisticRegression()\nlr.fit(train_bream_smelt, target_bream_smelt)\nprint(np.round(lr.predict_proba(train_bream_smelt[:2]), 3).tolist())",
+   "verifyExpect": "[[0.998, 0.002], [0.027, 0.973]]",
+   "options": [
+    "[[0.998], [0.027]]",
+    "[[-6.03, 3.57]]",
+    "[[0.998, 0.998], [0.027, 0.027]]",
+    "[[0.998, 0.002], [0.027, 0.973]]",
+    "[[0.002, 0.998], [0.973, 0.027]]"
+   ]
+  },
+  {
+   "id": "F08R05",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "print(softmax(np.array([[1.0, 1.0, 1.0, 1.0]]), axis=1).tolist())",
+   "answer": "[[0.25, 0.25, 0.25, 0.25]]",
+   "why": "z 값이 모두 같으면 소프트맥스는 확률을 똑같이 나눕니다. 4개이므로 각각 0.25 이고 합은 1 입니다.",
+   "tags": [
+    "소프트맥스"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom scipy.special import expit, softmax\nprint(softmax(np.array([[1.0, 1.0, 1.0, 1.0]]), axis=1).tolist())",
+   "verifyExpect": "[[0.25, 0.25, 0.25, 0.25]]",
+   "options": [
+    "[[0.0, 0.0, 0.0, 1.0]]",
+    "[[4.0]]",
+    "[[1.0, 1.0, 1.0, 1.0]]",
+    "[[0.5, 0.5, 0.5, 0.5]]",
+    "[[0.25, 0.25, 0.25, 0.25]]"
+   ]
+  },
+  {
+   "id": "F08R06",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "테스트 세트 처음 5개 샘플에서 확률이 가장 큰 열의 인덱스가 차례로 2, 5, 3, 4, 2 이다. 다음 코드를 실행했을 때 출력되는 것은? <span class=\"mono\">lr</span> 은 7종 전체로 훈련한 <span class=\"mono\">LogisticRegression(C=20, max_iter=1000)</span> 모델이다. 클래스는 알파벳순으로 ['Bream' 'Parkki' 'Perch' 'Pike' 'Roach' 'Smelt' 'Whitefish'] 이다.",
+   "code": "print(lr.predict(test_scaled[:5]))",
+   "answer": "['Perch' 'Smelt' 'Pike' 'Roach' 'Perch']",
+   "why": "열 인덱스를 <span class=\"mono\">classes_</span> 에 대응시키면 2 는 Perch, 5 는 Smelt, 3 은 Pike, 4 는 Roach 입니다.",
+   "tags": [
+    "predict",
+    "classes_"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom scipy.special import expit, softmax\n\nfish = pd.read_csv('fish.csv')\nfish_input = fish[['Weight', 'Length', 'Diagonal', 'Height', 'Width']].to_numpy()\nfish_target = fish['Species'].to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(fish_input, fish_target, random_state=42)\nss = StandardScaler()\nss.fit(train_input)\ntrain_scaled = ss.transform(train_input)\ntest_scaled = ss.transform(test_input)\n\nlr = LogisticRegression(C=20, max_iter=1000)\nlr.fit(train_scaled, train_target)\nprint(lr.predict(test_scaled[:5]))",
+   "verifyExpect": "['Perch' 'Smelt' 'Pike' 'Roach' 'Perch']",
+   "options": [
+    "['Bream' 'Smelt' 'Bream' 'Bream' 'Bream']",
+    "['Perch' 'Smelt' 'Pike' 'Roach' 'Perch']",
+    "['Perch' 'Smelt' 'Pike' 'Whitefish' 'Perch']",
+    "[2 5 3 4 2]",
+    "['Perch' 'Smelt' 'Pike' 'Perch' 'Perch']"
+   ]
+  },
+  {
+   "id": "F08R07",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "첫 번째 테스트 샘플은 세 번째 열의 확률이 가장 크다. 다음 코드를 실행했을 때 출력되는 것은? <span class=\"mono\">lr</span> 은 7종 전체로 훈련한 <span class=\"mono\">LogisticRegression(C=20, max_iter=1000)</span> 모델이다. 클래스는 알파벳순으로 ['Bream' 'Parkki' 'Perch' 'Pike' 'Roach' 'Smelt' 'Whitefish'] 이다.",
+   "code": "proba = lr.predict_proba(test_scaled[:1])\nprint(proba.shape, lr.classes_[np.argmax(proba)])",
+   "answer": "(1, 7) Perch",
+   "why": "샘플 1개, 클래스 7개라 <span class=\"mono\">(1, 7)</span> 입니다. <span class=\"mono\">np.argmax</span> 는 가장 큰 값의 인덱스 2 를 돌려주고 <span class=\"mono\">classes_[2]</span> 는 Perch 입니다.",
+   "tags": [
+    "argmax",
+    "classes_"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom scipy.special import expit, softmax\n\nfish = pd.read_csv('fish.csv')\nfish_input = fish[['Weight', 'Length', 'Diagonal', 'Height', 'Width']].to_numpy()\nfish_target = fish['Species'].to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(fish_input, fish_target, random_state=42)\nss = StandardScaler()\nss.fit(train_input)\ntrain_scaled = ss.transform(train_input)\ntest_scaled = ss.transform(test_input)\n\nlr = LogisticRegression(C=20, max_iter=1000)\nlr.fit(train_scaled, train_target)\nproba = lr.predict_proba(test_scaled[:1])\nprint(proba.shape, lr.classes_[np.argmax(proba)])",
+   "verifyExpect": "(1, 7) Perch",
+   "options": [
+    "(7,) Perch",
+    "(1, 7) 2",
+    "(1, 7) Perch",
+    "(7, 1) Perch",
+    "(1, 5) Perch"
+   ]
+  },
+  {
+   "id": "F08X01",
+   "type": "대조",
+   "typeKey": "contrast",
+   "mode": "mc",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "테스트 세트의 네 번째 샘플에 대해 KNN 은 Perch 0.6667, Roach 0.3333 을, 로지스틱 회귀는 Roach 약 0.57, Perch 약 0.30 을 가장 큰 두 확률로 냈다. ㉠, ㉡에 출력되는 값으로 알맞은 것은? (<span class=\"mono\">train_scaled</span>, <span class=\"mono\">test_scaled</span> 는 물고기 7종의 특성 5개(Weight, Length, Diagonal, Height, Width)를 표준화한 훈련 119개, 테스트 40개이고 <span class=\"mono\">train_target</span>, <span class=\"mono\">test_target</span> 은 종 이름 문자열 배열이다)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">방법1 → ㉠<br>방법2 → ㉡</span></span>",
+   "code": "# 방법1: K-최근접 이웃\nkn = KNeighborsClassifier(n_neighbors=3).fit(train_scaled, train_target)\nprint(kn.predict(test_scaled[3:4]))\n\n# 방법2: 로지스틱 회귀\nlr = LogisticRegression(C=20, max_iter=1000).fit(train_scaled, train_target)\nprint(lr.predict(test_scaled[3:4]))",
+   "answer": "㉠ ['Perch']  ·  ㉡ ['Roach']",
+   "why": "각 모델은 자기가 계산한 확률이 가장 큰 클래스로 예측합니다. KNN 은 Perch, 로지스틱 회귀는 Roach 로, 같은 샘플도 모델에 따라 예측이 달라질 수 있습니다.",
+   "tags": [
+    "KNN",
+    "로지스틱 회귀"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom scipy.special import expit, softmax\n\nfish = pd.read_csv('fish.csv')\nfish_input = fish[['Weight', 'Length', 'Diagonal', 'Height', 'Width']].to_numpy()\nfish_target = fish['Species'].to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(fish_input, fish_target, random_state=42)\nss = StandardScaler()\nss.fit(train_input)\ntrain_scaled = ss.transform(train_input)\ntest_scaled = ss.transform(test_input)\n# 방법1: K-최근접 이웃\nkn = KNeighborsClassifier(n_neighbors=3).fit(train_scaled, train_target)\nprint(kn.predict(test_scaled[3:4]))\n\n# 방법2: 로지스틱 회귀\nlr = LogisticRegression(C=20, max_iter=1000).fit(train_scaled, train_target)\nprint(lr.predict(test_scaled[3:4]))",
+   "verifyExpect": "['Perch']\n['Roach']",
+   "options": [
+    "㉠ ['Roach']  ·  ㉡ ['Roach']",
+    "㉠ ['Perch']  ·  ㉡ ['Perch']",
+    "㉠ ['Perch']  ·  ㉡ ['Pike']",
+    "㉠ ['Roach']  ·  ㉡ ['Perch']",
+    "㉠ ['Perch']  ·  ㉡ ['Roach']"
+   ]
+  },
+  {
+   "id": "F08X02",
+   "type": "대조",
+   "typeKey": "contrast",
+   "mode": "mc",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "㉠, ㉡에 출력되는 값으로 알맞은 것은? (<span class=\"mono\">train_scaled</span>, <span class=\"mono\">test_scaled</span> 는 물고기 7종의 특성 5개(Weight, Length, Diagonal, Height, Width)를 표준화한 훈련 119개, 테스트 40개이고 <span class=\"mono\">train_target</span>, <span class=\"mono\">test_target</span> 은 종 이름 문자열 배열이다)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">방법1 → ㉠<br>방법2 → ㉡</span></span>",
+   "code": "# 방법1\nprint(test_scaled[3:4].shape)\n\n# 방법2\nprint(test_scaled[3].shape)",
+   "answer": "㉠ (1, 5)  ·  ㉡ (5,)",
+   "why": "슬라이싱 <span class=\"mono\">[3:4]</span> 는 행 하나짜리 2차원 배열 <span class=\"mono\">(1, 5)</span> 을, 인덱싱 <span class=\"mono\">[3]</span> 은 1차원 배열 <span class=\"mono\">(5,)</span> 을 돌려줍니다. <span class=\"mono\">predict</span> 나 <span class=\"mono\">kneighbors</span> 에는 2차원을 넣어야 해서 <span class=\"mono\">[3:4]</span> 를 씁니다.",
+   "tags": [
+    "슬라이싱",
+    "2차원 입력"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom scipy.special import expit, softmax\n\nfish = pd.read_csv('fish.csv')\nfish_input = fish[['Weight', 'Length', 'Diagonal', 'Height', 'Width']].to_numpy()\nfish_target = fish['Species'].to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(fish_input, fish_target, random_state=42)\nss = StandardScaler()\nss.fit(train_input)\ntrain_scaled = ss.transform(train_input)\ntest_scaled = ss.transform(test_input)\n# 방법1\nprint(test_scaled[3:4].shape)\n\n# 방법2\nprint(test_scaled[3].shape)",
+   "verifyExpect": "(1, 5)\n(5,)",
+   "options": [
+    "㉠ (1, 5)  ·  ㉡ (5, 1)",
+    "㉠ (5,)  ·  ㉡ (1, 5)",
+    "㉠ (1, 5)  ·  ㉡ (5,)",
+    "㉠ (5,)  ·  ㉡ (5,)",
+    "㉠ (1, 5)  ·  ㉡ (1, 5)"
+   ]
+  },
+  {
+   "id": "F08X03",
+   "type": "대조",
+   "typeKey": "contrast",
+   "mode": "mc",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "특성은 5개이다. ㉠, ㉡에 출력되는 값으로 알맞은 것은? (<span class=\"mono\">train_bream_smelt</span>, <span class=\"mono\">target_bream_smelt</span> 는 훈련 세트에서 Bream 과 Smelt 만 골라낸 33개 샘플과 정답이다)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">방법1 → ㉠<br>방법2 → ㉡</span></span>",
+   "code": "# 방법1: Bream, Smelt 두 종으로 훈련\nlr2 = LogisticRegression().fit(train_bream_smelt, target_bream_smelt)\nprint(lr2.coef_.shape)\n\n# 방법2: 7종 전체로 훈련\nlr7 = LogisticRegression(C=20, max_iter=1000).fit(train_scaled, train_target)\nprint(lr7.coef_.shape)",
+   "answer": "㉠ (1, 5)  ·  ㉡ (7, 5)",
+   "why": "이진 분류는 z 를 하나만 계산해서 계수가 1행 5열, 다중 분류는 클래스마다 z 를 계산해서 7행 5열입니다.",
+   "tags": [
+    "coef_",
+    "이진 분류",
+    "다중 분류"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom scipy.special import expit, softmax\n\nfish = pd.read_csv('fish.csv')\nfish_input = fish[['Weight', 'Length', 'Diagonal', 'Height', 'Width']].to_numpy()\nfish_target = fish['Species'].to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(fish_input, fish_target, random_state=42)\nss = StandardScaler()\nss.fit(train_input)\ntrain_scaled = ss.transform(train_input)\ntest_scaled = ss.transform(test_input)\n\nbream_smelt_indexes = (train_target == 'Bream') | (train_target == 'Smelt')\ntrain_bream_smelt = train_scaled[bream_smelt_indexes]\ntarget_bream_smelt = train_target[bream_smelt_indexes]\n# 방법1: Bream, Smelt 두 종으로 훈련\nlr2 = LogisticRegression().fit(train_bream_smelt, target_bream_smelt)\nprint(lr2.coef_.shape)\n\n# 방법2: 7종 전체로 훈련\nlr7 = LogisticRegression(C=20, max_iter=1000).fit(train_scaled, train_target)\nprint(lr7.coef_.shape)",
+   "verifyExpect": "(1, 5)\n(7, 5)",
+   "options": [
+    "㉠ (1, 5)  ·  ㉡ (1, 5)",
+    "㉠ (1, 5)  ·  ㉡ (7, 5)",
+    "㉠ (1, 5)  ·  ㉡ (5, 7)",
+    "㉠ (2, 5)  ·  ㉡ (7, 5)",
+    "㉠ (5,)  ·  ㉡ (7, 5)"
+   ]
+  },
+  {
+   "id": "F08X04",
+   "type": "대조",
+   "typeKey": "contrast",
+   "mode": "mc",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "다음은 거의 같은 두 코드이다. ㉠, ㉡에 출력되는 값으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">방법1 → ㉠<br>방법2 → ㉡</span></span>",
+   "code": "# 방법1\nprint(expit(0.0))\n\n# 방법2\nprint(softmax([0.0, 0.0]).tolist())",
+   "answer": "㉠ 0.5  ·  ㉡ [0.5, 0.5]",
+   "why": "시그모이드는 값 하나를 0~1 사이 값 하나로 바꾸며 z = 0 이면 0.5 입니다. 소프트맥스는 여러 값을 합이 1 인 확률들로 바꾸며, 두 값이 같으면 0.5 씩입니다.",
+   "tags": [
+    "시그모이드",
+    "소프트맥스"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom scipy.special import expit, softmax\n# 방법1\nprint(expit(0.0))\n\n# 방법2\nprint(softmax([0.0, 0.0]).tolist())",
+   "verifyExpect": "0.5\n[0.5, 0.5]",
+   "options": [
+    "㉠ 0.5  ·  ㉡ [0.5]",
+    "㉠ 0.5  ·  ㉡ [1.0, 1.0]",
+    "㉠ 1.0  ·  ㉡ [0.5, 0.5]",
+    "㉠ 0.5  ·  ㉡ [0.5, 0.5]",
+    "㉠ 0.0  ·  ㉡ [0.0, 0.0]"
+   ]
+  },
+  {
+   "id": "F08X05",
+   "type": "대조",
+   "typeKey": "contrast",
+   "mode": "mc",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "훈련 세트 119개 중 Bream 과 Smelt 는 모두 33개이다. ㉠, ㉡에 출력되는 값으로 알맞은 것은? (<span class=\"mono\">train_scaled</span>, <span class=\"mono\">test_scaled</span> 는 물고기 7종의 특성 5개(Weight, Length, Diagonal, Height, Width)를 표준화한 훈련 119개, 테스트 40개이고 <span class=\"mono\">train_target</span>, <span class=\"mono\">test_target</span> 은 종 이름 문자열 배열이다)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">방법1 → ㉠<br>방법2 → ㉡</span></span>",
+   "code": "# 방법1\nprint(int(((train_target == 'Bream') | (train_target == 'Smelt')).sum()))\n\n# 방법2\nprint(int(((train_target == 'Bream') & (train_target == 'Smelt')).sum()))",
+   "answer": "㉠ 33  ·  ㉡ 0",
+   "why": "<span class=\"mono\">|</span> 는 '또는'이라 Bream 이거나 Smelt 인 33개가 True 입니다. <span class=\"mono\">&amp;</span> 는 '그리고'인데 한 샘플이 두 종에 동시에 속할 수 없으므로 0개입니다.",
+   "tags": [
+    "불리언 인덱싱"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom scipy.special import expit, softmax\n\nfish = pd.read_csv('fish.csv')\nfish_input = fish[['Weight', 'Length', 'Diagonal', 'Height', 'Width']].to_numpy()\nfish_target = fish['Species'].to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(fish_input, fish_target, random_state=42)\nss = StandardScaler()\nss.fit(train_input)\ntrain_scaled = ss.transform(train_input)\ntest_scaled = ss.transform(test_input)\n# 방법1\nprint(int(((train_target == 'Bream') | (train_target == 'Smelt')).sum()))\n\n# 방법2\nprint(int(((train_target == 'Bream') & (train_target == 'Smelt')).sum()))",
+   "verifyExpect": "33\n0",
+   "options": [
+    "㉠ 33  ·  ㉡ 0",
+    "㉠ 33  ·  ㉡ 33",
+    "㉠ 33  ·  ㉡ 119",
+    "㉠ 0  ·  ㉡ 33",
+    "㉠ 119  ·  ㉡ 0"
+   ]
+  },
+  {
+   "id": "F08S01",
+   "type": "조건 매핑",
+   "typeKey": "spec",
+   "mode": "mc",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "다음 [조건]을 모두 만족하는 코드로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>[조건]</b><br>○ <span class=\"mono\">train_target</span> 에서 값이 'Bream' <b>이거나</b> 'Smelt' 인 위치만 True 인 배열을 만든다.</span>",
+   "code": "bream_smelt_indexes = ____",
+   "answer": "(train_target == 'Bream') | (train_target == 'Smelt')",
+   "why": "배열의 '또는'은 <span class=\"mono\">|</span> 이고, 연산 순서 때문에 각 비교식을 괄호로 감싸야 합니다.",
+   "tags": [
+    "불리언 인덱싱"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom scipy.special import expit, softmax\n\nfish = pd.read_csv('fish.csv')\nfish_input = fish[['Weight', 'Length', 'Diagonal', 'Height', 'Width']].to_numpy()\nfish_target = fish['Species'].to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(fish_input, fish_target, random_state=42)\nss = StandardScaler()\nss.fit(train_input)\ntrain_scaled = ss.transform(train_input)\ntest_scaled = ss.transform(test_input)\nbream_smelt_indexes = (train_target == 'Bream') | (train_target == 'Smelt')\nprint(int(bream_smelt_indexes.sum()))",
+   "verifyExpect": "33",
+   "options": [
+    "(train_target == 'Bream') | (train_target == 'Smelt')",
+    "(train_target == 'Bream') or (train_target == 'Smelt')",
+    "train_target == 'Bream' | train_target == 'Smelt'",
+    "(train_target == 'Bream') & (train_target == 'Smelt')",
+    "train_target == ['Bream', 'Smelt']"
+   ]
+  },
+  {
+   "id": "F08S02",
+   "type": "조건 매핑",
+   "typeKey": "spec",
+   "mode": "mc",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "다음 [조건]을 모두 만족하는 코드로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>[조건]</b><br>○ 테스트 세트 처음 5개 샘플에 대해 <b>클래스별 확률</b>을 구한다.<br>○ 결과는 5행 7열이고 각 행의 합은 1 이다.</span>",
+   "code": "proba = ____",
+   "answer": "lr.predict_proba(test_scaled[:5])",
+   "why": "확률은 <span class=\"mono\">predict_proba()</span> 입니다. <span class=\"mono\">decision_function()</span> 도 5행 7열이지만 z 값이라 행의 합이 1 이 아닙니다.",
+   "tags": [
+    "predict_proba"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom scipy.special import expit, softmax\n\nfish = pd.read_csv('fish.csv')\nfish_input = fish[['Weight', 'Length', 'Diagonal', 'Height', 'Width']].to_numpy()\nfish_target = fish['Species'].to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(fish_input, fish_target, random_state=42)\nss = StandardScaler()\nss.fit(train_input)\ntrain_scaled = ss.transform(train_input)\ntest_scaled = ss.transform(test_input)\n\nlr = LogisticRegression(C=20, max_iter=1000)\nlr.fit(train_scaled, train_target)\nproba = lr.predict_proba(test_scaled[:5])\nprint(proba.shape, bool(np.allclose(proba.sum(axis=1), 1)))",
+   "verifyExpect": "(5, 7) True",
+   "options": [
+    "lr.score(test_scaled[:5])",
+    "lr.decision_function(test_scaled[:5])",
+    "lr.proba(test_scaled[:5])",
+    "lr.predict_proba(test_scaled[:5])",
+    "lr.predict(test_scaled[:5])"
+   ]
+  },
+  {
+   "id": "F08S03",
+   "type": "조건 매핑",
+   "typeKey": "spec",
+   "mode": "mc",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "다음 [조건]을 모두 만족하는 코드로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>[조건]</b><br>○ 로지스틱 회귀 모델 객체를 만든다.<br>○ 규제를 기본값(1)보다 <b>약하게</b> 한다.<br>○ 반복 횟수를 1000 으로 늘린다.</span>",
+   "code": "lr = ____",
+   "answer": "LogisticRegression(C=20, max_iter=1000)",
+   "why": "<span class=\"mono\">C</span> 는 클수록 규제가 약해집니다. 기본값 1 보다 큰 20 을 줍니다. <span class=\"mono\">alpha</span> 는 릿지와 라쏘의 매개변수입니다.",
+   "tags": [
+    "C",
+    "max_iter"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom scipy.special import expit, softmax\nlr = LogisticRegression(C=20, max_iter=1000)\nprint(lr.C > 1, lr.max_iter)",
+   "verifyExpect": "True 1000",
+   "options": [
+    "LogisticRegression(max_iter=1000)",
+    "LogisticRegression(C=20, max_iter=1000)",
+    "LogisticRegression(alpha=20, max_iter=1000)",
+    "LogisticRegression(C=0.01, max_iter=1000)",
+    "LogisticRegression(C=20, epochs=1000)"
+   ]
+  },
+  {
+   "id": "F08S04",
+   "type": "조건 매핑",
+   "typeKey": "spec",
+   "mode": "mc",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "다음 [조건]을 모두 만족하는 코드로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>[조건]</b><br>○ 넘파이로 시그모이드 함수 φ(z) = 1 ÷ (1 + e^(−z)) 를 계산한다.</span>",
+   "code": "phi = ____",
+   "answer": "1 / (1 + np.exp(-z))",
+   "why": "<span class=\"mono\">np.exp(-z)</span> 가 e 의 −z 제곱입니다. z = 0 이면 1 ÷ 2 = 0.5 가 나와야 합니다.",
+   "tags": [
+    "시그모이드"
+   ],
+   "verifyCode": "import numpy as np\nz = np.array([0.0, 2.0])\nphi = 1 / (1 + np.exp(-z))\nprint(np.round(phi, 3))",
+   "verifyExpect": "[0.5   0.881]",
+   "options": [
+    "1 / (1 - np.exp(-z))",
+    "1 + np.exp(-z)",
+    "1 / (1 + np.exp(-z))",
+    "np.exp(-z) / (1 + z)",
+    "1 / (1 + np.exp(z))"
+   ]
+  },
+  {
+   "id": "F08S05",
+   "type": "조건 매핑",
+   "typeKey": "spec",
+   "mode": "mc",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "다음 [조건]을 모두 만족하는 코드로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>[조건]</b><br>○ 테스트 세트의 네 번째 샘플 <b>하나</b>를 고른다.<br>○ 모델에 바로 넣을 수 있게 2차원 배열로 유지한다.</span>",
+   "code": "x = ____",
+   "answer": "test_scaled[3:4]",
+   "why": "네 번째 샘플의 인덱스는 3 이고, 슬라이싱 <span class=\"mono\">[3:4]</span> 로 뽑아야 <span class=\"mono\">(1, 5)</span> 의 2차원이 유지됩니다.",
+   "tags": [
+    "슬라이싱"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom scipy.special import expit, softmax\n\nfish = pd.read_csv('fish.csv')\nfish_input = fish[['Weight', 'Length', 'Diagonal', 'Height', 'Width']].to_numpy()\nfish_target = fish['Species'].to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(fish_input, fish_target, random_state=42)\nss = StandardScaler()\nss.fit(train_input)\ntrain_scaled = ss.transform(train_input)\ntest_scaled = ss.transform(test_input)\nx = test_scaled[3:4]\nprint(x.shape, bool((x[0] == test_scaled[3]).all()))",
+   "verifyExpect": "(1, 5) True",
+   "options": [
+    "test_scaled[3]",
+    "test_scaled[4]",
+    "test_scaled[:3]",
+    "test_scaled[3:5]",
+    "test_scaled[3:4]"
+   ]
+  },
+  {
+   "id": "F08W01",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "시그모이드 함수에 z = 0 을 넣었을 때의 값을 쓰시오.",
+   "code": "",
+   "answer": "0.5",
+   "why": "1 ÷ (1 + e⁰) = 1 ÷ 2 = 0.5 입니다.",
+   "tags": [
+    "시그모이드"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom scipy.special import expit, softmax\nprint(expit(0))",
+   "verifyExpect": "0.5",
+   "accept": [
+    "0.5",
+    "0.50",
+    "1/2",
+    ".5"
+   ]
+  },
+  {
+   "id": "F08W02",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "<span class=\"mono\">KNeighborsClassifier(n_neighbors=3)</span> 모델에서 어떤 샘플의 이웃 3개가 Perch 2개, Roach 1개였다. 이 샘플이 Perch 일 확률을 소수 넷째 자리까지 쓰시오.",
+   "code": "",
+   "answer": "0.6667",
+   "why": "이웃 3개 중 Perch 가 2개이므로 2/3 ≈ 0.6667 입니다.",
+   "tags": [
+    "KNN",
+    "확률"
+   ],
+   "verifyCode": "print(round(2/3, 4))",
+   "verifyExpect": "0.6667",
+   "accept": [
+    "0.6667",
+    "2/3",
+    "0.667",
+    "0.67",
+    "0.6666",
+    "0.666"
+   ]
+  },
+  {
+   "id": "F08W03",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "빈칸 ㉠ 에 들어갈 메서드 이름을 쓰시오. (클래스별 확률을 돌려준다.)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">(5, 7)</span></span>",
+   "code": "proba = lr.㉠(test_scaled[:5])\nprint(proba.shape)",
+   "answer": "predict_proba",
+   "why": "<span class=\"mono\">predict_proba()</span> 가 샘플마다 클래스별 확률을 돌려줍니다. 샘플 5개, 클래스 7개라 <span class=\"mono\">(5, 7)</span> 입니다.",
+   "tags": [
+    "predict_proba"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom scipy.special import expit, softmax\n\nfish = pd.read_csv('fish.csv')\nfish_input = fish[['Weight', 'Length', 'Diagonal', 'Height', 'Width']].to_numpy()\nfish_target = fish['Species'].to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(fish_input, fish_target, random_state=42)\nss = StandardScaler()\nss.fit(train_input)\ntrain_scaled = ss.transform(train_input)\ntest_scaled = ss.transform(test_input)\n\nlr = LogisticRegression(C=20, max_iter=1000)\nlr.fit(train_scaled, train_target)\nproba = lr.predict_proba(test_scaled[:5])\nprint(proba.shape)",
+   "verifyExpect": "(5, 7)",
+   "accept": [
+    "predict_proba"
+   ]
+  },
+  {
+   "id": "F08W04",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "특성이 5개인 데이터로 7종을 분류하는 로지스틱 회귀 모델을 훈련했다. <span class=\"mono\">lr.coef_.shape</span> 을 쓰시오.",
+   "code": "",
+   "answer": "(7, 5)",
+   "why": "클래스마다 z 식이 하나씩 있어 7행, 식마다 특성 5개의 계수가 있어 5열입니다.",
+   "tags": [
+    "coef_",
+    "다중 분류"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom scipy.special import expit, softmax\n\nfish = pd.read_csv('fish.csv')\nfish_input = fish[['Weight', 'Length', 'Diagonal', 'Height', 'Width']].to_numpy()\nfish_target = fish['Species'].to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(fish_input, fish_target, random_state=42)\nss = StandardScaler()\nss.fit(train_input)\ntrain_scaled = ss.transform(train_input)\ntest_scaled = ss.transform(test_input)\n\nlr = LogisticRegression(C=20, max_iter=1000)\nlr.fit(train_scaled, train_target)\nprint(lr.coef_.shape)",
+   "verifyExpect": "(7, 5)",
+   "accept": [
+    "(7, 5)",
+    "7, 5",
+    "(7,5)",
+    "7,5",
+    "7x5",
+    "7×5",
+    "7 5"
+   ]
+  },
+  {
+   "id": "F08W05",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "소프트맥스 함수가 출력한 클래스별 확률을 모두 더하면 얼마인지 쓰시오.",
+   "code": "",
+   "answer": "1",
+   "why": "소프트맥스는 각 값을 전체의 합으로 나누므로 출력의 합이 항상 1 입니다.",
+   "tags": [
+    "소프트맥스"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom scipy.special import expit, softmax\nprint(int(round(softmax([2.0, 1.0, 0.0]).sum())))",
+   "verifyExpect": "1",
+   "accept": [
+    "1",
+    "1.0",
+    "1.00",
+    "100%"
+   ]
+  },
+  {
+   "id": "F08W06",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "<span class=\"mono\">LogisticRegression</span> 에서 규제의 강도를 조절하는 매개변수의 이름을 쓰시오. (작을수록 규제가 강하다.)",
+   "code": "",
+   "answer": "C",
+   "why": "<span class=\"mono\">C</span> 는 릿지·라쏘의 <span class=\"mono\">alpha</span> 와 반대로 작을수록 규제가 강해지며 기본값은 1 입니다.",
+   "tags": [
+    "C"
+   ],
+   "accept": [
+    "C",
+    "c"
+   ]
+  },
+  {
+   "id": "F08W07",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "빈칸 ㉠ 에 들어갈 함수 이름을 쓰시오. (사이파이의 시그모이드 함수)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">0.5</span></span>",
+   "code": "from scipy.special import ㉠\nprint(㉠(0))",
+   "answer": "expit",
+   "why": "<span class=\"mono\">scipy.special.expit</span> 가 시그모이드 함수입니다. z = 0 이면 0.5 입니다.",
+   "tags": [
+    "expit"
+   ],
+   "verifyCode": "from scipy.special import expit\nprint(expit(0))",
+   "verifyExpect": "0.5",
+   "accept": [
+    "expit"
+   ]
+  },
+  {
+   "id": "F08W08",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "<span class=\"mono\">KNeighborsClassifier(n_neighbors=5)</span> 모델의 <span class=\"mono\">predict_proba()</span> 가 낼 수 있는 서로 다른 확률 값은 모두 몇 가지인지 쓰시오.",
+   "code": "",
+   "answer": "6",
+   "why": "이웃 5개 중 해당 클래스가 0~5개일 수 있으므로 0, 0.2, 0.4, 0.6, 0.8, 1 의 6가지입니다.",
+   "tags": [
+    "KNN",
+    "확률"
+   ],
+   "verifyCode": "print(len({k / 5 for k in range(6)}))",
+   "verifyExpect": "6",
+   "accept": [
+    "6",
+    "6가지",
+    "6개",
+    "여섯",
+    "여섯 가지"
+   ]
+  },
+  {
+   "id": "F08E01",
+   "type": "서술형",
+   "typeKey": "essay",
+   "mode": "essay",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "이웃 수를 3으로 한 K-최근접 이웃 분류기의 <span class=\"mono\">predict_proba()</span> 결과에는 0, 0.3333, 0.6667, 1 만 나타났다. 그 이유를 설명하고, 이것이 왜 한계인지 쓰시오.",
+   "code": "",
+   "answer": "K-최근접 이웃의 확률은 이웃 중 그 클래스가 차지하는 비율이다. 이웃이 3개뿐이므로 가능한 값이 0/3, 1/3, 2/3, 3/3 네 가지밖에 없다. 확률이 띄엄띄엄한 몇 개의 값으로만 나와서 세밀한 확률을 알 수 없다는 것이 한계이다.",
+   "why": "AI 채점 결과입니다.",
+   "tags": [
+    "KNN",
+    "확률",
+    "서술형"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom scipy.special import expit, softmax\n\nfish = pd.read_csv('fish.csv')\nfish_input = fish[['Weight', 'Length', 'Diagonal', 'Height', 'Width']].to_numpy()\nfish_target = fish['Species'].to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(fish_input, fish_target, random_state=42)\nss = StandardScaler()\nss.fit(train_input)\ntrain_scaled = ss.transform(train_input)\ntest_scaled = ss.transform(test_input)\n\nkn = KNeighborsClassifier(n_neighbors=3)\nkn.fit(train_scaled, train_target)\nprint(sorted(set(np.round(kn.predict_proba(test_scaled[:5]), 4).ravel().tolist())))",
+   "verifyExpect": "[0.0, 0.3333, 0.6667, 1.0]",
+   "rubric": "필수 요소(모두 있어야 정답): (1) 확률이 이웃 중 해당 클래스의 비율(개수 ÷ 3)로 계산된다는 점. (2) 그래서 가능한 값이 네 가지뿐/세밀한(연속적인) 확률을 얻지 못한다는 한계."
+  },
+  {
+   "id": "F08E02",
+   "type": "서술형",
+   "typeKey": "essay",
+   "mode": "essay",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "시그모이드 함수와 소프트맥스 함수의 차이를 (1) 사용하는 분류의 종류, (2) 입력과 출력의 개수, (3) 출력값의 성질 측면에서 설명하시오.",
+   "code": "",
+   "answer": "시그모이드 함수는 이진 분류에 쓰며, z 값 하나를 받아 0~1 사이의 값 하나(양성 클래스일 확률)를 낸다. 소프트맥스 함수는 다중 분류에 쓰며, 클래스 수만큼의 z 값을 받아 같은 개수의 0~1 사이 값을 내고 그 합은 1 이다.",
+   "why": "AI 채점 결과입니다.",
+   "tags": [
+    "시그모이드",
+    "소프트맥스",
+    "서술형"
+   ],
+   "rubric": "필수 요소(모두 있어야 정답): (1) 시그모이드는 이진 분류, 소프트맥스는 다중 분류. (2) 시그모이드는 값 하나 → 하나, 소프트맥스는 여러 개 → 여러 개. (3) 소프트맥스 출력의 합이 1 (또는 시그모이드 출력이 0~1 사이의 확률). 두 함수의 설명이 서로 바뀌면 오답."
+  },
+  {
+   "id": "F08E03",
+   "type": "서술형",
+   "typeKey": "essay",
+   "mode": "essay",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "Bream 과 Smelt 를 구분하는 로지스틱 회귀 모델에서 <span class=\"mono\">lr.classes_</span> 는 <span class=\"mono\">['Bream' 'Smelt']</span> 이다. 어떤 샘플의 <span class=\"mono\">decision_function()</span> 값(z)이 −6.03 이었고 <span class=\"mono\">predict_proba()</span> 결과는 <span class=\"mono\">[0.9976, 0.0024]</span> 였다. 이 샘플을 어느 종으로 예측하는지와, z 값과 두 확률의 관계를 설명하시오.",
+   "code": "",
+   "answer": "Bream 으로 예측한다. z 를 시그모이드 함수에 넣은 값 0.0024 가 양성 클래스(classes_ 의 두 번째인 Smelt)일 확률이고 predict_proba 의 두 번째 열에 들어간다. 첫 번째 열 0.9976 은 1 − 0.0024 로 Bream 일 확률이다. z 가 음수라서 Smelt 확률이 0.5 보다 작으므로 Bream 이 된다.",
+   "why": "AI 채점 결과입니다.",
+   "tags": [
+    "시그모이드",
+    "predict_proba",
+    "서술형"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom scipy.special import expit, softmax\n\nfish = pd.read_csv('fish.csv')\nfish_input = fish[['Weight', 'Length', 'Diagonal', 'Height', 'Width']].to_numpy()\nfish_target = fish['Species'].to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(fish_input, fish_target, random_state=42)\nss = StandardScaler()\nss.fit(train_input)\ntrain_scaled = ss.transform(train_input)\ntest_scaled = ss.transform(test_input)\n\nbream_smelt_indexes = (train_target == 'Bream') | (train_target == 'Smelt')\ntrain_bream_smelt = train_scaled[bream_smelt_indexes]\ntarget_bream_smelt = train_target[bream_smelt_indexes]\n\nlr = LogisticRegression()\nlr.fit(train_bream_smelt, target_bream_smelt)\nprint(lr.classes_, np.round(lr.predict_proba(train_bream_smelt[:1]), 4), np.round(lr.decision_function(train_bream_smelt[:1]), 2))",
+   "verifyExpect": "['Bream' 'Smelt'] [[0.9976 0.0024]] [-6.03]",
+   "rubric": "필수 요소(모두 있어야 정답): (1) Bream 으로 예측. (2) z 를 시그모이드에 넣은 값이 Smelt(양성 클래스, 두 번째 열)의 확률 0.0024 라는 점. (3) Bream 확률은 나머지(1 − 0.0024) 이거나, z 가 음수이면 양성 확률이 0.5 미만이라는 설명 중 하나."
+  },
+  {
+   "id": "F08E04",
+   "type": "서술형",
+   "typeKey": "essay",
+   "mode": "essay",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "릿지 회귀의 <span class=\"mono\">alpha</span> 와 로지스틱 회귀의 <span class=\"mono\">C</span> 는 모두 규제의 강도를 조절한다. 두 매개변수의 값과 규제 강도의 관계가 어떻게 다른지 설명하고, 노트북에서 <span class=\"mono\">C=20</span> 으로 설정한 것은 규제를 어떻게 한 것인지 쓰시오.",
+   "code": "",
+   "answer": "alpha 는 값이 클수록 규제가 강해지고, C 는 반대로 값이 작을수록 규제가 강해진다(클수록 약해진다). C 의 기본값은 1 이므로 C=20 은 규제를 기본보다 약하게 풀어 준 것이다.",
+   "why": "AI 채점 결과입니다.",
+   "tags": [
+    "C",
+    "alpha",
+    "규제",
+    "서술형"
+   ],
+   "rubric": "필수 요소(모두 있어야 정답): (1) alpha 는 클수록 규제가 강하다. (2) C 는 작을수록 규제가 강하다(클수록 약하다). (3) C=20 은 규제를 약하게 한 것. 방향이 하나라도 반대면 오답."
+  },
+  {
+   "id": "F08E05",
+   "type": "서술형",
+   "typeKey": "essay",
+   "mode": "essay",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "로지스틱 회귀는 선형회귀와 같은 선형식을 학습하지만 회귀가 아니라 분류에 쓰인다. 로지스틱 회귀가 샘플의 클래스를 정하는 과정을 '선형식', '시그모이드(또는 소프트맥스)', '확률'이라는 말을 넣어 설명하시오.",
+   "code": "",
+   "answer": "먼저 특성에 계수를 곱하고 절편을 더한 선형식으로 z 값을 계산한다. 이 z 를 시그모이드 함수(다중 분류에서는 소프트맥스 함수)에 넣어 0~1 사이의 확률로 바꾼다. 그 확률이 가장 큰 클래스(이진 분류에서는 0.5 를 기준)로 샘플을 분류한다.",
+   "why": "AI 채점 결과입니다.",
+   "tags": [
+    "로지스틱 회귀",
+    "서술형"
+   ],
+   "rubric": "필수 요소(모두 있어야 정답): (1) 선형식으로 z 를 계산. (2) 시그모이드 또는 소프트맥스로 확률(0~1)로 변환. (3) 확률이 가장 큰 클래스(또는 0.5 기준)로 분류."
+  },
+  {
+   "id": "F08E06",
+   "type": "서술형",
+   "typeKey": "essay",
+   "mode": "essay",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "7종을 분류하는 모델의 <span class=\"mono\">classes_</span> 가 <span class=\"mono\">['Bream' 'Parkki' 'Perch' 'Pike' 'Roach' 'Smelt' 'Whitefish']</span> 이고, 어떤 샘플의 <span class=\"mono\">predict_proba()</span> 결과가 <span class=\"mono\">[0, 0, 0.6667, 0, 0.3333, 0, 0]</span> 이다. 이 결과가 뜻하는 것을 설명하고 모델이 예측하는 종을 쓰시오.",
+   "code": "",
+   "answer": "predict_proba 의 값은 classes_ 의 순서대로 각 종일 확률이다. 세 번째 값 0.6667 은 Perch 일 확률, 다섯 번째 값 0.3333 은 Roach 일 확률이고 나머지 종의 확률은 0 이다. 확률이 가장 큰 Perch 로 예측한다.",
+   "why": "AI 채점 결과입니다.",
+   "tags": [
+    "predict_proba",
+    "classes_",
+    "서술형"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom scipy.special import expit, softmax\n\nfish = pd.read_csv('fish.csv')\nfish_input = fish[['Weight', 'Length', 'Diagonal', 'Height', 'Width']].to_numpy()\nfish_target = fish['Species'].to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(fish_input, fish_target, random_state=42)\nss = StandardScaler()\nss.fit(train_input)\ntrain_scaled = ss.transform(train_input)\ntest_scaled = ss.transform(test_input)\n\nkn = KNeighborsClassifier(n_neighbors=3)\nkn.fit(train_scaled, train_target)\nprint(kn.classes_[np.argmax(kn.predict_proba(test_scaled[3:4]))])",
+   "verifyExpect": "Perch",
+   "rubric": "필수 요소(모두 있어야 정답): (1) 열 순서가 classes_ 순서와 같다는 점 또는 0.6667 이 Perch, 0.3333 이 Roach 의 확률이라는 대응. (2) 예측 결과 Perch."
+  },
+  {
+   "id": "F08E07",
+   "type": "서술형",
+   "typeKey": "essay",
+   "mode": "essay",
+   "src": "기말.8.로지스틱회귀",
+   "stem": "<span class=\"mono\">train_scaled</span> 는 훈련 세트의 입력(2차원 배열), <span class=\"mono\">train_target</span> 은 종 이름이 든 배열이다. 훈련 세트에서 'Bream' 과 'Smelt' 인 샘플의 입력만 골라 <span class=\"mono\">train_bream_smelt</span> 에 저장하는 코드를 쓰시오. (불리언 인덱싱 사용)",
+   "code": "",
+   "answer": "bream_smelt_indexes = (train_target == 'Bream') | (train_target == 'Smelt')\ntrain_bream_smelt = train_scaled[bream_smelt_indexes]",
+   "why": "AI 채점 결과입니다.",
+   "tags": [
+    "불리언 인덱싱",
+    "서술형"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom scipy.special import expit, softmax\n\nfish = pd.read_csv('fish.csv')\nfish_input = fish[['Weight', 'Length', 'Diagonal', 'Height', 'Width']].to_numpy()\nfish_target = fish['Species'].to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(fish_input, fish_target, random_state=42)\nss = StandardScaler()\nss.fit(train_input)\ntrain_scaled = ss.transform(train_input)\ntest_scaled = ss.transform(test_input)\nbream_smelt_indexes = (train_target == 'Bream') | (train_target == 'Smelt')\ntrain_bream_smelt = train_scaled[bream_smelt_indexes]\ntarget_bream_smelt = train_target[bream_smelt_indexes]\nprint(train_bream_smelt.shape)",
+   "verifyExpect": "(33, 5)",
+   "rubric": "필수 요소(모두 있어야 정답): (1) (train_target == 'Bream') | (train_target == 'Smelt') 형태의 조건. 각 비교식에 괄호가 있어야 하고 or 가 아닌 | 를 써야 한다. (2) 그 조건으로 train_scaled 를 인덱싱. 한 줄로 합쳐 써도 정답. np.isin(train_target, ['Bream','Smelt']) 같은 같은 결과의 코드도 정답."
+  }
+ ]
+}
