@@ -99,7 +99,8 @@ class Bank:
         return q
 
     # ── 개념 분류: <보기>에서 옳은 것만 고르기 ─────────────
-    def C(self, items, why, tags, code='', stem=None, pre=None, ref=None):
+    def C(self, items, why, tags, code='', stem=None, pre=None, ref=None, show=None):
+        # show: 화면에 보일 코드가 실행용 코드(code)와 다를 때 (텐서플로 코드 등)
         qid, n = self._id('C')
         exprs = [t for _, t in items if isinstance(t, str)]
         truth, vcode, vexp = [], None, None
@@ -130,15 +131,16 @@ class Bank:
         opts_sorted = sorted(opts, key=lambda o: (o.count(','), o))   # 수능식으로 짧은 것부터
         body = '<br>'.join(f'{MARK[i]} {fmt(t)}' for i, (t, _) in enumerate(items))
         stem = fmt(stem or '다음 코드에 대한 설명으로 옳은 것만 <보기>에서 모두 고른 것은?') + box('<보기>', body)
-        return self._add(qid, 'classify', 'mc', stem, code, name(right), why, tags,
+        assert stem and (code or show or True)
+        return self._add(qid, 'classify', 'mc', stem, code if show is None else show, name(right), why, tags,
                          verifyCode=vcode, verifyExpect=vexp, ref=ref, options=opts_sorted)
 
     # ── 실행 결과를 고르는 문항 (상태 예측 / 경계값) ───────
     def _mc(self, letter, key, stem, code, opts, why, tags, ans=None, pre=None, chk=None, eq=True, ref=None):
         qid, n = self._id(letter)
         vcode = vexp = None
-        if ans is None:
-            vcode = self._full(code, pre)
+        if ans is None:          # 정답 = 실행 출력. chk 가 있으면 화면의 code 대신 chk 를 실행한다.
+            vcode = self._full(code if chk is None else chk, pre)
             vexp, _ = run(vcode)
             ans = vexp
             assert '\n' not in ans and ans != '', f'{qid}: 출력이 한 줄이 아님 → {ans!r}'
@@ -186,16 +188,20 @@ class Bank:
                          options=self._place('B', n, join(fill), [join(o) for o in opts]))
 
     # ── 대조: 두 코드의 출력 짝 ────────────────────────────
-    def X(self, code, opts, why, tags, stem=None, pre=None, ans=None, labels=('방법1', '방법2')):
+    def X(self, code, opts, why, tags, stem=None, pre=None, ans=None, labels=('방법1', '방법2'), chk=None):
         qid, n = self._id('X')
         join = lambda p: f'㉠ {p[0]}  ·  ㉡ {p[1]}'
         vcode = vexp = None
         if ans is None:
-            vcode = self._full(code, pre)
+            vcode = self._full(code if chk is None else chk, pre)
             vexp, _ = run(vcode)
             lines = vexp.split('\n')
             assert len(lines) == 2, f'{qid}: 출력이 두 줄이 아님 → {vexp!r}'
             ans = tuple(lines)
+        elif chk is not None:
+            vcode = self._full(chk, pre)
+            vexp, _ = run(vcode)
+            assert tuple(vexp.split('\n')) == tuple(str(a) for a in ans), f'{qid}: 검증 출력 {vexp!r} != 정답 {ans!r}'
         stem = fmt(stem or '다음은 거의 같은 두 코드이다. ㉠, ㉡에 출력되는 값으로 알맞은 것은?')
         stem += resbox(f'{labels[0]} → ㉠\n{labels[1]} → ㉡')
         return self._add(qid, 'contrast', 'mc', stem, code, join(ans), why, tags,
@@ -221,11 +227,14 @@ class Bank:
                          verifyCode=vcode, verifyExpect=vexp, options=self._place('S', n, ans, opts))
 
     # ── 서답형 ─────────────────────────────────────────────
-    def W(self, stem, ans, why, tags, accept=(), code='', pre=None, chk=None, result=True, eq=True):
+    def W(self, stem, ans, why, tags, accept=(), code='', pre=None, chk=None, result=True, eq=True, exec_=True):
         qid, n = self._id('W')
         vcode = vexp = None
         stem = fmt(stem)
-        if '㉠' in code:
+        if '㉠' in code and not exec_:
+            if isinstance(result, str):
+                stem += resbox(result)
+        elif '㉠' in code:
             vcode = self._full(code.replace('㉠', ans), pre)
             vexp, _ = run(vcode)
             if result is True and vexp:
