@@ -1,0 +1,1299 @@
+{
+ "version": 1,
+ "generatedAt": "2026-11-11",
+ "source": [
+  "기말.7.특성공학과규제(과대적합,과소적합).ipynb"
+ ],
+ "verified": "verifyCode 가 있는 문항은 파이썬(numpy 2.5, pandas 3.0, scikit-learn 1.9)에서 실제로 실행해 정답을 확인함. ref 가 있는 문항은 코드로 검증할 수 없는 개념이나 텐서플로 실행 결과라서 노트북 본문(해당 셀)과 저장된 출력을 근거로 둠. 서술형(essay)은 AI 가 rubric 으로 채점하며, 계산이 들어간 모범 답안은 verifyCode 로 실행 확인함.",
+ "types": [
+  {
+   "key": "classify",
+   "label": "개념 분류",
+   "pick": [
+    1,
+    2
+   ],
+   "note": "코드를 보고 <보기>에서 옳은 설명을 모두 고르는 문항"
+  },
+  {
+   "key": "blank2",
+   "label": "빈칸",
+   "pick": [
+    1,
+    2
+   ],
+   "note": "㉠, ㉡ 두 빈칸을 짝으로 고르는 문항"
+  },
+  {
+   "key": "boundary",
+   "label": "경계값",
+   "pick": [
+    1,
+    2
+   ],
+   "note": "포함/미포함, 개수·크기의 경계를 판별하는 문항"
+  },
+  {
+   "key": "trace",
+   "label": "상태 예측",
+   "pick": [
+    1,
+    2
+   ],
+   "note": "출력값·shape 등 실행 결과를 예측하는 문항"
+  },
+  {
+   "key": "contrast",
+   "label": "대조",
+   "pick": [
+    1,
+    2
+   ],
+   "note": "거의 같은 두 코드의 결정적 차이를 묻는 문항"
+  },
+  {
+   "key": "spec",
+   "label": "조건 매핑",
+   "pick": [
+    1,
+    1
+   ],
+   "note": "[조건]을 만족하는 코드를 고르는 문항"
+  },
+  {
+   "key": "short",
+   "label": "서답형",
+   "pick": [
+    1,
+    1
+   ],
+   "note": "빈칸에 들어갈 코드나 계산 결과를 직접 쓰는 문항"
+  },
+  {
+   "key": "essay",
+   "label": "서술형",
+   "pick": [
+    1,
+    1
+   ],
+   "note": "이유 설명·계산 과정을 서술하는 문항 (AI 채점)"
+  }
+ ],
+ "questions": [
+  {
+   "id": "F07C01",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "과대적합과 과소적합에 대한 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) 훈련 세트의 점수는 좋은데 테스트 세트의 점수가 낮으면 과대적합이다.<br>(나) 테스트 세트의 점수가 훈련 세트보다 높거나 두 점수가 모두 낮으면 과소적합이다.<br>(다) 과대적합은 모델이 너무 단순해서 훈련이 제대로 되지 않은 경우이다.</span>",
+   "code": "",
+   "answer": "(가), (나)",
+   "why": "모델이 너무 단순해서 훈련이 제대로 되지 않은 것은 <b>과소적합</b>입니다. 과대적합은 모델이 훈련 세트에 너무 집착해서 전체적인 패턴을 놓친 경우입니다.",
+   "tags": [
+    "과대적합",
+    "과소적합"
+   ],
+   "ref": "셀 [1] 과대적합, 과소적합",
+   "options": [
+    "(나)",
+    "(가), (나)",
+    "(가), (다)",
+    "(나), (다)",
+    "(가), (나), (다)"
+   ]
+  },
+  {
+   "id": "F07C02",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "<span class=\"mono\">train_input</span> 은 농어의 길이 42개가 든 1차원 배열(shape <span class=\"mono\">(42,)</span>)이다. 다음 코드를 실행한 뒤의 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) <span class=\"mono\">train_input.shape</span> 은 <span class=\"mono\">(42, 1)</span> 이다.<br>(나) <span class=\"mono\">train_input.size</span> (전체 원소 수)는 84 가 된다.<br>(다) <span class=\"mono\">-1</span> 은 나머지 차원에 맞춰 크기를 자동으로 정하라는 뜻이다.</span>",
+   "code": "train_input = train_input.reshape(-1, 1)",
+   "answer": "(가), (다)",
+   "why": "사이킷런의 입력은 2차원이어야 해서 <span class=\"mono\">(42,)</span> 를 <span class=\"mono\">(42, 1)</span> 로 바꿉니다. 모양만 바뀌고 원소 수 42 는 그대로이며, <span class=\"mono\">-1</span> 자리는 자동으로 42 가 됩니다.",
+   "tags": [
+    "reshape",
+    "2차원 입력"
+   ],
+   "verifyCode": "import numpy as np\nperch_length = np.array([8.4, 13.7, 15.0, 16.2, 17.4, 18.0, 18.7, 19.0, 19.6, 20.0, 21.0, 21.0, 21.0, 21.3, 22.0, 22.0, 22.0, 22.0, 22.0, 22.5, 22.5, 22.7, 23.0, 23.5, 24.0, 24.0, 24.6, 25.0, 25.6, 26.5, 27.3, 27.5, 27.5, 27.5, 28.0, 28.7, 30.0, 32.8, 34.5, 35.0, 36.5, 36.0, 37.0, 37.0, 39.0, 39.0, 39.0, 40.0, 40.0, 40.0, 40.0, 42.0, 43.0, 43.0, 43.5, 44.0])\nperch_weight = np.array([5.9, 32.0, 40.0, 51.5, 70.0, 100.0, 78.0, 80.0, 85.0, 85.0, 110.0, 115.0, 125.0, 130.0, 120.0, 120.0, 130.0, 135.0, 110.0, 130.0, 150.0, 145.0, 150.0, 170.0, 225.0, 145.0, 188.0, 180.0, 197.0, 218.0, 300.0, 260.0, 265.0, 250.0, 250.0, 300.0, 320.0, 514.0, 556.0, 840.0, 685.0, 700.0, 700.0, 690.0, 900.0, 650.0, 820.0, 850.0, 900.0, 1015.0, 820.0, 1100.0, 1000.0, 1100.0, 1000.0, 1000.0])\n\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression, Ridge, Lasso\nfrom sklearn.preprocessing import PolynomialFeatures, StandardScaler\n\ntrain_input, test_input, train_target, test_target = train_test_split(perch_length, perch_weight, random_state=42)\ntrain_input = train_input.reshape(-1, 1)\nprint(train_input.shape == (42, 1), train_input.size == 84)",
+   "verifyExpect": "True False",
+   "options": [
+    "(다)",
+    "(가), (나)",
+    "(가), (다)",
+    "(나), (다)",
+    "(가), (나), (다)"
+   ]
+  },
+  {
+   "id": "F07C03",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "다음 코드에 대한 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은? (<span class=\"mono\">train_input</span>, <span class=\"mono\">test_input</span> 은 농어 56마리의 길이를 기본 비율로 나눈 뒤 <span class=\"mono\">reshape(-1, 1)</span> 한 배열이고, 정답은 무게이다)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) <span class=\"mono\">lr.predict([[50]])</span> 의 값은 약 1574 이다.<br>(나) <span class=\"mono\">lr.coef_</span> 에는 값이 1개 들어 있다.<br>(다) <span class=\"mono\">lr.intercept_</span> 는 음수이다.</span>",
+   "code": "lr = LinearRegression()\nlr.fit(train_input, train_target)",
+   "answer": "(나), (다)",
+   "why": "특성이 길이 하나라서 계수도 하나(약 39.02)이고 절편은 약 −709.02 입니다. 50cm 의 예측값은 39.02 × 50 − 709.02 ≈ 1241.8 입니다. 1574 는 2차식(다항회귀) 모델의 예측값입니다.",
+   "tags": [
+    "LinearRegression",
+    "coef_",
+    "intercept_"
+   ],
+   "verifyCode": "import numpy as np\nperch_length = np.array([8.4, 13.7, 15.0, 16.2, 17.4, 18.0, 18.7, 19.0, 19.6, 20.0, 21.0, 21.0, 21.0, 21.3, 22.0, 22.0, 22.0, 22.0, 22.0, 22.5, 22.5, 22.7, 23.0, 23.5, 24.0, 24.0, 24.6, 25.0, 25.6, 26.5, 27.3, 27.5, 27.5, 27.5, 28.0, 28.7, 30.0, 32.8, 34.5, 35.0, 36.5, 36.0, 37.0, 37.0, 39.0, 39.0, 39.0, 40.0, 40.0, 40.0, 40.0, 42.0, 43.0, 43.0, 43.5, 44.0])\nperch_weight = np.array([5.9, 32.0, 40.0, 51.5, 70.0, 100.0, 78.0, 80.0, 85.0, 85.0, 110.0, 115.0, 125.0, 130.0, 120.0, 120.0, 130.0, 135.0, 110.0, 130.0, 150.0, 145.0, 150.0, 170.0, 225.0, 145.0, 188.0, 180.0, 197.0, 218.0, 300.0, 260.0, 265.0, 250.0, 250.0, 300.0, 320.0, 514.0, 556.0, 840.0, 685.0, 700.0, 700.0, 690.0, 900.0, 650.0, 820.0, 850.0, 900.0, 1015.0, 820.0, 1100.0, 1000.0, 1100.0, 1000.0, 1000.0])\n\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression, Ridge, Lasso\nfrom sklearn.preprocessing import PolynomialFeatures, StandardScaler\n\ntrain_input, test_input, train_target, test_target = train_test_split(perch_length, perch_weight, random_state=42)\n\ntrain_input = train_input.reshape(-1, 1)\ntest_input = test_input.reshape(-1, 1)\nlr = LinearRegression()\nlr.fit(train_input, train_target)\nprint(round(float(lr.predict([[50]])[0])) == 1574, len(lr.coef_) == 1, lr.intercept_ < 0)",
+   "verifyExpect": "False True True",
+   "options": [
+    "(가)",
+    "(가), (나)",
+    "(가), (다)",
+    "(나), (다)",
+    "(가), (나), (다)"
+   ]
+  },
+  {
+   "id": "F07C04",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "다음 코드에 대한 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은? (<span class=\"mono\">train_input</span>, <span class=\"mono\">test_input</span> 은 농어 56마리의 길이를 기본 비율로 나눈 뒤 <span class=\"mono\">reshape(-1, 1)</span> 한 배열이고, 정답은 무게이다)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) <span class=\"mono\">train_poly.shape</span> 은 <span class=\"mono\">(42, 2)</span> 이다.<br>(나) <span class=\"mono\">train_poly</span> 의 첫 번째 열은 길이의 제곱이다.<br>(다) 50cm 농어는 <span class=\"mono\">lr.predict([[50, 50**2]])</span> 로 예측해야 한다.</span>",
+   "code": "train_poly = np.column_stack((train_input ** 2, train_input))\ntest_poly = np.column_stack((test_input ** 2, test_input))\nlr = LinearRegression()\nlr.fit(train_poly, train_target)",
+   "answer": "(가), (나)",
+   "why": "<span class=\"mono\">column_stack</span> 에 제곱을 먼저 넣었으므로 열 순서는 [길이², 길이] 입니다. 예측할 때도 같은 순서인 <span class=\"mono\">[[50**2, 50]]</span> 으로 넣어야 합니다.",
+   "tags": [
+    "다항회귀",
+    "column_stack"
+   ],
+   "verifyCode": "import numpy as np\nperch_length = np.array([8.4, 13.7, 15.0, 16.2, 17.4, 18.0, 18.7, 19.0, 19.6, 20.0, 21.0, 21.0, 21.0, 21.3, 22.0, 22.0, 22.0, 22.0, 22.0, 22.5, 22.5, 22.7, 23.0, 23.5, 24.0, 24.0, 24.6, 25.0, 25.6, 26.5, 27.3, 27.5, 27.5, 27.5, 28.0, 28.7, 30.0, 32.8, 34.5, 35.0, 36.5, 36.0, 37.0, 37.0, 39.0, 39.0, 39.0, 40.0, 40.0, 40.0, 40.0, 42.0, 43.0, 43.0, 43.5, 44.0])\nperch_weight = np.array([5.9, 32.0, 40.0, 51.5, 70.0, 100.0, 78.0, 80.0, 85.0, 85.0, 110.0, 115.0, 125.0, 130.0, 120.0, 120.0, 130.0, 135.0, 110.0, 130.0, 150.0, 145.0, 150.0, 170.0, 225.0, 145.0, 188.0, 180.0, 197.0, 218.0, 300.0, 260.0, 265.0, 250.0, 250.0, 300.0, 320.0, 514.0, 556.0, 840.0, 685.0, 700.0, 700.0, 690.0, 900.0, 650.0, 820.0, 850.0, 900.0, 1015.0, 820.0, 1100.0, 1000.0, 1100.0, 1000.0, 1000.0])\n\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression, Ridge, Lasso\nfrom sklearn.preprocessing import PolynomialFeatures, StandardScaler\n\ntrain_input, test_input, train_target, test_target = train_test_split(perch_length, perch_weight, random_state=42)\n\ntrain_input = train_input.reshape(-1, 1)\ntest_input = test_input.reshape(-1, 1)\ntrain_poly = np.column_stack((train_input ** 2, train_input))\ntest_poly = np.column_stack((test_input ** 2, test_input))\nlr = LinearRegression()\nlr.fit(train_poly, train_target)\nprint(train_poly.shape == (42, 2), bool(np.allclose(train_poly[:, 0], train_input[:, 0] ** 2)))",
+   "verifyExpect": "True True",
+   "options": [
+    "(가)",
+    "(나)",
+    "(가), (나)",
+    "(가), (다)",
+    "(나), (다)"
+   ]
+  },
+  {
+   "id": "F07C05",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "다음 코드에 대한 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은? (<span class=\"mono\">train_input</span>, <span class=\"mono\">test_input</span> 은 농어의 길이, 높이, 두께 3개 특성을 기본 비율로 나눈 훈련 42개, 테스트 14개이다)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) <span class=\"mono\">train_poly.shape</span> 은 <span class=\"mono\">(42, 9)</span> 이다.<br>(나) <span class=\"mono\">include_bias=False</span> 를 지우면 특성이 8개로 줄어든다.<br>(다) <span class=\"mono\">poly.get_feature_names_out()</span> 에는 <span class=\"mono\">'x0 x1'</span> 이 들어 있다.</span>",
+   "code": "poly = PolynomialFeatures(include_bias=False)\npoly.fit(train_input)\ntrain_poly = poly.transform(train_input)\ntest_poly = poly.transform(test_input)",
+   "answer": "(가), (다)",
+   "why": "특성 3개에서 원래 특성 3개, 제곱 3개, 서로 곱한 것 3개로 9개가 만들어집니다. <span class=\"mono\">include_bias=False</span> 를 지우면 값이 1인 특성이 하나 <b>추가</b>되어 10개가 됩니다.",
+   "tags": [
+    "PolynomialFeatures",
+    "특성 공학"
+   ],
+   "verifyCode": "import numpy as np\nperch_length = np.array([8.4, 13.7, 15.0, 16.2, 17.4, 18.0, 18.7, 19.0, 19.6, 20.0, 21.0, 21.0, 21.0, 21.3, 22.0, 22.0, 22.0, 22.0, 22.0, 22.5, 22.5, 22.7, 23.0, 23.5, 24.0, 24.0, 24.6, 25.0, 25.6, 26.5, 27.3, 27.5, 27.5, 27.5, 28.0, 28.7, 30.0, 32.8, 34.5, 35.0, 36.5, 36.0, 37.0, 37.0, 39.0, 39.0, 39.0, 40.0, 40.0, 40.0, 40.0, 42.0, 43.0, 43.0, 43.5, 44.0])\nperch_weight = np.array([5.9, 32.0, 40.0, 51.5, 70.0, 100.0, 78.0, 80.0, 85.0, 85.0, 110.0, 115.0, 125.0, 130.0, 120.0, 120.0, 130.0, 135.0, 110.0, 130.0, 150.0, 145.0, 150.0, 170.0, 225.0, 145.0, 188.0, 180.0, 197.0, 218.0, 300.0, 260.0, 265.0, 250.0, 250.0, 300.0, 320.0, 514.0, 556.0, 840.0, 685.0, 700.0, 700.0, 690.0, 900.0, 650.0, 820.0, 850.0, 900.0, 1015.0, 820.0, 1100.0, 1000.0, 1100.0, 1000.0, 1000.0])\n\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression, Ridge, Lasso\nfrom sklearn.preprocessing import PolynomialFeatures, StandardScaler\n\nperch_full = pd.read_csv('perch_full.csv').to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(perch_full, perch_weight, random_state=42)\npoly = PolynomialFeatures(include_bias=False)\npoly.fit(train_input)\ntrain_poly = poly.transform(train_input)\ntest_poly = poly.transform(test_input)\nprint(train_poly.shape == (42, 9), PolynomialFeatures().fit_transform(train_input).shape[1] == 8, 'x0 x1' in poly.get_feature_names_out())",
+   "verifyExpect": "True False True",
+   "options": [
+    "(가)",
+    "(다)",
+    "(가), (나)",
+    "(가), (다)",
+    "(나), (다)"
+   ]
+  },
+  {
+   "id": "F07C06",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "다음 코드를 노트북에서 실행한 결과에 대한 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은? (<span class=\"mono\">train_input</span>, <span class=\"mono\">test_input</span> 은 농어의 길이, 높이, 두께 3개 특성을 기본 비율로 나눈 훈련 42개, 테스트 14개이다)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) 만들어진 특성은 55개이다.<br>(나) <span class=\"mono\">lr.score(test_poly, test_target)</span> 도 0.9 이상이다.<br>(다) <span class=\"mono\">lr.score(train_poly, train_target)</span> 은 0.99 보다 크다.</span>",
+   "code": "poly = PolynomialFeatures(degree=5, include_bias=False)\npoly.fit(train_input)\ntrain_poly = poly.transform(train_input)\ntest_poly = poly.transform(test_input)\nlr = LinearRegression()\nlr.fit(train_poly, train_target)",
+   "answer": "(가), (다)",
+   "why": "5제곱 항까지 만들면 특성이 55개로 훈련 샘플 42개보다 많아집니다. 훈련 세트는 거의 완벽하게 맞히지만(0.9999…) 테스트 점수는 −144 로, 극단적인 과대적합입니다.",
+   "tags": [
+    "과대적합",
+    "degree"
+   ],
+   "verifyCode": "import numpy as np\nperch_length = np.array([8.4, 13.7, 15.0, 16.2, 17.4, 18.0, 18.7, 19.0, 19.6, 20.0, 21.0, 21.0, 21.0, 21.3, 22.0, 22.0, 22.0, 22.0, 22.0, 22.5, 22.5, 22.7, 23.0, 23.5, 24.0, 24.0, 24.6, 25.0, 25.6, 26.5, 27.3, 27.5, 27.5, 27.5, 28.0, 28.7, 30.0, 32.8, 34.5, 35.0, 36.5, 36.0, 37.0, 37.0, 39.0, 39.0, 39.0, 40.0, 40.0, 40.0, 40.0, 42.0, 43.0, 43.0, 43.5, 44.0])\nperch_weight = np.array([5.9, 32.0, 40.0, 51.5, 70.0, 100.0, 78.0, 80.0, 85.0, 85.0, 110.0, 115.0, 125.0, 130.0, 120.0, 120.0, 130.0, 135.0, 110.0, 130.0, 150.0, 145.0, 150.0, 170.0, 225.0, 145.0, 188.0, 180.0, 197.0, 218.0, 300.0, 260.0, 265.0, 250.0, 250.0, 300.0, 320.0, 514.0, 556.0, 840.0, 685.0, 700.0, 700.0, 690.0, 900.0, 650.0, 820.0, 850.0, 900.0, 1015.0, 820.0, 1100.0, 1000.0, 1100.0, 1000.0, 1000.0])\n\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression, Ridge, Lasso\nfrom sklearn.preprocessing import PolynomialFeatures, StandardScaler\n\nperch_full = pd.read_csv('perch_full.csv').to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(perch_full, perch_weight, random_state=42)\npoly = PolynomialFeatures(degree=5, include_bias=False)\npoly.fit(train_input)\ntrain_poly = poly.transform(train_input)\ntest_poly = poly.transform(test_input)\nlr = LinearRegression()\nlr.fit(train_poly, train_target)\nprint(train_poly.shape[1] == 55)",
+   "verifyExpect": "True",
+   "ref": "셀 [34]~[38] degree=5 실험 (저장된 출력: 훈련 0.9999999999996433, 테스트 -144.40579436844948)",
+   "options": [
+    "(다)",
+    "(가), (나)",
+    "(가), (다)",
+    "(나), (다)",
+    "(가), (나), (다)"
+   ]
+  },
+  {
+   "id": "F07C07",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "규제에 대한 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) <span class=\"mono\">alpha</span> 값이 클수록 규제가 약해진다.<br>(나) 릿지는 계수를 작게 만들어 여러 특성의 영향력을 줄인다.<br>(다) 라쏘는 일부 특성의 계수를 0 으로 만들어 아예 쓰지 않게 할 수 있다.</span>",
+   "code": "",
+   "answer": "(나), (다)",
+   "why": "<span class=\"mono\">alpha</span> 가 <b>클수록 규제가 강해져</b> 계수가 더 작아지고 과소적합 쪽으로 갑니다. 릿지는 '여러 특성을 유지하되 영향력을 줄이자', 라쏘는 '일부 특성은 아예 사용하지 말자'입니다.",
+   "tags": [
+    "규제",
+    "릿지",
+    "라쏘",
+    "alpha"
+   ],
+   "ref": "셀 [40]~[52] 규제, 릿지 회귀, 라쏘 회귀",
+   "options": [
+    "(나)",
+    "(다)",
+    "(가), (나)",
+    "(가), (다)",
+    "(나), (다)"
+   ]
+  },
+  {
+   "id": "F07C08",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "다음 코드에 대한 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은? (<span class=\"mono\">train_scaled</span>, <span class=\"mono\">test_scaled</span> 는 3개 특성을 <span class=\"mono\">degree=5</span> 로 늘린 55개 특성을 <span class=\"mono\">StandardScaler</span> 로 표준화한 훈련 42개, 테스트 14개이다)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) <span class=\"mono\">lasso.coef_</span> 에는 0 인 계수가 있다.<br>(나) <span class=\"mono\">ridge.coef_</span> 에는 0 인 계수가 없다.<br>(다) <span class=\"mono\">ridge.score(test_scaled, test_target)</span> 은 음수이다.</span>",
+   "code": "ridge = Ridge(alpha=0.1)\nridge.fit(train_scaled, train_target)\nlasso = Lasso(alpha=10)\nlasso.fit(train_scaled, train_target)",
+   "answer": "(가), (나)",
+   "why": "라쏘는 일부 계수를 정확히 0 으로 만들고, 릿지는 계수를 작게 줄일 뿐 0 으로 만들지는 않습니다. 규제를 적용하자 55개 특성을 쓰면서도 테스트 점수가 약 0.98 로 회복됩니다.",
+   "tags": [
+    "릿지",
+    "라쏘",
+    "coef_"
+   ],
+   "verifyCode": "import numpy as np\nperch_length = np.array([8.4, 13.7, 15.0, 16.2, 17.4, 18.0, 18.7, 19.0, 19.6, 20.0, 21.0, 21.0, 21.0, 21.3, 22.0, 22.0, 22.0, 22.0, 22.0, 22.5, 22.5, 22.7, 23.0, 23.5, 24.0, 24.0, 24.6, 25.0, 25.6, 26.5, 27.3, 27.5, 27.5, 27.5, 28.0, 28.7, 30.0, 32.8, 34.5, 35.0, 36.5, 36.0, 37.0, 37.0, 39.0, 39.0, 39.0, 40.0, 40.0, 40.0, 40.0, 42.0, 43.0, 43.0, 43.5, 44.0])\nperch_weight = np.array([5.9, 32.0, 40.0, 51.5, 70.0, 100.0, 78.0, 80.0, 85.0, 85.0, 110.0, 115.0, 125.0, 130.0, 120.0, 120.0, 130.0, 135.0, 110.0, 130.0, 150.0, 145.0, 150.0, 170.0, 225.0, 145.0, 188.0, 180.0, 197.0, 218.0, 300.0, 260.0, 265.0, 250.0, 250.0, 300.0, 320.0, 514.0, 556.0, 840.0, 685.0, 700.0, 700.0, 690.0, 900.0, 650.0, 820.0, 850.0, 900.0, 1015.0, 820.0, 1100.0, 1000.0, 1100.0, 1000.0, 1000.0])\n\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression, Ridge, Lasso\nfrom sklearn.preprocessing import PolynomialFeatures, StandardScaler\n\nperch_full = pd.read_csv('perch_full.csv').to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(perch_full, perch_weight, random_state=42)\n\npoly = PolynomialFeatures(degree=5, include_bias=False)\npoly.fit(train_input)\ntrain_poly = poly.transform(train_input)\ntest_poly = poly.transform(test_input)\n\nss = StandardScaler()\nss.fit(train_poly)\ntrain_scaled = ss.transform(train_poly)\ntest_scaled = ss.transform(test_poly)\nridge = Ridge(alpha=0.1)\nridge.fit(train_scaled, train_target)\nlasso = Lasso(alpha=10)\nlasso.fit(train_scaled, train_target)\nprint(int(np.sum(lasso.coef_ == 0)) > 0, int(np.sum(ridge.coef_ == 0)) == 0, ridge.score(test_scaled, test_target) < 0)",
+   "verifyExpect": "True True False",
+   "options": [
+    "(가)",
+    "(나)",
+    "(가), (나)",
+    "(가), (다)",
+    "(나), (다)"
+   ]
+  },
+  {
+   "id": "F07C09",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "<span class=\"mono\">train_poly</span>, <span class=\"mono\">test_poly</span> 는 <span class=\"mono\">PolynomialFeatures</span> 로 만든 훈련 세트와 테스트 세트이다. 다음 코드에 대한 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) <span class=\"mono\">train_scaled</span> 는 열마다 평균이 0 에 가깝다.<br>(나) <span class=\"mono\">test_scaled</span> 도 열마다 평균이 정확히 0 이다.<br>(다) 테스트 세트는 훈련 세트에서 구한 평균과 표준편차로 변환되었다.</span>",
+   "code": "ss = StandardScaler()\nss.fit(train_poly)\ntrain_scaled = ss.transform(train_poly)\ntest_scaled = ss.transform(test_poly)",
+   "answer": "(가), (다)",
+   "why": "<span class=\"mono\">ss.fit(train_poly)</span> 로 훈련 세트의 평균과 표준편차를 구하고, 그 기준으로 두 세트를 모두 변환합니다. 테스트 세트는 자기 평균으로 변환한 것이 아니므로 평균이 정확히 0 이 되지는 않습니다.",
+   "tags": [
+    "StandardScaler",
+    "표준화"
+   ],
+   "verifyCode": "import numpy as np\nperch_length = np.array([8.4, 13.7, 15.0, 16.2, 17.4, 18.0, 18.7, 19.0, 19.6, 20.0, 21.0, 21.0, 21.0, 21.3, 22.0, 22.0, 22.0, 22.0, 22.0, 22.5, 22.5, 22.7, 23.0, 23.5, 24.0, 24.0, 24.6, 25.0, 25.6, 26.5, 27.3, 27.5, 27.5, 27.5, 28.0, 28.7, 30.0, 32.8, 34.5, 35.0, 36.5, 36.0, 37.0, 37.0, 39.0, 39.0, 39.0, 40.0, 40.0, 40.0, 40.0, 42.0, 43.0, 43.0, 43.5, 44.0])\nperch_weight = np.array([5.9, 32.0, 40.0, 51.5, 70.0, 100.0, 78.0, 80.0, 85.0, 85.0, 110.0, 115.0, 125.0, 130.0, 120.0, 120.0, 130.0, 135.0, 110.0, 130.0, 150.0, 145.0, 150.0, 170.0, 225.0, 145.0, 188.0, 180.0, 197.0, 218.0, 300.0, 260.0, 265.0, 250.0, 250.0, 300.0, 320.0, 514.0, 556.0, 840.0, 685.0, 700.0, 700.0, 690.0, 900.0, 650.0, 820.0, 850.0, 900.0, 1015.0, 820.0, 1100.0, 1000.0, 1100.0, 1000.0, 1000.0])\n\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression, Ridge, Lasso\nfrom sklearn.preprocessing import PolynomialFeatures, StandardScaler\n\nperch_full = pd.read_csv('perch_full.csv').to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(perch_full, perch_weight, random_state=42)\n\npoly = PolynomialFeatures(degree=5, include_bias=False)\npoly.fit(train_input)\ntrain_poly = poly.transform(train_input)\ntest_poly = poly.transform(test_input)\nss = StandardScaler()\nss.fit(train_poly)\ntrain_scaled = ss.transform(train_poly)\ntest_scaled = ss.transform(test_poly)\nprint(bool(np.allclose(train_scaled.mean(axis=0), 0)), bool(np.allclose(test_scaled.mean(axis=0), 0)))",
+   "verifyExpect": "True False",
+   "options": [
+    "(가)",
+    "(나)",
+    "(가), (나)",
+    "(가), (다)",
+    "(나), (다)"
+   ]
+  },
+  {
+   "id": "F07B01",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "<span class=\"mono\">train_input</span> 은 shape 이 <span class=\"mono\">(42,)</span> 인 1차원 배열이다. ㉠, ㉡에 들어갈 것으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">(42, 1)</span></span>",
+   "code": "train_input = train_input.㉠(-1, ㉡)\nprint(train_input.shape)",
+   "answer": "㉠ reshape  ·  ㉡ 1",
+   "why": "<span class=\"mono\">reshape(-1, 1)</span> 은 열을 1개로 고정하고 행 수를 자동으로 맞춰 <span class=\"mono\">(42, 1)</span> 을 만듭니다.",
+   "tags": [
+    "reshape"
+   ],
+   "verifyCode": "import numpy as np\nperch_length = np.array([8.4, 13.7, 15.0, 16.2, 17.4, 18.0, 18.7, 19.0, 19.6, 20.0, 21.0, 21.0, 21.0, 21.3, 22.0, 22.0, 22.0, 22.0, 22.0, 22.5, 22.5, 22.7, 23.0, 23.5, 24.0, 24.0, 24.6, 25.0, 25.6, 26.5, 27.3, 27.5, 27.5, 27.5, 28.0, 28.7, 30.0, 32.8, 34.5, 35.0, 36.5, 36.0, 37.0, 37.0, 39.0, 39.0, 39.0, 40.0, 40.0, 40.0, 40.0, 42.0, 43.0, 43.0, 43.5, 44.0])\nperch_weight = np.array([5.9, 32.0, 40.0, 51.5, 70.0, 100.0, 78.0, 80.0, 85.0, 85.0, 110.0, 115.0, 125.0, 130.0, 120.0, 120.0, 130.0, 135.0, 110.0, 130.0, 150.0, 145.0, 150.0, 170.0, 225.0, 145.0, 188.0, 180.0, 197.0, 218.0, 300.0, 260.0, 265.0, 250.0, 250.0, 300.0, 320.0, 514.0, 556.0, 840.0, 685.0, 700.0, 700.0, 690.0, 900.0, 650.0, 820.0, 850.0, 900.0, 1015.0, 820.0, 1100.0, 1000.0, 1100.0, 1000.0, 1000.0])\n\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression, Ridge, Lasso\nfrom sklearn.preprocessing import PolynomialFeatures, StandardScaler\n\ntrain_input, test_input, train_target, test_target = train_test_split(perch_length, perch_weight, random_state=42)\ntrain_input = train_input.reshape(-1, 1)\nprint(train_input.shape)",
+   "verifyExpect": "(42, 1)",
+   "options": [
+    "㉠ reshape  ·  ㉡ 2",
+    "㉠ reshape  ·  ㉡ 42",
+    "㉠ shape  ·  ㉡ 1",
+    "㉠ resize  ·  ㉡ 0",
+    "㉠ reshape  ·  ㉡ 1"
+   ]
+  },
+  {
+   "id": "F07B02",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "㉠, ㉡에 들어갈 것으로 알맞은 것은? (<span class=\"mono\">train_input</span>, <span class=\"mono\">test_input</span> 은 농어 56마리의 길이를 기본 비율로 나눈 뒤 <span class=\"mono\">reshape(-1, 1)</span> 한 배열이고, 정답은 무게이다)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">[39.02] -709.02</span></span>",
+   "code": "lr = ㉠()\nlr.fit(train_input, train_target)\nprint(lr.㉡.round(2), lr.intercept_.round(2))",
+   "answer": "㉠ LinearRegression  ·  ㉡ coef_",
+   "why": "선형회귀 모델은 <span class=\"mono\">LinearRegression</span>, 학습으로 찾은 기울기(계수)는 끝에 밑줄이 붙은 <span class=\"mono\">coef_</span> 에 들어 있습니다. 식은 무게 = 39.02 × 길이 − 709.02 입니다.",
+   "tags": [
+    "LinearRegression",
+    "coef_"
+   ],
+   "verifyCode": "import numpy as np\nperch_length = np.array([8.4, 13.7, 15.0, 16.2, 17.4, 18.0, 18.7, 19.0, 19.6, 20.0, 21.0, 21.0, 21.0, 21.3, 22.0, 22.0, 22.0, 22.0, 22.0, 22.5, 22.5, 22.7, 23.0, 23.5, 24.0, 24.0, 24.6, 25.0, 25.6, 26.5, 27.3, 27.5, 27.5, 27.5, 28.0, 28.7, 30.0, 32.8, 34.5, 35.0, 36.5, 36.0, 37.0, 37.0, 39.0, 39.0, 39.0, 40.0, 40.0, 40.0, 40.0, 42.0, 43.0, 43.0, 43.5, 44.0])\nperch_weight = np.array([5.9, 32.0, 40.0, 51.5, 70.0, 100.0, 78.0, 80.0, 85.0, 85.0, 110.0, 115.0, 125.0, 130.0, 120.0, 120.0, 130.0, 135.0, 110.0, 130.0, 150.0, 145.0, 150.0, 170.0, 225.0, 145.0, 188.0, 180.0, 197.0, 218.0, 300.0, 260.0, 265.0, 250.0, 250.0, 300.0, 320.0, 514.0, 556.0, 840.0, 685.0, 700.0, 700.0, 690.0, 900.0, 650.0, 820.0, 850.0, 900.0, 1015.0, 820.0, 1100.0, 1000.0, 1100.0, 1000.0, 1000.0])\n\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression, Ridge, Lasso\nfrom sklearn.preprocessing import PolynomialFeatures, StandardScaler\n\ntrain_input, test_input, train_target, test_target = train_test_split(perch_length, perch_weight, random_state=42)\n\ntrain_input = train_input.reshape(-1, 1)\ntest_input = test_input.reshape(-1, 1)\nlr = LinearRegression()\nlr.fit(train_input, train_target)\nprint(lr.coef_.round(2), lr.intercept_.round(2))",
+   "verifyExpect": "[39.02] -709.02",
+   "options": [
+    "㉠ LinearRegression  ·  ㉡ weight_",
+    "㉠ LinearRegression  ·  ㉡ coef_",
+    "㉠ LogisticRegression  ·  ㉡ coef_",
+    "㉠ LinearRegression  ·  ㉡ coef",
+    "㉠ LinearRegression  ·  ㉡ intercept_"
+   ]
+  },
+  {
+   "id": "F07B03",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "길이 50cm 인 농어의 무게를 예측하려고 한다. ㉠, ㉡에 들어갈 것으로 알맞은 것은? (<span class=\"mono\">train_input</span>, <span class=\"mono\">test_input</span> 은 농어 56마리의 길이를 기본 비율로 나눈 뒤 <span class=\"mono\">reshape(-1, 1)</span> 한 배열이고, 정답은 무게이다)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">[1574.]</span></span>",
+   "code": "train_poly = np.column_stack((train_input ** 2, train_input))\ntest_poly = np.column_stack((test_input ** 2, test_input))\nlr = LinearRegression()\nlr.fit(train_poly, train_target)\nprint(lr.predict([[㉠, ㉡]]).round(1))",
+   "answer": "㉠ 50**2  ·  ㉡ 50",
+   "why": "훈련할 때 열 순서가 [길이², 길이] 였으므로 예측할 때도 <span class=\"mono\">[[50**2, 50]]</span> 순서로 넣습니다.",
+   "tags": [
+    "다항회귀",
+    "predict"
+   ],
+   "verifyCode": "import numpy as np\nperch_length = np.array([8.4, 13.7, 15.0, 16.2, 17.4, 18.0, 18.7, 19.0, 19.6, 20.0, 21.0, 21.0, 21.0, 21.3, 22.0, 22.0, 22.0, 22.0, 22.0, 22.5, 22.5, 22.7, 23.0, 23.5, 24.0, 24.0, 24.6, 25.0, 25.6, 26.5, 27.3, 27.5, 27.5, 27.5, 28.0, 28.7, 30.0, 32.8, 34.5, 35.0, 36.5, 36.0, 37.0, 37.0, 39.0, 39.0, 39.0, 40.0, 40.0, 40.0, 40.0, 42.0, 43.0, 43.0, 43.5, 44.0])\nperch_weight = np.array([5.9, 32.0, 40.0, 51.5, 70.0, 100.0, 78.0, 80.0, 85.0, 85.0, 110.0, 115.0, 125.0, 130.0, 120.0, 120.0, 130.0, 135.0, 110.0, 130.0, 150.0, 145.0, 150.0, 170.0, 225.0, 145.0, 188.0, 180.0, 197.0, 218.0, 300.0, 260.0, 265.0, 250.0, 250.0, 300.0, 320.0, 514.0, 556.0, 840.0, 685.0, 700.0, 700.0, 690.0, 900.0, 650.0, 820.0, 850.0, 900.0, 1015.0, 820.0, 1100.0, 1000.0, 1100.0, 1000.0, 1000.0])\n\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression, Ridge, Lasso\nfrom sklearn.preprocessing import PolynomialFeatures, StandardScaler\n\ntrain_input, test_input, train_target, test_target = train_test_split(perch_length, perch_weight, random_state=42)\n\ntrain_input = train_input.reshape(-1, 1)\ntest_input = test_input.reshape(-1, 1)\ntrain_poly = np.column_stack((train_input ** 2, train_input))\ntest_poly = np.column_stack((test_input ** 2, test_input))\nlr = LinearRegression()\nlr.fit(train_poly, train_target)\nprint(lr.predict([[50**2, 50]]).round(1))",
+   "verifyExpect": "[1574.]",
+   "options": [
+    "㉠ 50**2  ·  ㉡ 50",
+    "㉠ 50  ·  ㉡ 50**2",
+    "㉠ 50*2  ·  ㉡ 50",
+    "㉠ 50  ·  ㉡ 50",
+    "㉠ 2500  ·  ㉡ 2500"
+   ]
+  },
+  {
+   "id": "F07B04",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "㉠, ㉡에 들어갈 것으로 알맞은 것은? (<span class=\"mono\">train_input</span>, <span class=\"mono\">test_input</span> 은 농어의 길이, 높이, 두께 3개 특성을 기본 비율로 나눈 훈련 42개, 테스트 14개이다)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">(42, 9)</span></span>",
+   "code": "poly = PolynomialFeatures(㉠=False)\npoly.fit(train_input)\ntrain_poly = poly.㉡(train_input)\nprint(train_poly.shape)",
+   "answer": "㉠ include_bias  ·  ㉡ transform",
+   "why": "절편용 항(값이 1인 특성)을 넣지 않는 옵션은 <span class=\"mono\">include_bias=False</span> 이고, 변환기는 <span class=\"mono\">fit</span> 다음에 <span class=\"mono\">transform</span> 으로 데이터를 바꿉니다.",
+   "tags": [
+    "PolynomialFeatures",
+    "transform"
+   ],
+   "verifyCode": "import numpy as np\nperch_length = np.array([8.4, 13.7, 15.0, 16.2, 17.4, 18.0, 18.7, 19.0, 19.6, 20.0, 21.0, 21.0, 21.0, 21.3, 22.0, 22.0, 22.0, 22.0, 22.0, 22.5, 22.5, 22.7, 23.0, 23.5, 24.0, 24.0, 24.6, 25.0, 25.6, 26.5, 27.3, 27.5, 27.5, 27.5, 28.0, 28.7, 30.0, 32.8, 34.5, 35.0, 36.5, 36.0, 37.0, 37.0, 39.0, 39.0, 39.0, 40.0, 40.0, 40.0, 40.0, 42.0, 43.0, 43.0, 43.5, 44.0])\nperch_weight = np.array([5.9, 32.0, 40.0, 51.5, 70.0, 100.0, 78.0, 80.0, 85.0, 85.0, 110.0, 115.0, 125.0, 130.0, 120.0, 120.0, 130.0, 135.0, 110.0, 130.0, 150.0, 145.0, 150.0, 170.0, 225.0, 145.0, 188.0, 180.0, 197.0, 218.0, 300.0, 260.0, 265.0, 250.0, 250.0, 300.0, 320.0, 514.0, 556.0, 840.0, 685.0, 700.0, 700.0, 690.0, 900.0, 650.0, 820.0, 850.0, 900.0, 1015.0, 820.0, 1100.0, 1000.0, 1100.0, 1000.0, 1000.0])\n\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression, Ridge, Lasso\nfrom sklearn.preprocessing import PolynomialFeatures, StandardScaler\n\nperch_full = pd.read_csv('perch_full.csv').to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(perch_full, perch_weight, random_state=42)\npoly = PolynomialFeatures(include_bias=False)\npoly.fit(train_input)\ntrain_poly = poly.transform(train_input)\nprint(train_poly.shape)",
+   "verifyExpect": "(42, 9)",
+   "options": [
+    "㉠ include_bias  ·  ㉡ predict",
+    "㉠ include_bias  ·  ㉡ fit",
+    "㉠ bias  ·  ㉡ transform",
+    "㉠ include_bias  ·  ㉡ transform",
+    "㉠ intercept  ·  ㉡ transform"
+   ]
+  },
+  {
+   "id": "F07B05",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "규제를 적용하기 전에 특성을 표준화하려고 한다. ㉠, ㉡에 들어갈 것으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">(42, 55) (14, 55)</span></span>",
+   "code": "ss = ㉠()\nss.fit(train_poly)\ntrain_scaled = ss.transform(train_poly)\ntest_scaled = ss.㉡(test_poly)\nprint(train_scaled.shape, test_scaled.shape)",
+   "answer": "㉠ StandardScaler  ·  ㉡ transform",
+   "why": "표준점수로 바꾸는 변환기는 <span class=\"mono\">StandardScaler</span> 입니다. 훈련 세트로 <span class=\"mono\">fit</span> 한 변환기로 테스트 세트는 <span class=\"mono\">transform</span> 만 합니다.",
+   "tags": [
+    "StandardScaler"
+   ],
+   "verifyCode": "import numpy as np\nperch_length = np.array([8.4, 13.7, 15.0, 16.2, 17.4, 18.0, 18.7, 19.0, 19.6, 20.0, 21.0, 21.0, 21.0, 21.3, 22.0, 22.0, 22.0, 22.0, 22.0, 22.5, 22.5, 22.7, 23.0, 23.5, 24.0, 24.0, 24.6, 25.0, 25.6, 26.5, 27.3, 27.5, 27.5, 27.5, 28.0, 28.7, 30.0, 32.8, 34.5, 35.0, 36.5, 36.0, 37.0, 37.0, 39.0, 39.0, 39.0, 40.0, 40.0, 40.0, 40.0, 42.0, 43.0, 43.0, 43.5, 44.0])\nperch_weight = np.array([5.9, 32.0, 40.0, 51.5, 70.0, 100.0, 78.0, 80.0, 85.0, 85.0, 110.0, 115.0, 125.0, 130.0, 120.0, 120.0, 130.0, 135.0, 110.0, 130.0, 150.0, 145.0, 150.0, 170.0, 225.0, 145.0, 188.0, 180.0, 197.0, 218.0, 300.0, 260.0, 265.0, 250.0, 250.0, 300.0, 320.0, 514.0, 556.0, 840.0, 685.0, 700.0, 700.0, 690.0, 900.0, 650.0, 820.0, 850.0, 900.0, 1015.0, 820.0, 1100.0, 1000.0, 1100.0, 1000.0, 1000.0])\n\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression, Ridge, Lasso\nfrom sklearn.preprocessing import PolynomialFeatures, StandardScaler\n\nperch_full = pd.read_csv('perch_full.csv').to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(perch_full, perch_weight, random_state=42)\n\npoly = PolynomialFeatures(degree=5, include_bias=False)\npoly.fit(train_input)\ntrain_poly = poly.transform(train_input)\ntest_poly = poly.transform(test_input)\nss = StandardScaler()\nss.fit(train_poly)\ntrain_scaled = ss.transform(train_poly)\ntest_scaled = ss.transform(test_poly)\nprint(train_scaled.shape, test_scaled.shape)",
+   "verifyExpect": "(42, 55) (14, 55)",
+   "options": [
+    "㉠ StandardScaler  ·  ㉡ fit",
+    "㉠ StandardScaler  ·  ㉡ predict",
+    "㉠ StandardScaler  ·  ㉡ transform",
+    "㉠ Standard  ·  ㉡ transform",
+    "㉠ MinMaxScaler  ·  ㉡ transform"
+   ]
+  },
+  {
+   "id": "F07B06",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "㉠, ㉡에 들어갈 것으로 알맞은 것은? (<span class=\"mono\">train_scaled</span>, <span class=\"mono\">test_scaled</span> 는 3개 특성을 <span class=\"mono\">degree=5</span> 로 늘린 55개 특성을 <span class=\"mono\">StandardScaler</span> 로 표준화한 훈련 42개, 테스트 14개이다)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">0.9828</span></span>",
+   "code": "ridge = Ridge(㉠=0.1)\nridge.fit(train_scaled, train_target)\nprint(round(ridge.㉡(test_scaled, test_target), 4))",
+   "answer": "㉠ alpha  ·  ㉡ score",
+   "why": "릿지와 라쏘의 규제 강도는 <span class=\"mono\">alpha</span> 로 조절합니다. <span class=\"mono\">score(입력, 정답)</span> 이 R² 를 돌려줍니다.",
+   "tags": [
+    "Ridge",
+    "alpha"
+   ],
+   "verifyCode": "import numpy as np\nperch_length = np.array([8.4, 13.7, 15.0, 16.2, 17.4, 18.0, 18.7, 19.0, 19.6, 20.0, 21.0, 21.0, 21.0, 21.3, 22.0, 22.0, 22.0, 22.0, 22.0, 22.5, 22.5, 22.7, 23.0, 23.5, 24.0, 24.0, 24.6, 25.0, 25.6, 26.5, 27.3, 27.5, 27.5, 27.5, 28.0, 28.7, 30.0, 32.8, 34.5, 35.0, 36.5, 36.0, 37.0, 37.0, 39.0, 39.0, 39.0, 40.0, 40.0, 40.0, 40.0, 42.0, 43.0, 43.0, 43.5, 44.0])\nperch_weight = np.array([5.9, 32.0, 40.0, 51.5, 70.0, 100.0, 78.0, 80.0, 85.0, 85.0, 110.0, 115.0, 125.0, 130.0, 120.0, 120.0, 130.0, 135.0, 110.0, 130.0, 150.0, 145.0, 150.0, 170.0, 225.0, 145.0, 188.0, 180.0, 197.0, 218.0, 300.0, 260.0, 265.0, 250.0, 250.0, 300.0, 320.0, 514.0, 556.0, 840.0, 685.0, 700.0, 700.0, 690.0, 900.0, 650.0, 820.0, 850.0, 900.0, 1015.0, 820.0, 1100.0, 1000.0, 1100.0, 1000.0, 1000.0])\n\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression, Ridge, Lasso\nfrom sklearn.preprocessing import PolynomialFeatures, StandardScaler\n\nperch_full = pd.read_csv('perch_full.csv').to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(perch_full, perch_weight, random_state=42)\n\npoly = PolynomialFeatures(degree=5, include_bias=False)\npoly.fit(train_input)\ntrain_poly = poly.transform(train_input)\ntest_poly = poly.transform(test_input)\n\nss = StandardScaler()\nss.fit(train_poly)\ntrain_scaled = ss.transform(train_poly)\ntest_scaled = ss.transform(test_poly)\nridge = Ridge(alpha=0.1)\nridge.fit(train_scaled, train_target)\nprint(round(ridge.score(test_scaled, test_target), 4))",
+   "verifyExpect": "0.9828",
+   "options": [
+    "㉠ alpha  ·  ㉡ fit",
+    "㉠ rate  ·  ㉡ score",
+    "㉠ alpha  ·  ㉡ predict",
+    "㉠ C  ·  ㉡ score",
+    "㉠ alpha  ·  ㉡ score"
+   ]
+  },
+  {
+   "id": "F07B07",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "alpha 값을 바꿔 가며 점수를 기록하고, 그래프의 가로축에 쓸 값을 출력한다. ㉠, ㉡에 들어갈 것으로 알맞은 것은? (<span class=\"mono\">train_scaled</span>, <span class=\"mono\">test_scaled</span> 는 3개 특성을 <span class=\"mono\">degree=5</span> 로 늘린 55개 특성을 <span class=\"mono\">StandardScaler</span> 로 표준화한 훈련 42개, 테스트 14개이다)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">[-3.0, -2.0, -1.0, 0.0, 1.0, 2.0] 0.98</span></span>",
+   "code": "train_score = []\nalpha_list = [0.001, 0.01, 0.1, 1, 10, 100]\nfor alpha in alpha_list:\n    ridge = Ridge(alpha=㉠)\n    ridge.fit(train_scaled, train_target)\n    train_score.append(ridge.score(train_scaled, train_target))\nprint(np.㉡(alpha_list).tolist(), round(train_score[-1], 2))",
+   "answer": "㉠ alpha  ·  ㉡ log10",
+   "why": "반복문에서 꺼낸 <span class=\"mono\">alpha</span> 를 그대로 모델에 넣습니다. alpha 가 10배씩 커지므로 <span class=\"mono\">np.log10</span> 으로 바꿔 −3, −2, …, 2 처럼 같은 간격으로 만듭니다.",
+   "tags": [
+    "alpha",
+    "log10"
+   ],
+   "verifyCode": "import numpy as np\nperch_length = np.array([8.4, 13.7, 15.0, 16.2, 17.4, 18.0, 18.7, 19.0, 19.6, 20.0, 21.0, 21.0, 21.0, 21.3, 22.0, 22.0, 22.0, 22.0, 22.0, 22.5, 22.5, 22.7, 23.0, 23.5, 24.0, 24.0, 24.6, 25.0, 25.6, 26.5, 27.3, 27.5, 27.5, 27.5, 28.0, 28.7, 30.0, 32.8, 34.5, 35.0, 36.5, 36.0, 37.0, 37.0, 39.0, 39.0, 39.0, 40.0, 40.0, 40.0, 40.0, 42.0, 43.0, 43.0, 43.5, 44.0])\nperch_weight = np.array([5.9, 32.0, 40.0, 51.5, 70.0, 100.0, 78.0, 80.0, 85.0, 85.0, 110.0, 115.0, 125.0, 130.0, 120.0, 120.0, 130.0, 135.0, 110.0, 130.0, 150.0, 145.0, 150.0, 170.0, 225.0, 145.0, 188.0, 180.0, 197.0, 218.0, 300.0, 260.0, 265.0, 250.0, 250.0, 300.0, 320.0, 514.0, 556.0, 840.0, 685.0, 700.0, 700.0, 690.0, 900.0, 650.0, 820.0, 850.0, 900.0, 1015.0, 820.0, 1100.0, 1000.0, 1100.0, 1000.0, 1000.0])\n\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression, Ridge, Lasso\nfrom sklearn.preprocessing import PolynomialFeatures, StandardScaler\n\nperch_full = pd.read_csv('perch_full.csv').to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(perch_full, perch_weight, random_state=42)\n\npoly = PolynomialFeatures(degree=5, include_bias=False)\npoly.fit(train_input)\ntrain_poly = poly.transform(train_input)\ntest_poly = poly.transform(test_input)\n\nss = StandardScaler()\nss.fit(train_poly)\ntrain_scaled = ss.transform(train_poly)\ntest_scaled = ss.transform(test_poly)\ntrain_score = []\nalpha_list = [0.001, 0.01, 0.1, 1, 10, 100]\nfor alpha in alpha_list:\n    ridge = Ridge(alpha=alpha)\n    ridge.fit(train_scaled, train_target)\n    train_score.append(ridge.score(train_scaled, train_target))\nprint(np.log10(alpha_list).tolist(), round(train_score[-1], 2))",
+   "verifyExpect": "[-3.0, -2.0, -1.0, 0.0, 1.0, 2.0] 0.98",
+   "options": [
+    "㉠ alpha  ·  ㉡ log",
+    "㉠ alpha  ·  ㉡ log10",
+    "㉠ alpha_list  ·  ㉡ log10",
+    "㉠ 0.1  ·  ㉡ log10",
+    "㉠ alpha  ·  ㉡ sqrt"
+   ]
+  },
+  {
+   "id": "F07D01",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "mode": "mc",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "<span class=\"mono\">perch_length</span>, <span class=\"mono\">perch_weight</span> 는 농어 56마리의 길이와 무게이다. 다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "a, b, c, d = train_test_split(perch_length, perch_weight, random_state=42)\nprint(len(a), len(b))",
+   "answer": "42 14",
+   "why": "기본 테스트 비율 25%이므로 56 × 0.25 = 14개가 테스트 세트, 42개가 훈련 세트입니다.",
+   "tags": [
+    "train_test_split"
+   ],
+   "verifyCode": "import numpy as np\nperch_length = np.array([8.4, 13.7, 15.0, 16.2, 17.4, 18.0, 18.7, 19.0, 19.6, 20.0, 21.0, 21.0, 21.0, 21.3, 22.0, 22.0, 22.0, 22.0, 22.0, 22.5, 22.5, 22.7, 23.0, 23.5, 24.0, 24.0, 24.6, 25.0, 25.6, 26.5, 27.3, 27.5, 27.5, 27.5, 28.0, 28.7, 30.0, 32.8, 34.5, 35.0, 36.5, 36.0, 37.0, 37.0, 39.0, 39.0, 39.0, 40.0, 40.0, 40.0, 40.0, 42.0, 43.0, 43.0, 43.5, 44.0])\nperch_weight = np.array([5.9, 32.0, 40.0, 51.5, 70.0, 100.0, 78.0, 80.0, 85.0, 85.0, 110.0, 115.0, 125.0, 130.0, 120.0, 120.0, 130.0, 135.0, 110.0, 130.0, 150.0, 145.0, 150.0, 170.0, 225.0, 145.0, 188.0, 180.0, 197.0, 218.0, 300.0, 260.0, 265.0, 250.0, 250.0, 300.0, 320.0, 514.0, 556.0, 840.0, 685.0, 700.0, 700.0, 690.0, 900.0, 650.0, 820.0, 850.0, 900.0, 1015.0, 820.0, 1100.0, 1000.0, 1100.0, 1000.0, 1000.0])\n\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression, Ridge, Lasso\nfrom sklearn.preprocessing import PolynomialFeatures, StandardScaler\na, b, c, d = train_test_split(perch_length, perch_weight, random_state=42)\nprint(len(a), len(b))",
+   "verifyExpect": "42 14",
+   "options": [
+    "14 42",
+    "42 14",
+    "45 11",
+    "41 15",
+    "43 13"
+   ]
+  },
+  {
+   "id": "F07D02",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "mode": "mc",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은? (<span class=\"mono\">train_input</span>, <span class=\"mono\">test_input</span> 은 농어의 길이, 높이, 두께 3개 특성을 기본 비율로 나눈 훈련 42개, 테스트 14개이다)",
+   "code": "print(PolynomialFeatures(include_bias=False).fit_transform(train_input).shape,\n      PolynomialFeatures().fit_transform(train_input).shape)",
+   "answer": "(42, 9) (42, 10)",
+   "why": "특성 3개를 2차까지 조합하면 9개이고, <span class=\"mono\">include_bias</span> 의 기본값은 True 라서 값이 1인 특성이 하나 더 붙어 10개가 됩니다.",
+   "tags": [
+    "include_bias"
+   ],
+   "verifyCode": "import numpy as np\nperch_length = np.array([8.4, 13.7, 15.0, 16.2, 17.4, 18.0, 18.7, 19.0, 19.6, 20.0, 21.0, 21.0, 21.0, 21.3, 22.0, 22.0, 22.0, 22.0, 22.0, 22.5, 22.5, 22.7, 23.0, 23.5, 24.0, 24.0, 24.6, 25.0, 25.6, 26.5, 27.3, 27.5, 27.5, 27.5, 28.0, 28.7, 30.0, 32.8, 34.5, 35.0, 36.5, 36.0, 37.0, 37.0, 39.0, 39.0, 39.0, 40.0, 40.0, 40.0, 40.0, 42.0, 43.0, 43.0, 43.5, 44.0])\nperch_weight = np.array([5.9, 32.0, 40.0, 51.5, 70.0, 100.0, 78.0, 80.0, 85.0, 85.0, 110.0, 115.0, 125.0, 130.0, 120.0, 120.0, 130.0, 135.0, 110.0, 130.0, 150.0, 145.0, 150.0, 170.0, 225.0, 145.0, 188.0, 180.0, 197.0, 218.0, 300.0, 260.0, 265.0, 250.0, 250.0, 300.0, 320.0, 514.0, 556.0, 840.0, 685.0, 700.0, 700.0, 690.0, 900.0, 650.0, 820.0, 850.0, 900.0, 1015.0, 820.0, 1100.0, 1000.0, 1100.0, 1000.0, 1000.0])\n\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression, Ridge, Lasso\nfrom sklearn.preprocessing import PolynomialFeatures, StandardScaler\n\nperch_full = pd.read_csv('perch_full.csv').to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(perch_full, perch_weight, random_state=42)\nprint(PolynomialFeatures(include_bias=False).fit_transform(train_input).shape,\n      PolynomialFeatures().fit_transform(train_input).shape)",
+   "verifyExpect": "(42, 9) (42, 10)",
+   "options": [
+    "(42, 9) (42, 8)",
+    "(42, 6) (42, 7)",
+    "(42, 9) (42, 9)",
+    "(42, 3) (42, 4)",
+    "(42, 9) (42, 10)"
+   ]
+  },
+  {
+   "id": "F07D03",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "mode": "mc",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "poly = PolynomialFeatures(include_bias=False)\nprint(poly.fit_transform([[2, 3]]))",
+   "answer": "[[2. 3. 4. 6. 9.]]",
+   "why": "샘플 [2, 3] 에서 원래 값 2, 3 과 2² = 4, 2 × 3 = 6, 3² = 9 가 만들어집니다. <span class=\"mono\">include_bias=False</span> 라서 맨 앞의 1 은 없습니다.",
+   "tags": [
+    "PolynomialFeatures"
+   ],
+   "verifyCode": "import numpy as np\nperch_length = np.array([8.4, 13.7, 15.0, 16.2, 17.4, 18.0, 18.7, 19.0, 19.6, 20.0, 21.0, 21.0, 21.0, 21.3, 22.0, 22.0, 22.0, 22.0, 22.0, 22.5, 22.5, 22.7, 23.0, 23.5, 24.0, 24.0, 24.6, 25.0, 25.6, 26.5, 27.3, 27.5, 27.5, 27.5, 28.0, 28.7, 30.0, 32.8, 34.5, 35.0, 36.5, 36.0, 37.0, 37.0, 39.0, 39.0, 39.0, 40.0, 40.0, 40.0, 40.0, 42.0, 43.0, 43.0, 43.5, 44.0])\nperch_weight = np.array([5.9, 32.0, 40.0, 51.5, 70.0, 100.0, 78.0, 80.0, 85.0, 85.0, 110.0, 115.0, 125.0, 130.0, 120.0, 120.0, 130.0, 135.0, 110.0, 130.0, 150.0, 145.0, 150.0, 170.0, 225.0, 145.0, 188.0, 180.0, 197.0, 218.0, 300.0, 260.0, 265.0, 250.0, 250.0, 300.0, 320.0, 514.0, 556.0, 840.0, 685.0, 700.0, 700.0, 690.0, 900.0, 650.0, 820.0, 850.0, 900.0, 1015.0, 820.0, 1100.0, 1000.0, 1100.0, 1000.0, 1000.0])\n\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression, Ridge, Lasso\nfrom sklearn.preprocessing import PolynomialFeatures, StandardScaler\npoly = PolynomialFeatures(include_bias=False)\nprint(poly.fit_transform([[2, 3]]))",
+   "verifyExpect": "[[2. 3. 4. 6. 9.]]",
+   "options": [
+    "[[2. 3. 4. 6. 9.]]",
+    "[[1. 2. 3. 4. 6. 9.]]",
+    "[[2. 3. 4. 9.]]",
+    "[[2. 3. 5. 6.]]",
+    "[[4. 6. 9.]]"
+   ]
+  },
+  {
+   "id": "F07D04",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "mode": "mc",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "poly = PolynomialFeatures()\nprint(poly.fit_transform([[2, 3]]))",
+   "answer": "[[1. 2. 3. 4. 6. 9.]]",
+   "why": "<span class=\"mono\">include_bias</span> 를 지정하지 않으면 절편용 항 1 이 맨 앞에 추가됩니다. 그 뒤로 2, 3, 2², 2×3, 3² 입니다.",
+   "tags": [
+    "PolynomialFeatures",
+    "include_bias"
+   ],
+   "verifyCode": "import numpy as np\nperch_length = np.array([8.4, 13.7, 15.0, 16.2, 17.4, 18.0, 18.7, 19.0, 19.6, 20.0, 21.0, 21.0, 21.0, 21.3, 22.0, 22.0, 22.0, 22.0, 22.0, 22.5, 22.5, 22.7, 23.0, 23.5, 24.0, 24.0, 24.6, 25.0, 25.6, 26.5, 27.3, 27.5, 27.5, 27.5, 28.0, 28.7, 30.0, 32.8, 34.5, 35.0, 36.5, 36.0, 37.0, 37.0, 39.0, 39.0, 39.0, 40.0, 40.0, 40.0, 40.0, 42.0, 43.0, 43.0, 43.5, 44.0])\nperch_weight = np.array([5.9, 32.0, 40.0, 51.5, 70.0, 100.0, 78.0, 80.0, 85.0, 85.0, 110.0, 115.0, 125.0, 130.0, 120.0, 120.0, 130.0, 135.0, 110.0, 130.0, 150.0, 145.0, 150.0, 170.0, 225.0, 145.0, 188.0, 180.0, 197.0, 218.0, 300.0, 260.0, 265.0, 250.0, 250.0, 300.0, 320.0, 514.0, 556.0, 840.0, 685.0, 700.0, 700.0, 690.0, 900.0, 650.0, 820.0, 850.0, 900.0, 1015.0, 820.0, 1100.0, 1000.0, 1100.0, 1000.0, 1000.0])\n\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression, Ridge, Lasso\nfrom sklearn.preprocessing import PolynomialFeatures, StandardScaler\npoly = PolynomialFeatures()\nprint(poly.fit_transform([[2, 3]]))",
+   "verifyExpect": "[[1. 2. 3. 4. 6. 9.]]",
+   "options": [
+    "[[2. 3. 4. 6. 9.]]",
+    "[[1. 2. 3. 6.]]",
+    "[[1. 2. 3. 4. 9.]]",
+    "[[1. 2. 3. 4. 6. 9.]]",
+    "[[0. 2. 3. 4. 6. 9.]]"
+   ]
+  },
+  {
+   "id": "F07D05",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "mode": "mc",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은? (<span class=\"mono\">train_input</span>, <span class=\"mono\">test_input</span> 은 농어의 길이, 높이, 두께 3개 특성을 기본 비율로 나눈 훈련 42개, 테스트 14개이다)",
+   "code": "poly = PolynomialFeatures(degree=5, include_bias=False)\nprint(poly.fit_transform(train_input).shape)",
+   "answer": "(42, 55)",
+   "why": "5제곱 항까지 만들면 특성이 55개가 됩니다. 샘플 수 42 는 그대로이고, 특성 수가 샘플 수보다 많아집니다.",
+   "tags": [
+    "degree"
+   ],
+   "verifyCode": "import numpy as np\nperch_length = np.array([8.4, 13.7, 15.0, 16.2, 17.4, 18.0, 18.7, 19.0, 19.6, 20.0, 21.0, 21.0, 21.0, 21.3, 22.0, 22.0, 22.0, 22.0, 22.0, 22.5, 22.5, 22.7, 23.0, 23.5, 24.0, 24.0, 24.6, 25.0, 25.6, 26.5, 27.3, 27.5, 27.5, 27.5, 28.0, 28.7, 30.0, 32.8, 34.5, 35.0, 36.5, 36.0, 37.0, 37.0, 39.0, 39.0, 39.0, 40.0, 40.0, 40.0, 40.0, 42.0, 43.0, 43.0, 43.5, 44.0])\nperch_weight = np.array([5.9, 32.0, 40.0, 51.5, 70.0, 100.0, 78.0, 80.0, 85.0, 85.0, 110.0, 115.0, 125.0, 130.0, 120.0, 120.0, 130.0, 135.0, 110.0, 130.0, 150.0, 145.0, 150.0, 170.0, 225.0, 145.0, 188.0, 180.0, 197.0, 218.0, 300.0, 260.0, 265.0, 250.0, 250.0, 300.0, 320.0, 514.0, 556.0, 840.0, 685.0, 700.0, 700.0, 690.0, 900.0, 650.0, 820.0, 850.0, 900.0, 1015.0, 820.0, 1100.0, 1000.0, 1100.0, 1000.0, 1000.0])\n\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression, Ridge, Lasso\nfrom sklearn.preprocessing import PolynomialFeatures, StandardScaler\n\nperch_full = pd.read_csv('perch_full.csv').to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(perch_full, perch_weight, random_state=42)\npoly = PolynomialFeatures(degree=5, include_bias=False)\nprint(poly.fit_transform(train_input).shape)",
+   "verifyExpect": "(42, 55)",
+   "options": [
+    "(42, 15)",
+    "(55, 42)",
+    "(42, 55)",
+    "(42, 243)",
+    "(42, 9)"
+   ]
+  },
+  {
+   "id": "F07D06",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "mode": "mc",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "a = np.arange(6)\nprint(a.reshape(-1, 1).shape, a.reshape(2, -1).shape)",
+   "answer": "(6, 1) (2, 3)",
+   "why": "원소가 6개이므로 열을 1로 고정하면 행이 6, 행을 2로 고정하면 열이 3 으로 자동 계산됩니다.",
+   "tags": [
+    "reshape"
+   ],
+   "verifyCode": "import numpy as np\na = np.arange(6)\nprint(a.reshape(-1, 1).shape, a.reshape(2, -1).shape)",
+   "verifyExpect": "(6, 1) (2, 3)",
+   "options": [
+    "(1, 6) (2, 3)",
+    "(6, 1) (2, 3)",
+    "(6, 1) (2, 6)",
+    "(5, 1) (2, 2)",
+    "(6,) (2, 3)"
+   ]
+  },
+  {
+   "id": "F07R01",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은? (<span class=\"mono\">train_input</span>, <span class=\"mono\">test_input</span> 은 농어 56마리의 길이를 기본 비율로 나눈 뒤 <span class=\"mono\">reshape(-1, 1)</span> 한 배열이고, 정답은 무게이다)",
+   "code": "print(train_input.shape, test_input.shape)",
+   "answer": "(42, 1) (14, 1)",
+   "why": "56개가 42개와 14개로 나뉘고, <span class=\"mono\">reshape(-1, 1)</span> 로 열이 1개인 2차원 배열이 됩니다.",
+   "tags": [
+    "reshape",
+    "shape"
+   ],
+   "verifyCode": "import numpy as np\nperch_length = np.array([8.4, 13.7, 15.0, 16.2, 17.4, 18.0, 18.7, 19.0, 19.6, 20.0, 21.0, 21.0, 21.0, 21.3, 22.0, 22.0, 22.0, 22.0, 22.0, 22.5, 22.5, 22.7, 23.0, 23.5, 24.0, 24.0, 24.6, 25.0, 25.6, 26.5, 27.3, 27.5, 27.5, 27.5, 28.0, 28.7, 30.0, 32.8, 34.5, 35.0, 36.5, 36.0, 37.0, 37.0, 39.0, 39.0, 39.0, 40.0, 40.0, 40.0, 40.0, 42.0, 43.0, 43.0, 43.5, 44.0])\nperch_weight = np.array([5.9, 32.0, 40.0, 51.5, 70.0, 100.0, 78.0, 80.0, 85.0, 85.0, 110.0, 115.0, 125.0, 130.0, 120.0, 120.0, 130.0, 135.0, 110.0, 130.0, 150.0, 145.0, 150.0, 170.0, 225.0, 145.0, 188.0, 180.0, 197.0, 218.0, 300.0, 260.0, 265.0, 250.0, 250.0, 300.0, 320.0, 514.0, 556.0, 840.0, 685.0, 700.0, 700.0, 690.0, 900.0, 650.0, 820.0, 850.0, 900.0, 1015.0, 820.0, 1100.0, 1000.0, 1100.0, 1000.0, 1000.0])\n\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression, Ridge, Lasso\nfrom sklearn.preprocessing import PolynomialFeatures, StandardScaler\n\ntrain_input, test_input, train_target, test_target = train_test_split(perch_length, perch_weight, random_state=42)\n\ntrain_input = train_input.reshape(-1, 1)\ntest_input = test_input.reshape(-1, 1)\nprint(train_input.shape, test_input.shape)",
+   "verifyExpect": "(42, 1) (14, 1)",
+   "options": [
+    "(42, 1) (14, 1)",
+    "(56, 1) (56, 1)",
+    "(42,) (14,)",
+    "(1, 42) (1, 14)",
+    "(42, 2) (14, 2)"
+   ]
+  },
+  {
+   "id": "F07R02",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "<span class=\"mono\">lr</span> 은 길이 한 가지 특성으로 훈련한 <span class=\"mono\">LinearRegression</span> 모델이고 <span class=\"mono\">lr.coef_</span> 는 약 39.02, <span class=\"mono\">lr.intercept_</span> 는 약 −709.02 이다. 다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "print(lr.predict([[50]]).round(1))",
+   "answer": "[1241.8]",
+   "why": "39.02 × 50 − 709.02 ≈ 1241.8 입니다. <span class=\"mono\">predict</span> 는 값 하나짜리 배열을 돌려줍니다.",
+   "tags": [
+    "선형식",
+    "predict"
+   ],
+   "verifyCode": "import numpy as np\nperch_length = np.array([8.4, 13.7, 15.0, 16.2, 17.4, 18.0, 18.7, 19.0, 19.6, 20.0, 21.0, 21.0, 21.0, 21.3, 22.0, 22.0, 22.0, 22.0, 22.0, 22.5, 22.5, 22.7, 23.0, 23.5, 24.0, 24.0, 24.6, 25.0, 25.6, 26.5, 27.3, 27.5, 27.5, 27.5, 28.0, 28.7, 30.0, 32.8, 34.5, 35.0, 36.5, 36.0, 37.0, 37.0, 39.0, 39.0, 39.0, 40.0, 40.0, 40.0, 40.0, 42.0, 43.0, 43.0, 43.5, 44.0])\nperch_weight = np.array([5.9, 32.0, 40.0, 51.5, 70.0, 100.0, 78.0, 80.0, 85.0, 85.0, 110.0, 115.0, 125.0, 130.0, 120.0, 120.0, 130.0, 135.0, 110.0, 130.0, 150.0, 145.0, 150.0, 170.0, 225.0, 145.0, 188.0, 180.0, 197.0, 218.0, 300.0, 260.0, 265.0, 250.0, 250.0, 300.0, 320.0, 514.0, 556.0, 840.0, 685.0, 700.0, 700.0, 690.0, 900.0, 650.0, 820.0, 850.0, 900.0, 1015.0, 820.0, 1100.0, 1000.0, 1100.0, 1000.0, 1000.0])\n\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression, Ridge, Lasso\nfrom sklearn.preprocessing import PolynomialFeatures, StandardScaler\n\ntrain_input, test_input, train_target, test_target = train_test_split(perch_length, perch_weight, random_state=42)\n\ntrain_input = train_input.reshape(-1, 1)\ntest_input = test_input.reshape(-1, 1)\n\nlr = LinearRegression()\nlr.fit(train_input, train_target)\nprint(lr.predict([[50]]).round(1))",
+   "verifyExpect": "[1241.8]",
+   "options": [
+    "[39.]",
+    "[1574.]",
+    "[1241.8]",
+    "[1950.9]",
+    "1241.8"
+   ]
+  },
+  {
+   "id": "F07R03",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은? (<span class=\"mono\">train_input</span>, <span class=\"mono\">test_input</span> 은 농어의 길이, 높이, 두께 3개 특성을 기본 비율로 나눈 훈련 42개, 테스트 14개이다)",
+   "code": "poly = PolynomialFeatures(include_bias=False)\npoly.fit(train_input)\ntrain_poly = poly.transform(train_input)\ntest_poly = poly.transform(test_input)\nprint(poly.get_feature_names_out().tolist()[3:6])",
+   "answer": "['x0^2', 'x0 x1', 'x0 x2']",
+   "why": "특성 이름은 x0, x1, x2, x0^2, x0 x1, x0 x2, x1^2, x1 x2, x2^2 순서입니다. 인덱스 3~5 는 x0^2, x0 x1, x0 x2 입니다.",
+   "tags": [
+    "get_feature_names_out"
+   ],
+   "verifyCode": "import numpy as np\nperch_length = np.array([8.4, 13.7, 15.0, 16.2, 17.4, 18.0, 18.7, 19.0, 19.6, 20.0, 21.0, 21.0, 21.0, 21.3, 22.0, 22.0, 22.0, 22.0, 22.0, 22.5, 22.5, 22.7, 23.0, 23.5, 24.0, 24.0, 24.6, 25.0, 25.6, 26.5, 27.3, 27.5, 27.5, 27.5, 28.0, 28.7, 30.0, 32.8, 34.5, 35.0, 36.5, 36.0, 37.0, 37.0, 39.0, 39.0, 39.0, 40.0, 40.0, 40.0, 40.0, 42.0, 43.0, 43.0, 43.5, 44.0])\nperch_weight = np.array([5.9, 32.0, 40.0, 51.5, 70.0, 100.0, 78.0, 80.0, 85.0, 85.0, 110.0, 115.0, 125.0, 130.0, 120.0, 120.0, 130.0, 135.0, 110.0, 130.0, 150.0, 145.0, 150.0, 170.0, 225.0, 145.0, 188.0, 180.0, 197.0, 218.0, 300.0, 260.0, 265.0, 250.0, 250.0, 300.0, 320.0, 514.0, 556.0, 840.0, 685.0, 700.0, 700.0, 690.0, 900.0, 650.0, 820.0, 850.0, 900.0, 1015.0, 820.0, 1100.0, 1000.0, 1100.0, 1000.0, 1000.0])\n\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression, Ridge, Lasso\nfrom sklearn.preprocessing import PolynomialFeatures, StandardScaler\n\nperch_full = pd.read_csv('perch_full.csv').to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(perch_full, perch_weight, random_state=42)\npoly = PolynomialFeatures(include_bias=False)\npoly.fit(train_input)\ntrain_poly = poly.transform(train_input)\ntest_poly = poly.transform(test_input)\nprint(poly.get_feature_names_out().tolist()[3:6])",
+   "verifyExpect": "['x0^2', 'x0 x1', 'x0 x2']",
+   "options": [
+    "['x0^2', 'x1^2', 'x2^2']",
+    "['x0 x1', 'x0 x2', 'x1 x2']",
+    "['1', 'x0', 'x1']",
+    "['x0^2', 'x0 x1', 'x0 x2']",
+    "['x0', 'x1', 'x2']"
+   ]
+  },
+  {
+   "id": "F07R04",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "길이 한 가지 특성을 [길이², 길이] 로 늘려 훈련한 다항회귀 모델이다. 직선 모델(훈련 0.94, 테스트 0.82)보다 두 점수가 모두 올랐다. 다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "print(round(lr.score(train_poly, train_target), 2), round(lr.score(test_poly, test_target), 2))",
+   "answer": "0.97 0.98",
+   "why": "다항회귀 모델의 점수는 훈련 0.97, 테스트 0.98 입니다. 테스트 점수가 조금 더 높아서 과소적합이 약간 남아 있습니다.",
+   "tags": [
+    "다항회귀",
+    "점수"
+   ],
+   "verifyCode": "import numpy as np\nperch_length = np.array([8.4, 13.7, 15.0, 16.2, 17.4, 18.0, 18.7, 19.0, 19.6, 20.0, 21.0, 21.0, 21.0, 21.3, 22.0, 22.0, 22.0, 22.0, 22.0, 22.5, 22.5, 22.7, 23.0, 23.5, 24.0, 24.0, 24.6, 25.0, 25.6, 26.5, 27.3, 27.5, 27.5, 27.5, 28.0, 28.7, 30.0, 32.8, 34.5, 35.0, 36.5, 36.0, 37.0, 37.0, 39.0, 39.0, 39.0, 40.0, 40.0, 40.0, 40.0, 42.0, 43.0, 43.0, 43.5, 44.0])\nperch_weight = np.array([5.9, 32.0, 40.0, 51.5, 70.0, 100.0, 78.0, 80.0, 85.0, 85.0, 110.0, 115.0, 125.0, 130.0, 120.0, 120.0, 130.0, 135.0, 110.0, 130.0, 150.0, 145.0, 150.0, 170.0, 225.0, 145.0, 188.0, 180.0, 197.0, 218.0, 300.0, 260.0, 265.0, 250.0, 250.0, 300.0, 320.0, 514.0, 556.0, 840.0, 685.0, 700.0, 700.0, 690.0, 900.0, 650.0, 820.0, 850.0, 900.0, 1015.0, 820.0, 1100.0, 1000.0, 1100.0, 1000.0, 1000.0])\n\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression, Ridge, Lasso\nfrom sklearn.preprocessing import PolynomialFeatures, StandardScaler\n\ntrain_input, test_input, train_target, test_target = train_test_split(perch_length, perch_weight, random_state=42)\n\ntrain_input = train_input.reshape(-1, 1)\ntest_input = test_input.reshape(-1, 1)\n\ntrain_poly = np.column_stack((train_input ** 2, train_input))\ntest_poly = np.column_stack((test_input ** 2, test_input))\nlr = LinearRegression()\nlr.fit(train_poly, train_target)\nprint(round(lr.score(train_poly, train_target), 2), round(lr.score(test_poly, test_target), 2))",
+   "verifyExpect": "0.97 0.98",
+   "options": [
+    "0.94 0.82",
+    "0.97 0.98",
+    "1.0 -144.41",
+    "0.98 0.97",
+    "0.97 0.82"
+   ]
+  },
+  {
+   "id": "F07R05",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "노트북에서 다음 코드를 실행했을 때 출력되는 것은? (<span class=\"mono\">train_input</span>, <span class=\"mono\">test_input</span> 은 농어의 길이, 높이, 두께 3개 특성을 기본 비율로 나눈 훈련 42개, 테스트 14개이다)",
+   "code": "poly = PolynomialFeatures(degree=5, include_bias=False)\npoly.fit(train_input)\ntrain_poly = poly.transform(train_input)\ntest_poly = poly.transform(test_input)\nlr = LinearRegression()\nlr.fit(train_poly, train_target)\nprint(lr.score(train_poly, train_target) > 0.99, lr.score(test_poly, test_target) < 0)",
+   "answer": "True True",
+   "why": "특성을 55개로 늘리면 훈련 점수는 0.9999… 로 거의 완벽하지만 테스트 점수는 −144 로 음수입니다. 훈련 세트에 지나치게 맞춰진 과대적합입니다.",
+   "tags": [
+    "과대적합"
+   ],
+   "ref": "셀 [34]~[38] degree=5 실험 (저장된 출력: 훈련 0.9999999999996433, 테스트 -144.40579436844948)",
+   "options": [
+    "False False",
+    "False True",
+    "True None",
+    "True False",
+    "True True"
+   ]
+  },
+  {
+   "id": "F07R06",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "a = np.array([[2], [3]])\nprint(np.column_stack((a ** 2, a)).tolist())",
+   "answer": "[[4, 2], [9, 3]]",
+   "why": "제곱한 열이 앞, 원래 열이 뒤에 붙습니다. 행마다 [길이², 길이] 순서입니다.",
+   "tags": [
+    "column_stack"
+   ],
+   "verifyCode": "import numpy as np\na = np.array([[2], [3]])\nprint(np.column_stack((a ** 2, a)).tolist())",
+   "verifyExpect": "[[4, 2], [9, 3]]",
+   "options": [
+    "[[4, 2], [9, 3]]",
+    "[[4], [9], [2], [3]]",
+    "[[4, 9], [2, 3]]",
+    "[[4, 2, 9, 3]]",
+    "[[2, 4], [3, 9]]"
+   ]
+  },
+  {
+   "id": "F07R07",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "print(np.log10([0.001, 0.1, 10]).tolist())",
+   "answer": "[-3.0, -1.0, 1.0]",
+   "why": "0.001 = 10⁻³, 0.1 = 10⁻¹, 10 = 10¹ 이므로 −3, −1, 1 입니다. alpha 그래프의 가로축이 이렇게 만들어집니다.",
+   "tags": [
+    "log10"
+   ],
+   "verifyCode": "import numpy as np\nprint(np.log10([0.001, 0.1, 10]).tolist())",
+   "verifyExpect": "[-3.0, -1.0, 1.0]",
+   "options": [
+    "[0.001, 0.1, 10.0]",
+    "[-6.9, -2.3, 2.3]",
+    "[-3.0, -1.0, 1.0]",
+    "[3.0, 1.0, -1.0]",
+    "[-3.0, -1.0, 10.0]"
+   ]
+  },
+  {
+   "id": "F07R08",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "다항회귀로 학습한 식이 <b>무게 = 1.01 × 길이² − 21.6 × 길이 + 116.05</b> 이다. 길이 10 을 넣은 다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "print(round(1.01 * 10**2 - 21.6 * 10 + 116.05, 2))",
+   "answer": "1.05",
+   "why": "1.01 × 100 − 216 + 116.05 = 101 − 216 + 116.05 = 1.05 입니다.",
+   "tags": [
+    "다항식 계산"
+   ],
+   "verifyCode": "print(round(1.01 * 10**2 - 21.6 * 10 + 116.05, 2))",
+   "verifyExpect": "1.05",
+   "options": [
+    "117.05",
+    "-98.95",
+    "1.5",
+    "1.05",
+    "10.15"
+   ]
+  },
+  {
+   "id": "F07X01",
+   "type": "대조",
+   "typeKey": "contrast",
+   "mode": "mc",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "50cm 농어의 무게를 두 모델로 예측한다. ㉠, ㉡에 출력되는 값으로 알맞은 것은? (<span class=\"mono\">train_input</span>, <span class=\"mono\">test_input</span> 은 농어 56마리의 길이를 기본 비율로 나눈 뒤 <span class=\"mono\">reshape(-1, 1)</span> 한 배열이고, 정답은 무게이다)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">방법1 → ㉠<br>방법2 → ㉡</span></span>",
+   "code": "# 방법1: 직선 모델\nlr1 = LinearRegression()\nlr1.fit(train_input, train_target)\nprint(lr1.predict([[50]]).round(1))\n\n# 방법2: 2차식 모델\nlr2 = LinearRegression()\nlr2.fit(np.column_stack((train_input ** 2, train_input)), train_target)\nprint(lr2.predict([[50**2, 50]]).round(1))",
+   "answer": "㉠ [1241.8]  ·  ㉡ [1574.]",
+   "why": "직선 모델은 약 1241.8g, 길이의 제곱을 특성으로 추가한 모델은 약 1574g 으로 예측합니다. 농어의 무게는 길이가 길수록 더 가파르게 늘어나서 곡선 모델의 예측이 더 큽니다.",
+   "tags": [
+    "선형회귀",
+    "다항회귀"
+   ],
+   "verifyCode": "import numpy as np\nperch_length = np.array([8.4, 13.7, 15.0, 16.2, 17.4, 18.0, 18.7, 19.0, 19.6, 20.0, 21.0, 21.0, 21.0, 21.3, 22.0, 22.0, 22.0, 22.0, 22.0, 22.5, 22.5, 22.7, 23.0, 23.5, 24.0, 24.0, 24.6, 25.0, 25.6, 26.5, 27.3, 27.5, 27.5, 27.5, 28.0, 28.7, 30.0, 32.8, 34.5, 35.0, 36.5, 36.0, 37.0, 37.0, 39.0, 39.0, 39.0, 40.0, 40.0, 40.0, 40.0, 42.0, 43.0, 43.0, 43.5, 44.0])\nperch_weight = np.array([5.9, 32.0, 40.0, 51.5, 70.0, 100.0, 78.0, 80.0, 85.0, 85.0, 110.0, 115.0, 125.0, 130.0, 120.0, 120.0, 130.0, 135.0, 110.0, 130.0, 150.0, 145.0, 150.0, 170.0, 225.0, 145.0, 188.0, 180.0, 197.0, 218.0, 300.0, 260.0, 265.0, 250.0, 250.0, 300.0, 320.0, 514.0, 556.0, 840.0, 685.0, 700.0, 700.0, 690.0, 900.0, 650.0, 820.0, 850.0, 900.0, 1015.0, 820.0, 1100.0, 1000.0, 1100.0, 1000.0, 1000.0])\n\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression, Ridge, Lasso\nfrom sklearn.preprocessing import PolynomialFeatures, StandardScaler\n\ntrain_input, test_input, train_target, test_target = train_test_split(perch_length, perch_weight, random_state=42)\n\ntrain_input = train_input.reshape(-1, 1)\ntest_input = test_input.reshape(-1, 1)\n# 방법1: 직선 모델\nlr1 = LinearRegression()\nlr1.fit(train_input, train_target)\nprint(lr1.predict([[50]]).round(1))\n\n# 방법2: 2차식 모델\nlr2 = LinearRegression()\nlr2.fit(np.column_stack((train_input ** 2, train_input)), train_target)\nprint(lr2.predict([[50**2, 50]]).round(1))",
+   "verifyExpect": "[1241.8]\n[1574.]",
+   "options": [
+    "㉠ [1574.]  ·  ㉡ [1241.8]",
+    "㉠ [1241.8]  ·  ㉡ [1574.]",
+    "㉠ [1241.8]  ·  ㉡ [2500.]",
+    "㉠ [1574.]  ·  ㉡ [1574.]",
+    "㉠ [1241.8]  ·  ㉡ [1241.8]"
+   ]
+  },
+  {
+   "id": "F07X02",
+   "type": "대조",
+   "typeKey": "contrast",
+   "mode": "mc",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "다음은 거의 같은 두 코드이다. ㉠, ㉡에 출력되는 값으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">방법1 → ㉠<br>방법2 → ㉡</span></span>",
+   "code": "# 방법1\nprint(PolynomialFeatures(include_bias=False).fit_transform([[2, 3]]).shape)\n\n# 방법2\nprint(PolynomialFeatures().fit_transform([[2, 3]]).shape)",
+   "answer": "㉠ (1, 5)  ·  ㉡ (1, 6)",
+   "why": "[2, 3] 에서 2, 3, 4, 6, 9 다섯 개가 만들어지고, <span class=\"mono\">include_bias</span> 를 끄지 않으면 맨 앞에 1 이 추가되어 여섯 개가 됩니다.",
+   "tags": [
+    "include_bias"
+   ],
+   "verifyCode": "import numpy as np\nperch_length = np.array([8.4, 13.7, 15.0, 16.2, 17.4, 18.0, 18.7, 19.0, 19.6, 20.0, 21.0, 21.0, 21.0, 21.3, 22.0, 22.0, 22.0, 22.0, 22.0, 22.5, 22.5, 22.7, 23.0, 23.5, 24.0, 24.0, 24.6, 25.0, 25.6, 26.5, 27.3, 27.5, 27.5, 27.5, 28.0, 28.7, 30.0, 32.8, 34.5, 35.0, 36.5, 36.0, 37.0, 37.0, 39.0, 39.0, 39.0, 40.0, 40.0, 40.0, 40.0, 42.0, 43.0, 43.0, 43.5, 44.0])\nperch_weight = np.array([5.9, 32.0, 40.0, 51.5, 70.0, 100.0, 78.0, 80.0, 85.0, 85.0, 110.0, 115.0, 125.0, 130.0, 120.0, 120.0, 130.0, 135.0, 110.0, 130.0, 150.0, 145.0, 150.0, 170.0, 225.0, 145.0, 188.0, 180.0, 197.0, 218.0, 300.0, 260.0, 265.0, 250.0, 250.0, 300.0, 320.0, 514.0, 556.0, 840.0, 685.0, 700.0, 700.0, 690.0, 900.0, 650.0, 820.0, 850.0, 900.0, 1015.0, 820.0, 1100.0, 1000.0, 1100.0, 1000.0, 1000.0])\n\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression, Ridge, Lasso\nfrom sklearn.preprocessing import PolynomialFeatures, StandardScaler\n# 방법1\nprint(PolynomialFeatures(include_bias=False).fit_transform([[2, 3]]).shape)\n\n# 방법2\nprint(PolynomialFeatures().fit_transform([[2, 3]]).shape)",
+   "verifyExpect": "(1, 5)\n(1, 6)",
+   "options": [
+    "㉠ (1, 5)  ·  ㉡ (1, 6)",
+    "㉠ (2, 5)  ·  ㉡ (2, 6)",
+    "㉠ (1, 4)  ·  ㉡ (1, 5)",
+    "㉠ (1, 6)  ·  ㉡ (1, 5)",
+    "㉠ (1, 5)  ·  ㉡ (1, 5)"
+   ]
+  },
+  {
+   "id": "F07X03",
+   "type": "대조",
+   "typeKey": "contrast",
+   "mode": "mc",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "㉠, ㉡에 출력되는 값(만들어진 특성의 수)으로 알맞은 것은? (<span class=\"mono\">train_input</span>, <span class=\"mono\">test_input</span> 은 농어의 길이, 높이, 두께 3개 특성을 기본 비율로 나눈 훈련 42개, 테스트 14개이다)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">방법1 → ㉠<br>방법2 → ㉡</span></span>",
+   "code": "# 방법1\nprint(PolynomialFeatures(degree=2, include_bias=False).fit_transform(train_input).shape[1])\n\n# 방법2\nprint(PolynomialFeatures(degree=5, include_bias=False).fit_transform(train_input).shape[1])",
+   "answer": "㉠ 9  ·  ㉡ 55",
+   "why": "특성 3개를 2차까지 조합하면 9개, 5차까지 조합하면 55개입니다.",
+   "tags": [
+    "degree"
+   ],
+   "verifyCode": "import numpy as np\nperch_length = np.array([8.4, 13.7, 15.0, 16.2, 17.4, 18.0, 18.7, 19.0, 19.6, 20.0, 21.0, 21.0, 21.0, 21.3, 22.0, 22.0, 22.0, 22.0, 22.0, 22.5, 22.5, 22.7, 23.0, 23.5, 24.0, 24.0, 24.6, 25.0, 25.6, 26.5, 27.3, 27.5, 27.5, 27.5, 28.0, 28.7, 30.0, 32.8, 34.5, 35.0, 36.5, 36.0, 37.0, 37.0, 39.0, 39.0, 39.0, 40.0, 40.0, 40.0, 40.0, 42.0, 43.0, 43.0, 43.5, 44.0])\nperch_weight = np.array([5.9, 32.0, 40.0, 51.5, 70.0, 100.0, 78.0, 80.0, 85.0, 85.0, 110.0, 115.0, 125.0, 130.0, 120.0, 120.0, 130.0, 135.0, 110.0, 130.0, 150.0, 145.0, 150.0, 170.0, 225.0, 145.0, 188.0, 180.0, 197.0, 218.0, 300.0, 260.0, 265.0, 250.0, 250.0, 300.0, 320.0, 514.0, 556.0, 840.0, 685.0, 700.0, 700.0, 690.0, 900.0, 650.0, 820.0, 850.0, 900.0, 1015.0, 820.0, 1100.0, 1000.0, 1100.0, 1000.0, 1000.0])\n\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression, Ridge, Lasso\nfrom sklearn.preprocessing import PolynomialFeatures, StandardScaler\n\nperch_full = pd.read_csv('perch_full.csv').to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(perch_full, perch_weight, random_state=42)\n# 방법1\nprint(PolynomialFeatures(degree=2, include_bias=False).fit_transform(train_input).shape[1])\n\n# 방법2\nprint(PolynomialFeatures(degree=5, include_bias=False).fit_transform(train_input).shape[1])",
+   "verifyExpect": "9\n55",
+   "options": [
+    "㉠ 6  ·  ㉡ 15",
+    "㉠ 9  ·  ㉡ 45",
+    "㉠ 10  ·  ㉡ 56",
+    "㉠ 9  ·  ㉡ 243",
+    "㉠ 9  ·  ㉡ 55"
+   ]
+  },
+  {
+   "id": "F07X04",
+   "type": "대조",
+   "typeKey": "contrast",
+   "mode": "mc",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "55개 계수 중 값이 0 인 것의 개수를 출력한다. ㉠, ㉡에 출력되는 값으로 알맞은 것은? (<span class=\"mono\">train_scaled</span>, <span class=\"mono\">test_scaled</span> 는 3개 특성을 <span class=\"mono\">degree=5</span> 로 늘린 55개 특성을 <span class=\"mono\">StandardScaler</span> 로 표준화한 훈련 42개, 테스트 14개이다)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">방법1 → ㉠<br>방법2 → ㉡</span></span>",
+   "code": "ridge = Ridge(alpha=0.1).fit(train_scaled, train_target)\nlasso = Lasso(alpha=10).fit(train_scaled, train_target)\n# 방법1: 릿지\nprint(int(np.sum(ridge.coef_ == 0)))\n\n# 방법2: 라쏘\nprint(int(np.sum(lasso.coef_ == 0)))",
+   "answer": "㉠ 0  ·  ㉡ 40",
+   "why": "릿지는 계수를 작게 줄이기만 해서 0 인 계수가 없습니다. 라쏘는 55개 중 40개의 계수를 0 으로 만들어 15개 특성만 사용합니다.",
+   "tags": [
+    "릿지",
+    "라쏘"
+   ],
+   "verifyCode": "import numpy as np\nperch_length = np.array([8.4, 13.7, 15.0, 16.2, 17.4, 18.0, 18.7, 19.0, 19.6, 20.0, 21.0, 21.0, 21.0, 21.3, 22.0, 22.0, 22.0, 22.0, 22.0, 22.5, 22.5, 22.7, 23.0, 23.5, 24.0, 24.0, 24.6, 25.0, 25.6, 26.5, 27.3, 27.5, 27.5, 27.5, 28.0, 28.7, 30.0, 32.8, 34.5, 35.0, 36.5, 36.0, 37.0, 37.0, 39.0, 39.0, 39.0, 40.0, 40.0, 40.0, 40.0, 42.0, 43.0, 43.0, 43.5, 44.0])\nperch_weight = np.array([5.9, 32.0, 40.0, 51.5, 70.0, 100.0, 78.0, 80.0, 85.0, 85.0, 110.0, 115.0, 125.0, 130.0, 120.0, 120.0, 130.0, 135.0, 110.0, 130.0, 150.0, 145.0, 150.0, 170.0, 225.0, 145.0, 188.0, 180.0, 197.0, 218.0, 300.0, 260.0, 265.0, 250.0, 250.0, 300.0, 320.0, 514.0, 556.0, 840.0, 685.0, 700.0, 700.0, 690.0, 900.0, 650.0, 820.0, 850.0, 900.0, 1015.0, 820.0, 1100.0, 1000.0, 1100.0, 1000.0, 1000.0])\n\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression, Ridge, Lasso\nfrom sklearn.preprocessing import PolynomialFeatures, StandardScaler\n\nperch_full = pd.read_csv('perch_full.csv').to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(perch_full, perch_weight, random_state=42)\n\npoly = PolynomialFeatures(degree=5, include_bias=False)\npoly.fit(train_input)\ntrain_poly = poly.transform(train_input)\ntest_poly = poly.transform(test_input)\n\nss = StandardScaler()\nss.fit(train_poly)\ntrain_scaled = ss.transform(train_poly)\ntest_scaled = ss.transform(test_poly)\nridge = Ridge(alpha=0.1).fit(train_scaled, train_target)\nlasso = Lasso(alpha=10).fit(train_scaled, train_target)\n# 방법1: 릿지\nprint(int(np.sum(ridge.coef_ == 0)))\n\n# 방법2: 라쏘\nprint(int(np.sum(lasso.coef_ == 0)))",
+   "verifyExpect": "0\n40",
+   "options": [
+    "㉠ 40  ·  ㉡ 0",
+    "㉠ 40  ·  ㉡ 40",
+    "㉠ 0  ·  ㉡ 0",
+    "㉠ 0  ·  ㉡ 40",
+    "㉠ 55  ·  ㉡ 55"
+   ]
+  },
+  {
+   "id": "F07X05",
+   "type": "대조",
+   "typeKey": "contrast",
+   "mode": "mc",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "테스트 세트를 표준화한 뒤 열마다 평균이 0 인지 확인한다. ㉠, ㉡에 출력되는 값으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">방법1 → ㉠<br>방법2 → ㉡</span></span>",
+   "code": "ss = StandardScaler()\nss.fit(train_poly)\n# 방법1\nprint(bool(np.allclose(ss.transform(test_poly).mean(axis=0), 0)))\n\n# 방법2\nprint(bool(np.allclose(StandardScaler().fit_transform(test_poly).mean(axis=0), 0)))",
+   "answer": "㉠ False  ·  ㉡ True",
+   "why": "방법1은 훈련 세트의 평균과 표준편차로 변환해서 테스트 세트의 평균이 정확히 0 이 되지 않습니다(올바른 방법). 방법2는 테스트 세트만으로 기준을 새로 잡아서 평균이 0 이 되지만, 훈련 세트와 기준이 달라져 쓰면 안 됩니다.",
+   "tags": [
+    "StandardScaler",
+    "fit",
+    "transform"
+   ],
+   "verifyCode": "import numpy as np\nperch_length = np.array([8.4, 13.7, 15.0, 16.2, 17.4, 18.0, 18.7, 19.0, 19.6, 20.0, 21.0, 21.0, 21.0, 21.3, 22.0, 22.0, 22.0, 22.0, 22.0, 22.5, 22.5, 22.7, 23.0, 23.5, 24.0, 24.0, 24.6, 25.0, 25.6, 26.5, 27.3, 27.5, 27.5, 27.5, 28.0, 28.7, 30.0, 32.8, 34.5, 35.0, 36.5, 36.0, 37.0, 37.0, 39.0, 39.0, 39.0, 40.0, 40.0, 40.0, 40.0, 42.0, 43.0, 43.0, 43.5, 44.0])\nperch_weight = np.array([5.9, 32.0, 40.0, 51.5, 70.0, 100.0, 78.0, 80.0, 85.0, 85.0, 110.0, 115.0, 125.0, 130.0, 120.0, 120.0, 130.0, 135.0, 110.0, 130.0, 150.0, 145.0, 150.0, 170.0, 225.0, 145.0, 188.0, 180.0, 197.0, 218.0, 300.0, 260.0, 265.0, 250.0, 250.0, 300.0, 320.0, 514.0, 556.0, 840.0, 685.0, 700.0, 700.0, 690.0, 900.0, 650.0, 820.0, 850.0, 900.0, 1015.0, 820.0, 1100.0, 1000.0, 1100.0, 1000.0, 1000.0])\n\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression, Ridge, Lasso\nfrom sklearn.preprocessing import PolynomialFeatures, StandardScaler\n\nperch_full = pd.read_csv('perch_full.csv').to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(perch_full, perch_weight, random_state=42)\n\npoly = PolynomialFeatures(degree=5, include_bias=False)\npoly.fit(train_input)\ntrain_poly = poly.transform(train_input)\ntest_poly = poly.transform(test_input)\nss = StandardScaler()\nss.fit(train_poly)\n# 방법1\nprint(bool(np.allclose(ss.transform(test_poly).mean(axis=0), 0)))\n\n# 방법2\nprint(bool(np.allclose(StandardScaler().fit_transform(test_poly).mean(axis=0), 0)))",
+   "verifyExpect": "False\nTrue",
+   "options": [
+    "㉠ False  ·  ㉡ False",
+    "㉠ True  ·  ㉡ True",
+    "㉠ False  ·  ㉡ True",
+    "㉠ None  ·  ㉡ True",
+    "㉠ True  ·  ㉡ False"
+   ]
+  },
+  {
+   "id": "F07S01",
+   "type": "조건 매핑",
+   "typeKey": "spec",
+   "mode": "mc",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "다음 [조건]을 모두 만족하는 코드로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>[조건]</b><br>○ shape 이 <span class=\"mono\">(42,)</span> 인 <span class=\"mono\">train_input</span> 을 사이킷런 입력에 맞게 2차원으로 바꾼다.<br>○ 결과의 shape 은 <span class=\"mono\">(42, 1)</span> 이다.</span>",
+   "code": "train_input = ____",
+   "answer": "train_input.reshape(-1, 1)",
+   "why": "열을 1개로 고정하고 행은 <span class=\"mono\">-1</span> 로 자동 계산합니다. <span class=\"mono\">reshape(1, -1)</span> 은 <span class=\"mono\">(1, 42)</span> 가 됩니다.",
+   "tags": [
+    "reshape"
+   ],
+   "verifyCode": "import numpy as np\nperch_length = np.array([8.4, 13.7, 15.0, 16.2, 17.4, 18.0, 18.7, 19.0, 19.6, 20.0, 21.0, 21.0, 21.0, 21.3, 22.0, 22.0, 22.0, 22.0, 22.0, 22.5, 22.5, 22.7, 23.0, 23.5, 24.0, 24.0, 24.6, 25.0, 25.6, 26.5, 27.3, 27.5, 27.5, 27.5, 28.0, 28.7, 30.0, 32.8, 34.5, 35.0, 36.5, 36.0, 37.0, 37.0, 39.0, 39.0, 39.0, 40.0, 40.0, 40.0, 40.0, 42.0, 43.0, 43.0, 43.5, 44.0])\nperch_weight = np.array([5.9, 32.0, 40.0, 51.5, 70.0, 100.0, 78.0, 80.0, 85.0, 85.0, 110.0, 115.0, 125.0, 130.0, 120.0, 120.0, 130.0, 135.0, 110.0, 130.0, 150.0, 145.0, 150.0, 170.0, 225.0, 145.0, 188.0, 180.0, 197.0, 218.0, 300.0, 260.0, 265.0, 250.0, 250.0, 300.0, 320.0, 514.0, 556.0, 840.0, 685.0, 700.0, 700.0, 690.0, 900.0, 650.0, 820.0, 850.0, 900.0, 1015.0, 820.0, 1100.0, 1000.0, 1100.0, 1000.0, 1000.0])\n\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression, Ridge, Lasso\nfrom sklearn.preprocessing import PolynomialFeatures, StandardScaler\n\ntrain_input, test_input, train_target, test_target = train_test_split(perch_length, perch_weight, random_state=42)\ntrain_input = train_input.reshape(-1, 1)\nprint(train_input.shape)",
+   "verifyExpect": "(42, 1)",
+   "options": [
+    "train_input.reshape(1, 1)",
+    "train_input.reshape(-1, 1)",
+    "train_input.reshape(1, -1)",
+    "train_input.reshape(42)",
+    "train_input.reshape(-1)"
+   ]
+  },
+  {
+   "id": "F07S02",
+   "type": "조건 매핑",
+   "typeKey": "spec",
+   "mode": "mc",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "다음 [조건]을 모두 만족하는 코드로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>[조건]</b><br>○ 길이의 제곱과 길이를 나란히 붙여 특성 2개짜리 훈련 세트를 만든다.<br>○ 첫 번째 열이 길이의 제곱이다.</span>",
+   "code": "train_poly = ____",
+   "answer": "np.column_stack((train_input ** 2, train_input))",
+   "why": "<span class=\"mono\">** 2</span> 가 제곱이고, <span class=\"mono\">column_stack</span> 에 넣은 순서대로 열이 됩니다. <span class=\"mono\">* 2</span> 는 두 배입니다.",
+   "tags": [
+    "다항회귀",
+    "column_stack"
+   ],
+   "verifyCode": "import numpy as np\nperch_length = np.array([8.4, 13.7, 15.0, 16.2, 17.4, 18.0, 18.7, 19.0, 19.6, 20.0, 21.0, 21.0, 21.0, 21.3, 22.0, 22.0, 22.0, 22.0, 22.0, 22.5, 22.5, 22.7, 23.0, 23.5, 24.0, 24.0, 24.6, 25.0, 25.6, 26.5, 27.3, 27.5, 27.5, 27.5, 28.0, 28.7, 30.0, 32.8, 34.5, 35.0, 36.5, 36.0, 37.0, 37.0, 39.0, 39.0, 39.0, 40.0, 40.0, 40.0, 40.0, 42.0, 43.0, 43.0, 43.5, 44.0])\nperch_weight = np.array([5.9, 32.0, 40.0, 51.5, 70.0, 100.0, 78.0, 80.0, 85.0, 85.0, 110.0, 115.0, 125.0, 130.0, 120.0, 120.0, 130.0, 135.0, 110.0, 130.0, 150.0, 145.0, 150.0, 170.0, 225.0, 145.0, 188.0, 180.0, 197.0, 218.0, 300.0, 260.0, 265.0, 250.0, 250.0, 300.0, 320.0, 514.0, 556.0, 840.0, 685.0, 700.0, 700.0, 690.0, 900.0, 650.0, 820.0, 850.0, 900.0, 1015.0, 820.0, 1100.0, 1000.0, 1100.0, 1000.0, 1000.0])\n\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression, Ridge, Lasso\nfrom sklearn.preprocessing import PolynomialFeatures, StandardScaler\n\ntrain_input, test_input, train_target, test_target = train_test_split(perch_length, perch_weight, random_state=42)\n\ntrain_input = train_input.reshape(-1, 1)\ntest_input = test_input.reshape(-1, 1)\ntrain_poly = np.column_stack((train_input ** 2, train_input))\nprint(train_poly.shape, bool(np.isclose(train_poly[0][0], train_poly[0][1] ** 2)))",
+   "verifyExpect": "(42, 2) True",
+   "options": [
+    "train_input ** 2",
+    "np.concatenate((train_input ** 2, train_input))",
+    "np.column_stack((train_input, train_input ** 2))",
+    "np.column_stack((train_input ** 2, train_input))",
+    "np.column_stack((train_input * 2, train_input))"
+   ]
+  },
+  {
+   "id": "F07S03",
+   "type": "조건 매핑",
+   "typeKey": "spec",
+   "mode": "mc",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "다음 [조건]을 모두 만족하는 코드로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>[조건]</b><br>○ 특성 3개를 2차 항까지 조합해 9개로 늘리는 변환기를 만든다.<br>○ 값이 1인 절편용 특성은 넣지 않는다.</span>",
+   "code": "poly = ____",
+   "answer": "PolynomialFeatures(include_bias=False)",
+   "why": "<span class=\"mono\">degree</span> 의 기본값이 2 이므로 <span class=\"mono\">include_bias=False</span> 만 주면 됩니다.",
+   "tags": [
+    "PolynomialFeatures"
+   ],
+   "verifyCode": "import numpy as np\nperch_length = np.array([8.4, 13.7, 15.0, 16.2, 17.4, 18.0, 18.7, 19.0, 19.6, 20.0, 21.0, 21.0, 21.0, 21.3, 22.0, 22.0, 22.0, 22.0, 22.0, 22.5, 22.5, 22.7, 23.0, 23.5, 24.0, 24.0, 24.6, 25.0, 25.6, 26.5, 27.3, 27.5, 27.5, 27.5, 28.0, 28.7, 30.0, 32.8, 34.5, 35.0, 36.5, 36.0, 37.0, 37.0, 39.0, 39.0, 39.0, 40.0, 40.0, 40.0, 40.0, 42.0, 43.0, 43.0, 43.5, 44.0])\nperch_weight = np.array([5.9, 32.0, 40.0, 51.5, 70.0, 100.0, 78.0, 80.0, 85.0, 85.0, 110.0, 115.0, 125.0, 130.0, 120.0, 120.0, 130.0, 135.0, 110.0, 130.0, 150.0, 145.0, 150.0, 170.0, 225.0, 145.0, 188.0, 180.0, 197.0, 218.0, 300.0, 260.0, 265.0, 250.0, 250.0, 300.0, 320.0, 514.0, 556.0, 840.0, 685.0, 700.0, 700.0, 690.0, 900.0, 650.0, 820.0, 850.0, 900.0, 1015.0, 820.0, 1100.0, 1000.0, 1100.0, 1000.0, 1000.0])\n\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression, Ridge, Lasso\nfrom sklearn.preprocessing import PolynomialFeatures, StandardScaler\n\nperch_full = pd.read_csv('perch_full.csv').to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(perch_full, perch_weight, random_state=42)\npoly = PolynomialFeatures(include_bias=False)\npoly.fit(train_input)\nprint(poly.transform(train_input).shape)",
+   "verifyExpect": "(42, 9)",
+   "options": [
+    "PolynomialFeatures(include_bias=False)",
+    "PolynomialFeatures(degree=1, include_bias=False)",
+    "StandardScaler()",
+    "PolynomialFeatures()",
+    "PolynomialFeatures(degree=5, include_bias=False)"
+   ]
+  },
+  {
+   "id": "F07S04",
+   "type": "조건 매핑",
+   "typeKey": "spec",
+   "mode": "mc",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "다음 [조건]을 모두 만족하는 코드로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>[조건]</b><br>○ 릿지 회귀 모델 객체를 만든다.<br>○ 규제 강도를 0.1 로 한다.</span>",
+   "code": "model = ____",
+   "answer": "Ridge(alpha=0.1)",
+   "why": "릿지는 <span class=\"mono\">Ridge</span>, 규제 강도는 <span class=\"mono\">alpha</span> 입니다. <span class=\"mono\">C</span> 는 로지스틱 회귀에서 쓰는 매개변수입니다.",
+   "tags": [
+    "Ridge",
+    "alpha"
+   ],
+   "verifyCode": "import numpy as np\nperch_length = np.array([8.4, 13.7, 15.0, 16.2, 17.4, 18.0, 18.7, 19.0, 19.6, 20.0, 21.0, 21.0, 21.0, 21.3, 22.0, 22.0, 22.0, 22.0, 22.0, 22.5, 22.5, 22.7, 23.0, 23.5, 24.0, 24.0, 24.6, 25.0, 25.6, 26.5, 27.3, 27.5, 27.5, 27.5, 28.0, 28.7, 30.0, 32.8, 34.5, 35.0, 36.5, 36.0, 37.0, 37.0, 39.0, 39.0, 39.0, 40.0, 40.0, 40.0, 40.0, 42.0, 43.0, 43.0, 43.5, 44.0])\nperch_weight = np.array([5.9, 32.0, 40.0, 51.5, 70.0, 100.0, 78.0, 80.0, 85.0, 85.0, 110.0, 115.0, 125.0, 130.0, 120.0, 120.0, 130.0, 135.0, 110.0, 130.0, 150.0, 145.0, 150.0, 170.0, 225.0, 145.0, 188.0, 180.0, 197.0, 218.0, 300.0, 260.0, 265.0, 250.0, 250.0, 300.0, 320.0, 514.0, 556.0, 840.0, 685.0, 700.0, 700.0, 690.0, 900.0, 650.0, 820.0, 850.0, 900.0, 1015.0, 820.0, 1100.0, 1000.0, 1100.0, 1000.0, 1000.0])\n\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression, Ridge, Lasso\nfrom sklearn.preprocessing import PolynomialFeatures, StandardScaler\nmodel = Ridge(alpha=0.1)\nprint(type(model).__name__, model.alpha)",
+   "verifyExpect": "Ridge 0.1",
+   "options": [
+    "Ridge(alpha=10)",
+    "Lasso(alpha=0.1)",
+    "LinearRegression(alpha=0.1)",
+    "Ridge(C=0.1)",
+    "Ridge(alpha=0.1)"
+   ]
+  },
+  {
+   "id": "F07S05",
+   "type": "조건 매핑",
+   "typeKey": "spec",
+   "mode": "mc",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "다음 [조건]을 모두 만족하는 코드로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>[조건]</b><br>○ <span class=\"mono\">lr</span> 은 [길이², 길이] 순서의 특성으로 훈련한 모델이다.<br>○ 길이 50cm 인 농어 한 마리의 무게를 예측한다.</span>",
+   "code": "pred = ____",
+   "answer": "lr.predict([[50**2, 50]])",
+   "why": "훈련할 때와 같은 열 순서, 같은 개수의 특성을 2차원으로 넣어야 합니다.",
+   "tags": [
+    "predict",
+    "다항회귀"
+   ],
+   "verifyCode": "import numpy as np\nperch_length = np.array([8.4, 13.7, 15.0, 16.2, 17.4, 18.0, 18.7, 19.0, 19.6, 20.0, 21.0, 21.0, 21.0, 21.3, 22.0, 22.0, 22.0, 22.0, 22.0, 22.5, 22.5, 22.7, 23.0, 23.5, 24.0, 24.0, 24.6, 25.0, 25.6, 26.5, 27.3, 27.5, 27.5, 27.5, 28.0, 28.7, 30.0, 32.8, 34.5, 35.0, 36.5, 36.0, 37.0, 37.0, 39.0, 39.0, 39.0, 40.0, 40.0, 40.0, 40.0, 42.0, 43.0, 43.0, 43.5, 44.0])\nperch_weight = np.array([5.9, 32.0, 40.0, 51.5, 70.0, 100.0, 78.0, 80.0, 85.0, 85.0, 110.0, 115.0, 125.0, 130.0, 120.0, 120.0, 130.0, 135.0, 110.0, 130.0, 150.0, 145.0, 150.0, 170.0, 225.0, 145.0, 188.0, 180.0, 197.0, 218.0, 300.0, 260.0, 265.0, 250.0, 250.0, 300.0, 320.0, 514.0, 556.0, 840.0, 685.0, 700.0, 700.0, 690.0, 900.0, 650.0, 820.0, 850.0, 900.0, 1015.0, 820.0, 1100.0, 1000.0, 1100.0, 1000.0, 1000.0])\n\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression, Ridge, Lasso\nfrom sklearn.preprocessing import PolynomialFeatures, StandardScaler\n\ntrain_input, test_input, train_target, test_target = train_test_split(perch_length, perch_weight, random_state=42)\n\ntrain_input = train_input.reshape(-1, 1)\ntest_input = test_input.reshape(-1, 1)\n\ntrain_poly = np.column_stack((train_input ** 2, train_input))\ntest_poly = np.column_stack((test_input ** 2, test_input))\nlr = LinearRegression()\nlr.fit(train_poly, train_target)\npred = lr.predict([[50**2, 50]])\nprint(pred.round(1))",
+   "verifyExpect": "[1574.]",
+   "options": [
+    "lr.predict([50**2, 50])",
+    "lr.predict([[50, 50**2]])",
+    "lr.predict([[50**2, 50]])",
+    "lr.predict([[50*2, 50]])",
+    "lr.predict([[50]])"
+   ]
+  },
+  {
+   "id": "F07W01",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "빈칸 ㉠ 에 들어갈 메서드 이름을 쓰시오.<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">(42, 1)</span></span>",
+   "code": "train_input = train_input.㉠(-1, 1)\nprint(train_input.shape)",
+   "answer": "reshape",
+   "why": "배열의 모양을 바꾸는 메서드는 <span class=\"mono\">reshape</span> 입니다.",
+   "tags": [
+    "reshape"
+   ],
+   "verifyCode": "import numpy as np\nperch_length = np.array([8.4, 13.7, 15.0, 16.2, 17.4, 18.0, 18.7, 19.0, 19.6, 20.0, 21.0, 21.0, 21.0, 21.3, 22.0, 22.0, 22.0, 22.0, 22.0, 22.5, 22.5, 22.7, 23.0, 23.5, 24.0, 24.0, 24.6, 25.0, 25.6, 26.5, 27.3, 27.5, 27.5, 27.5, 28.0, 28.7, 30.0, 32.8, 34.5, 35.0, 36.5, 36.0, 37.0, 37.0, 39.0, 39.0, 39.0, 40.0, 40.0, 40.0, 40.0, 42.0, 43.0, 43.0, 43.5, 44.0])\nperch_weight = np.array([5.9, 32.0, 40.0, 51.5, 70.0, 100.0, 78.0, 80.0, 85.0, 85.0, 110.0, 115.0, 125.0, 130.0, 120.0, 120.0, 130.0, 135.0, 110.0, 130.0, 150.0, 145.0, 150.0, 170.0, 225.0, 145.0, 188.0, 180.0, 197.0, 218.0, 300.0, 260.0, 265.0, 250.0, 250.0, 300.0, 320.0, 514.0, 556.0, 840.0, 685.0, 700.0, 700.0, 690.0, 900.0, 650.0, 820.0, 850.0, 900.0, 1015.0, 820.0, 1100.0, 1000.0, 1100.0, 1000.0, 1000.0])\n\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression, Ridge, Lasso\nfrom sklearn.preprocessing import PolynomialFeatures, StandardScaler\n\ntrain_input, test_input, train_target, test_target = train_test_split(perch_length, perch_weight, random_state=42)\ntrain_input = train_input.reshape(-1, 1)\nprint(train_input.shape)",
+   "verifyExpect": "(42, 1)",
+   "accept": [
+    "reshape"
+   ]
+  },
+  {
+   "id": "F07W02",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "선형회귀로 학습한 식이 <b>무게 = 39 × 길이 − 709</b> 이다. 길이 30cm 인 농어의 무게 예측값을 구하시오.",
+   "code": "",
+   "answer": "461",
+   "why": "39 × 30 − 709 = 1170 − 709 = 461 입니다.",
+   "tags": [
+    "선형식 계산"
+   ],
+   "verifyCode": "print(39 * 30 - 709)",
+   "verifyExpect": "461",
+   "accept": [
+    "461",
+    "461g",
+    "461.0",
+    "461 g"
+   ]
+  },
+  {
+   "id": "F07W03",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "빈칸 ㉠ 에 들어갈 매개변수 이름을 쓰시오. (절편용 특성 1 을 넣지 않는다.)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">[[2. 3. 4. 6. 9.]]</span></span>",
+   "code": "poly = PolynomialFeatures(㉠=False)\nprint(poly.fit_transform([[2, 3]]))",
+   "answer": "include_bias",
+   "why": "<span class=\"mono\">include_bias=False</span> 로 값이 1인 특성을 빼면 2, 3, 4, 6, 9 만 남습니다.",
+   "tags": [
+    "include_bias"
+   ],
+   "verifyCode": "import numpy as np\nperch_length = np.array([8.4, 13.7, 15.0, 16.2, 17.4, 18.0, 18.7, 19.0, 19.6, 20.0, 21.0, 21.0, 21.0, 21.3, 22.0, 22.0, 22.0, 22.0, 22.0, 22.5, 22.5, 22.7, 23.0, 23.5, 24.0, 24.0, 24.6, 25.0, 25.6, 26.5, 27.3, 27.5, 27.5, 27.5, 28.0, 28.7, 30.0, 32.8, 34.5, 35.0, 36.5, 36.0, 37.0, 37.0, 39.0, 39.0, 39.0, 40.0, 40.0, 40.0, 40.0, 42.0, 43.0, 43.0, 43.5, 44.0])\nperch_weight = np.array([5.9, 32.0, 40.0, 51.5, 70.0, 100.0, 78.0, 80.0, 85.0, 85.0, 110.0, 115.0, 125.0, 130.0, 120.0, 120.0, 130.0, 135.0, 110.0, 130.0, 150.0, 145.0, 150.0, 170.0, 225.0, 145.0, 188.0, 180.0, 197.0, 218.0, 300.0, 260.0, 265.0, 250.0, 250.0, 300.0, 320.0, 514.0, 556.0, 840.0, 685.0, 700.0, 700.0, 690.0, 900.0, 650.0, 820.0, 850.0, 900.0, 1015.0, 820.0, 1100.0, 1000.0, 1100.0, 1000.0, 1000.0])\n\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression, Ridge, Lasso\nfrom sklearn.preprocessing import PolynomialFeatures, StandardScaler\npoly = PolynomialFeatures(include_bias=False)\nprint(poly.fit_transform([[2, 3]]))",
+   "verifyExpect": "[[2. 3. 4. 6. 9.]]",
+   "accept": [
+    "include_bias"
+   ]
+  },
+  {
+   "id": "F07W04",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "특성이 2개인 데이터를 <span class=\"mono\">PolynomialFeatures(include_bias=False)</span> 로 변환하면 특성은 모두 몇 개가 되는지 쓰시오.",
+   "code": "",
+   "answer": "5",
+   "why": "원래 특성 2개(x0, x1), 제곱 2개(x0², x1²), 서로 곱한 것 1개(x0·x1)로 5개입니다.",
+   "tags": [
+    "PolynomialFeatures"
+   ],
+   "verifyCode": "import numpy as np\nperch_length = np.array([8.4, 13.7, 15.0, 16.2, 17.4, 18.0, 18.7, 19.0, 19.6, 20.0, 21.0, 21.0, 21.0, 21.3, 22.0, 22.0, 22.0, 22.0, 22.0, 22.5, 22.5, 22.7, 23.0, 23.5, 24.0, 24.0, 24.6, 25.0, 25.6, 26.5, 27.3, 27.5, 27.5, 27.5, 28.0, 28.7, 30.0, 32.8, 34.5, 35.0, 36.5, 36.0, 37.0, 37.0, 39.0, 39.0, 39.0, 40.0, 40.0, 40.0, 40.0, 42.0, 43.0, 43.0, 43.5, 44.0])\nperch_weight = np.array([5.9, 32.0, 40.0, 51.5, 70.0, 100.0, 78.0, 80.0, 85.0, 85.0, 110.0, 115.0, 125.0, 130.0, 120.0, 120.0, 130.0, 135.0, 110.0, 130.0, 150.0, 145.0, 150.0, 170.0, 225.0, 145.0, 188.0, 180.0, 197.0, 218.0, 300.0, 260.0, 265.0, 250.0, 250.0, 300.0, 320.0, 514.0, 556.0, 840.0, 685.0, 700.0, 700.0, 690.0, 900.0, 650.0, 820.0, 850.0, 900.0, 1015.0, 820.0, 1100.0, 1000.0, 1100.0, 1000.0, 1000.0])\n\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression, Ridge, Lasso\nfrom sklearn.preprocessing import PolynomialFeatures, StandardScaler\nprint(PolynomialFeatures(include_bias=False).fit_transform([[2, 3]]).shape[1])",
+   "verifyExpect": "5",
+   "accept": [
+    "5",
+    "5개",
+    "다섯",
+    "다섯 개"
+   ]
+  },
+  {
+   "id": "F07W05",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "어떤 모델의 훈련 세트 점수가 0.99999, 테스트 세트 점수가 −144.4 였다. 이 모델의 상태를 무엇이라고 하는지 쓰시오.",
+   "code": "",
+   "answer": "과대적합",
+   "why": "훈련 세트는 거의 완벽하게 맞히지만 테스트 세트에서는 형편없는 것은 훈련 세트에 지나치게 맞춰진 과대적합입니다.",
+   "tags": [
+    "과대적합"
+   ],
+   "accept": [
+    "과대적합",
+    "과대 적합",
+    "overfitting",
+    "오버피팅",
+    "과적합",
+    "과대적합(overfitting)"
+   ]
+  },
+  {
+   "id": "F07W06",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "빈칸 ㉠ 에 들어갈 매개변수 이름을 쓰시오. (릿지와 라쏘에서 규제의 강도를 정한다.)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">0.9828</span></span>",
+   "code": "ridge = Ridge(㉠=0.1)\nridge.fit(train_scaled, train_target)\nprint(round(ridge.score(test_scaled, test_target), 4))",
+   "answer": "alpha",
+   "why": "<span class=\"mono\">alpha</span> 가 클수록 규제가 강해집니다.",
+   "tags": [
+    "alpha"
+   ],
+   "verifyCode": "import numpy as np\nperch_length = np.array([8.4, 13.7, 15.0, 16.2, 17.4, 18.0, 18.7, 19.0, 19.6, 20.0, 21.0, 21.0, 21.0, 21.3, 22.0, 22.0, 22.0, 22.0, 22.0, 22.5, 22.5, 22.7, 23.0, 23.5, 24.0, 24.0, 24.6, 25.0, 25.6, 26.5, 27.3, 27.5, 27.5, 27.5, 28.0, 28.7, 30.0, 32.8, 34.5, 35.0, 36.5, 36.0, 37.0, 37.0, 39.0, 39.0, 39.0, 40.0, 40.0, 40.0, 40.0, 42.0, 43.0, 43.0, 43.5, 44.0])\nperch_weight = np.array([5.9, 32.0, 40.0, 51.5, 70.0, 100.0, 78.0, 80.0, 85.0, 85.0, 110.0, 115.0, 125.0, 130.0, 120.0, 120.0, 130.0, 135.0, 110.0, 130.0, 150.0, 145.0, 150.0, 170.0, 225.0, 145.0, 188.0, 180.0, 197.0, 218.0, 300.0, 260.0, 265.0, 250.0, 250.0, 300.0, 320.0, 514.0, 556.0, 840.0, 685.0, 700.0, 700.0, 690.0, 900.0, 650.0, 820.0, 850.0, 900.0, 1015.0, 820.0, 1100.0, 1000.0, 1100.0, 1000.0, 1000.0])\n\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression, Ridge, Lasso\nfrom sklearn.preprocessing import PolynomialFeatures, StandardScaler\n\nperch_full = pd.read_csv('perch_full.csv').to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(perch_full, perch_weight, random_state=42)\n\npoly = PolynomialFeatures(degree=5, include_bias=False)\npoly.fit(train_input)\ntrain_poly = poly.transform(train_input)\ntest_poly = poly.transform(test_input)\n\nss = StandardScaler()\nss.fit(train_poly)\ntrain_scaled = ss.transform(train_poly)\ntest_scaled = ss.transform(test_poly)\nridge = Ridge(alpha=0.1)\nridge.fit(train_scaled, train_target)\nprint(round(ridge.score(test_scaled, test_target), 4))",
+   "verifyExpect": "0.9828",
+   "accept": [
+    "alpha"
+   ]
+  },
+  {
+   "id": "F07W07",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "<span class=\"mono\">lr.coef_</span> 가 <span class=\"mono\">[39.02]</span>, <span class=\"mono\">lr.intercept_</span> 가 <span class=\"mono\">-709.02</span> 인 선형회귀 모델로 길이 20cm 인 농어의 무게를 예측한 값을 소수 둘째 자리까지 구하시오.",
+   "code": "",
+   "answer": "71.38",
+   "why": "39.02 × 20 − 709.02 = 780.4 − 709.02 = 71.38 입니다.",
+   "tags": [
+    "선형식 계산"
+   ],
+   "verifyCode": "print(round(39.02 * 20 - 709.02, 2))",
+   "verifyExpect": "71.38",
+   "accept": [
+    "71.38",
+    "71.4",
+    "71.38g"
+   ]
+  },
+  {
+   "id": "F07E01",
+   "type": "서술형",
+   "typeKey": "essay",
+   "mode": "essay",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "농어의 길이로 무게를 예측할 때 길이의 제곱을 특성으로 추가해 <b>무게 = a × 길이² + b × 길이 + c</b> 꼴의 식을 학습했다. 식에 2차항이 있는데도 이 모델을 선형회귀라고 부를 수 있는 이유를 설명하시오.",
+   "code": "",
+   "answer": "길이²을 '왕길이' 같은 새로운 변수 하나로 바꿔 생각하면 식이 무게 = a × 왕길이 + b × 길이 + c 가 된다. 즉 무게는 두 특성(왕길이, 길이)에 계수를 곱해 더한 선형 관계로 표현되므로 선형회귀이다.",
+   "why": "AI 채점 결과입니다.",
+   "tags": [
+    "다항회귀",
+    "선형",
+    "서술형"
+   ],
+   "rubric": "필수 요소: 길이의 제곱을 새로운 변수(특성) 하나로 치환하면 특성들의 선형식(계수×특성의 합)이 된다는 취지. '그래프가 직선이라서'는 오답(그래프는 곡선)."
+  },
+  {
+   "id": "F07E02",
+   "type": "서술형",
+   "typeKey": "essay",
+   "mode": "essay",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "농어의 길이, 높이, 두께 3개 특성을 <span class=\"mono\">PolynomialFeatures(degree=5, include_bias=False)</span> 로 55개로 늘려 선형회귀 모델을 훈련했더니 훈련 세트 점수는 0.9999, 테스트 세트 점수는 −144.4 가 나왔다(훈련 샘플 42개). 이 결과가 뜻하는 것과 그 원인을 쓰고, 해결 방법을 한 가지 쓰시오.",
+   "code": "",
+   "answer": "훈련 세트는 거의 완벽하게 맞히지만 테스트 세트는 전혀 맞히지 못하는 과대적합이다. 특성이 55개로 훈련 샘플 수(42개)보다 많아 모델이 훈련 세트에 지나치게 맞춰졌기 때문이다. 해결하려면 특성 수를 줄이거나(degree 를 낮춤), 릿지·라쏘 같은 규제를 적용한다.",
+   "why": "AI 채점 결과입니다.",
+   "tags": [
+    "과대적합",
+    "규제",
+    "서술형"
+   ],
+   "verifyCode": "import numpy as np\nperch_length = np.array([8.4, 13.7, 15.0, 16.2, 17.4, 18.0, 18.7, 19.0, 19.6, 20.0, 21.0, 21.0, 21.0, 21.3, 22.0, 22.0, 22.0, 22.0, 22.0, 22.5, 22.5, 22.7, 23.0, 23.5, 24.0, 24.0, 24.6, 25.0, 25.6, 26.5, 27.3, 27.5, 27.5, 27.5, 28.0, 28.7, 30.0, 32.8, 34.5, 35.0, 36.5, 36.0, 37.0, 37.0, 39.0, 39.0, 39.0, 40.0, 40.0, 40.0, 40.0, 42.0, 43.0, 43.0, 43.5, 44.0])\nperch_weight = np.array([5.9, 32.0, 40.0, 51.5, 70.0, 100.0, 78.0, 80.0, 85.0, 85.0, 110.0, 115.0, 125.0, 130.0, 120.0, 120.0, 130.0, 135.0, 110.0, 130.0, 150.0, 145.0, 150.0, 170.0, 225.0, 145.0, 188.0, 180.0, 197.0, 218.0, 300.0, 260.0, 265.0, 250.0, 250.0, 300.0, 320.0, 514.0, 556.0, 840.0, 685.0, 700.0, 700.0, 690.0, 900.0, 650.0, 820.0, 850.0, 900.0, 1015.0, 820.0, 1100.0, 1000.0, 1100.0, 1000.0, 1000.0])\n\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression, Ridge, Lasso\nfrom sklearn.preprocessing import PolynomialFeatures, StandardScaler\n\nperch_full = pd.read_csv('perch_full.csv').to_numpy()\ntrain_input, test_input, train_target, test_target = train_test_split(perch_full, perch_weight, random_state=42)\npoly = PolynomialFeatures(degree=5, include_bias=False)\npoly.fit(train_input)\ntrain_poly = poly.transform(train_input)\ntest_poly = poly.transform(test_input)\nlr = LinearRegression()\nlr.fit(train_poly, train_target)\nprint(train_poly.shape)",
+   "verifyExpect": "(42, 55)",
+   "rubric": "필수 요소(모두 있어야 정답): (1) 과대적합이라는 판정. (2) 원인: 특성이 너무 많다/모델이 훈련 세트에 지나치게 맞춰졌다는 취지. (3) 해결: 규제(릿지, 라쏘) 적용 또는 특성 수(차수) 줄이기 중 하나."
+  },
+  {
+   "id": "F07E03",
+   "type": "서술형",
+   "typeKey": "essay",
+   "mode": "essay",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "릿지 회귀와 라쏘 회귀는 모두 선형회귀에 규제를 더한 모델이다. 두 모델이 계수를 규제하는 방식의 차이를 설명하시오.",
+   "code": "",
+   "answer": "릿지는 계수의 제곱을 기준으로 규제해서 모든 특성의 계수를 작게 줄이지만 0 으로 만들지는 않는다(여러 특성을 유지하되 영향력을 줄임). 라쏘는 계수의 절댓값을 기준으로 규제해서 일부 특성의 계수를 정확히 0 으로 만들 수 있다(일부 특성을 아예 사용하지 않음).",
+   "why": "AI 채점 결과입니다.",
+   "tags": [
+    "릿지",
+    "라쏘",
+    "서술형"
+   ],
+   "rubric": "필수 요소(모두 있어야 정답): (1) 릿지: 계수를 작게 줄인다(0 이 되지는 않는다) 또는 계수의 제곱 기준. (2) 라쏘: 일부 계수를 0 으로 만들 수 있다(일부 특성을 쓰지 않는다) 또는 계수의 절댓값 기준. 두 모델의 설명이 서로 바뀌면 오답."
+  },
+  {
+   "id": "F07E04",
+   "type": "서술형",
+   "typeKey": "essay",
+   "mode": "essay",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "릿지 회귀에서 <span class=\"mono\">alpha</span> 값을 크게 할 때와 작게 할 때 모델이 각각 어떻게 달라지는지 과대적합, 과소적합과 관련지어 설명하고, 적절한 <span class=\"mono\">alpha</span> 값은 어떻게 찾는지 쓰시오.",
+   "code": "",
+   "answer": "alpha 가 크면 규제가 강해져 계수가 더 작아지고 모델이 단순해져 과소적합 쪽으로 간다. alpha 가 작으면 규제가 약해져 훈련 세트에 더 잘 맞게 되어 과대적합 쪽으로 간다. 여러 alpha 값으로 모델을 훈련해 훈련 세트와 테스트 세트의 점수를 그래프로 그리고, 두 점수가 가장 가깝고 테스트 세트 점수가 가장 높은 alpha 를 고른다.",
+   "why": "AI 채점 결과입니다.",
+   "tags": [
+    "alpha",
+    "규제",
+    "서술형"
+   ],
+   "rubric": "필수 요소(모두 있어야 정답): (1) alpha 가 크면 규제가 강해져 과소적합 쪽. (2) alpha 가 작으면 규제가 약해져 과대적합 쪽. (3) 여러 alpha 로 훈련·테스트 점수를 비교해(그래프) 테스트 점수가 가장 높은(두 점수가 가까운) 값을 고른다는 취지. 방향이 반대면 오답."
+  },
+  {
+   "id": "F07E05",
+   "type": "서술형",
+   "typeKey": "essay",
+   "mode": "essay",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "릿지나 라쏘 같은 규제를 적용하기 전에는 <span class=\"mono\">StandardScaler</span> 로 특성을 표준화해야 한다. 그 이유를 설명하시오.",
+   "code": "",
+   "answer": "규제는 계수의 크기를 기준으로 벌점을 준다. 특성마다 값의 범위(스케일)가 다르면 계수의 크기도 그에 따라 제각각이 되어, 스케일 때문에 계수가 큰 특성만 더 심하게 규제받는 등 공정하게 규제되지 않는다. 표준화로 스케일을 맞추면 모든 특성의 계수가 같은 기준에서 규제된다.",
+   "why": "AI 채점 결과입니다.",
+   "tags": [
+    "표준화",
+    "규제",
+    "서술형"
+   ],
+   "rubric": "필수 요소: (1) 규제가 계수의 크기에 벌점을 준다는 점. (2) 특성의 스케일이 다르면 계수의 크기가 달라져 공정하게 규제되지 않는다는 점. 두 취지가 드러나야 정답. '점수가 좋아져서'만 쓰면 오답."
+  },
+  {
+   "id": "F07E06",
+   "type": "서술형",
+   "typeKey": "essay",
+   "mode": "essay",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "농어의 길이 한 가지 특성으로 훈련한 선형회귀 모델의 식이 <b>무게 = 39 × 길이 − 709</b> 였다. 이 식으로 길이 5cm 인 농어의 무게를 계산하고, 그 결과에서 알 수 있는 이 모델의 문제점을 쓰시오.",
+   "code": "",
+   "answer": "39 × 5 − 709 = −514. 무게가 음수로 예측된다. 무게는 음수가 될 수 없으므로, 직선 하나로는 길이가 짧은 농어의 무게를 제대로 예측하지 못한다. (실제 데이터는 길이가 길수록 무게가 더 가파르게 늘어나는 곡선 모양이라 직선으로는 한계가 있다.)",
+   "why": "AI 채점 결과입니다.",
+   "tags": [
+    "선형회귀",
+    "한계",
+    "서술형"
+   ],
+   "verifyCode": "print(39 * 5 - 709)",
+   "verifyExpect": "-514",
+   "rubric": "필수 요소(모두 있어야 정답): (1) 계산 결과 −514 (음수). (2) 무게가 음수가 되는 것은 현실과 맞지 않는다/직선 모델로는 짧은 농어의 무게를 제대로 예측하지 못한다는 문제점."
+  },
+  {
+   "id": "F07E07",
+   "type": "서술형",
+   "typeKey": "essay",
+   "mode": "essay",
+   "src": "기말.7.특성공학과규제(과대적합,과소적합)",
+   "stem": "<span class=\"mono\">PolynomialFeatures(include_bias=False)</span> 로 샘플 <span class=\"mono\">[2, 3]</span> 을 변환한 결과를 쓰고, 결과의 각 값이 어떻게 만들어졌는지 설명하시오.",
+   "code": "",
+   "answer": "[2, 3, 4, 6, 9]\n2 와 3 은 원래 특성, 4 는 첫 번째 특성의 제곱(2²), 6 은 두 특성의 곱(2 × 3), 9 는 두 번째 특성의 제곱(3²)이다.",
+   "why": "AI 채점 결과입니다.",
+   "tags": [
+    "PolynomialFeatures",
+    "서술형"
+   ],
+   "verifyCode": "import numpy as np\nperch_length = np.array([8.4, 13.7, 15.0, 16.2, 17.4, 18.0, 18.7, 19.0, 19.6, 20.0, 21.0, 21.0, 21.0, 21.3, 22.0, 22.0, 22.0, 22.0, 22.0, 22.5, 22.5, 22.7, 23.0, 23.5, 24.0, 24.0, 24.6, 25.0, 25.6, 26.5, 27.3, 27.5, 27.5, 27.5, 28.0, 28.7, 30.0, 32.8, 34.5, 35.0, 36.5, 36.0, 37.0, 37.0, 39.0, 39.0, 39.0, 40.0, 40.0, 40.0, 40.0, 42.0, 43.0, 43.0, 43.5, 44.0])\nperch_weight = np.array([5.9, 32.0, 40.0, 51.5, 70.0, 100.0, 78.0, 80.0, 85.0, 85.0, 110.0, 115.0, 125.0, 130.0, 120.0, 120.0, 130.0, 135.0, 110.0, 130.0, 150.0, 145.0, 150.0, 170.0, 225.0, 145.0, 188.0, 180.0, 197.0, 218.0, 300.0, 260.0, 265.0, 250.0, 250.0, 300.0, 320.0, 514.0, 556.0, 840.0, 685.0, 700.0, 700.0, 690.0, 900.0, 650.0, 820.0, 850.0, 900.0, 1015.0, 820.0, 1100.0, 1000.0, 1100.0, 1000.0, 1000.0])\n\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression, Ridge, Lasso\nfrom sklearn.preprocessing import PolynomialFeatures, StandardScaler\nprint(PolynomialFeatures(include_bias=False).fit_transform([[2, 3]]))",
+   "verifyExpect": "[[2. 3. 4. 6. 9.]]",
+   "rubric": "필수 요소(모두 있어야 정답): (1) 결과 [2, 3, 4, 6, 9] (순서 포함, 2. 3. 처럼 실수 표기도 정답). (2) 4 = 2², 6 = 2×3, 9 = 3² 이라는 설명. 맨 앞에 1 을 넣으면 오답(include_bias=False)."
+  }
+ ]
+}
