@@ -1,0 +1,1108 @@
+{
+ "version": 1,
+ "generatedAt": "2026-11-11",
+ "source": [
+  "기말.4.선형회귀.ipynb"
+ ],
+ "verified": "verifyCode 가 있는 문항은 파이썬(numpy 2.5, pandas 3.0, scikit-learn 1.9)에서 실제로 실행해 정답을 확인함. ref 가 있는 문항은 코드로 검증할 수 없는 개념이나 텐서플로 실행 결과라서 노트북 본문(해당 셀)과 저장된 출력을 근거로 둠. 서술형(essay)은 AI 가 rubric 으로 채점하며, 계산이 들어간 모범 답안은 verifyCode 로 실행 확인함.",
+ "types": [
+  {
+   "key": "classify",
+   "label": "개념 분류",
+   "pick": [
+    1,
+    2
+   ],
+   "note": "코드를 보고 <보기>에서 옳은 설명을 모두 고르는 문항"
+  },
+  {
+   "key": "blank2",
+   "label": "빈칸",
+   "pick": [
+    1,
+    2
+   ],
+   "note": "㉠, ㉡ 두 빈칸을 짝으로 고르는 문항"
+  },
+  {
+   "key": "boundary",
+   "label": "경계값",
+   "pick": [
+    1,
+    2
+   ],
+   "note": "포함/미포함, 개수·크기의 경계를 판별하는 문항"
+  },
+  {
+   "key": "trace",
+   "label": "상태 예측",
+   "pick": [
+    1,
+    2
+   ],
+   "note": "출력값·shape 등 실행 결과를 예측하는 문항"
+  },
+  {
+   "key": "contrast",
+   "label": "대조",
+   "pick": [
+    1,
+    2
+   ],
+   "note": "거의 같은 두 코드의 결정적 차이를 묻는 문항"
+  },
+  {
+   "key": "spec",
+   "label": "조건 매핑",
+   "pick": [
+    1,
+    1
+   ],
+   "note": "[조건]을 만족하는 코드를 고르는 문항"
+  },
+  {
+   "key": "short",
+   "label": "서답형",
+   "pick": [
+    1,
+    1
+   ],
+   "note": "빈칸에 들어갈 코드나 계산 결과를 직접 쓰는 문항"
+  },
+  {
+   "key": "essay",
+   "label": "서술형",
+   "pick": [
+    1,
+    1
+   ],
+   "note": "이유 설명·계산 과정을 서술하는 문항 (AI 채점)"
+  }
+ ],
+ "questions": [
+  {
+   "id": "F04C01",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "기말.4.선형회귀",
+   "stem": "insurance.csv 에는 age, sex, bmi, children, smoker, region, charges 열이 있고 sex, smoker, region 은 문자열이다. 다음 코드를 실행한 뒤의 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) <span class=\"mono\">df.shape</span> 은 <span class=\"mono\">(1338, 7)</span> 이다.<br>(나) <span class=\"mono\">df.describe()</span> 의 결과에는 <span class=\"mono\">sex</span>, <span class=\"mono\">smoker</span>, <span class=\"mono\">region</span> 열이 나오지 않는다.<br>(다) <span class=\"mono\">df.isna().sum()</span> 은 결측치가 있는 행의 수를 숫자 하나로 돌려준다.</span>",
+   "code": "df = pd.read_csv(\"insurance.csv\")",
+   "answer": "(가), (나)",
+   "why": "<span class=\"mono\">describe()</span> 는 수치형 열의 통계만 보여 주므로 문자열 열 세 개는 빠집니다. <span class=\"mono\">isna().sum()</span> 은 숫자 하나가 아니라 <b>열마다</b> 결측치 개수를 돌려줍니다.",
+   "tags": [
+    "read_csv",
+    "describe",
+    "isna"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.preprocessing import MinMaxScaler, StandardScaler\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import r2_score\ndf = pd.read_csv(\"insurance.csv\")\nprint(df.shape == (1338, 7), set(df.describe().columns) == {'age', 'bmi', 'children', 'charges'})",
+   "verifyExpect": "True True",
+   "options": [
+    "(가)",
+    "(나)",
+    "(가), (나)",
+    "(가), (다)",
+    "(나), (다)"
+   ]
+  },
+  {
+   "id": "F04C02",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "기말.4.선형회귀",
+   "stem": "다음 코드에 대한 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) <span class=\"mono\">df</span> 에서도 <span class=\"mono\">region</span> 열이 사라진다.<br>(나) <span class=\"mono\">df2</span> 의 열은 <span class=\"mono\">age</span>, <span class=\"mono\">sex</span> 두 개이다.<br>(다) <span class=\"mono\">df2['sex']</span> 의 값은 차례로 1, 0 이다.</span>",
+   "code": "df = pd.DataFrame({'age': [19, 18], 'sex': ['female', 'male'], 'region': ['sw', 'se']})\ndf2 = df.drop('region', axis=1)\ndf2['sex'] = df2['sex'].replace({'male': 0, 'female': 1})",
+   "answer": "(나), (다)",
+   "why": "<span class=\"mono\">drop()</span> 은 원본을 바꾸지 않고 열을 뺀 <b>새 데이터프레임</b>을 돌려주므로 <span class=\"mono\">df</span> 에는 <span class=\"mono\">region</span> 이 그대로 있습니다. <span class=\"mono\">replace</span> 는 딕셔너리의 짝대로 female → 1, male → 0 으로 바꿉니다.",
+   "tags": [
+    "drop",
+    "replace"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.preprocessing import MinMaxScaler, StandardScaler\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import r2_score\ndf = pd.DataFrame({'age': [19, 18], 'sex': ['female', 'male'], 'region': ['sw', 'se']})\ndf2 = df.drop('region', axis=1)\ndf2['sex'] = df2['sex'].replace({'male': 0, 'female': 1})\nprint('region' not in df.columns, list(df2.columns) == ['age', 'sex'], df2['sex'].tolist() == [1, 0])",
+   "verifyExpect": "False True True",
+   "options": [
+    "(나)",
+    "(가), (나)",
+    "(가), (다)",
+    "(나), (다)",
+    "(가), (나), (다)"
+   ]
+  },
+  {
+   "id": "F04C03",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "기말.4.선형회귀",
+   "stem": "다음 코드에 대한 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은? (<span class=\"mono\">df</span> 는 보험 데이터 1338행. 열은 age, sex, bmi, children, smoker, charges 이고 sex 와 smoker 는 0/1 로 바꾼 상태)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) <span class=\"mono\">X</span> 는 데이터프레임, <span class=\"mono\">y</span> 는 시리즈이다.<br>(나) <span class=\"mono\">X.shape</span> 은 <span class=\"mono\">(1338, 4)</span> 이다.<br>(다) <span class=\"mono\">y</span> 는 모델이 맞혀야 하는 값(종속변수)이다.</span>",
+   "code": "X = df[['age', 'bmi', 'smoker']]\ny = df['charges']",
+   "answer": "(가), (다)",
+   "why": "대괄호를 두 겹으로 쓰면 여러 열을 고른 데이터프레임, 한 겹이면 열 하나인 시리즈입니다. 고른 열이 3개이므로 <span class=\"mono\">X.shape</span> 은 <span class=\"mono\">(1338, 3)</span> 입니다. 보험료 <span class=\"mono\">charges</span> 가 예측 대상입니다.",
+   "tags": [
+    "독립변수",
+    "종속변수",
+    "열 선택"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.preprocessing import MinMaxScaler, StandardScaler\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import r2_score\n\nraw = pd.read_csv('insurance.csv')\ndf = raw.drop('region', axis=1)\ndf['sex'] = df['sex'].map({'male': 0, 'female': 1})\ndf['smoker'] = df['smoker'].map({'no': 0, 'yes': 1})\nX = df[['age', 'bmi', 'smoker']]\ny = df['charges']\nprint(type(X).__name__ == 'DataFrame' and type(y).__name__ == 'Series', X.shape == (1338, 4))",
+   "verifyExpect": "True False",
+   "options": [
+    "(가)",
+    "(가), (나)",
+    "(가), (다)",
+    "(나), (다)",
+    "(가), (나), (다)"
+   ]
+  },
+  {
+   "id": "F04C04",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "기말.4.선형회귀",
+   "stem": "<span class=\"mono\">X</span> 는 age, bmi, smoker 세 열로 된 데이터프레임(1338행)이다. 다음 코드에 대한 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) <span class=\"mono\">normalized_data</span> 의 각 열은 최솟값이 0, 최댓값이 1이다.<br>(나) <span class=\"mono\">normalized_data</span> 의 각 열은 평균이 0이다.<br>(다) <span class=\"mono\">normalized_data.shape</span> 은 <span class=\"mono\">(1338, 3)</span> 이다.</span>",
+   "code": "scaler = MinMaxScaler()\nnormalized_data = scaler.fit_transform(X.values)",
+   "answer": "(가), (다)",
+   "why": "Min-Max 정규화는 열마다 최솟값을 0, 최댓값을 1로 맞춥니다. 평균을 0으로 맞추는 것은 표준화(표준점수)입니다. 값만 바뀌고 모양은 그대로입니다.",
+   "tags": [
+    "MinMaxScaler",
+    "정규화"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.preprocessing import MinMaxScaler, StandardScaler\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import r2_score\n\nraw = pd.read_csv('insurance.csv')\ndf = raw.drop('region', axis=1)\ndf['sex'] = df['sex'].map({'male': 0, 'female': 1})\ndf['smoker'] = df['smoker'].map({'no': 0, 'yes': 1})\n\nX = df[['age', 'bmi', 'smoker']]\ny = df['charges']\nscaler = MinMaxScaler()\nnormalized_data = scaler.fit_transform(X.values)\nprint(bool(np.allclose(normalized_data.min(axis=0), 0) and np.allclose(normalized_data.max(axis=0), 1)), bool(np.allclose(normalized_data.mean(axis=0), 0)), normalized_data.shape == (1338, 3))",
+   "verifyExpect": "True False True",
+   "options": [
+    "(가)",
+    "(다)",
+    "(가), (나)",
+    "(가), (다)",
+    "(나), (다)"
+   ]
+  },
+  {
+   "id": "F04C05",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "기말.4.선형회귀",
+   "stem": "결정계수 R² 에 대한 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) R² = 0.8 은 예측 정확도가 80%라는 뜻이다.<br>(나) R² 의 최댓값은 1이다.<br>(다) 평균으로 예측하는 것보다 오차가 크면 R² 는 음수가 된다.</span>",
+   "code": "",
+   "answer": "(나), (다)",
+   "why": "R² 는 '평균으로 예측하는 기준 모델보다 제곱오차 합을 얼마나 줄였는가'를 나타냅니다. 모든 예측이 맞으면 1, 평균 예측과 같으면 0, 그보다 나쁘면 음수입니다. 정확도(맞힌 비율)와는 다른 지표입니다.",
+   "tags": [
+    "R²",
+    "결정계수"
+   ],
+   "ref": "셀 [35] R² Score 설명",
+   "options": [
+    "(가)",
+    "(다)",
+    "(가), (나)",
+    "(가), (다)",
+    "(나), (다)"
+   ]
+  },
+  {
+   "id": "F04C06",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "기말.4.선형회귀",
+   "stem": "<span class=\"mono\">train_test_split(X, y, test_size=0.3, random_state=10)</span> 으로 나눈 뒤 다음 코드를 실행했다. 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은? (<span class=\"mono\">X</span> 는 age, bmi, smoker 를 Min-Max 정규화한 데이터프레임(1338행), <span class=\"mono\">y</span> 는 charges. <span class=\"mono\">scaler</span> 는 정규화에 쓴 <span class=\"mono\">MinMaxScaler</span> 객체)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) <span class=\"mono\">linear_model.score(X_test, y_test)</span> 와 <span class=\"mono\">r2_score(y_test, linear_predict)</span> 는 같은 값이다.<br>(나) <span class=\"mono\">len(linear_predict)</span> 는 402이다.<br>(다) <span class=\"mono\">linear_predict</span> 의 값은 모두 0 이상이다.</span>",
+   "code": "linear_model = LinearRegression()\nlinear_model.fit(X_train, y_train)\nlinear_predict = linear_model.predict(X_test)",
+   "answer": "(가), (나)",
+   "why": "회귀 모델의 <span class=\"mono\">score()</span> 는 결정계수 R² 를 돌려주므로 <span class=\"mono\">r2_score(실제값, 예측값)</span> 과 같습니다. 테스트 세트는 1338 × 0.3 을 올림한 402개입니다. 선형 모델의 출력에는 범위 제한이 없어 예측값 중에 음수(−596.89)도 있습니다.",
+   "tags": [
+    "score",
+    "r2_score",
+    "predict"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.preprocessing import MinMaxScaler, StandardScaler\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import r2_score\n\nraw = pd.read_csv('insurance.csv')\ndf = raw.drop('region', axis=1)\ndf['sex'] = df['sex'].map({'male': 0, 'female': 1})\ndf['smoker'] = df['smoker'].map({'no': 0, 'yes': 1})\n\nX = df[['age', 'bmi', 'smoker']]\ny = df['charges']\n\nscaler = MinMaxScaler()\nnormalized_data = scaler.fit_transform(X.values)\nX = pd.DataFrame(normalized_data, columns=X.columns)\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=10)\nlinear_model = LinearRegression()\nlinear_model.fit(X_train, y_train)\nlinear_model = LinearRegression()\nlinear_model.fit(X_train, y_train)\nlinear_predict = linear_model.predict(X_test)\nprint(bool(np.isclose(linear_model.score(X_test, y_test), r2_score(y_test, linear_predict))), len(linear_predict) == 402, bool((linear_predict >= 0).all()))",
+   "verifyExpect": "True True False",
+   "options": [
+    "(나)",
+    "(가), (나)",
+    "(가), (다)",
+    "(나), (다)",
+    "(가), (나), (다)"
+   ]
+  },
+  {
+   "id": "F04C07",
+   "type": "개념 분류",
+   "typeKey": "classify",
+   "mode": "mc",
+   "src": "기말.4.선형회귀",
+   "stem": "다음 코드에 대한 설명으로 옳은 것만 &lt;보기&gt;에서 모두 고른 것은? (<span class=\"mono\">df</span> 는 보험 데이터 1338행. 열은 age, sex, bmi, children, smoker, charges 이고 sex 와 smoker 는 0/1 로 바꾼 상태)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;보기&gt;</b><br>(가) <span class=\"mono\">corr</span> 는 속성 쌍마다 상관계수를 담은 6행 6열 표이다.<br>(나) 보험료(<span class=\"mono\">charges</span>)와 상관계수가 가장 큰 속성은 <span class=\"mono\">age</span> 이다.<br>(다) <span class=\"mono\">sns.heatmap(corr, annot=True)</span> 의 <span class=\"mono\">annot=True</span> 는 칸마다 숫자를 표시한다.</span>",
+   "code": "corr = df.corr()",
+   "answer": "(가), (다)",
+   "why": "보험료와 상관계수가 가장 큰 속성은 흡연 여부 <span class=\"mono\">smoker</span> (약 0.79)입니다. <span class=\"mono\">age</span> 는 약 0.30, <span class=\"mono\">bmi</span> 는 약 0.20 입니다. 그래서 노트북은 age, bmi, smoker 를 학습 속성으로 골랐습니다.",
+   "tags": [
+    "corr",
+    "heatmap",
+    "상관계수"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.preprocessing import MinMaxScaler, StandardScaler\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import r2_score\n\nraw = pd.read_csv('insurance.csv')\ndf = raw.drop('region', axis=1)\ndf['sex'] = df['sex'].map({'male': 0, 'female': 1})\ndf['smoker'] = df['smoker'].map({'no': 0, 'yes': 1})\ncorr = df.corr()\nprint(corr.shape == (6, 6), corr['charges'].drop('charges').idxmax() == 'age')",
+   "verifyExpect": "True False",
+   "options": [
+    "(가)",
+    "(나)",
+    "(가), (나)",
+    "(가), (다)",
+    "(나), (다)"
+   ]
+  },
+  {
+   "id": "F04B01",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "기말.4.선형회귀",
+   "stem": "㉠, ㉡에 들어갈 것으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">(1338, 7)</span></span>",
+   "code": "df = pd.㉠(\"insurance.csv\")\nprint(df.㉡)",
+   "answer": "㉠ read_csv  ·  ㉡ shape",
+   "why": "csv 파일은 <span class=\"mono\">pd.read_csv()</span> 로 읽고, (행 수, 열 수)는 괄호 없이 <span class=\"mono\">df.shape</span> 으로 봅니다.",
+   "tags": [
+    "read_csv",
+    "shape"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.preprocessing import MinMaxScaler, StandardScaler\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import r2_score\ndf = pd.read_csv(\"insurance.csv\")\nprint(df.shape)",
+   "verifyExpect": "(1338, 7)",
+   "options": [
+    "㉠ read_csv  ·  ㉡ size",
+    "㉠ read_csv  ·  ㉡ shape()",
+    "㉠ read  ·  ㉡ shape",
+    "㉠ load_csv  ·  ㉡ shape",
+    "㉠ read_csv  ·  ㉡ shape"
+   ]
+  },
+  {
+   "id": "F04B02",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "기말.4.선형회귀",
+   "stem": "㉠, ㉡에 들어갈 것으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">['age', 'bmi']</span></span>",
+   "code": "df = pd.DataFrame({'age': [19, 18], 'bmi': [27.9, 33.8], 'region': ['sw', 'se']})\ndf = df.㉠('region', axis=㉡)\nprint(list(df.columns))",
+   "answer": "㉠ drop  ·  ㉡ 1",
+   "why": "행이나 열을 지우는 메서드는 <span class=\"mono\">drop</span> 이고, <b>열</b>을 지울 때는 <span class=\"mono\">axis=1</span> 입니다. <span class=\"mono\">axis=0</span> 은 행을 지웁니다.",
+   "tags": [
+    "drop",
+    "axis"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.preprocessing import MinMaxScaler, StandardScaler\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import r2_score\ndf = pd.DataFrame({'age': [19, 18], 'bmi': [27.9, 33.8], 'region': ['sw', 'se']})\ndf = df.drop('region', axis=1)\nprint(list(df.columns))",
+   "verifyExpect": "['age', 'bmi']",
+   "options": [
+    "㉠ delete  ·  ㉡ 1",
+    "㉠ drop  ·  ㉡ 0",
+    "㉠ drop  ·  ㉡ 1",
+    "㉠ dropna  ·  ㉡ 0",
+    "㉠ remove  ·  ㉡ 1"
+   ]
+  },
+  {
+   "id": "F04B03",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "기말.4.선형회귀",
+   "stem": "㉠, ㉡에 들어갈 것으로 알맞은 것은? (<span class=\"mono\">df</span> 는 보험 데이터 1338행. 열은 age, sex, bmi, children, smoker, charges 이고 sex 와 smoker 는 0/1 로 바꾼 상태)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">(1338, 3) (1338,)</span></span>",
+   "code": "X = df[㉠]\ny = df[㉡]\nprint(X.shape, y.shape)",
+   "answer": "㉠ ['age', 'bmi', 'smoker']  ·  ㉡ 'charges'",
+   "why": "열을 여러 개 고를 때는 열 이름의 <b>리스트</b>를 넣어 대괄호가 두 겹이 됩니다. <span class=\"mono\">y</span> 는 shape 이 <span class=\"mono\">(1338,)</span> 인 시리즈이므로 열 이름 하나만 넣습니다.",
+   "tags": [
+    "열 선택"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.preprocessing import MinMaxScaler, StandardScaler\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import r2_score\n\nraw = pd.read_csv('insurance.csv')\ndf = raw.drop('region', axis=1)\ndf['sex'] = df['sex'].map({'male': 0, 'female': 1})\ndf['smoker'] = df['smoker'].map({'no': 0, 'yes': 1})\nX = df[['age', 'bmi', 'smoker']]\ny = df['charges']\nprint(X.shape, y.shape)",
+   "verifyExpect": "(1338, 3) (1338,)",
+   "options": [
+    "㉠ ['age', 'bmi', 'smoker']  ·  ㉡ 'charges'",
+    "㉠ ['age', 'bmi']  ·  ㉡ 'charges'",
+    "㉠ ['charges']  ·  ㉡ 'age'",
+    "㉠ 'age', 'bmi', 'smoker'  ·  ㉡ 'charges'",
+    "㉠ ['age', 'bmi', 'smoker']  ·  ㉡ ['charges']"
+   ]
+  },
+  {
+   "id": "F04B04",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "기말.4.선형회귀",
+   "stem": "㉠, ㉡에 들어갈 것으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">0.0 1.0</span></span>",
+   "code": "scaler = ㉠()\nnormalized_data = scaler.㉡(X.values)\nprint(normalized_data.min(), normalized_data.max())",
+   "answer": "㉠ MinMaxScaler  ·  ㉡ fit_transform",
+   "why": "0~1 로 맞추는 변환기는 <span class=\"mono\">MinMaxScaler</span> 이고, 기준 계산과 변환을 한 번에 하는 메서드는 <span class=\"mono\">fit_transform</span> 입니다. <span class=\"mono\">fit</span> 을 하지 않고 <span class=\"mono\">transform</span> 만 부르면 오류가 납니다.",
+   "tags": [
+    "MinMaxScaler",
+    "fit_transform"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.preprocessing import MinMaxScaler, StandardScaler\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import r2_score\n\nraw = pd.read_csv('insurance.csv')\ndf = raw.drop('region', axis=1)\ndf['sex'] = df['sex'].map({'male': 0, 'female': 1})\ndf['smoker'] = df['smoker'].map({'no': 0, 'yes': 1})\n\nX = df[['age', 'bmi', 'smoker']]\ny = df['charges']\nscaler = MinMaxScaler()\nnormalized_data = scaler.fit_transform(X.values)\nprint(normalized_data.min(), normalized_data.max())",
+   "verifyExpect": "0.0 1.0",
+   "options": [
+    "㉠ StandardScaler  ·  ㉡ fit_transform",
+    "㉠ MinMaxScaler  ·  ㉡ fit_transform",
+    "㉠ MinMaxScaler  ·  ㉡ fit",
+    "㉠ MinMaxScaler  ·  ㉡ transform",
+    "㉠ Normalizer  ·  ㉡ fit_transform"
+   ]
+  },
+  {
+   "id": "F04B05",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "기말.4.선형회귀",
+   "stem": "㉠, ㉡에 들어갈 것으로 알맞은 것은? (<span class=\"mono\">X</span> 는 age, bmi, smoker 를 Min-Max 정규화한 데이터프레임(1338행), <span class=\"mono\">y</span> 는 charges. <span class=\"mono\">scaler</span> 는 정규화에 쓴 <span class=\"mono\">MinMaxScaler</span> 객체)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">936 402</span></span>",
+   "code": "X_train, X_test, y_train, y_test = train_test_split(X, y, ㉠=0.3, random_state=10)\nprint(len(X_train), len(㉡))",
+   "answer": "㉠ test_size  ·  ㉡ X_test",
+   "why": "<span class=\"mono\">test_size=0.3</span> 이면 1338개 중 30%(올림해서 402개)가 테스트 세트, 나머지 936개가 훈련 세트입니다.",
+   "tags": [
+    "test_size"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.preprocessing import MinMaxScaler, StandardScaler\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import r2_score\n\nraw = pd.read_csv('insurance.csv')\ndf = raw.drop('region', axis=1)\ndf['sex'] = df['sex'].map({'male': 0, 'female': 1})\ndf['smoker'] = df['smoker'].map({'no': 0, 'yes': 1})\n\nX = df[['age', 'bmi', 'smoker']]\ny = df['charges']\n\nscaler = MinMaxScaler()\nnormalized_data = scaler.fit_transform(X.values)\nX = pd.DataFrame(normalized_data, columns=X.columns)\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=10)\nlinear_model = LinearRegression()\nlinear_model.fit(X_train, y_train)\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=10)\nprint(len(X_train), len(X_test))",
+   "verifyExpect": "936 402",
+   "options": [
+    "㉠ test_size  ·  ㉡ X",
+    "㉠ test_size  ·  ㉡ y_train",
+    "㉠ size  ·  ㉡ X_test",
+    "㉠ test_size  ·  ㉡ X_test",
+    "㉠ train_size  ·  ㉡ X_test"
+   ]
+  },
+  {
+   "id": "F04B06",
+   "type": "빈칸",
+   "typeKey": "blank2",
+   "mode": "mc",
+   "src": "기말.4.선형회귀",
+   "stem": "㉠, ㉡에 들어갈 것으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">0.719</span></span>",
+   "code": "linear_model = ㉠()\nlinear_model.fit(X_train, y_train)\nprint(round(linear_model.㉡(X_test, y_test), 3))",
+   "answer": "㉠ LinearRegression  ·  ㉡ score",
+   "why": "선형회귀 모델은 <span class=\"mono\">LinearRegression</span> 이고, <span class=\"mono\">score(입력, 정답)</span> 이 결정계수 R² 를 돌려줍니다.",
+   "tags": [
+    "LinearRegression",
+    "score"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.preprocessing import MinMaxScaler, StandardScaler\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import r2_score\n\nraw = pd.read_csv('insurance.csv')\ndf = raw.drop('region', axis=1)\ndf['sex'] = df['sex'].map({'male': 0, 'female': 1})\ndf['smoker'] = df['smoker'].map({'no': 0, 'yes': 1})\n\nX = df[['age', 'bmi', 'smoker']]\ny = df['charges']\n\nscaler = MinMaxScaler()\nnormalized_data = scaler.fit_transform(X.values)\nX = pd.DataFrame(normalized_data, columns=X.columns)\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=10)\nlinear_model = LinearRegression()\nlinear_model.fit(X_train, y_train)\nlinear_model = LinearRegression()\nlinear_model.fit(X_train, y_train)\nprint(round(linear_model.score(X_test, y_test), 3))",
+   "verifyExpect": "0.719",
+   "options": [
+    "㉠ LinearRegression  ·  ㉡ r2_score",
+    "㉠ Regression  ·  ㉡ score",
+    "㉠ LinearModel  ·  ㉡ score",
+    "㉠ LinearRegression  ·  ㉡ predict",
+    "㉠ LinearRegression  ·  ㉡ score"
+   ]
+  },
+  {
+   "id": "F04D01",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "mode": "mc",
+   "src": "기말.4.선형회귀",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은? (<span class=\"mono\">X</span> 는 age, bmi, smoker 를 Min-Max 정규화한 데이터프레임(1338행), <span class=\"mono\">y</span> 는 charges. <span class=\"mono\">scaler</span> 는 정규화에 쓴 <span class=\"mono\">MinMaxScaler</span> 객체)",
+   "code": "X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=10)\nprint(len(X_train), len(X_test))",
+   "answer": "936 402",
+   "why": "1338 × 0.3 = 401.4 를 올림해 테스트 세트가 402개, 나머지 936개가 훈련 세트입니다.",
+   "tags": [
+    "test_size",
+    "올림"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.preprocessing import MinMaxScaler, StandardScaler\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import r2_score\n\nraw = pd.read_csv('insurance.csv')\ndf = raw.drop('region', axis=1)\ndf['sex'] = df['sex'].map({'male': 0, 'female': 1})\ndf['smoker'] = df['smoker'].map({'no': 0, 'yes': 1})\n\nX = df[['age', 'bmi', 'smoker']]\ny = df['charges']\n\nscaler = MinMaxScaler()\nnormalized_data = scaler.fit_transform(X.values)\nX = pd.DataFrame(normalized_data, columns=X.columns)\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=10)\nlinear_model = LinearRegression()\nlinear_model.fit(X_train, y_train)\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=10)\nprint(len(X_train), len(X_test))",
+   "verifyExpect": "936 402",
+   "options": [
+    "936 402",
+    "1003 335",
+    "402 936",
+    "937 401",
+    "1338 402"
+   ]
+  },
+  {
+   "id": "F04D02",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "mode": "mc",
+   "src": "기말.4.선형회귀",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "data = np.array([[10.0], [20.0], [50.0]])\nprint(MinMaxScaler().fit_transform(data).ravel().tolist())",
+   "answer": "[0.0, 0.25, 1.0]",
+   "why": "(x − 최솟값) ÷ (최댓값 − 최솟값) 입니다. 20은 (20 − 10) ÷ (50 − 10) = 0.25 입니다. 단순히 최댓값으로 나눈 0.4 가 아닙니다.",
+   "tags": [
+    "MinMaxScaler"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.preprocessing import MinMaxScaler, StandardScaler\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import r2_score\ndata = np.array([[10.0], [20.0], [50.0]])\nprint(MinMaxScaler().fit_transform(data).ravel().tolist())",
+   "verifyExpect": "[0.0, 0.25, 1.0]",
+   "options": [
+    "[0.0, 0.2, 1.0]",
+    "[0.0, 0.5, 1.0]",
+    "[-1.0, 0.0, 1.0]",
+    "[0.0, 0.25, 1.0]",
+    "[0.2, 0.4, 1.0]"
+   ]
+  },
+  {
+   "id": "F04D03",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "mode": "mc",
+   "src": "기말.4.선형회귀",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "scaler = MinMaxScaler()\nscaler.fit(np.array([[10.0], [20.0], [50.0]]))\nprint(scaler.transform(np.array([[60.0], [0.0]])).ravel().tolist())",
+   "answer": "[1.25, -0.25]",
+   "why": "<span class=\"mono\">transform</span> 은 <span class=\"mono\">fit</span> 때 정해진 최솟값 10, 최댓값 50 을 그대로 씁니다. 60은 (60 − 10) ÷ 40 = 1.25, 0은 (0 − 10) ÷ 40 = −0.25 로, 기준 범위를 벗어난 새 데이터는 0~1 밖의 값이 됩니다.",
+   "tags": [
+    "transform",
+    "범위"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.preprocessing import MinMaxScaler, StandardScaler\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import r2_score\nscaler = MinMaxScaler()\nscaler.fit(np.array([[10.0], [20.0], [50.0]]))\nprint(scaler.transform(np.array([[60.0], [0.0]])).ravel().tolist())",
+   "verifyExpect": "[1.25, -0.25]",
+   "options": [
+    "[60.0, 0.0]",
+    "[1.25, -0.25]",
+    "[1.0, 0.0]",
+    "[1.0, -0.25]",
+    "[1.2, 0.0]"
+   ]
+  },
+  {
+   "id": "F04D04",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "mode": "mc",
+   "src": "기말.4.선형회귀",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "df = pd.DataFrame({'a': [1, None, 3], 'b': [None, None, 6]})\nprint(df.isna().sum().tolist())",
+   "answer": "[1, 2]",
+   "why": "<span class=\"mono\">isna()</span> 는 결측이면 True 이고 <span class=\"mono\">sum()</span> 은 열마다 True 의 개수를 셉니다. a 열에 1개, b 열에 2개입니다.",
+   "tags": [
+    "isna",
+    "결측치"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.preprocessing import MinMaxScaler, StandardScaler\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import r2_score\ndf = pd.DataFrame({'a': [1, None, 3], 'b': [None, None, 6]})\nprint(df.isna().sum().tolist())",
+   "verifyExpect": "[1, 2]",
+   "options": [
+    "[3]",
+    "[2, 2, 0]",
+    "[1, 2]",
+    "[2, 1]",
+    "[1, 1]"
+   ]
+  },
+  {
+   "id": "F04D05",
+   "type": "경계값",
+   "typeKey": "boundary",
+   "mode": "mc",
+   "src": "기말.4.선형회귀",
+   "stem": "insurance.csv 는 데이터가 1338행인 파일이다. 다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "df = pd.read_csv(\"insurance.csv\")\nprint(len(df.head()), len(df.head(3)), len(df))",
+   "answer": "5 3 1338",
+   "why": "<span class=\"mono\">head()</span> 는 기본으로 앞 5행, <span class=\"mono\">head(3)</span> 은 앞 3행을 보여 줍니다. <span class=\"mono\">len(df)</span> 는 전체 행 수입니다.",
+   "tags": [
+    "head"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.preprocessing import MinMaxScaler, StandardScaler\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import r2_score\ndf = pd.read_csv(\"insurance.csv\")\nprint(len(df.head()), len(df.head(3)), len(df))",
+   "verifyExpect": "5 3 1338",
+   "options": [
+    "5 4 1338",
+    "5 3 7",
+    "10 3 1338",
+    "1 3 1338",
+    "5 3 1338"
+   ]
+  },
+  {
+   "id": "F04R01",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "기말.4.선형회귀",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은? (<span class=\"mono\">df</span> 는 보험 데이터 1338행. 열은 age, sex, bmi, children, smoker, charges 이고 sex 와 smoker 는 0/1 로 바꾼 상태)",
+   "code": "X = df[['age', 'bmi', 'smoker']]\ny = df['charges']\nprint(X.shape, y.shape)",
+   "answer": "(1338, 3) (1338,)",
+   "why": "열 3개를 고른 데이터프레임은 <span class=\"mono\">(1338, 3)</span>, 열 하나인 시리즈는 1차원이라 <span class=\"mono\">(1338,)</span> 입니다.",
+   "tags": [
+    "shape",
+    "열 선택"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.preprocessing import MinMaxScaler, StandardScaler\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import r2_score\n\nraw = pd.read_csv('insurance.csv')\ndf = raw.drop('region', axis=1)\ndf['sex'] = df['sex'].map({'male': 0, 'female': 1})\ndf['smoker'] = df['smoker'].map({'no': 0, 'yes': 1})\nX = df[['age', 'bmi', 'smoker']]\ny = df['charges']\nprint(X.shape, y.shape)",
+   "verifyExpect": "(1338, 3) (1338,)",
+   "options": [
+    "(1338, 6) (1338,)",
+    "(3, 1338) (1338,)",
+    "(1338, 3) (1338,)",
+    "(1338, 3) (1338, 1)",
+    "(1338,) (1338,)"
+   ]
+  },
+  {
+   "id": "F04R02",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "기말.4.선형회귀",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "s = pd.Series(['no', 'yes', 'no'])\nprint(s.replace({'no': 0, 'yes': 1}).tolist())",
+   "answer": "[0, 1, 0]",
+   "why": "<span class=\"mono\">replace</span> 에 딕셔너리를 넘기면 키를 값으로 바꿉니다. no → 0, yes → 1 입니다. 범주형 데이터를 수치형으로 바꾸는 전처리입니다.",
+   "tags": [
+    "replace"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.preprocessing import MinMaxScaler, StandardScaler\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import r2_score\ns = pd.Series(['no', 'yes', 'no'])\nprint(s.replace({'no': 0, 'yes': 1}).tolist())",
+   "verifyExpect": "[0, 1, 0]",
+   "options": [
+    "[0, 1, 0]",
+    "[False, True, False]",
+    "[0, 1]",
+    "[1, 0, 1]",
+    "['no', 'yes', 'no']"
+   ]
+  },
+  {
+   "id": "F04R03",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "기말.4.선형회귀",
+   "stem": "<span class=\"mono\">scaler</span> 는 age(최소 18, 최대 64), bmi(최소 15.96, 최대 53.13), smoker(최소 0, 최대 1) 로 <span class=\"mono\">fit</span> 한 <span class=\"mono\">MinMaxScaler</span> 이다. 다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "print(scaler.transform([[35, 28.5, 1]]).round(4).tolist())",
+   "answer": "[[0.3696, 0.3374, 1.0]]",
+   "why": "나이 (35 − 18) ÷ (64 − 18) = 0.3696, bmi (28.5 − 15.96) ÷ (53.13 − 15.96) = 0.3374, 흡연 (1 − 0) ÷ (1 − 0) = 1.0 입니다.",
+   "tags": [
+    "transform",
+    "정규화 계산"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.preprocessing import MinMaxScaler, StandardScaler\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import r2_score\n\nraw = pd.read_csv('insurance.csv')\ndf = raw.drop('region', axis=1)\ndf['sex'] = df['sex'].map({'male': 0, 'female': 1})\ndf['smoker'] = df['smoker'].map({'no': 0, 'yes': 1})\n\nX = df[['age', 'bmi', 'smoker']]\ny = df['charges']\n\nscaler = MinMaxScaler()\nnormalized_data = scaler.fit_transform(X.values)\nX = pd.DataFrame(normalized_data, columns=X.columns)\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=10)\nlinear_model = LinearRegression()\nlinear_model.fit(X_train, y_train)\nprint(scaler.transform([[35, 28.5, 1]]).round(4).tolist())",
+   "verifyExpect": "[[0.3696, 0.3374, 1.0]]",
+   "options": [
+    "[[0.0, 0.0, 0.0]]",
+    "[[0.3696, 0.3374, 1.0]]",
+    "[[0.5469, 0.5364, 1.0]]",
+    "[[0.3696, 0.3374, 0.5]]",
+    "[[35.0, 28.5, 1.0]]"
+   ]
+  },
+  {
+   "id": "F04R04",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "기말.4.선형회귀",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "y_true = [1, 2, 3]\nprint(r2_score(y_true, [1, 2, 3]), r2_score(y_true, [2, 2, 2]))",
+   "answer": "1.0 0.0",
+   "why": "모든 예측이 실제값과 같으면 R² = 1 입니다. 실제값의 평균인 2로만 예측하면 '평균으로 예측하는 기준 모델'과 같아서 R² = 0 입니다.",
+   "tags": [
+    "R²"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.preprocessing import MinMaxScaler, StandardScaler\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import r2_score\ny_true = [1, 2, 3]\nprint(r2_score(y_true, [1, 2, 3]), r2_score(y_true, [2, 2, 2]))",
+   "verifyExpect": "1.0 0.0",
+   "options": [
+    "1.0 -1.0",
+    "1.0 0.5",
+    "0.0 1.0",
+    "1.0 0.0",
+    "100.0 0.0"
+   ]
+  },
+  {
+   "id": "F04R05",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "기말.4.선형회귀",
+   "stem": "다음 코드를 실행했을 때 출력되는 것은?",
+   "code": "print(r2_score([1, 2, 3], [3, 2, 1]))",
+   "answer": "-3.0",
+   "why": "오차 제곱의 합은 4 + 0 + 4 = 8, 평균(2)으로 예측했을 때의 오차 제곱의 합은 1 + 0 + 1 = 2 입니다. R² = 1 − 8 ÷ 2 = −3 으로, 평균 예측보다 나쁘면 음수가 됩니다.",
+   "tags": [
+    "R²",
+    "음수"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.preprocessing import MinMaxScaler, StandardScaler\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import r2_score\nprint(r2_score([1, 2, 3], [3, 2, 1]))",
+   "verifyExpect": "-3.0",
+   "options": [
+    "-1.0",
+    "0.0",
+    "1.0",
+    "3.0",
+    "-3.0"
+   ]
+  },
+  {
+   "id": "F04R06",
+   "type": "상태 예측",
+   "typeKey": "trace",
+   "mode": "mc",
+   "src": "기말.4.선형회귀",
+   "stem": "테스트 세트는 402개이고, 예측값 중에는 −596.89 가 있다. 다음 코드를 실행했을 때 출력되는 것은? (<span class=\"mono\">X</span> 는 age, bmi, smoker 를 Min-Max 정규화한 데이터프레임(1338행), <span class=\"mono\">y</span> 는 charges. <span class=\"mono\">scaler</span> 는 정규화에 쓴 <span class=\"mono\">MinMaxScaler</span> 객체)",
+   "code": "pred = linear_model.predict(X_test)\nprint(type(pred).__name__, pred.shape, bool((pred < 0).any()))",
+   "answer": "ndarray (402,) True",
+   "why": "<span class=\"mono\">predict</span> 는 샘플마다 예측값 하나씩을 담은 1차원 넘파이 배열을 돌려줍니다. 선형 모델은 출력 범위에 제한이 없어 음수 예측도 나옵니다.",
+   "tags": [
+    "predict"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.preprocessing import MinMaxScaler, StandardScaler\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import r2_score\n\nraw = pd.read_csv('insurance.csv')\ndf = raw.drop('region', axis=1)\ndf['sex'] = df['sex'].map({'male': 0, 'female': 1})\ndf['smoker'] = df['smoker'].map({'no': 0, 'yes': 1})\n\nX = df[['age', 'bmi', 'smoker']]\ny = df['charges']\n\nscaler = MinMaxScaler()\nnormalized_data = scaler.fit_transform(X.values)\nX = pd.DataFrame(normalized_data, columns=X.columns)\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=10)\nlinear_model = LinearRegression()\nlinear_model.fit(X_train, y_train)\npred = linear_model.predict(X_test)\nprint(type(pred).__name__, pred.shape, bool((pred < 0).any()))",
+   "verifyExpect": "ndarray (402,) True",
+   "options": [
+    "DataFrame (402, 1) False",
+    "ndarray (402,) False",
+    "ndarray (402,) True",
+    "ndarray (936,) True",
+    "list (402,) True"
+   ]
+  },
+  {
+   "id": "F04X01",
+   "type": "대조",
+   "typeKey": "contrast",
+   "mode": "mc",
+   "src": "기말.4.선형회귀",
+   "stem": "다음은 거의 같은 두 코드이다. ㉠, ㉡에 출력되는 값으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">방법1 → ㉠<br>방법2 → ㉡</span></span>",
+   "code": "scaler = MinMaxScaler()\n# 방법1\nprint(scaler.fit_transform(np.array([[10.0], [20.0], [50.0]]))[1][0])\n\n# 방법2\nprint(scaler.transform(np.array([[30.0]]))[0][0])",
+   "answer": "㉠ 0.25  ·  ㉡ 0.5",
+   "why": "<span class=\"mono\">fit_transform</span> 에서 최솟값 10, 최댓값 50 이 기준으로 정해져 20은 0.25 가 됩니다. 그 뒤의 <span class=\"mono\">transform</span> 은 같은 기준을 써서 30을 (30 − 10) ÷ 40 = 0.5 로 바꿉니다.",
+   "tags": [
+    "fit_transform",
+    "transform"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.preprocessing import MinMaxScaler, StandardScaler\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import r2_score\nscaler = MinMaxScaler()\n# 방법1\nprint(scaler.fit_transform(np.array([[10.0], [20.0], [50.0]]))[1][0])\n\n# 방법2\nprint(scaler.transform(np.array([[30.0]]))[0][0])",
+   "verifyExpect": "0.25\n0.5",
+   "options": [
+    "㉠ 0.5  ·  ㉡ 0.5",
+    "㉠ 0.4  ·  ㉡ 0.6",
+    "㉠ 0.25  ·  ㉡ 0.5",
+    "㉠ 0.25  ·  ㉡ 0.0",
+    "㉠ 0.25  ·  ㉡ 1.0"
+   ]
+  },
+  {
+   "id": "F04X02",
+   "type": "대조",
+   "typeKey": "contrast",
+   "mode": "mc",
+   "src": "기말.4.선형회귀",
+   "stem": "㉠, ㉡에 출력되는 값으로 알맞은 것은? (<span class=\"mono\">df</span> 는 보험 데이터 1338행. 열은 age, sex, bmi, children, smoker, charges 이고 sex 와 smoker 는 0/1 로 바꾼 상태)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">방법1 → ㉠<br>방법2 → ㉡</span></span>",
+   "code": "# 방법1\nprint(df[['age']].shape)\n\n# 방법2\nprint(df['age'].shape)",
+   "answer": "㉠ (1338, 1)  ·  ㉡ (1338,)",
+   "why": "대괄호 두 겹은 열이 하나뿐이어도 2차원 데이터프레임 <span class=\"mono\">(1338, 1)</span> 이고, 한 겹은 1차원 시리즈 <span class=\"mono\">(1338,)</span> 입니다.",
+   "tags": [
+    "열 선택",
+    "shape"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.preprocessing import MinMaxScaler, StandardScaler\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import r2_score\n\nraw = pd.read_csv('insurance.csv')\ndf = raw.drop('region', axis=1)\ndf['sex'] = df['sex'].map({'male': 0, 'female': 1})\ndf['smoker'] = df['smoker'].map({'no': 0, 'yes': 1})\n# 방법1\nprint(df[['age']].shape)\n\n# 방법2\nprint(df['age'].shape)",
+   "verifyExpect": "(1338, 1)\n(1338,)",
+   "options": [
+    "㉠ (1, 1338)  ·  ㉡ (1338,)",
+    "㉠ (1338, 1)  ·  ㉡ (1338, 1)",
+    "㉠ (1338,)  ·  ㉡ (1338,)",
+    "㉠ (1338,)  ·  ㉡ (1338, 1)",
+    "㉠ (1338, 1)  ·  ㉡ (1338,)"
+   ]
+  },
+  {
+   "id": "F04X03",
+   "type": "대조",
+   "typeKey": "contrast",
+   "mode": "mc",
+   "src": "기말.4.선형회귀",
+   "stem": "다음은 거의 같은 두 코드이다. ㉠, ㉡에 출력되는 값으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">방법1 → ㉠<br>방법2 → ㉡</span></span>",
+   "code": "df = pd.DataFrame({'a': [1, 2, 3], 'b': [4, 5, 6], 'c': [7, 8, 9]})\n# 방법1\nprint(df.drop('b', axis=1).shape)\n\n# 방법2\nprint(df.drop(1, axis=0).shape)",
+   "answer": "㉠ (3, 2)  ·  ㉡ (2, 3)",
+   "why": "<span class=\"mono\">axis=1</span> 은 열을 지워서 3행 2열, <span class=\"mono\">axis=0</span> 은 인덱스 1인 행을 지워서 2행 3열이 됩니다.",
+   "tags": [
+    "drop",
+    "axis"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.preprocessing import MinMaxScaler, StandardScaler\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import r2_score\ndf = pd.DataFrame({'a': [1, 2, 3], 'b': [4, 5, 6], 'c': [7, 8, 9]})\n# 방법1\nprint(df.drop('b', axis=1).shape)\n\n# 방법2\nprint(df.drop(1, axis=0).shape)",
+   "verifyExpect": "(3, 2)\n(2, 3)",
+   "options": [
+    "㉠ (2, 3)  ·  ㉡ (3, 2)",
+    "㉠ (3, 2)  ·  ㉡ (3, 2)",
+    "㉠ (3, 2)  ·  ㉡ (3, 3)",
+    "㉠ (3, 2)  ·  ㉡ (2, 3)",
+    "㉠ (3, 3)  ·  ㉡ (3, 3)"
+   ]
+  },
+  {
+   "id": "F04X04",
+   "type": "대조",
+   "typeKey": "contrast",
+   "mode": "mc",
+   "src": "기말.4.선형회귀",
+   "stem": "다음은 거의 같은 두 코드이다. ㉠, ㉡에 출력되는 값으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">방법1 → ㉠<br>방법2 → ㉡</span></span>",
+   "code": "d = np.array([[0.0], [10.0]])\n# 방법1\nprint(MinMaxScaler().fit_transform(d).ravel().tolist())\n\n# 방법2\nprint(StandardScaler().fit_transform(d).ravel().tolist())",
+   "answer": "㉠ [0.0, 1.0]  ·  ㉡ [-1.0, 1.0]",
+   "why": "Min-Max 정규화는 최솟값을 0, 최댓값을 1로 만듭니다. 표준화는 (값 − 평균) ÷ 표준편차라서 평균 5, 표준편차 5인 이 데이터는 −1 과 1 이 됩니다.",
+   "tags": [
+    "정규화",
+    "표준화"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.preprocessing import MinMaxScaler, StandardScaler\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import r2_score\nd = np.array([[0.0], [10.0]])\n# 방법1\nprint(MinMaxScaler().fit_transform(d).ravel().tolist())\n\n# 방법2\nprint(StandardScaler().fit_transform(d).ravel().tolist())",
+   "verifyExpect": "[0.0, 1.0]\n[-1.0, 1.0]",
+   "options": [
+    "㉠ [0.0, 1.0]  ·  ㉡ [0.0, 1.0]",
+    "㉠ [0.0, 1.0]  ·  ㉡ [-1.0, 1.0]",
+    "㉠ [0.0, 10.0]  ·  ㉡ [-5.0, 5.0]",
+    "㉠ [-1.0, 1.0]  ·  ㉡ [0.0, 1.0]",
+    "㉠ [0.0, 1.0]  ·  ㉡ [-0.5, 0.5]"
+   ]
+  },
+  {
+   "id": "F04X05",
+   "type": "대조",
+   "typeKey": "contrast",
+   "mode": "mc",
+   "src": "기말.4.선형회귀",
+   "stem": "다음은 거의 같은 두 코드이다. ㉠, ㉡에 출력되는 값으로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">방법1 → ㉠<br>방법2 → ㉡</span></span>",
+   "code": "df = pd.DataFrame({'a': [1, 2], 'b': [3, 4], 'c': [5, 6]})\n# 방법1\ndf.drop('b', axis=1)\nprint(len(df.columns))\n\n# 방법2\ndf = df.drop('b', axis=1)\nprint(len(df.columns))",
+   "answer": "㉠ 3  ·  ㉡ 2",
+   "why": "<span class=\"mono\">drop()</span> 은 원본을 바꾸지 않습니다. 결과를 다시 <span class=\"mono\">df</span> 에 넣어야 열이 실제로 줄어듭니다.",
+   "tags": [
+    "drop",
+    "대입"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.preprocessing import MinMaxScaler, StandardScaler\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import r2_score\ndf = pd.DataFrame({'a': [1, 2], 'b': [3, 4], 'c': [5, 6]})\n# 방법1\ndf.drop('b', axis=1)\nprint(len(df.columns))\n\n# 방법2\ndf = df.drop('b', axis=1)\nprint(len(df.columns))",
+   "verifyExpect": "3\n2",
+   "options": [
+    "㉠ 3  ·  ㉡ 2",
+    "㉠ 3  ·  ㉡ 1",
+    "㉠ 2  ·  ㉡ 1",
+    "㉠ 3  ·  ㉡ 3",
+    "㉠ 2  ·  ㉡ 2"
+   ]
+  },
+  {
+   "id": "F04S01",
+   "type": "조건 매핑",
+   "typeKey": "spec",
+   "mode": "mc",
+   "src": "기말.4.선형회귀",
+   "stem": "다음 [조건]을 모두 만족하는 코드로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>[조건]</b><br>○ <span class=\"mono\">df</span> 에서 age, bmi, smoker 세 열만 골라 독립변수로 쓴다.<br>○ 결과는 shape 이 <span class=\"mono\">(1338, 3)</span> 인 데이터프레임이다.</span>",
+   "code": "X = ____",
+   "answer": "df[['age', 'bmi', 'smoker']]",
+   "why": "여러 열을 고를 때는 열 이름 리스트를 대괄호 안에 넣습니다.",
+   "tags": [
+    "열 선택"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.preprocessing import MinMaxScaler, StandardScaler\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import r2_score\n\nraw = pd.read_csv('insurance.csv')\ndf = raw.drop('region', axis=1)\ndf['sex'] = df['sex'].map({'male': 0, 'female': 1})\ndf['smoker'] = df['smoker'].map({'no': 0, 'yes': 1})\nX = df[['age', 'bmi', 'smoker']]\nprint(X.shape, list(X.columns))",
+   "verifyExpect": "(1338, 3) ['age', 'bmi', 'smoker']",
+   "options": [
+    "df['age', 'bmi', 'smoker']",
+    "df[['charges']]",
+    "df['age'] + df['bmi'] + df['smoker']",
+    "df[['age', 'bmi', 'smoker']]",
+    "df.drop('charges')"
+   ]
+  },
+  {
+   "id": "F04S02",
+   "type": "조건 매핑",
+   "typeKey": "spec",
+   "mode": "mc",
+   "src": "기말.4.선형회귀",
+   "stem": "다음 [조건]을 모두 만족하는 코드로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>[조건]</b><br>○ <span class=\"mono\">region</span> <b>열</b>을 지운다.<br>○ 지운 결과가 <span class=\"mono\">df</span> 에 반영된다.</span>",
+   "code": "df = ____",
+   "answer": "df.drop('region', axis=1)",
+   "why": "열을 지울 때는 <span class=\"mono\">axis=1</span> 을 줍니다. <span class=\"mono\">axis</span> 를 생략하면 행 인덱스에서 'region' 을 찾다가 오류가 납니다.",
+   "tags": [
+    "drop",
+    "axis"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.preprocessing import MinMaxScaler, StandardScaler\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import r2_score\ndf = pd.read_csv('insurance.csv')\ndf = df.drop('region', axis=1)\nprint(df.shape, 'region' in df.columns)",
+   "verifyExpect": "(1338, 6) False",
+   "options": [
+    "df.drop('region', axis=1)",
+    "df.drop('region')",
+    "df['region'].drop()",
+    "df.remove('region', axis=1)",
+    "df.drop('region', axis=0)"
+   ]
+  },
+  {
+   "id": "F04S03",
+   "type": "조건 매핑",
+   "typeKey": "spec",
+   "mode": "mc",
+   "src": "기말.4.선형회귀",
+   "stem": "다음 [조건]을 모두 만족하는 코드로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>[조건]</b><br>○ 새 고객 데이터 <span class=\"mono\">new_customer</span> (age 35, bmi 28.5, smoker 1)를 정규화한다.<br>○ 학습 때 <span class=\"mono\">scaler</span> 가 정한 최솟값, 최댓값 기준을 <b>그대로</b> 쓴다.</span>",
+   "code": "new_customer_normalized = ____",
+   "answer": "scaler.transform(new_customer.values)",
+   "why": "<span class=\"mono\">fit_transform</span> 을 다시 부르면 새 데이터 한 줄만으로 기준을 새로 잡아 버려 모든 값이 0이 됩니다. 이미 <span class=\"mono\">fit</span> 한 <span class=\"mono\">scaler</span> 의 <span class=\"mono\">transform</span> 만 써야 합니다.",
+   "tags": [
+    "transform",
+    "새 데이터"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.preprocessing import MinMaxScaler, StandardScaler\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import r2_score\n\nraw = pd.read_csv('insurance.csv')\ndf = raw.drop('region', axis=1)\ndf['sex'] = df['sex'].map({'male': 0, 'female': 1})\ndf['smoker'] = df['smoker'].map({'no': 0, 'yes': 1})\n\nX = df[['age', 'bmi', 'smoker']]\ny = df['charges']\n\nscaler = MinMaxScaler()\nnormalized_data = scaler.fit_transform(X.values)\nX = pd.DataFrame(normalized_data, columns=X.columns)\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=10)\nlinear_model = LinearRegression()\nlinear_model.fit(X_train, y_train)\nnew_customer = pd.DataFrame([{'age': 35, 'bmi': 28.5, 'smoker': 1}])\nnew_customer_normalized = scaler.transform(new_customer.values)\nprint(np.round(new_customer_normalized, 4).tolist())",
+   "verifyExpect": "[[0.3696, 0.3374, 1.0]]",
+   "options": [
+    "new_customer.values / 100",
+    "scaler.fit(new_customer.values)",
+    "scaler.fit_transform(new_customer.values)",
+    "MinMaxScaler().fit_transform(new_customer.values)",
+    "scaler.transform(new_customer.values)"
+   ]
+  },
+  {
+   "id": "F04S04",
+   "type": "조건 매핑",
+   "typeKey": "spec",
+   "mode": "mc",
+   "src": "기말.4.선형회귀",
+   "stem": "다음 [조건]을 모두 만족하는 코드로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>[조건]</b><br>○ 데이터의 30%를 테스트 세트로 쓴다.<br>○ 실행할 때마다 같은 결과가 나오게 한다.</span>",
+   "code": "X_train, X_test, y_train, y_test = ____",
+   "answer": "train_test_split(X, y, test_size=0.3, random_state=10)",
+   "why": "비율은 <span class=\"mono\">test_size=0.3</span> 처럼 소수로 줍니다. <span class=\"mono\">test_size=30</span> 은 테스트 샘플 30개라는 뜻이고, 생략하면 25%입니다.",
+   "tags": [
+    "test_size"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.preprocessing import MinMaxScaler, StandardScaler\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import r2_score\n\nraw = pd.read_csv('insurance.csv')\ndf = raw.drop('region', axis=1)\ndf['sex'] = df['sex'].map({'male': 0, 'female': 1})\ndf['smoker'] = df['smoker'].map({'no': 0, 'yes': 1})\n\nX = df[['age', 'bmi', 'smoker']]\ny = df['charges']\n\nscaler = MinMaxScaler()\nnormalized_data = scaler.fit_transform(X.values)\nX = pd.DataFrame(normalized_data, columns=X.columns)\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=10)\nlinear_model = LinearRegression()\nlinear_model.fit(X_train, y_train)\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=10)\nprint(len(X_train), len(X_test))",
+   "verifyExpect": "936 402",
+   "options": [
+    "train_test_split(X, y, test_size=30, random_state=10)",
+    "train_test_split(X, y, random_state=10)",
+    "train_test_split(X, y, test_size=0.3, random_state=10)",
+    "train_test_split(X, y, test_size=0.7, random_state=10)",
+    "train_test_split(X, y, train_size=0.3, random_state=10)"
+   ]
+  },
+  {
+   "id": "F04S05",
+   "type": "조건 매핑",
+   "typeKey": "spec",
+   "mode": "mc",
+   "src": "기말.4.선형회귀",
+   "stem": "다음 [조건]을 모두 만족하는 코드로 알맞은 것은?<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>[조건]</b><br>○ <span class=\"mono\">smoker</span> 열의 문자열 'no' 를 0으로, 'yes' 를 1로 바꾼다.</span>",
+   "code": "df['smoker'] = ____",
+   "answer": "df['smoker'].replace({'no': 0, 'yes': 1})",
+   "why": "<span class=\"mono\">replace</span> 에 {바꿀 값: 새 값} 딕셔너리를 넘깁니다. 문자열 'yes' 는 <span class=\"mono\">astype(int)</span> 로 숫자가 되지 않습니다.",
+   "tags": [
+    "replace",
+    "범주형"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.preprocessing import MinMaxScaler, StandardScaler\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import r2_score\ndf = pd.DataFrame({'smoker': ['yes', 'no', 'no']})\ndf['smoker'] = df['smoker'].replace({'no': 0, 'yes': 1})\nprint(df['smoker'].tolist())",
+   "verifyExpect": "[1, 0, 0]",
+   "options": [
+    "df['smoker'].drop('no')",
+    "df['smoker'].replace({'no': 0, 'yes': 1})",
+    "df['smoker'].replace({'yes': 0, 'no': 1})",
+    "df['smoker'].replace('no', 'yes')",
+    "df['smoker'].astype(int)"
+   ]
+  },
+  {
+   "id": "F04W01",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "기말.4.선형회귀",
+   "stem": "나이 속성의 최솟값이 18, 최댓값이 64이다. 41세를 Min-Max 정규화한 값을 구하시오.",
+   "code": "",
+   "answer": "0.5",
+   "why": "(41 − 18) ÷ (64 − 18) = 23 ÷ 46 = 0.5 입니다.",
+   "tags": [
+    "정규화 계산"
+   ],
+   "verifyCode": "print((41 - 18) / (64 - 18))",
+   "verifyExpect": "0.5",
+   "accept": [
+    "0.5",
+    "0.50",
+    "1/2",
+    ".5",
+    "23/46"
+   ]
+  },
+  {
+   "id": "F04W02",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "기말.4.선형회귀",
+   "stem": "빈칸 ㉠ 에 들어갈 메서드 이름을 쓰시오. (값이 결측이면 True 로 표시한다.)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">[1, 1]</span></span>",
+   "code": "df = pd.DataFrame({'a': [1, None, 3], 'b': [4, 5, None]})\nprint(df.㉠().sum().tolist())",
+   "answer": "isna",
+   "why": "<span class=\"mono\">isna()</span> 로 결측 여부를 표시하고 <span class=\"mono\">sum()</span> 으로 열마다 개수를 셉니다. <span class=\"mono\">isnull()</span> 도 같은 기능입니다.",
+   "tags": [
+    "isna",
+    "결측치"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.preprocessing import MinMaxScaler, StandardScaler\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import r2_score\ndf = pd.DataFrame({'a': [1, None, 3], 'b': [4, 5, None]})\nprint(df.isna().sum().tolist())",
+   "verifyExpect": "[1, 1]",
+   "accept": [
+    "isna",
+    "isnull"
+   ]
+  },
+  {
+   "id": "F04W03",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "기말.4.선형회귀",
+   "stem": "빈칸 ㉠ 에 들어갈 메서드 이름을 쓰시오. (학습 때 정한 기준을 바꾸지 않고 새 데이터를 변환한다.)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">[[0.3696, 0.3374, 1.0]]</span></span>",
+   "code": "new_array = np.array([[35, 28.5, 1]])\nprint(scaler.㉠(new_array).round(4).tolist())",
+   "answer": "transform",
+   "why": "이미 <span class=\"mono\">fit</span> 한 변환기로 새 데이터를 바꿀 때는 <span class=\"mono\">transform</span> 만 씁니다.",
+   "tags": [
+    "transform"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.preprocessing import MinMaxScaler, StandardScaler\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import r2_score\n\nraw = pd.read_csv('insurance.csv')\ndf = raw.drop('region', axis=1)\ndf['sex'] = df['sex'].map({'male': 0, 'female': 1})\ndf['smoker'] = df['smoker'].map({'no': 0, 'yes': 1})\n\nX = df[['age', 'bmi', 'smoker']]\ny = df['charges']\n\nscaler = MinMaxScaler()\nnormalized_data = scaler.fit_transform(X.values)\nX = pd.DataFrame(normalized_data, columns=X.columns)\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=10)\nlinear_model = LinearRegression()\nlinear_model.fit(X_train, y_train)\nnew_array = np.array([[35, 28.5, 1]])\nprint(scaler.transform(new_array).round(4).tolist())",
+   "verifyExpect": "[[0.3696, 0.3374, 1.0]]",
+   "accept": [
+    "transform"
+   ]
+  },
+  {
+   "id": "F04W04",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "기말.4.선형회귀",
+   "stem": "빈칸 ㉠ 에 공통으로 들어갈 함수 이름을 쓰시오. (회귀 모델의 결정계수를 구한다.)<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">1.0</span></span>",
+   "code": "from sklearn.metrics import ㉠\nprint(㉠([1, 2, 3], [1, 2, 3]))",
+   "answer": "r2_score",
+   "why": "<span class=\"mono\">r2_score(실제값, 예측값)</span> 이 결정계수를 구합니다. 예측이 모두 맞아서 1.0 입니다.",
+   "tags": [
+    "r2_score"
+   ],
+   "verifyCode": "from sklearn.metrics import r2_score\nprint(r2_score([1, 2, 3], [1, 2, 3]))",
+   "verifyExpect": "1.0",
+   "accept": [
+    "r2_score"
+   ]
+  },
+  {
+   "id": "F04W05",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "기말.4.선형회귀",
+   "stem": "샘플 1000개를 <span class=\"mono\">train_test_split(X, y, test_size=0.3)</span> 으로 나누면 테스트 세트는 몇 개인지 쓰시오.",
+   "code": "",
+   "answer": "300",
+   "why": "1000 × 0.3 = 300개가 테스트 세트이고 나머지 700개가 훈련 세트입니다.",
+   "tags": [
+    "test_size"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.preprocessing import MinMaxScaler, StandardScaler\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import r2_score\nprint(len(train_test_split(np.zeros((1000, 1)), np.zeros(1000), test_size=0.3, random_state=0)[1]))",
+   "verifyExpect": "300",
+   "accept": [
+    "300",
+    "300개"
+   ]
+  },
+  {
+   "id": "F04W06",
+   "type": "서답형",
+   "typeKey": "short",
+   "mode": "text",
+   "src": "기말.4.선형회귀",
+   "stem": "빈칸 ㉠ 에 들어갈 매개변수 이름을 쓰시오.<span style=\"display:block;margin-top:9px;padding:9px 12px;background:rgba(22,35,58,.045);border-left:2px solid var(--rule);border-radius:2px\"><b>&lt;실행결과&gt;</b><br><span class=\"mono\" style=\"white-space:pre-wrap\">['age']</span></span>",
+   "code": "df = pd.DataFrame({'age': [19, 18], 'region': ['sw', 'se']})\ndf = df.drop('region', ㉠=1)\nprint(list(df.columns))",
+   "answer": "axis",
+   "why": "<span class=\"mono\">axis=1</span> 이 열 방향입니다.",
+   "tags": [
+    "drop",
+    "axis"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.preprocessing import MinMaxScaler, StandardScaler\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import r2_score\ndf = pd.DataFrame({'age': [19, 18], 'region': ['sw', 'se']})\ndf = df.drop('region', axis=1)\nprint(list(df.columns))",
+   "verifyExpect": "['age']",
+   "accept": [
+    "axis"
+   ]
+  },
+  {
+   "id": "F04E01",
+   "type": "서술형",
+   "typeKey": "essay",
+   "mode": "essay",
+   "src": "기말.4.선형회귀",
+   "stem": "선형회귀 모델의 <span class=\"mono\">score()</span> 값이 0.72로 나왔다. 이 값의 이름과 의미를 쓰고, '예측 정확도가 72%'라고 말하면 안 되는 이유를 설명하시오.",
+   "code": "",
+   "answer": "이 값은 결정계수(R²)이다. 모든 값을 평균으로 예측하는 기준 모델과 비교해 제곱오차의 합을 72% 줄였다는 뜻이다. 정확도는 분류에서 전체 중 맞힌 개수의 비율인데, 회귀는 연속적인 수치를 예측하므로 맞혔다/틀렸다로 셀 수 없고 R² 는 오차가 줄어든 정도를 나타내는 다른 지표이다.",
+   "why": "AI 채점 결과입니다.",
+   "tags": [
+    "R²",
+    "결정계수",
+    "서술형"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.preprocessing import MinMaxScaler, StandardScaler\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import r2_score\n\nraw = pd.read_csv('insurance.csv')\ndf = raw.drop('region', axis=1)\ndf['sex'] = df['sex'].map({'male': 0, 'female': 1})\ndf['smoker'] = df['smoker'].map({'no': 0, 'yes': 1})\n\nX = df[['age', 'bmi', 'smoker']]\ny = df['charges']\n\nscaler = MinMaxScaler()\nnormalized_data = scaler.fit_transform(X.values)\nX = pd.DataFrame(normalized_data, columns=X.columns)\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=10)\nlinear_model = LinearRegression()\nlinear_model.fit(X_train, y_train)\nprint(round(linear_model.score(X_test, y_test), 2))",
+   "verifyExpect": "0.72",
+   "rubric": "필수 요소(모두 있어야 정답): (1) 결정계수 또는 R² 라는 이름. (2) 평균으로 예측하는 것(기준 모델)과 비교해 오차(제곱오차 합)를 얼마나 줄였는지를 나타낸다는 의미. (3) 정확도(맞힌 비율)와는 다른 지표라는 점. '72%를 맞혔다'는 식의 설명은 오답."
+  },
+  {
+   "id": "F04E02",
+   "type": "서술형",
+   "typeKey": "essay",
+   "mode": "essay",
+   "src": "기말.4.선형회귀",
+   "stem": "학습 데이터는 <span class=\"mono\">scaler.fit_transform()</span> 으로 정규화했다. 예측하려는 새 고객 데이터를 정규화할 때는 <span class=\"mono\">scaler.fit_transform()</span> 이 아니라 <span class=\"mono\">scaler.transform()</span> 을 써야 한다. 그 이유를 설명하시오.",
+   "code": "",
+   "answer": "fit 은 최솟값과 최댓값 같은 변환 기준을 새로 계산한다. 새 데이터에 fit_transform 을 쓰면 새 데이터만으로 기준이 다시 정해져 학습 데이터와 다른 기준으로 변환된다. 모델은 학습 데이터의 기준으로 변환된 값으로 학습했으므로, 새 데이터도 같은 기준을 그대로 쓰는 transform 으로 변환해야 한다.",
+   "why": "AI 채점 결과입니다.",
+   "tags": [
+    "transform",
+    "fit_transform",
+    "서술형"
+   ],
+   "rubric": "필수 요소: (1) fit(또는 fit_transform)은 기준(최솟값·최댓값)을 새로 계산한다는 점. (2) 새 데이터도 학습 데이터와 같은 기준으로 변환해야 한다는 점. 두 가지 취지가 모두 드러나야 정답."
+  },
+  {
+   "id": "F04E03",
+   "type": "서술형",
+   "typeKey": "essay",
+   "mode": "essay",
+   "src": "기말.4.선형회귀",
+   "stem": "어떤 속성의 최솟값이 20, 최댓값이 60이다. 값 30과 50을 각각 Min-Max 정규화하는 식과 결과를 쓰시오.",
+   "code": "",
+   "answer": "Min-Max 정규화 = (값 − 최솟값) ÷ (최댓값 − 최솟값)\n30: (30 − 20) ÷ (60 − 20) = 0.25\n50: (50 − 20) ÷ (60 − 20) = 0.75",
+   "why": "AI 채점 결과입니다.",
+   "tags": [
+    "정규화 계산",
+    "서술형"
+   ],
+   "verifyCode": "print((30 - 20) / (60 - 20), (50 - 20) / (60 - 20))",
+   "verifyExpect": "0.25 0.75",
+   "rubric": "필수 요소(모두 있어야 정답): (1) 30의 정규화 값 0.25. (2) 50의 정규화 값 0.75. 식이 (값 − 최솟값) ÷ (최댓값 − 최솟값) 꼴이어야 하며 최댓값으로만 나눈 0.5, 0.83 은 오답. 식 없이 두 값만 정확히 써도 정답으로 인정한다."
+  },
+  {
+   "id": "F04E04",
+   "type": "서술형",
+   "typeKey": "essay",
+   "mode": "essay",
+   "src": "기말.4.선형회귀",
+   "stem": "보험 데이터의 <span class=\"mono\">sex</span> 열에는 'male', 'female', <span class=\"mono\">smoker</span> 열에는 'yes', 'no' 가 문자열로 들어 있다. 모델을 학습시키기 전에 이 열들에 해 주어야 하는 전처리가 무엇인지 쓰고, <span class=\"mono\">smoker</span> 열에 대해 그 전처리를 하는 코드를 한 줄 쓰시오. (no 는 0, yes 는 1)",
+   "code": "",
+   "answer": "문자열로 된 범주형 데이터를 수치형 데이터로 바꿔야 한다. 모델은 숫자로 계산하기 때문이다.\ndf['smoker'] = df['smoker'].replace({'no': 0, 'yes': 1})",
+   "why": "AI 채점 결과입니다.",
+   "tags": [
+    "replace",
+    "범주형",
+    "서술형"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.preprocessing import MinMaxScaler, StandardScaler\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import r2_score\ns = pd.Series(['yes', 'no']).replace({'no': 0, 'yes': 1})\nprint(s.tolist())",
+   "verifyExpect": "[1, 0]",
+   "rubric": "필수 요소(모두 있어야 정답): (1) 범주형(문자열) 데이터를 수치형(숫자)으로 변환한다는 설명. (2) df['smoker'].replace({'no':0, 'yes':1}) 또는 map 등 같은 결과를 내는 코드. no→0, yes→1 방향이 반대면 오답. 결과를 df['smoker'] 에 다시 대입하지 않은 것은 감점하지 않는다."
+  },
+  {
+   "id": "F04E05",
+   "type": "서술형",
+   "typeKey": "essay",
+   "mode": "essay",
+   "src": "기말.4.선형회귀",
+   "stem": "보험료를 예측하는 선형회귀 모델의 예측값 중에 −596.89 처럼 음수가 나왔다. 보험료는 음수가 될 수 없는데도 이런 값이 나오는 이유를 선형회귀 모델의 특징과 관련지어 설명하시오.",
+   "code": "",
+   "answer": "선형회귀 모델은 입력에 계수를 곱하고 절편을 더한 일차식(직선·평면)으로 값을 예측한다. 이 식의 결과에는 범위 제한이 없어서 입력값에 따라 0보다 작은 값도 나올 수 있다. 모델은 보험료가 0 이상이어야 한다는 사실을 알지 못한다.",
+   "why": "AI 채점 결과입니다.",
+   "tags": [
+    "선형회귀",
+    "predict",
+    "서술형"
+   ],
+   "verifyCode": "import numpy as np\nimport pandas as pd\nfrom sklearn.preprocessing import MinMaxScaler, StandardScaler\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import r2_score\n\nraw = pd.read_csv('insurance.csv')\ndf = raw.drop('region', axis=1)\ndf['sex'] = df['sex'].map({'male': 0, 'female': 1})\ndf['smoker'] = df['smoker'].map({'no': 0, 'yes': 1})\n\nX = df[['age', 'bmi', 'smoker']]\ny = df['charges']\n\nscaler = MinMaxScaler()\nnormalized_data = scaler.fit_transform(X.values)\nX = pd.DataFrame(normalized_data, columns=X.columns)\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=10)\nlinear_model = LinearRegression()\nlinear_model.fit(X_train, y_train)\nprint(bool((linear_model.predict(X_test) < 0).any()))",
+   "verifyExpect": "True",
+   "rubric": "필수 요소: 선형회귀는 일차식(직선, 계수×입력+절편)으로 예측하며 그 출력 범위에 제한이 없다는 취지. '데이터가 잘못되어서', '학습이 덜 되어서'만 쓰면 오답."
+  }
+ ]
+}

@@ -103,7 +103,7 @@ class Bank:
         qid, n = self._id('C')
         exprs = [t for _, t in items if isinstance(t, str)]
         truth, vcode, vexp = [], None, None
-        if exprs or code:
+        if exprs:
             full = self._full(code, pre)
             out, ns = run(full)
             for _, t in items:
